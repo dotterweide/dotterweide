@@ -16,3 +16,5 @@ libraryDependencies ++= Seq(
 )
 
 mainClass in Compile := Some("com.pavelfatin.toyide.Application")
+
+unmanagedResourceDirectories in Compile += baseDirectory.value / "src" / "main" / "lisp"
