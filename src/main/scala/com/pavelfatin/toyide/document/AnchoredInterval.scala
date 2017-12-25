@@ -15,14 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.pavelfatin.toyide.editor
+package com.pavelfatin.toyide.document
 
-import com.pavelfatin.toyide.ObservableEvents
+import com.pavelfatin.toyide.Interval
 
-class ActionProcessor extends ObservableEvents[ActionProcessorEvent]
+class AnchoredInterval(document: Document, origin: Interval, beginBias: Bias = Bias.Right, endBias: Bias = Bias.Left) {
+  private val beginAnchor = document.createAnchorAt(origin.begin, beginBias)
 
-sealed trait ActionProcessorEvent
+  private val endAnchor = document.createAnchorAt(origin.end, endBias)
 
-case class ActionStarted(immediate: Boolean) extends ActionProcessorEvent
+  def interval = Interval(beginAnchor.offset, beginAnchor.offset.max(endAnchor.offset))
 
-case object ActionFinished extends ActionProcessorEvent
+  def dispose() {
+    beginAnchor.dispose()
+    endAnchor.dispose()
+  }
+}

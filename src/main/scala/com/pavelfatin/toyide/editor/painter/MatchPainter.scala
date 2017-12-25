@@ -20,7 +20,7 @@ package com.pavelfatin.toyide.editor.painter
 import java.awt.{Graphics, Rectangle}
 
 import com.pavelfatin.toyide.Interval
-import com.pavelfatin.toyide.document.Bias
+import com.pavelfatin.toyide.document.AnchoredInterval
 import com.pavelfatin.toyide.editor._
 import com.pavelfatin.toyide.lexer.Token
 
@@ -44,6 +44,7 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
   
   canvas.onChange {
     case VisibleRectangleChanged(_) if !completeData && anchoredMatches.nonEmpty => update(complete = true)
+    case FocusChanged(hasFocus) => update(complete = true)
     case _ =>
   }
 
@@ -52,7 +53,7 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
 
     val previousMatches = anchoredMatches
 
-    anchoredMatches = if (terminal.selection.isDefined) Seq.empty else {
+    anchoredMatches = if (!canvas.hasFocus || terminal.selection.isDefined) Seq.empty else {
       val tokens = if (complete) data.tokens else {
         val visibleInterval = intervalOf(grid.toArea(canvas.visibleRectangle))
         data.tokens.filter(_.span.intersectsWith(visibleInterval))
@@ -100,16 +101,5 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
     grid.toRectangle(area)
   }
 
-  private class AnchoredMatch(origin: Interval, val braceType: BraceType) {
-    private val beginAnchor = document.createAnchorAt(origin.begin, Bias.Right)
-
-    private val endAnchor = document.createAnchorAt(origin.end, Bias.Left)
-
-    def interval = Interval(beginAnchor.offset, beginAnchor.offset.max(endAnchor.offset))
-
-    def dispose() {
-      beginAnchor.dispose()
-      endAnchor.dispose()
-    }
-  }
+  private class AnchoredMatch(origin: Interval, val braceType: BraceType) extends AnchoredInterval(document, origin)
 }
