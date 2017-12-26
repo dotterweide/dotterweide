@@ -35,7 +35,7 @@ trait TranslatorTesting {
     val root = ProgramParser.parse(ToyLexer.analyze(code))
 
     val elements = root.elements
-    assertNoProblemsIn(elements)
+    assertNoProblemsIn  (elements)
     assertNoUnresolvedIn(elements)
 
     val bytecode = Assembler.assemble(root, Name)

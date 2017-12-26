@@ -17,77 +17,60 @@
 
 package com.pavelfatin.toyide.ide
 
-import action._
-import swing._
-import event.Key
 import javax.swing.KeyStroke
+
 import com.pavelfatin.toyide.Example
 import com.pavelfatin.toyide.editor._
+import com.pavelfatin.toyide.ide.action._
+
+import scala.swing.{Action, CheckMenuItem, Component, Dimension, Frame, Menu, MenuBar, MenuItem, RadioMenuItem, Separator}
+import scala.swing.event.Key
 
 private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Runner, invoker: Runner, launcher: Launcher,
                        console: Console, coloring: DynamicColoring, examples: Seq[Example]) extends MenuBar {
 
-  private val undo = new MenuItem("")
-
-  private val redo = new MenuItem("")
-
-  private val complete = new MenuItem("")
-
-  private val copy = new MenuItem("")
-
-  private val cut = new MenuItem("")
-
-  private val duplicateLine = new MenuItem("")
-
-  private val indentSelection = new MenuItem("")
-
+  private val undo              = new MenuItem("")
+  private val redo              = new MenuItem("")
+  private val complete          = new MenuItem("")
+  private val copy              = new MenuItem("")
+  private val cut               = new MenuItem("")
+  private val duplicateLine     = new MenuItem("")
+  private val indentSelection   = new MenuItem("")
   private val unindentSelection = new MenuItem("")
-
-  private val escape = new MenuItem("")
-
-  private val format = new MenuItem("")
-
-  private val gotoDeclaration = new MenuItem("")
-
-  private val moveLineDown = new MenuItem("")
-
-  private val moveLineUp = new MenuItem("")
-
-  private val optimize = new MenuItem("")
-
-  private val paste = new MenuItem("")
-
-  private val removeLine = new MenuItem("")
-
-  private val rename = new MenuItem("")
-
-  private val selectAll = new MenuItem("")
-
-  private val showUsages = new MenuItem("")
-
+  private val escape            = new MenuItem("")
+  private val format            = new MenuItem("")
+  private val gotoDeclaration   = new MenuItem("")
+  private val moveLineDown      = new MenuItem("")
+  private val moveLineUp        = new MenuItem("")
+  private val optimize          = new MenuItem("")
+  private val paste             = new MenuItem("")
+  private val removeLine        = new MenuItem("")
+  private val rename            = new MenuItem("")
+  private val selectAll         = new MenuItem("")
+  private val showUsages        = new MenuItem("")
   private val toggleLineComment = new MenuItem("")
 
   def bindTo(actions: EditorActions): Unit = {
-    bind(complete, "Complete", 'P', actions.complete)
-    bind(copy, "Copy", 'C', actions.copy)
-    bind(cut, "Cut", 'T', actions.cut)
-    bind(duplicateLine, "Duplicate Line", 'D', actions.duplicateLine)
-    bind(indentSelection, "Indent Selection", 'I', actions.indentSelection)
-    bind(unindentSelection, "Unindent Selection", 'N', actions.unindentSelection)
-    bind(escape, "Clear Selection", 'L', actions.escape)
-    bind(format, "Reformat", 'F', actions.format)
-    bind(gotoDeclaration, "Goto Declaration", 'G', actions.gotoDeclaration)
-    bind(moveLineDown, "Move Line Down", 'D', actions.moveLineDown)
-    bind(moveLineUp, "Move Line Up", 'U', actions.moveLineUp)
-    bind(optimize, "Optimize", 'O', actions.optimize)
-    bind(paste, "Paste", 'P', actions.paste)
-    bind(removeLine, "Remove Line", 'R', actions.removeLine)
-    bind(rename, "Rename", 'R', actions.rename)
-    bind(selectAll, "Select All", 'A', actions.selectAll)
-    bind(showUsages, "Show Usages", 'S', actions.showUsages)
-    bind(toggleLineComment, "Toggle Line Comment", 'T', actions.toggleLineComment)
-    bind(undo, "Undo", 'U', actions.undo)
-    bind(redo, "Redo", 'R', actions.redo)
+    bind(complete         , "Complete"            , 'P', actions.complete)
+    bind(copy             , "Copy"                , 'C', actions.copy)
+    bind(cut              , "Cut"                 , 'T', actions.cut)
+    bind(duplicateLine    , "Duplicate Line"      , 'D', actions.duplicateLine)
+    bind(indentSelection  , "Indent Selection"    , 'I', actions.indentSelection)
+    bind(unindentSelection, "Unindent Selection"  , 'N', actions.unindentSelection)
+    bind(escape           , "Clear Selection"     , 'L', actions.escape)
+    bind(format           , "Reformat"            , 'F', actions.format)
+    bind(gotoDeclaration  , "Goto Declaration"    , 'G', actions.gotoDeclaration)
+    bind(moveLineDown     , "Move Line Down"      , 'D', actions.moveLineDown)
+    bind(moveLineUp       , "Move Line Up"        , 'U', actions.moveLineUp)
+    bind(optimize         , "Optimize"            , 'O', actions.optimize)
+    bind(paste            , "Paste"               , 'P', actions.paste)
+    bind(removeLine       , "Remove Line"         , 'R', actions.removeLine)
+    bind(rename           , "Rename"              , 'R', actions.rename)
+    bind(selectAll        , "Select All"          , 'A', actions.selectAll)
+    bind(showUsages       , "Show Usages"         , 'S', actions.showUsages)
+    bind(toggleLineComment, "Toggle Line Comment" , 'T', actions.toggleLineComment)
+    bind(undo             , "Undo"                , 'U', actions.undo)
+    bind(redo             , "Redo"                , 'R', actions.redo)
   }
 
   private def bind(item: MenuItem, title: String, mnemonic: Char, anAction: AnAction): Unit = {
@@ -97,10 +80,10 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
   contents += new Menu("File") {
     private val parent = Component.wrap(frame.peer.getRootPane)
     mnemonic = Key.F
-    contents += new MenuItem(new NewAction("New", 'N', "ctrl pressed N", parent, tab))
-    contents += new MenuItem(new OpenAction("Open...", 'O', "ctrl pressed O", parent, tab))
-    contents += new MenuItem(new SaveAction("Save", 'S', "ctrl pressed S", parent, tab))
-    contents += new MenuItem(new SaveAsAction("Save As...", 'A', "shift ctrl pressed S", parent, tab))
+    contents += new MenuItem(new NewAction    ("New"        , 'N', "ctrl pressed N"       , parent, tab))
+    contents += new MenuItem(new OpenAction   ("Open..."    , 'O', "ctrl pressed O"       , parent, tab))
+    contents += new MenuItem(new SaveAction   ("Save"       , 'S', "ctrl pressed S"       , parent, tab))
+    contents += new MenuItem(new SaveAsAction ("Save As..." , 'A', "shift ctrl pressed S" , parent, tab))
     contents += new Separator()
     contents += new MenuItem(new ExportToClassAction("Export to Class...", 'E', data, parent))
     contents += new Separator()
@@ -174,9 +157,8 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
 
       updateSelection()
 
-      private def updateSelection(): Unit = {
+      private def updateSelection(): Unit =
         selected = coloring.name == it
-      }
     })
   }
 
@@ -187,9 +169,8 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
       action = new Action(text) {
         mnemonic = 'S'
         accelerator = Some(KeyStroke.getKeyStroke("ctrl alt pressed S"))
-        def apply(): Unit = {
+        def apply(): Unit =
           tab.split = selected
-        }
       }
     }
   }

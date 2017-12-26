@@ -24,20 +24,20 @@ import jasmin.ClassFile
 
 object Assembler {
   def assemble(root: Node, name: String): Array[Byte] = {
-    val code = root.translate(name, new Labels()).toText(name)
+    val code    = root.translate(name, new Labels()).toText(name)
 
-    val input = new StringReader(code)
-    val output = new ByteArrayOutputStream()
+    val input   = new StringReader(code)
+    val output  = new ByteArrayOutputStream()
 
-    val file = new ClassFile()
+    val file    = new ClassFile()
     file.readJasmin(input, name, false)
     if (file.errorCount() > 0) throw new RuntimeException("Assembling error: %s".format(code))
     file.write(output)
 
-    val bytes = output.toByteArray
+    val bytes   = output.toByteArray
 
     output.close()
-    input.close()
+    input .close()
 
     bytes
   }

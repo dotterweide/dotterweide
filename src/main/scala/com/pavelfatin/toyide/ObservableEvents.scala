@@ -18,7 +18,7 @@
 package com.pavelfatin.toyide
 
 trait ObservableEvents[A] {
-  private var observers = List[A => Unit]()
+  private var observers = List.empty[A => Unit]
 
   def onChange(action: A => Unit): Unit =
     observers ::= action

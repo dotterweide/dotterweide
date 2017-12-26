@@ -41,9 +41,7 @@ private class LauncherImpl extends Launcher {
       action()
 
       SwingUtilities.invokeLater(new Runnable {
-        def run(): Unit = {
-          stop()
-        }
+        def run(): Unit = stop()
       })
     }
   }

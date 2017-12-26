@@ -82,18 +82,16 @@ class HistoryImpl extends History {
   }
 
   private case class Action(document: Document, terminal: Terminal, events: List[AnyRef]) {
-    def undo(): Unit = {
+    def undo(): Unit =
       events.foreach {
         case it: DocumentEvent => it.undo(document)
         case it: TerminalEvent => it.undo(terminal)
       }
-    }
 
-    def redo(): Unit = {
+    def redo(): Unit =
       events.reverse.foreach {
         case it: DocumentEvent => it.redo(document)
         case it: TerminalEvent => it.redo(terminal)
       }
-    }
   }
 }

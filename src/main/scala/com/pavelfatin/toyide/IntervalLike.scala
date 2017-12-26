@@ -18,21 +18,19 @@
 package com.pavelfatin.toyide
 
 trait IntervalLike {
-  def begin: Int
-
-  def end: Int
+  def begin : Int
+  def end   : Int
 
   def length: Int = end - begin
 
   def empty: Boolean = length == 0
 
   def includes(offset: Int): Boolean = begin <= offset && offset < end
-
-  def touches(offset: Int): Boolean = begin <= offset && offset <= end
+  def touches (offset: Int): Boolean = begin <= offset && offset <= end
 
   def includes(interval: IntervalLike): Boolean =
     (!empty && !interval.empty) &&
-      interval.begin >= begin && interval.end <=end
+      interval.begin >= begin && interval.end <= end
 
   def intersectsWith(interval: IntervalLike): Boolean =
     (!empty && !interval.empty) &&

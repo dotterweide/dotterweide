@@ -17,8 +17,8 @@
 
 package com.pavelfatin.toyide
 
-import collection.generic.CanBuildFrom
-import scala.reflect.{classTag, ClassTag}
+import scala.collection.generic.CanBuildFrom
+import scala.reflect.{ClassTag, classTag}
 
 object Extensions {
   import language.higherKinds
@@ -26,15 +26,14 @@ object Extensions {
   private type CanBuildTo[Elem, CC[X]] = CanBuildFrom[Nothing, Elem, CC[Elem]]
 
   implicit class RichTraversable[CC[X] <: Traversable[X], A](val value: CC[A]) extends AnyVal {
-    def filterBy[T](implicit m: ClassTag[T], cbf: CanBuildTo[T, CC]): CC[T] =
-      value.filter(classTag[T].runtimeClass.isInstance(_)).map[T, CC[T]](_.asInstanceOf[T])(collection.breakOut)
+    def filterBy[B](implicit m: ClassTag[B], cbf: CanBuildTo[B, CC]): CC[B] =
+      value.filter(classTag[B].runtimeClass.isInstance(_)).map[B, CC[B]](_.asInstanceOf[B])(collection.breakOut)
 
-    def findBy[T: ClassTag]: Option[T] =
-      value.find(classTag[T].runtimeClass.isInstance(_)).map(_.asInstanceOf[T])
+    def findBy[B: ClassTag]: Option[B] =
+      value.find(classTag[B].runtimeClass.isInstance(_)).map(_.asInstanceOf[B])
 
-    def collectAll[B](pf: PartialFunction[A, B])(implicit cbf: CanBuildTo[B, CC]): Option[CC[B]] = {
+    def collectAll[B](pf: PartialFunction[A, B])(implicit cbf: CanBuildTo[B, CC]): Option[CC[B]] =
       if (value.forall(pf.isDefinedAt)) Some(value.collect(pf)(collection.breakOut)) else None
-    }
   }
 
   implicit class RichCharSequence(val chars: CharSequence) extends AnyVal {
@@ -48,12 +47,10 @@ object Extensions {
       n
     }
 
-    def take(n: Int): CharSequence = {
+    def take(n: Int): CharSequence =
       chars.subSequence(0, n)
-    }
 
-    def subSequence(begin: Int): CharSequence = {
+    def subSequence(begin: Int): CharSequence =
       chars.subSequence(begin, chars.length)
-    }
   }
 }

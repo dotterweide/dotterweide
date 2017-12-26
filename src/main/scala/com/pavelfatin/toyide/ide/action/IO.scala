@@ -17,8 +17,9 @@
 
 package com.pavelfatin.toyide.ide.action
 
-import java.io.{FileWriter, BufferedWriter, File}
-import io.Source
+import java.io.{BufferedWriter, File, FileWriter}
+
+import scala.io.Source
 
 private object IO {
   def write(file: File, text: String): Unit = {

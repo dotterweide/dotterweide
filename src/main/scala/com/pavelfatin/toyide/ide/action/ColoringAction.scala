@@ -24,7 +24,6 @@ import scala.swing.Action
 class ColoringAction(coloring: DynamicColoring, name: String) extends Action(name) {
   mnemonic = name.charAt(0)
 
-  def apply(): Unit = {
+  def apply(): Unit =
     coloring.name = name
-  }
 }

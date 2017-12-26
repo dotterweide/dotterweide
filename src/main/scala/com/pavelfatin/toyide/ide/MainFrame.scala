@@ -17,15 +17,15 @@
 
 package com.pavelfatin.toyide.ide
 
+import java.awt.event.{ActionEvent, ActionListener, FocusAdapter, FocusEvent}
 import javax.swing.Timer
 
 import com.pavelfatin.toyide.Language
-
-import swing._
-import scala.swing.event.{WindowOpened, WindowClosed}
 import com.pavelfatin.toyide.document.Location
-import java.awt.event.{ActionEvent, ActionListener, FocusAdapter, FocusEvent}
-import com.pavelfatin.toyide.editor.{Pass, EditorFactory, HistoryImpl, Editor}
+import com.pavelfatin.toyide.editor.{Editor, EditorFactory, HistoryImpl, Pass}
+
+import scala.swing.{BorderPanel, Component, Frame, Orientation, ScrollPane, SplitPane}
+import scala.swing.event.{WindowClosed, WindowOpened}
 
 class MainFrame(language: Language, text: String) extends Frame {
   reactions += {
@@ -33,8 +33,8 @@ class MainFrame(language: Language, text: String) extends Frame {
       timer.start()
     case WindowClosed(_) =>
       timer.stop()
-      primaryEditor.dispose()
-      secondaryEditor.dispose()
+      primaryEditor   .dispose()
+      secondaryEditor .dispose()
   }
 
   override def closeOperation(): Unit = {
@@ -42,10 +42,8 @@ class MainFrame(language: Language, text: String) extends Frame {
     dispose()
   }
 
-  private val history = new HistoryImpl()
-
-  private val coloring = new DynamicColoring(language.colorings)
-
+  private val history       = new HistoryImpl()
+  private val coloring      = new DynamicColoring(language.colorings)
   private val primaryEditor = EditorFactory.createEditorFor(language, history, coloring)
 
   private lazy val secondaryEditor = EditorFactory.createEditorFor(primaryEditor.document,
@@ -54,11 +52,10 @@ class MainFrame(language: Language, text: String) extends Frame {
   private val data = primaryEditor.data
 
   private val timer = new Timer(10, new ActionListener() {
-    def actionPerformed(e: ActionEvent): Unit = {
+    def actionPerformed(e: ActionEvent): Unit =
       if (data.hasNextPass) {
         data.nextPass()
       }
-    }
   })
 
   timer.setRepeats(false)
@@ -71,13 +68,10 @@ class MainFrame(language: Language, text: String) extends Frame {
     }
   }
 
-  private val status = new StatusBar()
-
-  private val tab = new EditorTabImpl(language.fileType, history, primaryEditor, secondaryEditor)
-
-  private val console = new ConsoleImpl(coloring)
-
-  private val launcher = new LauncherImpl()
+  private val status    = new StatusBar()
+  private val tab       = new EditorTabImpl(language.fileType, history, primaryEditor, secondaryEditor)
+  private val console   = new ConsoleImpl(coloring)
+  private val launcher  = new LauncherImpl()
 
   private val menu = new MainMenu(tab, this, primaryEditor.data, new NodeInterpreter(console),
     new NodeInvoker(console), launcher, console, coloring, language.examples)
@@ -124,10 +118,10 @@ class MainFrame(language: Language, text: String) extends Frame {
   contents = new BorderPanel() {
     val split = new SplitPane(Orientation.Horizontal, tab, new ScrollPane(Component.wrap(console)))
     split.dividerLocation = 507
-    split.resizeWeight = 1.0D
-    split.border = null
-    add(split, BorderPanel.Position.Center)
-    add(status, BorderPanel.Position.South)
+    split.resizeWeight    = 1.0D
+    split.border          = null
+    add(split , BorderPanel.Position.Center)
+    add(status, BorderPanel.Position.South )
   }
 
   menuBar = menu

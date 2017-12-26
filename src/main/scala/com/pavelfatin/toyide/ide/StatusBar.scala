@@ -17,7 +17,7 @@
 
 package com.pavelfatin.toyide.ide
 
-import swing.{Alignment, Label, FlowPanel}
+import scala.swing.{Alignment, FlowPanel, Label}
 
 private class StatusBar extends FlowPanel(FlowPanel.Alignment.Left)() {
   private val _message = new Label() {
@@ -34,13 +34,11 @@ private class StatusBar extends FlowPanel(FlowPanel.Alignment.Left)() {
 
   def message: String = _message.text
 
-  def message_=(s: String): Unit = {
+  def message_=(s: String): Unit =
     _message.text = s
-  }
 
   def position: String = _position.text
 
-  def position_=(s: String): Unit = {
+  def position_=(s: String): Unit =
     _position.text = s
-  }
 }

@@ -17,9 +17,10 @@
 
 package com.pavelfatin.toyide.ide.action
 
+import java.awt.Color
+
 import com.pavelfatin.toyide.editor.Data
 import com.pavelfatin.toyide.ide.Console
-import java.awt.Color
 
 private object ErrorPrinter {
   private val ErrorColor = new Color(127, 0, 0)

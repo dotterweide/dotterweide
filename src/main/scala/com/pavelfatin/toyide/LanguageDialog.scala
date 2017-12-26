@@ -17,7 +17,7 @@
 
 package com.pavelfatin.toyide
 
-import java.awt.event.{MouseEvent, MouseAdapter, KeyEvent}
+import java.awt.event.{KeyEvent, MouseAdapter, MouseEvent}
 import javax.swing.table.AbstractTableModel
 import javax.swing.{JComponent, JTable, KeyStroke, ListSelectionModel}
 

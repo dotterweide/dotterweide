@@ -17,8 +17,8 @@
 
 package com.pavelfatin.toyide.interpreter
 
-trait DelegateValue[T] extends Value {
-  def content: T
+trait DelegateValue[A] extends Value {
+  def content: A
 
   def presentation: String = content.toString
 }

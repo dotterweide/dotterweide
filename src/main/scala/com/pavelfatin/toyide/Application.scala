@@ -23,14 +23,13 @@ import com.pavelfatin.toyide.ide.MainFrame
 import com.pavelfatin.toyide.languages.lisp.LispLanguage
 import com.pavelfatin.toyide.languages.toy.ToyLanguage
 
-import scala.swing._
+import scala.swing.{SwingApplication, Window}
 
 object Application extends SwingApplication {
   private val Languages = Seq(ToyLanguage, LispLanguage)
 
-  override def startup(args: Array[String]): Unit = {
+  override def startup(args: Array[String]): Unit =
     selectLanguage().foreach(openMainFrame)
-  }
 
   private def selectLanguage(): Option[Language] = {
     val dialog = new LanguageDialog(Languages)

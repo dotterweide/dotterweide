@@ -17,34 +17,30 @@
 
 package com.pavelfatin.toyide.editor
 
-import java.awt.{Dimension, Point, Graphics, Color}
-import java.awt.event.{MouseEvent, MouseAdapter, ActionEvent, ActionListener}
-import javax.swing._
-import javax.swing.border.{EmptyBorder, CompoundBorder, LineBorder}
+import java.awt.event.{ActionEvent, ActionListener, MouseAdapter, MouseEvent}
+import java.awt.{Color, Dimension, Graphics, Point}
+import javax.swing.border.{CompoundBorder, EmptyBorder, LineBorder}
+import javax.swing.{JComponent, JLabel, Popup, PopupFactory, Timer}
 
 private class TooltipHandler(component: JComponent, lookup: Point => Option[Error]) {
-  private val Timeout = 500
-
-  private val TooltipShift = new Dimension(5, 5)
-
+  private val Timeout           = 500
+  private val TooltipShift      = new Dimension(5, 5)
   private val TooltipBackground = new Color(0xFDFEE2)
 
   private val TooltipBorder = new CompoundBorder(
     new LineBorder(Color.BLACK, 1, true),
     new EmptyBorder(3, 3, 3, 3))
 
-  private var pointer: Option[Point] = None
-
-  private var popup: Option[Popup] = None
+  private var pointer : Option[Point] = None
+  private var popup   : Option[Popup] = None
 
   private val tooltipTimer = new Timer(Timeout, new ActionListener() {
-    def actionPerformed(e: ActionEvent): Unit = {
+    def actionPerformed(e: ActionEvent): Unit =
       for (point <- pointer; error <- lookup(point)) {
         val p = createPopup(error, new Point(point.x + TooltipShift.width, point.y + TooltipShift.height))
         popup = Some(p)
         p.show()
       }
-    }
   })
 
   tooltipTimer.setRepeats(false)
@@ -63,20 +59,19 @@ private class TooltipHandler(component: JComponent, lookup: Point => Option[Erro
   })
 
   component.addMouseListener(new MouseAdapter() {
-    override def mouseExited(e: MouseEvent): Unit = {
+    override def mouseExited(e: MouseEvent): Unit =
       tooltipTimer.stop()
-    }
   })
 
   private def createPopup(error: Error, point: Point): Popup = {
     val factory = PopupFactory.getSharedInstance
-    val shift = component.getLocationOnScreen
-    val label = createLabel(error)
+    val shift   = component.getLocationOnScreen
+    val label   = createLabel(error)
     label.setBorder(TooltipBorder)
     factory.getPopup(component, label, shift.x + point.x, shift.y + point.y)
   }
 
-  private def createLabel(error: Error): JLabel = {
+  private def createLabel(error: Error): JLabel =
     new JLabel(error.message) {
       override def paint(g: Graphics): Unit = {
         g.setColor(TooltipBackground)
@@ -84,9 +79,7 @@ private class TooltipHandler(component: JComponent, lookup: Point => Option[Erro
         super.paint(g)
       }
     }
-  }
 
-  def dispose(): Unit = {
+  def dispose(): Unit =
     tooltipTimer.stop()
-  }
 }

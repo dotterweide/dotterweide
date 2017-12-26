@@ -20,20 +20,17 @@ package com.pavelfatin.toyide.lexer
 import com.pavelfatin.toyide.Span
 
 abstract class AbstractTokenIterator(input: CharSequence) extends Iterator[Token] {
-  private var index = 0
-  private var marker = -1
+  private var index   = 0
+  private var marker  = -1
 
-  def advance(): Unit = {
+  def advance(): Unit =
     advance(1)
-  }
 
-  def advance(count: Int): Unit = {
+  def advance(count: Int): Unit =
     index += count
-  }
 
-  def mark(): Unit = {
+  def mark(): Unit =
     marker = index
-  }
 
   def marked: Span = Span(input, marker, index)
 

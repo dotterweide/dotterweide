@@ -17,10 +17,12 @@
 
 package com.pavelfatin.toyide.ide.action
 
-import swing.Action
 import javax.swing.KeyStroke
+
 import com.pavelfatin.toyide.Output
 import com.pavelfatin.toyide.ide.Launcher
+
+import scala.swing.Action
 
 class StopAction(title0: String, mnemonic0: Char, shortcut: String,
                  launcher: Launcher, output: Output) extends Action(title0) {

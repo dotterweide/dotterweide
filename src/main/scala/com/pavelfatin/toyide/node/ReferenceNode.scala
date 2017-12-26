@@ -26,7 +26,7 @@ trait ReferenceNode extends Node {
 
   def isReferenceTo(node: Node): Boolean = target match {
     case Some(it) => it == node
-    case None => false
+    case None     => false
   }
 
   def predefined: Boolean
@@ -37,7 +37,7 @@ trait ReferenceNode extends Node {
 }
 
 object ReferenceNode {
-  def unapply(reference: ReferenceNode) =
+  def unapply(reference: ReferenceNode): Option[(Option[Node], Option[Node])] =
     Some((reference.source, reference.target))
 }
 

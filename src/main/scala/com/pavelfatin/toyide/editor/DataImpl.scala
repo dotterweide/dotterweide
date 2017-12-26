@@ -49,11 +49,10 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
     run(next)
   }
 
-  def compute(): Unit = {
+  def compute(): Unit =
     while (hasNextPass) {
       nextPass()
     }
-  }
 
   private def run(p: Pass): Unit = {
     pass = p

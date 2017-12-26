@@ -18,8 +18,8 @@
 package com.pavelfatin.toyide
 
 case class Interval(begin: Int, end: Int) extends IntervalLike {
-  if (begin < 0) throw new IllegalArgumentException("Begin must be positive: " + begin)
-  if (end < 0) throw new IllegalArgumentException("End must be positive: " + end)
+  if (begin  < 0) throw new IllegalArgumentException("Begin must be positive: "  + begin )
+  if (end    < 0) throw new IllegalArgumentException("End must be positive: "    + end   )
   if (length < 0) throw new IllegalArgumentException("Length must be positive: " + length)
 
   def intersection(interval: Interval): Interval = {
@@ -28,11 +28,9 @@ case class Interval(begin: Int, end: Int) extends IntervalLike {
   }
 
   def withBeginShift(n: Int): Interval = copy(begin = begin + n)
-
-  def withEndShift(n: Int): Interval = copy(end = end + n)
+  def withEndShift  (n: Int): Interval = copy(end   = end   + n)
 
   def +(n: Int) = Interval(begin + n, end + n)
-
   def -(n: Int) = Interval(begin - n, end - n)
 
   def transformWith(f: Int => Int): Interval = copy(begin = f(begin), end = f(end))

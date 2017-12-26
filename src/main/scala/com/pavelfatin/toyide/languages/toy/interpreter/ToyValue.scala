@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.interpreter.DelegateValue
 import com.pavelfatin.toyide.languages.toy.ToyType
 import com.pavelfatin.toyide.node.NodeType
 
-sealed trait ToyValue[T] extends DelegateValue[T]
+sealed trait ToyValue[A] extends DelegateValue[A]
 
 object ToyValue {
   case class StringValue(content: String) extends ToyValue[String] {

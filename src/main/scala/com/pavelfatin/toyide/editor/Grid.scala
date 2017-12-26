@@ -27,8 +27,8 @@ class Grid(val cellSize: Dimension, val insets: Insets) {
       insets.top + cellSize.height * location.line)
 
   def toLocation(point: Point): Location = {
-    val line = math.floor((point.y - insets.top).toDouble / cellSize.height.toDouble).toInt
-    val indent = math.floor((point.x - insets.left).toDouble / cellSize.width.toDouble).toInt
+    val line    = math.floor((point.y - insets.top ).toDouble / cellSize.height.toDouble).toInt
+    val indent  = math.floor((point.x - insets.left).toDouble / cellSize.width .toDouble).toInt
     Location(0.max(line), 0.max(indent))
   }
 
@@ -38,11 +38,11 @@ class Grid(val cellSize: Dimension, val insets: Insets) {
   }
 
   def toArea(rectangle: Rectangle): Area = {
-    val beginLine = 0.max(math.floor((rectangle.y - insets.top).toDouble / cellSize.height.toDouble).toInt)
-    val beginIndent = 0.max(math.floor((rectangle.x - insets.left).toDouble / cellSize.width.toDouble).toInt)
+    val beginLine   = 0.max(math.floor((rectangle.y - insets.top ).toDouble / cellSize.height.toDouble).toInt)
+    val beginIndent = 0.max(math.floor((rectangle.x - insets.left).toDouble / cellSize.width .toDouble).toInt)
 
-    val endLine = math.ceil((rectangle.y - insets.top + rectangle.height).toDouble / cellSize.height.toDouble).toInt
-    val endIndent = math.ceil((rectangle.x - insets.left + rectangle.width).toDouble / cellSize.width.toDouble).toInt
+    val endLine   = math.ceil((rectangle.y - insets.top  + rectangle.height).toDouble / cellSize.height.toDouble).toInt
+    val endIndent = math.ceil((rectangle.x - insets.left + rectangle.width ).toDouble / cellSize.width .toDouble).toInt
 
     Area(beginLine, beginIndent, endIndent - beginIndent, endLine - beginLine)
   }

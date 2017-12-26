@@ -29,9 +29,8 @@ private class ConsoleImpl(coloring: Coloring) extends JTextPane with Console {
   setFont(new Font(coloring.fontFamily, Font.PLAIN, coloring.fontSize))
   setEditable(false)
 
-  def print(s: String): Unit = {
+  def print(s: String): Unit =
     doPrint(s, null)
-  }
 
   def print(s: String, color: Color): Unit = {
     val attributes = new SimpleAttributeSet()
@@ -45,15 +44,12 @@ private class ConsoleImpl(coloring: Coloring) extends JTextPane with Console {
     doPrint(s, attributes)
   }
 
-  private def doPrint(s: String, attributes: AttributeSet): Unit = {
+  private def doPrint(s: String, attributes: AttributeSet): Unit =
     SwingUtilities.invokeLater(new Runnable {
-      def run(): Unit = {
+      def run(): Unit =
         getDocument.insertString(getDocument.getLength, s, attributes)
-      }
     })
-  }
 
-  def clear(): Unit = {
+  def clear(): Unit =
     setText("")
-  }
 }

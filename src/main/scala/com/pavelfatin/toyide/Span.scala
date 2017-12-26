@@ -18,9 +18,8 @@
 package com.pavelfatin.toyide
 
 case class Span(source: CharSequence, interval: Interval) extends IntervalLike {
-  def begin: Int = interval.begin
-
-  def end: Int = interval.end
+  def begin : Int = interval.begin
+  def end   : Int = interval.end
 
   def text: String = source.subSequence(begin, end).toString
 

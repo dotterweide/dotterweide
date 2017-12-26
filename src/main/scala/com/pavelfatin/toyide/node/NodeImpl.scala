@@ -43,7 +43,7 @@ class NodeImpl(val kind: String) extends Node {
     _children = children
     children.foreach(_.parent = Some(this))
     for((a, b) <- children.zip(children.tail)) {
-      a.nextSibling = Some(b)
+      a.nextSibling     = Some(b)
       b.previousSibling = Some(a)
     }
   }
@@ -51,17 +51,17 @@ class NodeImpl(val kind: String) extends Node {
 
 object NodeImpl {
   def createLeaf(token: Token): NodeImpl = {
-    val node = new NodeImpl("leaf")
-    node.token = Some(token)
-    node.span = token.span
+    val node      = new NodeImpl("leaf")
+    node.token    = Some(token)
+    node.span     = token.span
     node
   }
 
   def createError(token: Option[Token], span: Span, message: String): NodeImpl = {
-    val node = new NodeImpl("leaf")
-    node.span = span
-    node.token = token
-    node.problem = Some(message)
+    val node      = new NodeImpl("leaf")
+    node.span     = span
+    node.token    = token
+    node.problem  = Some(message)
     node
   }
 }

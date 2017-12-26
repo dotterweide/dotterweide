@@ -34,20 +34,17 @@ class TreeBuilder(input: Iterator[Token]) {
     advance()
   }
 
-  def ahead(kinds: TokenKind*): Boolean = {
+  def ahead(kinds: TokenKind*): Boolean =
     in.hasNext && kinds.contains(in.head.kind)
-  }
 
-  def matches(kinds: TokenKind*): Boolean = {
+  def matches(kinds: TokenKind*): Boolean =
     head.exists(token => kinds.contains(token.kind))
-  }
 
-  def consume(kinds: TokenKind*): Unit = {
+  def consume(kinds: TokenKind*): Unit =
     if (matches(kinds: _*))
       consume()
     else
       error("Expected %s".format(kinds.map(_.name).mkString(", ")))
-  }
 
   def consume(): Unit = {
     val token = head.getOrElse(throw new NoSuchTokenException())
@@ -91,7 +88,7 @@ class TreeBuilder(input: Iterator[Token]) {
   def tree: NodeImpl = {
     if (regions.tail.nonEmpty) throw new UnclosedRegionException
     val nodes = regions.head.nodes
-    val root = nodes.headOption.getOrElse(throw new NoRootNodeException)
+    val root  = nodes.headOption.getOrElse(throw new NoRootNodeException)
     if (nodes.tail.nonEmpty) throw new MultipleRootNodesException()
     root
   }
@@ -115,14 +112,13 @@ class TreeBuilder(input: Iterator[Token]) {
   }
 
   private class MyRegion(tokenSpan: Span) extends Region {
-    private var entries: List[NodeImpl] = Nil
-    private var closed = false
+    private var entries = List.empty[NodeImpl]
+    private var closed  = false
 
-    def close(node: NodeImpl, collapseHolderNode: Boolean): Unit = {
+    def close(node: NodeImpl, collapseHolderNode: Boolean): Unit =
       capture(node, collapseHolderNode)(children => children)
-    }
 
-    def fold(node: => NodeImpl, collapseHolderNode: Boolean, length: Int): Unit = {
+    def fold(node: => NodeImpl, collapseHolderNode: Boolean, length: Int): Unit =
       capture(node, collapseHolderNode) {
         case Nil => Nil
         case _head :: Nil => Seq(_head)
@@ -134,7 +130,6 @@ class TreeBuilder(input: Iterator[Token]) {
           }
           root.children
       }
-    }
 
     private def capture(node: NodeImpl, collapseHolderNode: Boolean = false)(f: Seq[NodeImpl] => Seq[NodeImpl]): Unit = {
       if (closed) throw new MultipleClosingException
@@ -168,16 +163,10 @@ trait Region {
   def fold(node: => NodeImpl, collapseHolderNode: Boolean = false, length: Int = 3): Unit
 }
 
-class NoRootNodeException extends RuntimeException
-
-class MultipleRootNodesException extends RuntimeException
-
-class NoSuchTokenException extends RuntimeException
-
-class ConsumeWithoutRegionException extends RuntimeException
-
-class UnclosedRegionException extends RuntimeException
-
-class MultipleClosingException extends RuntimeException
-
-class IncorrectRegionsOrderException extends RuntimeException
+class NoRootNodeException             extends RuntimeException
+class MultipleRootNodesException      extends RuntimeException
+class NoSuchTokenException            extends RuntimeException
+class ConsumeWithoutRegionException   extends RuntimeException
+class UnclosedRegionException         extends RuntimeException
+class MultipleClosingException        extends RuntimeException
+class IncorrectRegionsOrderException  extends RuntimeException

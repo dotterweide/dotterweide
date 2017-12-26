@@ -17,9 +17,11 @@
 
 package com.pavelfatin.toyide.ide.action
 
-import swing.{Component, Action}
 import javax.swing.KeyStroke
+
 import com.pavelfatin.toyide.ide.EditorTab
+
+import scala.swing.{Action, Component}
 
 class SaveAction(title0: String, mnemonic0: Char, shortcut: String,
                          parent: Component, tab: EditorTab) extends Action(title0) {

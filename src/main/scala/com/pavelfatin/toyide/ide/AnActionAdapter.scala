@@ -17,16 +17,16 @@
 
 package com.pavelfatin.toyide.ide
 
-import swing.Action
-import javax.swing.{SwingUtilities, KeyStroke}
+import javax.swing.{KeyStroke, SwingUtilities}
+
 import com.pavelfatin.toyide.editor.AnAction
 
+import scala.swing.Action
+
 private class AnActionAdapter(title: String, key: Char, anAction: AnAction) extends Action(title) {
-  mnemonic = key
-
+  mnemonic    = key
   accelerator = Some(KeyStroke.getKeyStroke(anAction.keys.head))
-
-  enabled = anAction.enabled
+  enabled     = anAction.enabled
 
   anAction.onChange {
     SwingUtilities.invokeLater(new Runnable {
@@ -36,7 +36,5 @@ private class AnActionAdapter(title: String, key: Char, anAction: AnAction) exte
     })
   }
 
-  def apply(): Unit = {
-    anAction()
-  }
+  def apply(): Unit = anAction()
 }

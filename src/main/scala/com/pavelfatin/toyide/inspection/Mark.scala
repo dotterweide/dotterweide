@@ -22,5 +22,5 @@ import com.pavelfatin.toyide.node.Node
 case class Mark(node: Node, message: String, decoration: Decoration = Decoration.Underline, warning: Boolean = false)
 
 object MarkData {
-  def unapply(mark: Mark) = Some((mark.node, mark.message))
+  def unapply(mark: Mark): Option[(Node, String)] = Some((mark.node, mark.message))
 }

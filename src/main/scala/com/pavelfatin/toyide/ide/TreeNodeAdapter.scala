@@ -22,12 +22,12 @@ import javax.swing.tree.TreeNode
 
 import com.pavelfatin.toyide.node.Node
 
-import collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 private case class TreeNodeAdapter(delegate: Node) extends TreeNode {
   private def convert(node: Node) = TreeNodeAdapter(node)
 
-  def children: util.Enumeration[TreeNodeAdapter] = delegate.children.map(convert).toIterator
+  def children: util.Enumeration[TreeNodeAdapter] = delegate.children.map(convert).iterator.asJavaEnumeration
 
   def isLeaf: Boolean = delegate.isLeaf
 

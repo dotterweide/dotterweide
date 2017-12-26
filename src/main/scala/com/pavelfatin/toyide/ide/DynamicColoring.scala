@@ -22,22 +22,20 @@ import com.pavelfatin.toyide.editor.{Attributes, Coloring}
 import com.pavelfatin.toyide.lexer.TokenKind
 
 private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring with Observable {
-  private var _name: String = delegates.head._1
-  
-  private var _coloring: Coloring = delegates.head._2
+  private var _name     : String    = delegates.head._1
+  private var _coloring : Coloring  = delegates.head._2
 
   def names: Seq[String] = delegates.keys.toSeq
   
   def name: String = _name 
   
-  def name_=(name: String): Unit = {
+  def name_=(name: String): Unit =
     if (_name != name) {
       _name = name
       _coloring = delegates(name)
 
       notifyObservers()
     }
-  }
 
   def apply(id: String) = _coloring(id)
 

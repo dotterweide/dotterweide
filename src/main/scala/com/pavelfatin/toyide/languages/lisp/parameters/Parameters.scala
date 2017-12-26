@@ -77,7 +77,7 @@ object Parameters {
     case _ => false
   }
 
-  private def duplicatesIn[T](seq: Seq[T]): Seq[T] =
+  private def duplicatesIn[A](seq: Seq[A]): Seq[A] =
     seq.groupBy(identity).filter(_._2.size > 1).keys.toSeq
 
   private def error(message: String) = throw new MalformedParametersException(message)

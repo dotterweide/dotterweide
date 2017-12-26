@@ -18,13 +18,11 @@
 package com.pavelfatin.toyide
 
 trait Observable {
-  private var observers = List[() => Unit]()
+  private var observers = List.empty[() => Unit]
 
-  def onChange(action: => Unit): Unit = {
+  def onChange(action: => Unit): Unit =
     observers ::= (() => action)
-  }
 
-  def notifyObservers(): Unit = {
+  def notifyObservers(): Unit =
     observers.foreach(_())
-  }
 }

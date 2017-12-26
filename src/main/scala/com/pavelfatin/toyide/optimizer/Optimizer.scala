@@ -26,7 +26,7 @@ object Optimizer {
   }
 
   private def optimizationsIn(node: Node): Seq[(Node, String)] = node.optimized match {
-    case Some(s) => if (node.span.text == s) Seq.empty else Seq(node -> s)
-    case None => node.children.flatMap(optimizationsIn)
+    case Some(s)  => if (node.span.text == s) Seq.empty else Seq(node -> s)
+    case None     => node.children.flatMap(optimizationsIn)
   }
 }

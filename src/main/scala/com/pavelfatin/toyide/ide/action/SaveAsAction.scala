@@ -17,11 +17,13 @@
 
 package com.pavelfatin.toyide.ide.action
 
-import javax.swing.filechooser.FileNameExtensionFilter
 import java.io.File
 import javax.swing.KeyStroke
+import javax.swing.filechooser.FileNameExtensionFilter
+
 import com.pavelfatin.toyide.ide.EditorTab
-import swing.{Dialog, Component, FileChooser, Action}
+
+import scala.swing.{Action, Component, Dialog, FileChooser}
 
 class SaveAsAction(title0: String, mnemonic0: Char, shortcut: String,
                            parent: Component, tab: EditorTab) extends Action(title0) {
@@ -48,8 +50,8 @@ private object SaveAsAction {
             "File '%s' already exists.\nDo you want to overwrite it?".format(file.getName),
             "File already exists", Dialog.Options.YesNoCancel, Dialog.Message.Warning)
           result match {
-            case Dialog.Result.Yes => doSave(file, tab)
-            case Dialog.Result.No => performOn(tab, parent, Some(chooser.selectedFile))
+            case Dialog.Result.Yes    => doSave(file, tab)
+            case Dialog.Result.No     => performOn(tab, parent, Some(chooser.selectedFile))
             case Dialog.Result.Cancel =>
           }
         } else {

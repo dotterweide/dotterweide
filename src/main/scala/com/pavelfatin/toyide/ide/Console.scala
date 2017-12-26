@@ -17,8 +17,9 @@
 
 package com.pavelfatin.toyide.ide
 
-import com.pavelfatin.toyide.Output
 import java.awt.Color
+
+import com.pavelfatin.toyide.Output
 
 trait Console extends Output {
   def print(s: String, color: Color): Unit

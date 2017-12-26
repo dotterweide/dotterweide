@@ -18,6 +18,7 @@
 package com.pavelfatin.toyide.ide
 
 import java.io.File
+
 import com.pavelfatin.toyide.{FileType, Observable}
 
 trait EditorTab extends Observable {

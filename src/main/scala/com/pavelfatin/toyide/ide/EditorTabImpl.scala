@@ -17,20 +17,20 @@
 
 package com.pavelfatin.toyide.ide
 
-import com.pavelfatin.toyide.FileType
 import java.io.File
-import swing._
-import com.pavelfatin.toyide.editor.{History, Editor}
+
+import com.pavelfatin.toyide.FileType
+import com.pavelfatin.toyide.editor.{Editor, History}
+
+import scala.swing.{BorderPanel, Orientation, ScrollPane, SplitPane}
 
 private class EditorTabImpl(val fileType: FileType, val history: History,
                             primaryEditor: Editor, secondaryEditor: => Editor) extends BorderPanel with EditorTab {
+
   private val structure = new StructureTab(primaryEditor.data, primaryEditor.terminal)
-
-  private var _split = false
-
+  private var _split    = false
   private var _original = ""
-
-  private var _file: Option[File] = None
+  private var _file     = Option.empty[File]
 
   updateLayout()
 

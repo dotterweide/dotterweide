@@ -20,11 +20,8 @@ package com.pavelfatin.toyide.inspection
 abstract sealed class Decoration
 
 object Decoration {
-  case object Red extends Decoration
-
+  case object Red       extends Decoration
   case object Underline extends Decoration
-
-  case object Dim extends Decoration
-
-  case object Fill extends Decoration
+  case object Dim       extends Decoration
+  case object Fill      extends Decoration
 }

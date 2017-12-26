@@ -88,12 +88,11 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   def message: Option[String] = _message
 
-  protected def message_=(m: Option[String]): Unit = {
+  protected def message_=(m: Option[String]): Unit =
     if (_message != m) {
       _message = m
       notifyObservers()
     }
-  }
 
   def dispose(): Unit = {
     tooltipHandler.dispose()
@@ -123,9 +122,8 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     updateMessage()
   }
 
-  private def updateMessage(): Unit = {
+  private def updateMessage(): Unit =
     message = errorAt(terminal.offset).map(_.message)
-  }
 
   private var popupVisible = false
 
@@ -135,11 +133,10 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     point => document.toOffset(grid.toLocation(point)).flatMap(errorAt))
 
   private val timer = new Timer(500, new ActionListener() {
-    def actionPerformed(e: ActionEvent): Unit = {
+    def actionPerformed(e: ActionEvent): Unit =
       if (shouldDisplayCaret) {
         canvas.caretVisible = !canvas.caretVisible
       }
-    }
   })
 
   private def shouldDisplayCaret = Pane.isFocusOwner || popupVisible
@@ -225,23 +222,17 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
       updateCaret()
     }
 
-    override def mouseMoved(e: MouseEvent): Unit = {
+    override def mouseMoved(e: MouseEvent): Unit =
       controller.processMouseMoved(e)
-    }
   })
 
   Pane.addFocusListener(new FocusListener {
-    def focusGained(e: FocusEvent): Unit = {
-      updateCaret()
-    }
-
-    def focusLost(e: FocusEvent): Unit = {
-      updateCaret()
-    }
+    def focusGained (e: FocusEvent): Unit = updateCaret()
+    def focusLost   (e: FocusEvent): Unit = updateCaret()
   })
 
   private object MyTerminal extends AbstractTerminal {
-    def choose[T <: AnyRef](variants: Seq[T], query: String)(callback: T => Unit): Unit = {
+    def choose[A <: AnyRef](variants: Seq[A], query: String)(callback: A => Unit): Unit = {
       val point = toPoint(offset)
       val shifted = new Point(point.x - grid.cellSize.width * query.length - 3, point.y + 20)
       val (popup, list) = ChooserFactory.createPopup(Pane, shifted, NormalFont, variants, listRenderer) { it =>
@@ -275,13 +266,13 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     def getPreferredScrollableViewportSize: Dimension = getPreferredSize
 
     def getScrollableUnitIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int = orientation match {
-      case SwingConstants.VERTICAL => grid.cellSize.height
-      case SwingConstants.HORIZONTAL => grid.cellSize.width
+      case SwingConstants.VERTICAL    => grid.cellSize.height
+      case SwingConstants.HORIZONTAL  => grid.cellSize.width
     }
 
     def getScrollableBlockIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int = orientation match {
-      case SwingConstants.VERTICAL => visibleRect.height
-      case SwingConstants.HORIZONTAL => visibleRect.width
+      case SwingConstants.VERTICAL    => visibleRect.height
+      case SwingConstants.HORIZONTAL  => visibleRect.width
     }
 
     def getScrollableTracksViewportWidth: Boolean = getParent match {
@@ -294,16 +285,14 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
       case _ => false
     }
 
-    override def paintComponent(g: Graphics): Unit = {
+    override def paintComponent(g: Graphics): Unit =
       paintOn(g, painters.filterNot(_.immediate))
-    }
 
-    def paintImmediately(painters: Seq[Painter]): Unit = {
+    def paintImmediately(painters: Seq[Painter]): Unit =
       Option(getGraphics).foreach { graphics =>
         paintOn(graphics, painters)
         Toolkit.getDefaultToolkit.sync()
       }
-    }
 
     private def paintOn(g: Graphics, painters: Seq[Painter]): Unit = {
       val g2d = g.asInstanceOf[Graphics2D]

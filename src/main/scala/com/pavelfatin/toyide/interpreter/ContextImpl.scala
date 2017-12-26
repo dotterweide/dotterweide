@@ -21,19 +21,15 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class ContextImpl extends Context {
-  private val MaxFrames = 100
-
-  private var frames = List[Frame]()
-
+  private val MaxFrames   = 100
+  private var frames      = List[Frame]()
   private var allocations = List[ListBuffer[String]]()
+  private val heap        = mutable.Map[String, Value]()
 
-  private val heap = mutable.Map[String, Value]()
-
-  def get(local: Boolean, name: String): Value = {
+  def get(local: Boolean, name: String): Value =
     storage(local).getOrElse(name,
       throw new IllegalStateException(
         "%s value not found: %s".format(place(local), name)))
-  }
 
   def put(local: Boolean, name: String, value: Value): Unit = {
     storage(local).put(name, value) match {
@@ -47,7 +43,7 @@ class ContextImpl extends Context {
     scope.append(name)
   }
 
-  def update(local: Boolean, name: String, value: Value): Unit = {
+  def update(local: Boolean, name: String, value: Value): Unit =
     storage(local).put(name, value) match {
       case Some(previous) =>
         if (previous.valueType != value.valueType)
@@ -57,17 +53,15 @@ class ContextImpl extends Context {
         throw new IllegalStateException(
           "%s value not found: %s".format(place(local), name))
     }
-  }
 
   private def place(local: Boolean) = if (local) "Frame" else "Heap"
 
-  private def storage(local: Boolean) = {
+  private def storage(local: Boolean) =
     if (local)
       frames.headOption.map(_.values).getOrElse(throw new IllegalStateException(
         "No active frame"))
     else
       heap
-  }
 
   def inScope(action: => Unit): Unit = {
     allocations ::= ListBuffer()

@@ -17,9 +17,9 @@
 
 package com.pavelfatin.toyide.languages.toy.interpreter
 
-import com.pavelfatin.toyide.languages.toy.node._
-import com.pavelfatin.toyide.interpreter._
 import com.pavelfatin.toyide.Output
+import com.pavelfatin.toyide.interpreter._
+import com.pavelfatin.toyide.languages.toy.node._
 
 trait ReferenceToValueEvaluator extends ToyEvaluable { self: ReferenceToValue =>
   override def evaluate(context: Context, output: Output): Option[Value] = {

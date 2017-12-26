@@ -18,8 +18,8 @@
 package com.pavelfatin.toyide.editor
 
 import java.awt.Color
-import java.text.AttributedString
 import java.awt.font.TextAttribute
+import java.text.AttributedString
 
 case class Attributes(color: Color, background: Option[Color], weight: Weight, style: Style, underlined: Boolean) {
   def decorate(result: AttributedString, begin: Int, end: Int): Unit = {
@@ -40,15 +40,13 @@ case class Attributes(color: Color, background: Option[Color], weight: Weight, s
 abstract sealed class Weight
 
 object Weight {
-  case object Normal extends Weight
-
-  case object Bold extends Weight
+  case object Normal  extends Weight
+  case object Bold    extends Weight
 }
 
 abstract sealed class Style
 
 object Style {
-  case object Ordinary extends Style
-
-  case object Italic extends Style
+  case object Ordinary  extends Style
+  case object Italic    extends Style
 }

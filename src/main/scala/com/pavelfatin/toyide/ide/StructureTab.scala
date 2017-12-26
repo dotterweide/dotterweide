@@ -17,12 +17,14 @@
 
 package com.pavelfatin.toyide.ide
 
+import java.awt.event.{FocusAdapter, FocusEvent}
 import javax.swing.JTree
-import javax.swing.tree.DefaultTreeModel
 import javax.swing.event.{TreeSelectionEvent, TreeSelectionListener}
-import java.awt.event.{FocusEvent, FocusAdapter}
-import com.pavelfatin.toyide.editor.{Pass, DataEvent, Terminal, Data}
-import swing.{BorderPanel, Component}
+import javax.swing.tree.DefaultTreeModel
+
+import com.pavelfatin.toyide.editor.{Data, DataEvent, Pass, Terminal}
+
+import scala.swing.{BorderPanel, Component}
 
 private class StructureTab(data: Data, terminal: Terminal) extends BorderPanel {
   private val tree = new JTree()
@@ -41,9 +43,8 @@ private class StructureTab(data: Data, terminal: Terminal) extends BorderPanel {
   }
 
   tree.addTreeSelectionListener(new TreeSelectionListener() {
-    def valueChanged(e: TreeSelectionEvent): Unit = {
+    def valueChanged(e: TreeSelectionEvent): Unit =
       updateTreeHighlight()
-    }
   })
 
   tree.addFocusListener(new FocusAdapter() {

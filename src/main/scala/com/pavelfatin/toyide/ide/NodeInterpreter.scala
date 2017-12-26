@@ -17,10 +17,11 @@
 
 package com.pavelfatin.toyide.ide
 
-import com.pavelfatin.toyide.editor.Runner
-import com.pavelfatin.toyide.node.Node
-import com.pavelfatin.toyide.interpreter.{EvaluationException, ContextImpl}
 import java.awt.Color
+
+import com.pavelfatin.toyide.editor.Runner
+import com.pavelfatin.toyide.interpreter.{ContextImpl, EvaluationException}
+import com.pavelfatin.toyide.node.Node
 
 private class NodeInterpreter(console: Console) extends Runner {
   private val ErrorColor = new Color(127, 0, 0)

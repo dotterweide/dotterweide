@@ -17,11 +17,11 @@
 
 package com.pavelfatin.toyide
 
-import editor.{Adviser, Coloring}
-import formatter.Format
-import inspection.Inspection
-import lexer.{TokenKind, Lexer}
-import parser.Parser
+import com.pavelfatin.toyide.editor.{Adviser, Coloring}
+import com.pavelfatin.toyide.formatter.Format
+import com.pavelfatin.toyide.inspection.Inspection
+import com.pavelfatin.toyide.lexer.{Lexer, TokenKind}
+import com.pavelfatin.toyide.parser.Parser
 
 /** Access to a programming language, including description, lexer, parser, etc. */
 trait Language {

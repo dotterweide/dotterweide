@@ -45,7 +45,7 @@ object Library {
     library
   }
 
-  private def exclusively[T](default: => T)(create: => T): T = {
+  private def exclusively[A](default: => A)(create: => A): A = {
     if (busy) default else {
       busy = true
       val result = create
@@ -57,10 +57,10 @@ object Library {
   private def createLibrary(): Library = {
     val environment = new EnvironmentImpl()
 
-    initialize(environment, "Core", CoreCode)
-    initialize(environment, "Function", FunctionCode)
+    initialize(environment, "Core"      , CoreCode)
+    initialize(environment, "Function"  , FunctionCode)
     initialize(environment, "Arithmetic", ArithmeticCode)
-    initialize(environment, "List", ListCode)
+    initialize(environment, "List"      , ListCode)
 
     new Library(environment.globals.toMap)
   }

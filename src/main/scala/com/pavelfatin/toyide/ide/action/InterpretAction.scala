@@ -17,10 +17,12 @@
 
 package com.pavelfatin.toyide.ide.action
 
-import swing.Action
 import javax.swing.KeyStroke
-import com.pavelfatin.toyide.editor.{Runner, Data}
+
+import com.pavelfatin.toyide.editor.{Data, Runner}
 import com.pavelfatin.toyide.ide.{Console, Launcher}
+
+import scala.swing.Action
 
 class InterpretAction(title0: String, mnemonic0: Char, shortcut: String, data: Data,
                       interpreter: Runner, launcher: Launcher, console: Console) extends Action(title0) {

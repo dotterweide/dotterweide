@@ -17,13 +17,15 @@
 
 package com.pavelfatin.toyide.ide.action
 
-import com.pavelfatin.toyide.compiler.Assembler
-import com.pavelfatin.toyide.editor.Data
-import swing.{Component, FileChooser, Action}
+import java.io.{File, FileOutputStream}
 import javax.swing.JOptionPane
 import javax.swing.filechooser.FileNameExtensionFilter
+
+import com.pavelfatin.toyide.compiler.Assembler
+import com.pavelfatin.toyide.editor.Data
 import com.pavelfatin.toyide.node.Node
-import java.io.{File, FileOutputStream}
+
+import scala.swing.{Action, Component, FileChooser}
 
 class ExportToClassAction(title0: String, mnemonic0: Char, data: Data, parent: Component) extends Action(title0) {
   mnemonic = mnemonic0
@@ -52,8 +54,8 @@ class ExportToClassAction(title0: String, mnemonic0: Char, data: Data, parent: C
     val (name, path) = if (file.getName.endsWith(".class")) (file.getName.dropRight(6), file.getPath)
       else (file.getName, "%s.class".format(file.getPath))
 
-    val bytecode = Assembler.assemble(root, name)
-    val stream = new FileOutputStream(path)
+    val bytecode  = Assembler.assemble(root, name)
+    val stream    = new FileOutputStream(path)
     try {
       stream.write(bytecode)
       stream.flush()

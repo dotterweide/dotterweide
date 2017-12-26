@@ -20,15 +20,10 @@ package com.pavelfatin.toyide.formatter
 abstract class Distance
 
 object Distance {
-  case object Joint extends Distance
-
-  case object Space extends Distance
-
-  case class Spaces(n: Int) extends Distance
-
-  case object Lines extends Distance
-
-  case class Lines(n: Int) extends Distance
-
-  case object LinesOrSpace extends Distance
+  case object Joint           extends Distance
+  case object Space           extends Distance
+  case class  Spaces(n: Int)  extends Distance
+  case object Lines           extends Distance
+  case class  Lines(n: Int)   extends Distance
+  case object LinesOrSpace    extends Distance
 }

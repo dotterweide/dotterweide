@@ -18,45 +18,26 @@
 package com.pavelfatin.toyide.editor
 
 trait EditorActions {
-  def complete: AnAction
-
-  def copy: AnAction
-
-  def cut: AnAction
-
-  def duplicateLine: AnAction
-
-  def escape: AnAction
-
-  def format: AnAction
-
-  def gotoDeclaration: AnAction
-
-  def indentSelection: AnAction
-
-  def moveLineDown: AnAction
-
-  def moveLineUp: AnAction
-
-  def optimize: AnAction
-
-  def paste: AnAction
-
-  def redo: AnAction
-
-  def removeLine: AnAction
-
-  def rename: AnAction
-
-  def selectAll: AnAction
-
-  def showUsages: AnAction
-
-  def toggleLineComment: AnAction
-
-  def undo: AnAction
-
-  def unindentSelection: AnAction
+  def complete          : AnAction
+  def copy              : AnAction
+  def cut               : AnAction
+  def duplicateLine     : AnAction
+  def escape            : AnAction
+  def format            : AnAction
+  def gotoDeclaration   : AnAction
+  def indentSelection   : AnAction
+  def moveLineDown      : AnAction
+  def moveLineUp        : AnAction
+  def optimize          : AnAction
+  def paste             : AnAction
+  def redo              : AnAction
+  def removeLine        : AnAction
+  def rename            : AnAction
+  def selectAll         : AnAction
+  def showUsages        : AnAction
+  def toggleLineComment : AnAction
+  def undo              : AnAction
+  def unindentSelection : AnAction
 
   def all: Seq[AnAction] = List(
     complete,

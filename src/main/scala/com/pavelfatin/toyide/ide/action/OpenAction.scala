@@ -17,10 +17,12 @@
 
 package com.pavelfatin.toyide.ide.action
 
-import swing.{Component, FileChooser, Action}
-import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.KeyStroke
+import javax.swing.filechooser.FileNameExtensionFilter
+
 import com.pavelfatin.toyide.ide.EditorTab
+
+import scala.swing.{Action, Component, FileChooser}
 
 class OpenAction(title0: String, mnemonic0: Char, shortcut: String,
                          parent: Component, tab: EditorTab) extends Action(title0) {

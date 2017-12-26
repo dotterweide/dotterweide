@@ -17,10 +17,11 @@
 
 package com.pavelfatin.toyide.ide
 
+import java.awt.Color
+
+import com.pavelfatin.toyide.compiler._
 import com.pavelfatin.toyide.editor.Runner
 import com.pavelfatin.toyide.node.Node
-import com.pavelfatin.toyide.compiler._
-import java.awt.Color
 
 private class NodeInvoker(console: Console) extends Runner {
   private val ErrorColor = new Color(127, 0, 0)

@@ -18,13 +18,13 @@
 package com.pavelfatin.toyide.ide
 
 import java.awt.{Desktop, Graphics}
-import javax.swing.border._
-import javax.swing.event._
-import javax.swing.text._
-import javax.swing.text.html._
-import javax.swing.{Action => _, _}
+import javax.swing.border.{CompoundBorder, EmptyBorder, EtchedBorder}
+import javax.swing.event.{HyperlinkEvent, HyperlinkListener}
+import javax.swing.text.html.{HTMLEditorKit, ImageView}
+import javax.swing.text.{AbstractDocument, Element, View, ViewFactory}
+import javax.swing.{JComponent, KeyStroke, WindowConstants}
 
-import scala.swing._
+import scala.swing.{Action, BorderPanel, Button, Dialog, Dimension, EditorPane, Insets, ScrollPane, Window}
 
 private class InfoDialog(owner: Window, file: String, scrolling: Boolean) extends Dialog(owner) {
   modal = true
@@ -32,8 +32,10 @@ private class InfoDialog(owner: Window, file: String, scrolling: Boolean) extend
 
   private val pane = new EditorPane() {
     focusable = false
-    val spacer = new EmptyBorder(5, 10, 10, 10)
-    border = if (scrolling) spacer else new CompoundBorder(new EtchedBottomBorder(), spacer)
+    border = {
+      val spacer = new EmptyBorder(5, 10, 10, 10)
+      if (scrolling) spacer else new CompoundBorder(new EtchedBottomBorder(), spacer)
+    }
     editorKit = new SynchronousHTMLEditorKit()
     peer.addHyperlinkListener(new LinkRedirector())
     peer.setPage(getClass.getResource("/%s".format(file)))
@@ -41,9 +43,7 @@ private class InfoDialog(owner: Window, file: String, scrolling: Boolean) extend
   }
 
   private val action = new Action("OK") {
-    def apply(): Unit = {
-      dispose()
-    }
+    def apply(): Unit = dispose()
   }
 
   private val button = new Button(action) {
@@ -81,21 +81,20 @@ private class EtchedBottomBorder extends EtchedBorder {
   override def getBorderInsets(c: java.awt.Component) = new Insets(0, 0, 2, 0)
 
   override def getBorderInsets(c: java.awt.Component, insets: java.awt.Insets): Insets = {
-    insets.left = 0
-    insets.top = 0
-    insets.right = 0
+    insets.left   = 0
+    insets.top    = 0
+    insets.right  = 0
     insets.bottom = 2
     insets
   }
 }
 
 private class LinkRedirector extends HyperlinkListener {
-  def hyperlinkUpdate(event: HyperlinkEvent): Unit = {
+  def hyperlinkUpdate(event: HyperlinkEvent): Unit =
     event.getEventType match {
       case HyperlinkEvent.EventType.ACTIVATED => Desktop.getDesktop.browse(event.getURL.toURI)
       case _ =>
     }
-  }
 }
 
 private class SynchronousHTMLEditorKit extends HTMLEditorKit {
@@ -109,12 +108,11 @@ private class SynchronousHTMLEditorKit extends HTMLEditorKit {
 }
 
 private class SynchronousImageViewFactory(impl: ViewFactory) extends ViewFactory {
-  def create(elem: Element): View = {
+  def create(elem: Element): View =
     impl.create(elem) match {
       case iv: ImageView =>
         iv.setLoadsSynchronously(true)
         iv
       case it => it
     }
-  }
 }
