@@ -30,7 +30,7 @@ class TreeBuilder(input: Iterator[Token]) {
 
   private var regions = List(new MyRegion(headSpan))
 
-  if(hasNext) {
+  if (hasNext) {
     advance()
   }
 
@@ -43,7 +43,7 @@ class TreeBuilder(input: Iterator[Token]) {
   }
 
   def consume(kinds: TokenKind*): Unit = {
-    if(matches(kinds: _*))
+    if (matches(kinds: _*))
       consume()
     else
       error("Expected %s".format(kinds.map(_.name).mkString(", ")))
@@ -51,23 +51,23 @@ class TreeBuilder(input: Iterator[Token]) {
 
   def consume(): Unit = {
     val token = head.getOrElse(throw new NoSuchTokenException())
-    if(regions.tail.isEmpty) throw new ConsumeWithoutRegionException()
+    if (regions.tail.isEmpty) throw new ConsumeWithoutRegionException()
     regions.head.add(NodeImpl.createLeaf(token))
     advance()
   }
 
   def grasp(kinds: TokenKind*): Boolean = {
     val matched = matches(kinds: _*)
-    if(matched) consume()
+    if (matched) consume()
     matched
   }
 
   def error(message: String): Unit = {
     val region = regions.head
 
-    if(region.hasProblem) return
+    if (region.hasProblem) return
 
-    if(isEOF) {
+    if (isEOF) {
       val span = Span(headSpan.source, headSpan.end, headSpan.end)
       region.add(NodeImpl.createError(None, span, message))
     } else {
@@ -82,17 +82,17 @@ class TreeBuilder(input: Iterator[Token]) {
   private def hasNext = in.hasNext
 
   def advance(): Unit = {
-    head = if(hasNext) Some(in.next()) else None
+    head = if (hasNext) Some(in.next()) else None
     head.foreach { token =>
       headSpan = token.span
     }
   }
 
   def tree: NodeImpl = {
-    if(regions.tail.nonEmpty) throw new UnclosedRegionException
+    if (regions.tail.nonEmpty) throw new UnclosedRegionException
     val nodes = regions.head.nodes
     val root = nodes.headOption.getOrElse(throw new NoRootNodeException)
-    if(nodes.tail.nonEmpty) throw new MultipleRootNodesException()
+    if (nodes.tail.nonEmpty) throw new MultipleRootNodesException()
     root
   }
 
@@ -137,11 +137,11 @@ class TreeBuilder(input: Iterator[Token]) {
     }
 
     private def capture(node: NodeImpl, collapseHolderNode: Boolean = false)(f: Seq[NodeImpl] => Seq[NodeImpl]): Unit = {
-      if(closed) throw new MultipleClosingException
-      if(!this.eq(regions.head)) throw new IncorrectRegionsOrderException
+      if (closed) throw new MultipleClosingException
+      if (!this.eq(regions.head)) throw new IncorrectRegionsOrderException
       regions = regions.tail
-      val children = if(collapseHolderNode && nodes.size == 1) nodes.head else {
-        if(entries.isEmpty)
+      val children = if (collapseHolderNode && nodes.size == 1) nodes.head else {
+        if (entries.isEmpty)
           node.span = tokenSpan.leftEdge
         else
           node.children = f(nodes)
@@ -152,7 +152,7 @@ class TreeBuilder(input: Iterator[Token]) {
     }
 
     def add(node: NodeImpl): Unit = {
-      if(closed) throw new RuntimeException("Unable to add node to closed region")
+      if (closed) throw new RuntimeException("Unable to add node to closed region")
       entries ::= node
     }
 

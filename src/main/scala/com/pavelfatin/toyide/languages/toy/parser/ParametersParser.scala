@@ -25,7 +25,7 @@ object ParametersParser extends Parser {
   def parse(in: TreeBuilder): Unit = {
     in.capturing(new Parameters()) {
       in.consume(LPAREN)
-      if(!in.isEOF && !in.matches(RPAREN)) {
+      if (!in.isEOF && !in.matches(RPAREN)) {
         ParameterParser.parse(in)
         while (in.grasp(COMMA)) ParameterParser.parse(in)
       }

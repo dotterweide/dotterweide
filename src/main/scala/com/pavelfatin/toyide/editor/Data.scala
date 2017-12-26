@@ -17,10 +17,10 @@
 
 package com.pavelfatin.toyide.editor
 
-import com.pavelfatin.toyide.node.Node
-import com.pavelfatin.toyide.lexer.Token
-import com.pavelfatin.toyide.{Interval, ObservableEvents}
 import com.pavelfatin.toyide.inspection.Decoration
+import com.pavelfatin.toyide.lexer.Token
+import com.pavelfatin.toyide.node.Node
+import com.pavelfatin.toyide.{Interval, ObservableEvents}
 
 trait Data extends ObservableEvents[DataEvent] {
   def text: String
@@ -49,11 +49,8 @@ case class Error(interval: Interval, message: String, decoration: Decoration = D
 sealed abstract class Pass(val next: Option[Pass])
 
 object Pass {
-  case object Text extends Pass(Some(Lexer))
-
-  case object Lexer extends Pass(Some(Parser))
-
-  case object Parser extends Pass(Some(Inspections))
-
+  case object Text        extends Pass(Some(Lexer))
+  case object Lexer       extends Pass(Some(Parser))
+  case object Parser      extends Pass(Some(Inspections))
   case object Inspections extends Pass(None)
 }

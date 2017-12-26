@@ -86,14 +86,14 @@ object ExpressionParser extends Parser {
           in.consume(RPAREN)
         }
       } else {
-        if(in.matches(IDENT)) {
-          if(in.ahead(LPAREN))
+        if (in.matches(IDENT)) {
+          if (in.ahead(LPAREN))
             CallExpressionParser.parse(in)
           else in.capturing(new ReferenceToValue()) {
             in.consume(IDENT)
           }
         } else {
-          if(in.matches(NUMBER_LITERAL, STRING_LITERAL, BOOLEAN_LITERAL)) {
+          if (in.matches(NUMBER_LITERAL, STRING_LITERAL, BOOLEAN_LITERAL)) {
             in.capturing(new Literal()) {
               in.consume()
             }

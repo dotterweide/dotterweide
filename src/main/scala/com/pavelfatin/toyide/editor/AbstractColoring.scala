@@ -19,7 +19,6 @@ package com.pavelfatin.toyide.editor
 
 import java.awt.Color
 
-
 abstract class AbstractColoring(colors: Map[String, Color]) extends Coloring {
   def apply(id: String): Color = colors.getOrElse(id,
     throw new NoSuchElementException("Unknown color ID: " + id))

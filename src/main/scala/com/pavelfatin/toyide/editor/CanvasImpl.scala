@@ -17,44 +17,36 @@
 
 package com.pavelfatin.toyide.editor
 
-import java.awt.event._
+import java.awt.event.{AdjustmentEvent, AdjustmentListener, ComponentAdapter, ComponentEvent, FocusEvent, FocusListener, HierarchyEvent, HierarchyListener}
 import java.awt.{Dimension, Rectangle}
-import javax.swing.{JScrollPane, JComponent}
+import javax.swing.{JComponent, JScrollPane}
 
 private class CanvasImpl(component: JComponent, scrollPane: JScrollPane) extends Canvas {
   private var _caretVisible = false
 
   component.addHierarchyListener(new HierarchyListener {
-    override def hierarchyChanged(e: HierarchyEvent): Unit = {
+    override def hierarchyChanged(e: HierarchyEvent): Unit =
       if ((e.getChangeFlags & HierarchyEvent.SHOWING_CHANGED) > 0) {
         notifyObservers(VisibilityChanged(component.isShowing))
       }
-    }
   })
 
   private val scrollListener = new AdjustmentListener {
-    def adjustmentValueChanged(e: AdjustmentEvent): Unit = {
+    def adjustmentValueChanged(e: AdjustmentEvent): Unit =
       notifyObservers(VisibleRectangleChanged(component.getVisibleRect))
-    }
   }
 
-  scrollPane.getVerticalScrollBar.addAdjustmentListener(scrollListener)
-  scrollPane.getHorizontalScrollBar.addAdjustmentListener(scrollListener)
+  scrollPane.getVerticalScrollBar   .addAdjustmentListener(scrollListener)
+  scrollPane.getHorizontalScrollBar .addAdjustmentListener(scrollListener)
 
   component.addComponentListener(new ComponentAdapter {
-    override def componentResized(e: ComponentEvent): Unit = {
+    override def componentResized(e: ComponentEvent): Unit =
       notifyObservers(VisibleRectangleChanged(component.getVisibleRect))
-    }
   })
 
   component.addFocusListener(new FocusListener {
-    def focusGained(e: FocusEvent): Unit = {
-      notifyObservers(FocusChanged(true))
-    }
-
-    def focusLost(e: FocusEvent): Unit = {
-      notifyObservers(FocusChanged(false))
-    }
+    def focusGained (e: FocusEvent): Unit = notifyObservers(FocusChanged(true ))
+    def focusLost   (e: FocusEvent): Unit = notifyObservers(FocusChanged(false))
   })
 
   def size: Dimension = component.getSize
@@ -67,10 +59,9 @@ private class CanvasImpl(component: JComponent, scrollPane: JScrollPane) extends
 
   def caretVisible: Boolean = _caretVisible
 
-  def caretVisible_=(b: Boolean): Unit = {
+  def caretVisible_=(b: Boolean): Unit =
     if (_caretVisible != b) {
       _caretVisible = b
       notifyObservers(CaretVisibilityChanged(b))
     }
-  }
 }

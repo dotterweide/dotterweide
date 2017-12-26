@@ -55,7 +55,7 @@ private class LinedString private (val lines: List[CharSequence]) extends CharSe
   }
 
   private def replace(start: Int, end: Int, lines: List[CharSequence]): List[CharSequence] = {
-    val left = subLines(0, start)
+    val left  = subLines(0, start)
     val right = subLines(end, length)
     join(join(left, lines), right)
   }
@@ -84,13 +84,12 @@ private object LinedString {
       }
   }
 
-  private def join(prefix: List[CharSequence], suffix: List[CharSequence]): List[CharSequence] = {
+  private def join(prefix: List[CharSequence], suffix: List[CharSequence]): List[CharSequence] =
     (prefix.reverse, suffix) match {
       case (pLast :: pInitReversed, sHead :: sTail) =>
         pInitReversed.reverse ::: List(pLast.toString + sHead.toString) ::: sTail
       case _ => prefix ::: suffix
     }
-  }
 
   private def wrapsIn(lines: List[CharSequence], offset: Int): List[Int] = lines match {
     case Nil => throw new IllegalArgumentException()

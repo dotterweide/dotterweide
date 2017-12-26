@@ -22,9 +22,8 @@ import com.pavelfatin.toyide.Interval
 import com.pavelfatin.toyide.editor.{AnAction, Terminal}
 
 private class SelectAll(document: Document, terminal: Terminal) extends AnAction {
-  def keys = List("ctrl pressed A")
+  def keys: Seq[String] = List("ctrl pressed A")
 
-  def apply(): Unit = {
+  def apply(): Unit =
     terminal.selection = Some(Interval(0, document.length))
-  }
 }

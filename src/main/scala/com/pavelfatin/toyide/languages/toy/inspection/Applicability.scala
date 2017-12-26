@@ -53,7 +53,7 @@ object Applicability extends Inspection {
     }
 
     val missedMark = call.rightBrace.flatMap { brace =>
-      if(missed.isEmpty) None else
+      if (missed.isEmpty) None else
         Some(Mark(brace, Missed(function.name, missed.flatMap(_.id).map(_.span.text).mkString(", "))))
     }
 

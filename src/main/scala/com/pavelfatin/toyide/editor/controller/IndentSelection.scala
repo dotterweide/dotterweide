@@ -24,11 +24,11 @@ import com.pavelfatin.toyide.Interval
 private class IndentSelection(document: Document, terminal: Terminal, tabSize: Int) extends AnAction with Repeater {
   repeat(document, terminal)
 
-  def keys = List("pressed TAB")
+  def keys: Seq[String] = List("pressed TAB")
 
   override def enabled: Boolean = terminal.selection.isDefined
 
-  def apply(): Unit = {
+  def apply(): Unit =
     terminal.selection.foreach { it =>
       val selection = if (document.toLocation(it.end).indent == 0) it.withEndShift(-1) else it
       val beginLine = document.lineNumberOf(selection.begin)
@@ -44,5 +44,4 @@ private class IndentSelection(document: Document, terminal: Terminal, tabSize: I
       terminal.offset += increment
       terminal.selection = Some(it.withEndShift(increment))
     }
-  }
 }

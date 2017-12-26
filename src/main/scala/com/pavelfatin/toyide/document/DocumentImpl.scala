@@ -26,9 +26,8 @@ class DocumentImpl(s: String = "") extends Document {
 
   def text: String = ls.toString
 
-  def text_=(s: String): Unit = {
+  def text_=(s: String): Unit =
     replace(0, length, s)
-  }
 
   def characters: CharSequence = ls
 
@@ -59,15 +58,14 @@ class DocumentImpl(s: String = "") extends Document {
     anchors.foreach(_.update(begin, end, end2))
   }
 
-  private def check(offset: Int, parameter: String = "Offset"): Unit = {
-    if(offset < 0 || offset > length)
+  private def check(offset: Int, parameter: String = "Offset"): Unit =
+    if (offset < 0 || offset > length)
       throw new IndexOutOfBoundsException("%s (%d) must be withing [%d; %d]".format(parameter, offset, 0, length))
-  }
 
   private def check(begin: Int, end: Int): Unit = {
     check(begin, "Begin")
     check(end, "End")
-    if(begin > end)
+    if (begin > end)
       throw new IllegalArgumentException("Begin (%d) must be not greater than end (%d)".format(begin, end))
   }
 
@@ -80,17 +78,15 @@ class DocumentImpl(s: String = "") extends Document {
   protected def wraps: Seq[Int] = ls.wraps
 
   private class AnchorImpl(var offset: Int, bias: Bias) extends Anchor {
-    def dispose(): Unit = {
+    def dispose(): Unit =
       anchors = anchors.diff(Seq(this))
-    }
 
-    def update(begin: Int, end: Int, end2: Int): Unit = {
+    def update(begin: Int, end: Int, end2: Int): Unit =
       if (begin < offset && end <= offset) {
         offset += end2 - end
       } else if ((begin < offset && offset < end && end2 < offset) ||
         (begin == end && begin == offset && bias == Bias.Right)) {
         offset = end2
       }
-    }
   }
 }

@@ -20,7 +20,7 @@ package com.pavelfatin.toyide.editor.controller
 import com.pavelfatin.toyide.editor.{AnAction, Terminal, Data}
 
 private class ShowUsages(terminal: Terminal, data: Data) extends AnAction {
-  def keys = List("shift ctrl pressed F7")
+  def keys: Seq[String] = List("shift ctrl pressed F7")
 
   def apply(): Unit = {
     data.compute()

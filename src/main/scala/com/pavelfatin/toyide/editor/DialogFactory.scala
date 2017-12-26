@@ -17,10 +17,10 @@
 
 package com.pavelfatin.toyide.editor
 
-import javax.swing._
-import border.EmptyBorder
-import java.awt.{FlowLayout, BorderLayout, Frame}
-import java.awt.event.{KeyEvent, ActionEvent, WindowEvent, WindowAdapter}
+import java.awt.event.{ActionEvent, KeyEvent, WindowAdapter, WindowEvent}
+import java.awt.{BorderLayout, FlowLayout, Frame}
+import javax.swing.border.EmptyBorder
+import javax.swing.{AbstractAction, Box, JButton, JComponent, JDialog, JPanel, JTextField, KeyStroke, WindowConstants}
 
 private object DialogFactory {
   def create(owner: JComponent, text: String, title: String)(callback: Option[String] => Unit): JDialog = {
@@ -49,8 +49,8 @@ private object DialogFactory {
       }
     }
 
-    val ok = new JButton(OkAction)
-    val cancel = new JButton(CancelAction)
+    val ok      = new JButton(OkAction)
+    val cancel  = new JButton(CancelAction)
 
     val buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0))
     buttons.add(ok)

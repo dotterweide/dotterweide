@@ -22,11 +22,9 @@ import com.pavelfatin.toyide.document.{Document, DocumentImpl}
 
 object EditorFactory {
   def createEditorFor(language: Language, history: History, coloring: Coloring): Editor = {
-    val document = new DocumentImpl()
-
-    val data = new DataImpl(document, language.lexer, language.parser, language.inspections)
-
-    val holder = new ErrorHolderImpl(document, data)
+    val document  = new DocumentImpl()
+    val data      = new DataImpl(document, language.lexer, language.parser, language.inspections)
+    val holder    = new ErrorHolderImpl(document, data)
 
     createEditorFor(document, data, holder, language, history, coloring)
   }
@@ -34,9 +32,8 @@ object EditorFactory {
   def createEditorFor(document: Document, data: Data, holder: ErrorHolder, language: Language,
                       history: History, coloring: Coloring): Editor = {
 
-    val listRenderer = new VariantCellRenderer(language.lexer, coloring)
-
-    val matcher = new BraceMatcherImpl(language.complements)
+    val listRenderer  = new VariantCellRenderer(language.lexer, coloring)
+    val matcher       = new BraceMatcherImpl(language.complements)
 
     new EditorImpl(document, data, holder, language.lexer, coloring, matcher, language.format,
       language.adviser, listRenderer, language.comment, history)

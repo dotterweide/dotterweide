@@ -17,14 +17,14 @@
 
 package com.pavelfatin.toyide.editor
 
+import java.awt.event.{ActionEvent, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent}
+import java.awt.{Color, Font, Point}
 import javax.swing.border.LineBorder
-import java.awt.{Point, Font, Color}
-import javax.swing._
-import java.awt.event._
+import javax.swing.{AbstractAction, JComponent, JList, JScrollPane, ListCellRenderer, Popup, PopupFactory}
 
 private object ChooserFactory {
-  def createPopup[T <: AnyRef](parent: JComponent, point: Point, font: Font, variants: Seq[T], renderer: ListCellRenderer[AnyRef])
-                              (callback: Option[T] => Unit): (Popup, JList[AnyRef]) = {
+  def createPopup[A <: AnyRef](parent: JComponent, point: Point, font: Font, variants: Seq[A], renderer: ListCellRenderer[AnyRef])
+                              (callback: Option[A] => Unit): (Popup, JList[AnyRef]) = {
     val list = createList(variants, font)
 
     list.setCellRenderer(renderer)
@@ -50,7 +50,7 @@ private object ChooserFactory {
           popup.hide()
         }
         if (e.getKeyChar == KeyEvent.VK_ENTER) {
-          callback(Some(list.getSelectedValue.asInstanceOf[T]))
+          callback(Some(list.getSelectedValue.asInstanceOf[A]))
           popup.hide()
         }
       }

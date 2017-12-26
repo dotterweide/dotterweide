@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.node.{IdentifiedNode, Node}
 import com.pavelfatin.toyide.editor.{AnAction, Terminal, Data}
 
 private class GotoDeclaration(terminal: Terminal, data: Data) extends AnAction {
-  def keys = List("ctrl pressed B")
+  def keys: Seq[String] = List("ctrl pressed B")
 
   def apply(): Unit = {
     data.compute()

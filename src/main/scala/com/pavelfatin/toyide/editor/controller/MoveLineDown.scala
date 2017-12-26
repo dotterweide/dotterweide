@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.editor.{AnAction, Terminal}
 private class MoveLineDown(document: Document, terminal: Terminal) extends AnAction with Repeater {
   repeat(document, terminal)
 
-  def keys = List("shift ctrl pressed DOWN")
+  def keys: Seq[String] = List("shift ctrl pressed DOWN")
 
   override def enabled: Boolean = document.lineNumberOf(terminal.offset) < document.linesCount - 1
 

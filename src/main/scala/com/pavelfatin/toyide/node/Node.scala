@@ -106,18 +106,18 @@ trait Node extends Evaluable with Translatable with Optimizable {
     def indent(s: String, level: Int) =
       s.split("\n").map(Array.fill(level)("  ").mkString + _).mkString("\n")
 
-    val prefix = if(problem.isDefined) "error: " else ""
+    val prefix = if (problem.isDefined) "error: " else ""
 
-    if(isLeaf)
+    if (isLeaf)
       prefix + token.get.toString
     else
       prefix + kind + "\n" + children.map(n => indent(n.content, 1)).mkString("\n")
   }
 
   override def toString: String = {
-    val prefix = if(problem.isDefined) "error: " else ""
+    val prefix = if (problem.isDefined) "error: " else ""
 
-    if(isLeaf)
+    if (isLeaf)
       prefix + token.get.toString
     else
       prefix + kind

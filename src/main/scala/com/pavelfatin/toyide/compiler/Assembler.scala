@@ -17,9 +17,10 @@
 
 package com.pavelfatin.toyide.compiler
 
-import jasmin.ClassFile
 import java.io.{ByteArrayOutputStream, StringReader}
+
 import com.pavelfatin.toyide.node.Node
+import jasmin.ClassFile
 
 object Assembler {
   def assemble(root: Node, name: String): Array[Byte] = {

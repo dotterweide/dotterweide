@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.editor._
 
 private class Complete(document: Document, terminal: Terminal, data: Data,
                        adviser: Adviser, history: History) extends AnAction {
-  def keys = List("ctrl pressed SPACE")
+  def keys: Seq[String] = List("ctrl pressed SPACE")
 
   def apply(): Unit = {
     terminal.selection = None
@@ -32,11 +32,14 @@ private class Complete(document: Document, terminal: Terminal, data: Data,
     data.compute()
     val structure = data.structure
     document.remove(terminal.offset, terminal.offset + label.length)
-    for (root <- structure;
-         anchor <- root.elements.find(it => it.isLeaf && it.span.text.contains(label))) {
-      val variants = adviser.variants(root, anchor)
-      val query = document.text(anchor.span.begin, terminal.offset)
-      val filtered = variants.filter(_.content.startsWith(query))
+
+    for {
+      root    <- structure
+      anchor  <- root.elements.find(it => it.isLeaf && it.span.text.contains(label))
+    } {
+      val variants  = adviser.variants(root, anchor)
+      val query     = document.text(anchor.span.begin, terminal.offset)
+      val filtered  = variants.filter(_.content.startsWith(query))
       filtered match {
         case Seq() =>
         case Seq(single) => history.recording(document, terminal) {

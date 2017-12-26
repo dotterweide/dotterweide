@@ -26,13 +26,13 @@ case class Attributes(color: Color, background: Option[Color], weight: Weight, s
     result.addAttribute(TextAttribute.FOREGROUND, color, begin, end)
     background.foreach(it => result.addAttribute(TextAttribute.BACKGROUND, it, begin, end))
 
-    if(underlined)
+    if (underlined)
       result.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON, begin, end)
 
-    if(weight == Weight.Bold)
+    if (weight == Weight.Bold)
       result.addAttribute(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD, begin, end)
 
-    if(style == Style.Italic)
+    if (style == Style.Italic)
       result.addAttribute(TextAttribute.POSTURE, TextAttribute.POSTURE_OBLIQUE, begin, end)
   }
 }

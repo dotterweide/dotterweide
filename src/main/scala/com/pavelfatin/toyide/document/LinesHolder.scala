@@ -27,35 +27,35 @@ trait LinesHolder {
   def linesCount: Int = wraps.size + 1
 
   def lineNumberOf(offset: Int): Int = {
-    if(offset < 0 || offset > length) throw new IndexOutOfBoundsException()
+    if (offset < 0 || offset > length) throw new IndexOutOfBoundsException()
     wraps.view.takeWhile(_ < offset).size
   }
 
   def startOffsetOf(line: Int): Int = {
-    if(line < 0 || line >= linesCount) throw new IndexOutOfBoundsException()
-    if(line == 0) 0 else wraps(line - 1) + 1
+    if (line < 0 || line >= linesCount) throw new IndexOutOfBoundsException()
+    if (line == 0) 0 else wraps(line - 1) + 1
   }
 
   def endOffsetOf(line: Int): Int = {
-    if(line < 0 || line >= linesCount) throw new IndexOutOfBoundsException()
-    if(line == wraps.size) length else wraps(line)
+    if (line < 0 || line >= linesCount) throw new IndexOutOfBoundsException()
+    if (line == wraps.size) length else wraps(line)
   }
 
   def intervalOf(line: Int): Interval = {
-    if(line < 0 || line >= linesCount) throw new IndexOutOfBoundsException()
+    if (line < 0 || line >= linesCount) throw new IndexOutOfBoundsException()
     Interval(startOffsetOf(line), endOffsetOf(line))
   }
 
   def toLocation(offset: Int): Location = {
-    if(offset < 0 || offset > length) throw new IndexOutOfBoundsException()
+    if (offset < 0 || offset > length) throw new IndexOutOfBoundsException()
     val line = lineNumberOf(offset)
     Location(line, offset - startOffsetOf(line))
   }
 
   def toOffset(location: Location): Option[Int] = {
-    if(location.line >= linesCount) return None
+    if (location.line >= linesCount) return None
     val offset = startOffsetOf(location.line) + location.indent
-    if(offset <= endOffsetOf(location.line)) Some(offset) else None
+    if (offset <= endOffsetOf(location.line)) Some(offset) else None
   }
 
   def toNearestOffset(location: Location): Int = {
@@ -64,8 +64,8 @@ trait LinesHolder {
     offset.min(endOffsetOf(line))
   }
 
-  def maximumIndent: Int = Range(0, linesCount).view
-          .map(line => toLocation(endOffsetOf(line)).indent).max
+  def maximumIndent: Int =
+    Range(0, linesCount).view.map(line => toLocation(endOffsetOf(line)).indent).max
 }
 
 case class Location(line: Int, indent: Int)

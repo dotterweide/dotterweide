@@ -20,16 +20,17 @@ package com.pavelfatin.toyide.editor.controller
 import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.editor.{AnAction, Terminal, History}
 
-private class HistoricalAction(delegate: AnAction, document: Document, terminal: Terminal, history: History) extends AnAction {
+private class HistoricalAction(delegate: AnAction, document: Document, terminal: Terminal, history: History)
+  extends AnAction {
+
   def keys: Seq[String] = delegate.keys
 
   override def enabled: Boolean = delegate.enabled
 
   delegate.onChange(notifyObservers())
 
-  def apply(): Unit = {
+  def apply(): Unit =
     history.recording(document, terminal) {
       delegate()
     }
-  }
 }

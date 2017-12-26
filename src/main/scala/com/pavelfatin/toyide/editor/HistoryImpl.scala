@@ -42,7 +42,7 @@ class HistoryImpl extends History {
     document.disconnect(recorder)
     terminal.disconnect(recorder)
 
-    if(events.exists(_.isInstanceOf[DocumentEvent])) {
+    if (events.exists(_.isInstanceOf[DocumentEvent])) {
       toUndo ::= Action(document, terminal, events)
       toRedo = List.empty
     }

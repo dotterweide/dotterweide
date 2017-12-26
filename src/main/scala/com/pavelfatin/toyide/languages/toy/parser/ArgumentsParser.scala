@@ -25,7 +25,7 @@ object ArgumentsParser extends Parser {
   def parse(in: TreeBuilder): Unit = {
     in.capturing(new Arguments()) {
       in.consume(LPAREN)
-      if(!in.isEOF && !in.matches(RPAREN)) {
+      if (!in.isEOF && !in.matches(RPAREN)) {
         ExpressionParser.parse(in)
         while (in.grasp(COMMA)) ExpressionParser.parse(in)
       }

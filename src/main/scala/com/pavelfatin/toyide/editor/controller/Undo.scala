@@ -23,11 +23,10 @@ import com.pavelfatin.toyide.editor.{AnAction, History, Terminal}
 private class Undo(document: Document, terminal: Terminal, history: History) extends AnAction with Repeater {
   repeat(document, terminal)
 
-  def keys = Seq("ctrl pressed Z")
+  def keys: Seq[String] = List("ctrl pressed Z")
 
   override def enabled: Boolean = history.canUndo
 
-  def apply(): Unit = {
+  def apply(): Unit =
     history.undo()
-  }
 }

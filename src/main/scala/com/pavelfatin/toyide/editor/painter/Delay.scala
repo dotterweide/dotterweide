@@ -20,10 +20,10 @@ package com.pavelfatin.toyide.editor.painter
 import com.pavelfatin.toyide.ObservableEvents
 import com.pavelfatin.toyide.editor.{ActionFinished, ActionProcessor, ActionStarted}
 
-private class Delay[T](delegate: ObservableEvents[T], processor: ActionProcessor) extends ObservableEvents[T] {
+private class Delay[A](delegate: ObservableEvents[A], processor: ActionProcessor) extends ObservableEvents[A] {
   private var delay = false
   
-  private var events = Seq.empty[T]
+  private var events = Seq.empty[A]
 
   processor.onChange {
     case ActionStarted(_) =>

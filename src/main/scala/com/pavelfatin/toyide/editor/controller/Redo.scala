@@ -23,11 +23,10 @@ import com.pavelfatin.toyide.editor.{AnAction, History, Terminal}
 private class Redo(document: Document, terminal: Terminal, history: History) extends AnAction with Repeater {
   repeat(document, terminal)
 
-  def keys = Seq("shift ctrl pressed Z")
+  def keys: Seq[String] = List("shift ctrl pressed Z")
 
   override def enabled: Boolean = history.canRedo
 
-  def apply(): Unit = {
+  def apply(): Unit =
     history.redo()
-  }
 }

@@ -33,7 +33,7 @@ private class HoverPainter(context: PainterContext) extends AbstractPainter(cont
   terminal.onChange {
     case HoverChange(from, to) =>
       from.foreach(offset => hoverInterval(offset).foreach(notifyObservers))
-      to.foreach(offset => hoverInterval(offset).foreach(notifyObservers))
+      to  .foreach(offset => hoverInterval(offset).foreach(notifyObservers))
     case _ =>
   }
 

@@ -29,7 +29,7 @@ object IfParser extends Parser {
       ExpressionParser.parse(in)
       in.consume(RPAREN)
       BlockParser.parse(in)
-      if(in.grasp(ELSE)) BlockParser.parse(in)
+      if (in.grasp(ELSE)) BlockParser.parse(in)
     }
   }
 }

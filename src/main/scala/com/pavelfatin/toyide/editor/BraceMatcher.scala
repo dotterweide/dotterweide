@@ -27,8 +27,6 @@ private trait BraceMatcher {
 
 private abstract sealed class BraceType
 
-private case object Inapplicable extends BraceType
-
-private case object Paired extends BraceType
-
-private case object Unbalanced extends BraceType
+private case object Inapplicable  extends BraceType
+private case object Paired        extends BraceType
+private case object Unbalanced    extends BraceType

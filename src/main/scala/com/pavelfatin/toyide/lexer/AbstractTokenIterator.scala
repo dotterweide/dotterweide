@@ -59,7 +59,7 @@ abstract class AbstractTokenIterator(input: CharSequence) extends Iterator[Token
 
   def ahead(offset: Int): Option[Char] = {
     val i = index + offset
-    if(i < input.length) Some(input.charAt(i)) else None
+    if (i < input.length) Some(input.charAt(i)) else None
   }
 
   def isAhead(char: Char): Boolean = isAhead(_ == char)

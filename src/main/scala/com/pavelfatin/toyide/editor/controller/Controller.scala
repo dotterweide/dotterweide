@@ -17,19 +17,17 @@
 
 package com.pavelfatin.toyide.editor.controller
 
-import java.awt.event.{MouseEvent, KeyEvent}
+import java.awt.event.{KeyEvent, MouseEvent}
+
 import com.pavelfatin.toyide.editor.{ActionProcessor, EditorActions}
 
 trait Controller extends ActionProcessor {
-  def processKeyPressed(e: KeyEvent): Unit
+  def processKeyPressed   (e: KeyEvent  ): Unit
+  def processKeyTyped     (e: KeyEvent  ): Unit
 
-  def processKeyTyped(e: KeyEvent): Unit
-
-  def processMousePressed(e: MouseEvent): Unit
-
-  def processMouseDragged(e: MouseEvent): Unit
-
-  def processMouseMoved(e: MouseEvent): Unit
+  def processMousePressed (e: MouseEvent): Unit
+  def processMouseDragged (e: MouseEvent): Unit
+  def processMouseMoved   (e: MouseEvent): Unit
 
   def actions: EditorActions
 }

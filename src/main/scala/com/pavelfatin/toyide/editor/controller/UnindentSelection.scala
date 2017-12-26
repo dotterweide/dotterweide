@@ -17,32 +17,32 @@
 
 package com.pavelfatin.toyide.editor.controller
 
+import com.pavelfatin.toyide.Interval
 import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.editor.{AnAction, Terminal}
-import com.pavelfatin.toyide.Interval
 
 private class UnindentSelection(document: Document, terminal: Terminal, tabSize: Int) extends AnAction with Repeater {
   repeat(document, terminal)
 
-  def keys = List("shift pressed TAB")
+  def keys: Seq[String] = List("shift pressed TAB")
 
   override def enabled: Boolean = terminal.selection.isDefined
 
-  def apply(): Unit = {
+  def apply(): Unit =
     terminal.selection.foreach { it =>
-      val selection = if (document.toLocation(it.end).indent == 0) it.withEndShift(-1) else it
-      val beginLine = document.lineNumberOf(selection.begin)
-      val endLine = document.lineNumberOf(selection.end)
-      val interval = Interval(document.startOffsetOf(beginLine), document.endOffsetOf(endLine))
+      val selection   = if (document.toLocation(it.end).indent == 0) it.withEndShift(-1) else it
+      val beginLine   = document.lineNumberOf(selection.begin)
+      val endLine     = document.lineNumberOf(selection.end)
+      val interval    = Interval(document.startOffsetOf(beginLine), document.endOffsetOf(endLine))
 
-      val text = document.text(interval)
-      val replacement = text.split("\n").map(s => s.drop(tabSize.min(s.takeWhile(_.isWhitespace).length))).mkString("\n")
+      val text        = document.text(interval)
+      val replacement = text.split("\n").map(s =>
+        s.drop(tabSize.min(s.takeWhile(_.isWhitespace).length))).mkString("\n")
 
-      val decrement = text.length - replacement.length
+      val decrement   = text.length - replacement.length
       terminal.offset -= decrement
       terminal.selection = Some(it.withEndShift(-decrement))
 
       document.replace(interval, replacement)
     }
-  }
 }

@@ -17,7 +17,7 @@
 
 package com.pavelfatin.toyide.editor.painter
 
-import java.awt._
+import java.awt.{Graphics, Rectangle}
 
 import com.pavelfatin.toyide.editor._
 
@@ -37,7 +37,7 @@ private class CaretPainter(context: PainterContext) extends AbstractPainter(cont
     case _ =>
   }
 
-  override def paint(g: Graphics, bounds: Rectangle): Unit = {
+  override def paint(g: Graphics, bounds: Rectangle): Unit =
     if (canvas.caretVisible) {
       val rectangle = caretRectangleAt(terminal.offset).intersection(bounds)
 
@@ -46,5 +46,4 @@ private class CaretPainter(context: PainterContext) extends AbstractPainter(cont
         fill(g, rectangle)
       }
     }
-  }
 }

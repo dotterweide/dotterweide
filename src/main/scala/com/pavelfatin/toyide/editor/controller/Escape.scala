@@ -20,7 +20,7 @@ package com.pavelfatin.toyide.editor.controller
 import com.pavelfatin.toyide.editor.{AnAction, Terminal}
 
 private class Escape(terminal: Terminal) extends AnAction {
-  def keys = List("pressed ESCAPE")
+  def keys: Seq[String] = List("pressed ESCAPE")
 
   def apply(): Unit = {
     terminal.selection = None

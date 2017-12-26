@@ -68,7 +68,8 @@ case class Code(instructions: String = "", fields: String = "", methods: String 
       |  """.stripMargin
 
   def +(other: Code): Code = {
-    Code("%s\n%s".format(instructions, other.instructions),
+    Code(
+      "%s\n%s".format(instructions, other.instructions),
       "%s\n%s".format(fields, other.fields),
       "%s\n%s".format(methods, other.methods))
   }

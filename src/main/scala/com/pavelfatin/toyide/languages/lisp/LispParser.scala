@@ -38,13 +38,13 @@ object LispParser extends Parser {
       list(in, LBRACKET, RBRACKET)
     } else if (matches(in, INTEGER_LITERAL)) {
       integer(in)
-    } else if(matches(in, BOOLEAN_LITERAL)) {
+    } else if (matches(in, BOOLEAN_LITERAL)) {
       boolean(in)
-    } else if(matches(in, CHARACTER_LITERAL)) {
+    } else if (matches(in, CHARACTER_LITERAL)) {
       character(in)
-    } else if(matches(in, STRING_LITERAL)) {
+    } else if (matches(in, STRING_LITERAL)) {
       string(in)
-    } else if(matches(in, PREDEFINED_SYMBOL, CUSTOM_SYMBOL)) {
+    } else if (matches(in, PREDEFINED_SYMBOL, CUSTOM_SYMBOL)) {
       symbol(in)
     } else {
       in.error("Expression expected")

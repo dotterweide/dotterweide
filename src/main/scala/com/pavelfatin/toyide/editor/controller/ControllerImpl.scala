@@ -17,14 +17,14 @@
 
 package com.pavelfatin.toyide.editor.controller
 
-import java.awt.event.{MouseEvent, KeyEvent}
-import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.Interval
-import com.pavelfatin.toyide.formatter.Formatter
-import collection.immutable.List
 import java.awt.AWTKeyStroke
-import com.pavelfatin.toyide.node.{Node, IdentifiedNode}
+import java.awt.event.{KeyEvent, MouseEvent}
+
+import com.pavelfatin.toyide.Interval
+import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.editor._
+import com.pavelfatin.toyide.formatter.Formatter
+import com.pavelfatin.toyide.node.{IdentifiedNode, Node}
 
 class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: Grid, adviser: Adviser,
                      formatter: Formatter, tabSize: Int, comment: String, history: History) extends Controller {
@@ -37,7 +37,6 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   )
 
   private val BlockOpening = '{'
-
   private val BlockClosing = '}'
 
   private var origin = 0
@@ -46,7 +45,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     new Actions(document, terminal, data, adviser, formatter, tabSize, comment, history)
 
   def processKeyPressed(e: KeyEvent): Unit = {
-    if(isModifierKey(e.getKeyCode)) return
+    if (isModifierKey(e.getKeyCode)) return
 
     notifyObservers(ActionStarted(isImmediate(e)))
 
@@ -86,7 +85,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   }
 
   def doProcessKeyPressed(e: KeyEvent): Unit = {
-    if(e.isShiftDown && terminal.selection.isEmpty) origin = terminal.offset
+    if (e.isShiftDown && terminal.selection.isEmpty) origin = terminal.offset
 
     e.getKeyCode match {
       case KeyEvent.VK_LEFT =>
@@ -96,8 +95,9 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
           } else {
             terminal.offset = terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset - 1)(_.begin)
           }
-          terminal.selection = if(e.isShiftDown) fromOriginTo(terminal.offset) else None
+          terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
         }
+
       case KeyEvent.VK_RIGHT =>
         if (terminal.offset < document.length) {
           if (e.isControlDown) {
@@ -105,72 +105,85 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
           } else {
             terminal.offset = terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset + 1)(_.end)
           }
-          terminal.selection = if(e.isShiftDown) fromOriginTo(terminal.offset) else None
+          terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
         }
+
       case KeyEvent.VK_UP if !e.isControlDown =>
         if (document.lineNumberOf(terminal.offset) > 0) {
           jumpTo(document.lineNumberOf(terminal.offset) - 1, e.isShiftDown)
         }
+
       case KeyEvent.VK_DOWN if !e.isControlDown =>
         if (document.lineNumberOf(terminal.offset) < document.linesCount - 1) {
           jumpTo(document.lineNumberOf(terminal.offset) + 1, e.isShiftDown)
         }
+
       case KeyEvent.VK_PAGE_UP if !e.isControlDown =>
         if (document.lineNumberOf(terminal.offset) > 0) {
           jumpTo(0.max(document.lineNumberOf(terminal.offset) - 10), e.isShiftDown)
         }
+
       case KeyEvent.VK_PAGE_DOWN if !e.isControlDown =>
         if (document.lineNumberOf(terminal.offset) < document.linesCount - 1) {
           jumpTo((document.linesCount - 1).min(document.lineNumberOf(terminal.offset) + 10), e.isShiftDown)
         }
+
       case KeyEvent.VK_HOME if e.isControlDown =>
         terminal.offset = 0
-        terminal.selection = if(e.isShiftDown) fromOriginTo(terminal.offset) else None
+        terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+
       case KeyEvent.VK_END if e.isControlDown =>
         terminal.offset = document.length
-        terminal.selection = if(e.isShiftDown) fromOriginTo(terminal.offset) else None
+        terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+
       case KeyEvent.VK_HOME =>
         val origin = terminal.offset
         val edge = document.startOffsetOf(document.lineNumberOf(terminal.offset))
         val next = seek(c => c.isWhitespace, edge, 1)
           .filter(document.toLocation(_).line == document.toLocation(edge).line)
           .getOrElse(edge)
-        terminal.offset = if(next == origin) edge else next
-        terminal.selection = if(e.isShiftDown) fromOriginTo(terminal.offset) else None
+        terminal.offset = if (next == origin) edge else next
+        terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+
       case KeyEvent.VK_END =>
         terminal.offset = document.endOffsetOf(document.lineNumberOf(terminal.offset))
-        terminal.selection = if(e.isShiftDown) fromOriginTo(terminal.offset) else None
+        terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+
       case KeyEvent.VK_BACK_SPACE if terminal.selection.isDefined =>
         terminal.insertInto(document, "")
+
       case KeyEvent.VK_BACK_SPACE =>
         if (terminal.offset > 0) {
           val length = if (e.isControlDown) terminal.offset - seek(-1) else 1
           terminal.offset -= length
           val next = terminal.offset + length
           val leftChar = document.charAt(next - 1)
-          val rightChar = if(document.length > next) Some(document.charAt(next)) else None
+          val rightChar = if (document.length > next) Some(document.charAt(next)) else None
           val complement = rightChar.flatMap(it => pairs.find(_._1 == leftChar).map(_._2).filter(_ == it))
           terminal.selection = None
           document.remove(terminal.offset, next + complement.mkString.length)
         }
+
       case KeyEvent.VK_DELETE if !e.isShiftDown && terminal.selection.isDefined =>
         terminal.insertInto(document, "")
+
       case KeyEvent.VK_DELETE if !e.isShiftDown =>
         if (terminal.offset < document.length) {
           val length = if (e.isControlDown) seek(1) - terminal.offset else 1
           terminal.selection = None
           document.remove(terminal.offset, terminal.offset + length)
         }
+
       case _ =>
     }
   }
 
   private def jumpTo(targetLine: Int, shiftPressed: Boolean): Unit = {
-    val line = document.lineNumberOf(terminal.offset)
-    val indent = terminal.offset - document.startOffsetOf(line)
-    val target = document.startOffsetOf(targetLine) + indent
-    terminal.offset = target.min(document.endOffsetOf(targetLine))
-    terminal.selection = if(shiftPressed) fromOriginTo(terminal.offset) else None
+    val line            = document.lineNumberOf(terminal.offset)
+    val indent          = terminal.offset - document.startOffsetOf(line)
+    val target          = document.startOffsetOf(targetLine) + indent
+    terminal.offset     = target.min(document.endOffsetOf(targetLine))
+    terminal.selection  = if (shiftPressed) fromOriginTo(terminal.offset) else None
   }
 
   def doProcessKeyTyped(e: KeyEvent): Unit = {
@@ -238,7 +251,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
 
   def processMousePressed(e: MouseEvent): Unit = {
     val navigation = (e.getButton == MouseEvent.BUTTON1 && e.isControlDown) || e.getButton == MouseEvent.BUTTON2
-    val targetOffset = if(navigation) {
+    val targetOffset = if (navigation) {
       for(i <- document.toOffset(grid.toLocation(e.getPoint));
           reference <- data.referenceAt(i);
           target <- reference.target) yield offsetOf(target)
@@ -246,7 +259,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
       None
     }
     val pointOffset = document.toNearestOffset(grid.toLocation(e.getPoint))
-    val leafSpan = if(e.getButton == MouseEvent.BUTTON1 && e.getClickCount == 2) {
+    val leafSpan = if (e.getButton == MouseEvent.BUTTON1 && e.getClickCount == 2) {
       data.leafAt(pointOffset).map(_.span)
     } else {
       None
@@ -263,7 +276,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   }
 
   def processMouseMoved(e: MouseEvent): Unit = {
-    val hover = if(e.isControlDown) {
+    val hover = if (e.isControlDown) {
       document.toOffset(grid.toLocation(e.getPoint))
     } else {
       None
@@ -291,14 +304,14 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   }
 
   private def indentOf(line: Int): Int = {
-    if(line < 0) 0 else {
+    if (line < 0) 0 else {
       val s = document.text(document.startOffsetOf(line), document.endOffsetOf(line))
       if (s.trim.isEmpty) indentFrom(line - 1) else s.takeWhile(_.isWhitespace).length
     }
   }
 
   private def indentFrom(line: Int): Int = {
-    if(line < 0) 0 else {
+    if (line < 0) 0 else {
       val s = document.text(document.startOffsetOf(line), document.endOffsetOf(line))
       if (s.trim.isEmpty) indentFrom(line - 1) else
         s.takeWhile(_.isWhitespace).length + (if (s.trim.endsWith("{")) tabSize else 0)

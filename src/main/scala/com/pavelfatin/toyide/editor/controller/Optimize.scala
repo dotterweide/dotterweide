@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.editor.{AnAction, Data, Terminal}
 import com.pavelfatin.toyide.optimizer.Optimizer
 
 private class Optimize(document: Document, terminal: Terminal, data: Data) extends AnAction {
-  def keys = List("ctrl alt pressed O")
+  def keys: Seq[String] = List("ctrl alt pressed O")
 
   def apply(): Unit = {
     data.compute()

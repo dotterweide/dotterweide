@@ -28,7 +28,7 @@ object ToyLexer extends Lexer {
 private class TokenIterator(input: CharSequence) extends AbstractTokenIterator(input) {
   def next(): Token = {
     if (char == '=') {
-      if(isAhead('=')) {
+      if (isAhead('=')) {
         return Token(EQ_EQ, captureChars(2))
       }
       return Token(EQ, captureChar)
@@ -44,7 +44,7 @@ private class TokenIterator(input: CharSequence) extends AbstractTokenIterator(i
     if (char == '-') return Token(MINUS, captureChar)
     if (char == '*') return Token(STAR, captureChar)
     if (char == '/') {
-      if(isAhead('/')) {
+      if (isAhead('/')) {
         mark()
         skip(c => c != '\n')
         return Token(COMMENT, marked)
@@ -54,13 +54,13 @@ private class TokenIterator(input: CharSequence) extends AbstractTokenIterator(i
     if (char == '%') return Token(PERCENT, captureChar)
     if (char == '!') return Token(BANG, captureChar)
     if (char == '<') {
-      if(isAhead('=')) {
+      if (isAhead('=')) {
         return Token(LT_EQ, captureChars(2))
       }
       return Token(LT, captureChar)
     }
     if (char == '>')  {
-      if(isAhead('=')) {
+      if (isAhead('=')) {
         return Token(GT_EQ, captureChars(2))
       }
       return Token(GT, captureChar)

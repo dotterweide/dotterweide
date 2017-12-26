@@ -51,9 +51,10 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
       if (isRelevant(replacement)) {
         lastEvent = Some(replacement)
 
-        val lengthBefore = replacement.before.length
-        val lengthAfter = replacement.after.length
-        val endAfter = replacement.begin + lengthAfter
+        val lengthBefore  = replacement.before.length
+        val lengthAfter   = replacement.after .length
+        val endAfter      = replacement.begin + lengthAfter
+
         val rectangle = rectangleFrom(replacement.begin, max(lengthBefore, lengthAfter) + tailLengthFrom(endAfter) + 1)
         notifyObservers(rectangle)
       }
@@ -85,8 +86,8 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
   }
 
   private def paintReplacement(g: Graphics, begin: Int, before: CharSequence, after: CharSequence): Unit = {
-    val endAfter = begin + after.length
-    val delta = after.length - before.length
+    val endAfter  = begin + after.length
+    val delta     = after.length - before.length
 
     if (delta != 0) {
       val tailLength = tailLengthFrom(endAfter)
@@ -119,8 +120,8 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
         fill(g, rectangle)
 
         val string = new AttributedString(after.toString)
-        string.addAttribute(TextAttribute.FAMILY, coloring.fontFamily)
-        string.addAttribute(TextAttribute.SIZE, coloring.fontSize)
+        string.addAttribute(TextAttribute.FAMILY, coloring.fontFamily )
+        string.addAttribute(TextAttribute.SIZE  , coloring.fontSize   )
 
         val attributes = coloring.attributesFor(token.kind)
         attributes.decorate(string, 0, after.length)

@@ -76,7 +76,7 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
 
   addMouseMotionListener(new MouseMotionAdapter() {
     override def mouseMoved(e: MouseEvent): Unit = {
-      if(Led.contains(e.getPoint)) {
+      if (Led.contains(e.getPoint)) {
         val message = status match {
           case Status.Waiting => "Analyzing..."
           case Status.Normal => "No errors"
@@ -95,7 +95,7 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
           setToolTipText(it.error.message)
           setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
         }
-        if(descriptor.isEmpty) {
+        if (descriptor.isEmpty) {
           setToolTipText(null)
           setCursor(Cursor.getDefaultCursor)
         }
@@ -133,7 +133,7 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
   private def gridY(line: Int) = grid.toPoint(Location(line, 0)).y
 
   private def toY(line: Int) = {
-    if(gridY(document.linesCount) < getHeight) gridY(line) + 3 else
+    if (gridY(document.linesCount) < getHeight) gridY(line) + 3 else
       math.round(getHeight.toDouble * line / document.linesCount).toInt
   }
 
@@ -187,7 +187,7 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
 
       val offset = math.round((lineHeight.toDouble - MarkSize.height) / 2.0D).toInt
 
-      val (y, height) = if(heights.empty)
+      val (y, height) = if (heights.empty)
         (heights.begin + offset, MarkSize.height)
       else
         (heights.begin, heights.length)

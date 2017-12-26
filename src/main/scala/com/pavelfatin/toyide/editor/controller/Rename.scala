@@ -21,13 +21,13 @@ import com.pavelfatin.toyide.document.{Bias, Document}
 import com.pavelfatin.toyide.editor.{AnAction, History, Data, Terminal}
 
 private class Rename(document: Document, terminal: Terminal, data: Data, history: History) extends AnAction {
-  def keys = List("shift pressed F6")
+  def keys: Seq[String] = List("shift pressed F6")
 
   def apply(): Unit = {
     data.compute()
     val leafs = data.connectedLeafsFor(terminal.offset)
     if (leafs.nonEmpty) {
-      terminal.selection = None
+      terminal.selection  = None
       terminal.highlights = leafs.map(_.span.interval)
       val id = leafs.head.span.text
       terminal.edit(id, "Rename") {

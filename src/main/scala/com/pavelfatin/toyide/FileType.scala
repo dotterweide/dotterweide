@@ -17,4 +17,7 @@
 
 package com.pavelfatin.toyide
 
+/** @param name       the human readable name for the type of file denoted
+  * @param extension  the file name extension without period
+  */
 case class FileType(name: String, extension: String)

@@ -19,7 +19,8 @@ package com.pavelfatin.toyide.editor
 
 import com.pavelfatin.toyide.Observable
 import com.pavelfatin.toyide.document.Document
-import swing.Component
+
+import scala.swing.Component
 
 trait Editor extends Observable {
   def document: Document
@@ -34,9 +35,7 @@ trait Editor extends Observable {
 
   def pane: Component
 
-  def text: String
-
-  def text_=(s: String): Unit
+  var text: String
 
   def actions: EditorActions
 

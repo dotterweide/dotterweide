@@ -35,10 +35,7 @@ trait Canvas extends ObservableEvents[CanvasEvent] {
 
 sealed trait CanvasEvent
 
-case class VisibilityChanged(b: Boolean) extends CanvasEvent
-
-case class VisibleRectangleChanged(r: Rectangle) extends CanvasEvent
-
-case class FocusChanged(b: Boolean) extends CanvasEvent
-
-case class CaretVisibilityChanged(b: Boolean) extends CanvasEvent
+case class VisibilityChanged      (b: Boolean   ) extends CanvasEvent
+case class VisibleRectangleChanged(r: Rectangle ) extends CanvasEvent
+case class FocusChanged           (b: Boolean   ) extends CanvasEvent
+case class CaretVisibilityChanged (b: Boolean   ) extends CanvasEvent

@@ -32,10 +32,8 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
 
   def id = "text"
 
-  private var string = EmptyString
-
-  private var stringValid = true
-
+  private var string            = EmptyString
+  private var stringValid       = true
   private var singleLineChanged = false
 
   document.onChange { event =>
@@ -84,11 +82,9 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
   }
 
   private def paintLine(g: Graphics, area: Area): Unit = {
-    val rectangle = grid.toRectangle(area)
-
-    val lineInterval = document.intervalOf(area.line)
-
-    val lineText = document.text(lineInterval)
+    val rectangle     = grid.toRectangle(area)
+    val lineInterval  = document.intervalOf(area.line)
+    val lineText      = document.text(lineInterval)
 
     if (lineText.length > 0) {
       val tokens = lexer.analyze(lineText).toSeq
@@ -126,8 +122,8 @@ private object TextPainter {
     val result = new AttributedString(text)
 
     if (!text.isEmpty) {
-      result.addAttribute(TextAttribute.FAMILY, coloring.fontFamily)
-      result.addAttribute(TextAttribute.SIZE, coloring.fontSize)
+      result.addAttribute(TextAttribute.FAMILY, coloring.fontFamily )
+      result.addAttribute(TextAttribute.SIZE  , coloring.fontSize   )
 
       tokens.foreach { token =>
         val attributes = coloring.attributesFor(token.kind)

@@ -22,56 +22,56 @@ import com.pavelfatin.toyide.lexer.TokenKind
 object ToyTokens {
   val COMMENT = TokenKind("COMMENT", data = true)
 
-  val COMMA = TokenKind("COMMA")
-  val COLON = TokenKind("COLON")
-  val SEMI = TokenKind("SEMI")
+  val COMMA   = TokenKind("COMMA")
+  val COLON   = TokenKind("COLON")
+  val SEMI    = TokenKind("SEMI")
 
-  val EQ = TokenKind("EQ")
+  val EQ      = TokenKind("EQ")
 
-  val LPAREN = TokenKind("LPAREN")
-  val RPAREN = TokenKind("RPAREN")
+  val LPAREN  = TokenKind("LPAREN")
+  val RPAREN  = TokenKind("RPAREN")
 
-  val LBRACE = TokenKind("LBRACE")
-  val RBRACE = TokenKind("RBRACE")
+  val LBRACE  = TokenKind("LBRACE")
+  val RBRACE  = TokenKind("RBRACE")
 
-  val PLUS = TokenKind("PLUS")
-  val MINUS = TokenKind("MINUS")
-  val STAR = TokenKind("STAR")
-  val SLASH = TokenKind("SLASH")
+  val PLUS    = TokenKind("PLUS")
+  val MINUS   = TokenKind("MINUS")
+  val STAR    = TokenKind("STAR")
+  val SLASH   = TokenKind("SLASH")
   val PERCENT = TokenKind("PERCENT")
 
-  val BANG = TokenKind("BANG")
+  val BANG    = TokenKind("BANG")
 
   val AMP_AMP = TokenKind("AMP_AMP")
   val BAR_BAR = TokenKind("BAR_BAR")
 
-  val EQ_EQ = TokenKind("EQ_EQ")
+  val EQ_EQ   = TokenKind("EQ_EQ")
   val BANG_EQ = TokenKind("BANG_EQ")
 
-  val LT = TokenKind("LT")
-  val LT_EQ = TokenKind("LT_EQ")
-  val GT = TokenKind("GT")
-  val GT_EQ = TokenKind("GT_EQ")
+  val LT      = TokenKind("LT")
+  val LT_EQ   = TokenKind("LT_EQ")
+  val GT      = TokenKind("GT")
+  val GT_EQ   = TokenKind("GT_EQ")
 
-  val VAR = TokenKind("VAR")
-  val DEF = TokenKind("DEF")
-  val WHILE = TokenKind("WHILE")
-  val IF = TokenKind("IF")
-  val ELSE = TokenKind("ELSE")
-  val RETURN = TokenKind("RETURN")
+  val VAR     = TokenKind("VAR")
+  val DEF     = TokenKind("DEF")
+  val WHILE   = TokenKind("WHILE")
+  val IF      = TokenKind("IF")
+  val ELSE    = TokenKind("ELSE")
+  val RETURN  = TokenKind("RETURN")
 
-  val Keywords = Seq(VAR, DEF, WHILE, IF, ELSE, RETURN)
+  val Keywords: Seq[TokenKind] = Seq(VAR, DEF, WHILE, IF, ELSE, RETURN)
 
-  val STRING = TokenKind("STRING")
+  val STRING  = TokenKind("STRING")
   val INTEGER = TokenKind("INTEGER")
   val BOOLEAN = TokenKind("BOOLEAN")
-  val VOID = TokenKind("VOID")
+  val VOID    = TokenKind("VOID")
 
-  val Types = Seq(STRING, INTEGER, BOOLEAN, VOID)
+  val Types: Seq[TokenKind] = Seq(STRING, INTEGER, BOOLEAN, VOID)
 
-  val NUMBER_LITERAL = TokenKind("NUMBER_LITERAL", data = true)
-  val STRING_LITERAL = TokenKind("STRING_LITERAL", data = true)
-  val BOOLEAN_LITERAL = TokenKind("BOOLEAN_LITERAL", data = true)
+  val NUMBER_LITERAL  = TokenKind("NUMBER_LITERAL"  , data = true)
+  val STRING_LITERAL  = TokenKind("STRING_LITERAL"  , data = true)
+  val BOOLEAN_LITERAL = TokenKind("BOOLEAN_LITERAL" , data = true)
 
   val IDENT = TokenKind("IDENT", data = true)
 }

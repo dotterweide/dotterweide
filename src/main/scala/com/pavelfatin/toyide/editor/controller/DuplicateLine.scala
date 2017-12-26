@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.editor.{AnAction, Terminal}
 import com.pavelfatin.toyide.Interval
 
 private class DuplicateLine(document: Document, terminal: Terminal) extends AnAction {
-  def keys = List("ctrl pressed D")
+  def keys: Seq[String] = List("ctrl pressed D")
 
   def apply(): Unit = {
     val selection = terminal.selection

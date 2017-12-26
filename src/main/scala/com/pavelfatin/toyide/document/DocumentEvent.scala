@@ -19,44 +19,37 @@ package com.pavelfatin.toyide.document
 
 sealed trait DocumentEvent {
   def undo(document: Document): Unit
-
   def redo(document: Document): Unit
 
   def asReplacement: Replacement
 }
 
 case class Insertion(offset: Int, chars: CharSequence) extends DocumentEvent {
-  def undo(document: Document): Unit = {
+  def undo(document: Document): Unit =
     document.remove(offset, offset + chars.length)
-  }
 
-  def redo(document: Document): Unit = {
+  def redo(document: Document): Unit =
     document.insert(offset, chars.toString)
-  }
 
   def asReplacement = Replacement(offset, offset, "", chars)
 }
 
 case class Removal(begin: Int, end: Int, before: CharSequence) extends DocumentEvent {
-  def undo(document: Document): Unit = {
+  def undo(document: Document): Unit =
     document.insert(begin, before.toString)
-  }
 
-  def redo(document: Document): Unit = {
+  def redo(document: Document): Unit =
     document.remove(begin, end)
-  }
 
   def asReplacement = Replacement(begin, end, before, "")
 }
 
 case class Replacement(begin: Int, end: Int, before: CharSequence, after: CharSequence) extends DocumentEvent {
-  def undo(document: Document): Unit = {
+  def undo(document: Document): Unit =
     document.replace(begin, begin + after.length, before.toString)
-  }
 
-  def redo(document: Document): Unit = {
+  def redo(document: Document): Unit =
     document.replace(begin, end, after.toString)
-  }
 
   def asReplacement: Replacement = this
 }

@@ -17,15 +17,15 @@
 
 package com.pavelfatin.toyide.editor
 
-import java.awt._
-import java.awt.event._
+import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseMotionAdapter}
+import java.awt.{BorderLayout, Cursor, Dimension, Font, Graphics, Graphics2D, Point, Rectangle, Toolkit}
 import javax.swing.border.EmptyBorder
-import javax.swing.{Painter => _, Renderer => _, _}
+import javax.swing.{JComponent, JPanel, JScrollPane, JViewport, KeyStroke, ListCellRenderer, Scrollable, SwingConstants, Timer}
 
 import com.pavelfatin.toyide.Interval
 import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.editor.controller.{Controller, ControllerImpl}
-import com.pavelfatin.toyide.editor.painter._
+import com.pavelfatin.toyide.editor.painter.{Painter, PainterFactory}
 import com.pavelfatin.toyide.formatter.{Format, FormatterImpl}
 import com.pavelfatin.toyide.lexer.Lexer
 
@@ -61,10 +61,10 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     val panel = new JPanel(new BorderLayout())
     val map = scroll.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
     map.allKeys().foreach(map.put(_, "none"))
-    map.put(KeyStroke.getKeyStroke("ctrl pressed UP"), "unitScrollUp")
-    map.put(KeyStroke.getKeyStroke("ctrl pressed DOWN"), "unitScrollDown")
-    map.put(KeyStroke.getKeyStroke("ctrl pressed PAGE_UP"), "scrollUp")
-    map.put(KeyStroke.getKeyStroke("ctrl pressed PAGE_DOWN"), "scrollDown")
+    map.put(KeyStroke.getKeyStroke("ctrl pressed UP")       , "unitScrollUp"  )
+    map.put(KeyStroke.getKeyStroke("ctrl pressed DOWN")     , "unitScrollDown")
+    map.put(KeyStroke.getKeyStroke("ctrl pressed PAGE_UP")  , "scrollUp"      )
+    map.put(KeyStroke.getKeyStroke("ctrl pressed PAGE_DOWN"), "scrollDown"    )
     panel.add(scroll, BorderLayout.CENTER)
     panel.add(stripe, BorderLayout.EAST)
     swing.Component.wrap(panel)
@@ -76,20 +76,19 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   def text: String = document.text
 
-  def text_=(s: String): Unit = {
+  def text_=(s: String): Unit =
     history.recording(document, terminal) {
       terminal.offset = 0
       terminal.selection = None
       terminal.highlights = Seq.empty
       document.text = s
     }
-  }
 
   private var _message: Option[String] = None
 
   def message: Option[String] = _message
 
-  private def message_=(m: Option[String]): Unit = {
+  protected def message_=(m: Option[String]): Unit = {
     if (_message != m) {
       _message = m
       notifyObservers()
@@ -112,10 +111,10 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   }
 
   terminal.onChange {
-    case CaretMovement(from, to) =>
+    case CaretMovement(_, to) =>
       scrollToOffsetVisible(to)
       updateMessage()
-    case HighlightsChange(from, to) =>
+    case HighlightsChange(_, to) =>
       to.headOption.foreach(it => scrollToOffsetVisible(it.begin))
     case _ =>
   }
@@ -137,7 +136,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   private val timer = new Timer(500, new ActionListener() {
     def actionPerformed(e: ActionEvent): Unit = {
-      if(shouldDisplayCaret) {
+      if (shouldDisplayCaret) {
         canvas.caretVisible = !canvas.caretVisible
       }
     }
@@ -167,7 +166,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   timer.start()
 
   // handle external changes
-  document.onChange { event =>
+  document.onChange { _ =>
     terminal.offset = terminal.offset.min(document.length)
     val selection = terminal.selection.map(it => Interval(it.begin.min(document.length), it.end.min(document.length)))
     terminal.selection = selection.filterNot(_.empty)

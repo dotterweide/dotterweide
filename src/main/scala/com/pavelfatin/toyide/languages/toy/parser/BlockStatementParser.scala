@@ -22,50 +22,50 @@ import com.pavelfatin.toyide.languages.toy.ToyTokens._
 
 object BlockStatementParser extends Parser {
   def parse(in: TreeBuilder): Unit = {
-    if(in.matches(VAR)) {
+    if (in.matches(VAR)) {
       VariableParser.parse(in)
       return
     }
 
-    if(in.matches(RETURN)) {
+    if (in.matches(RETURN)) {
       ReturnParser.parse(in)
       return
     }
 
-    if(in.matches(WHILE)) {
+    if (in.matches(WHILE)) {
       WhileParser.parse(in)
       return
     }
 
-    if(in.matches(IF)) {
+    if (in.matches(IF)) {
       IfParser.parse(in)
       return
     }
 
-    if(in.matches(IDENT)) {
-      if(in.ahead(LPAREN)) {
+    if (in.matches(IDENT)) {
+      if (in.ahead(LPAREN)) {
         CallParser.parse(in)
         return
       }
 
-      if(in.ahead(EQ)) {
+      if (in.ahead(EQ)) {
         AssignmentParser.parse(in)
         return
       }
     }
 
-    if(in.matches(COMMENT)) {
+    if (in.matches(COMMENT)) {
       CommentParser.parse(in)
       return
     }
 
-    if(in.matches(SEMI)) {
+    if (in.matches(SEMI)) {
       EmptyParser.parse(in)
       return
     }
 
     in.error("Wrong statement")
 
-    if(!in.isEOF) in.advance()
+    if (!in.isEOF) in.advance()
   }
 }

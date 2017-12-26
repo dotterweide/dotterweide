@@ -27,7 +27,7 @@ import com.pavelfatin.toyide.formatter.Distance._
 class FormatterImpl(format: Format) extends Formatter {
   def format(root: Node, selection: Option[Interval], tabSize: Int): String = {
     val (tokens, interval) = affectedTokens(root, selection)
-    if(tokens.isEmpty) root.span.text else {
+    if (tokens.isEmpty) root.span.text else {
       var column = 0
       val parts = tokens.zip(tokens.tail).map { p =>
         column += format.indentDeltaFor(p._1.kind, p._2.kind)
@@ -49,7 +49,7 @@ class FormatterImpl(format: Format) extends Formatter {
   private def distanceBetween(a: Token, b: Token): Distance = {
     val s = a.span.source.subSequence(a.span.end, b.span.begin)
     val lines = s.count(_ == '\n')
-    if(lines > 0) Lines(lines) else Spaces(s.count(_ == ' '))
+    if (lines > 0) Lines(lines) else Spaces(s.count(_ == ' '))
   }
 
   private def format(actual: Distance, expected: Distance, indent: Int) = {

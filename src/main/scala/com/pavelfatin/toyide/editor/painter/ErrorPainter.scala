@@ -68,15 +68,15 @@ private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends
 
 private object ErrorPainter {
   private def difference(before: Seq[Error], after: Seq[Error]): Seq[Interval] = {
-    val removedErrors = before.filterNot(mark => after.contains(mark))
-    val addedErrors = after.filterNot(mark => before.contains(mark))
+    val removedErrors = before.filterNot(mark => after  .contains(mark))
+    val addedErrors   = after .filterNot(mark => before .contains(mark))
     (removedErrors ++ addedErrors).map(_.interval)
   }
 
   private def drawWavyLine(g: Graphics, x: Int, y: Int, length: Int): Unit = {
-    val xs = Range(x, x + length, 2)
-    val points = xs.size
-    val ys = Stream.continually(()).flatMap(_ => Seq(y + 1, y - 1)).take(points)
+    val xs      = Range(x, x + length, 2)
+    val points  = xs.size
+    val ys      = Stream.continually(()).flatMap(_ => Seq(y + 1, y - 1)).take(points)
     g.drawPolyline(xs.toArray, ys.toArray, points)
   }
 }

@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.editor.{AnAction, Terminal}
 private class MoveLineUp(document: Document, terminal: Terminal) extends AnAction with Repeater {
   repeat(document, terminal)
 
-  def keys = List("shift ctrl pressed UP")
+  def keys: Seq[String] = List("shift ctrl pressed UP")
 
   override def enabled: Boolean = document.lineNumberOf(terminal.offset) > 0
 

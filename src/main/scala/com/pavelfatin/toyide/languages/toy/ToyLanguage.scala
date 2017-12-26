@@ -37,7 +37,7 @@ object ToyLanguage extends Language {
 
   def colorings = Map(
     "Light" -> new ToyColoring(ColorScheme.LightColors),
-    "Dark" -> new ToyColoring(ColorScheme.DarkColors))
+    "Dark"  -> new ToyColoring(ColorScheme.DarkColors))
 
   def complements = Seq((LBRACE, RBRACE), (LPAREN, RPAREN))
 

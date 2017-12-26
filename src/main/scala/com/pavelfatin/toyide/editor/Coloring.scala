@@ -20,7 +20,7 @@ package com.pavelfatin.toyide.editor
 import java.awt.Color
 
 import com.pavelfatin.toyide.Observable
-import com.pavelfatin.toyide.lexer._
+import com.pavelfatin.toyide.lexer.TokenKind
 
 trait Coloring extends Function[String, Color] with Observable {
   def fontFamily: String
@@ -31,43 +31,24 @@ trait Coloring extends Function[String, Color] with Observable {
 }
 
 object Coloring {
-  val TextForeground = "TextForeground"
-
-  val TextBackground = "TextBackground"
-
-  val CurrentLineBackground = "CurrentLineBackground"
-
-  val CaretForeground = "CaretForeground"
-
-  val SelectionForeground = "SelectionForeground"
-
-  val SelectionBackground = "SelectionBackground"
-
-  val HighlightBackground = "HighlightBackground"
-
-  val HoverForeground = "HoverForeground"
-
-  val PairedBraceBackground = "PairedBraceBackground"
-
+  val TextForeground            = "TextForeground"
+  val TextBackground            = "TextBackground"
+  val CurrentLineBackground     = "CurrentLineBackground"
+  val CaretForeground           = "CaretForeground"
+  val SelectionForeground       = "SelectionForeground"
+  val SelectionBackground       = "SelectionBackground"
+  val HighlightBackground       = "HighlightBackground"
+  val HoverForeground           = "HoverForeground"
+  val PairedBraceBackground     = "PairedBraceBackground"
   val UnbalancedBraceBackground = "UnbalancedBraceBackground"
-
-  val RedForeground = "RedForeground"
-
-  val UnderlineForeground = "UnderlineForeground"
-
-  val DimForeground = "DimForeground"
-
-  val FillBackground = "FillBackground"
-
-  val BooleanLiteral = "BooleanLiteral"
-
-  val IntegerLiteral = "IntegerLiteral"
-
-  val CharLiteral = "CharLiteral"
-
-  val StringLiteral = "StringLiteral"
-
-  val Keyword = "Keyword"
-
-  val Comment = "Comment"
+  val RedForeground             = "RedForeground"
+  val UnderlineForeground       = "UnderlineForeground"
+  val DimForeground             = "DimForeground"
+  val FillBackground            = "FillBackground"
+  val BooleanLiteral            = "BooleanLiteral"
+  val IntegerLiteral            = "IntegerLiteral"
+  val CharLiteral               = "CharLiteral"
+  val StringLiteral             = "StringLiteral"
+  val Keyword                   = "Keyword"
+  val Comment                   = "Comment"
 }

@@ -32,7 +32,7 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
   private var completeData = true
 
   new Delay(terminal, processor).onChange {
-    case CaretMovement(_, _) if data.pass != Pass.Text => update()
+    case CaretMovement(_, _)            if data.pass != Pass.Text => update()
     case SelectionChange(Some(_), None) if data.pass != Pass.Text => update()
     case _ =>
   }
@@ -90,9 +90,9 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
   }
 
   private def colorFor(braceType: BraceType) = braceType match {
-    case Paired => coloring(Coloring.PairedBraceBackground)
-    case Unbalanced => coloring(Coloring.UnbalancedBraceBackground)
-    case Inapplicable => coloring(Coloring.TextBackground)
+    case Paired       => coloring(Coloring.PairedBraceBackground    )
+    case Unbalanced   => coloring(Coloring.UnbalancedBraceBackground)
+    case Inapplicable => coloring(Coloring.TextBackground           )
   }
 
   private def toRectangle(interval: Interval): Rectangle = {

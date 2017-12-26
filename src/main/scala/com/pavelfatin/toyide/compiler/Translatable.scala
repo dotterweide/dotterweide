@@ -17,7 +17,6 @@
 
 package com.pavelfatin.toyide.compiler
 
-
 trait Translatable {
   @throws(classOf[TranslationException])
   def translate(className: String, labels: Labels): Code = Code()

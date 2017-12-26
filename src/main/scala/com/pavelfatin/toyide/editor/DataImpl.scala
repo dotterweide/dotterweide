@@ -59,23 +59,23 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
     pass = p
 
     val passErrors = p match {
-      case Pass.Text => runTextPass()
-      case Pass.Lexer => runLexerPass()
-      case Pass.Parser => runParserPass()
+      case Pass.Text        => runTextPass()
+      case Pass.Lexer       => runLexerPass()
+      case Pass.Parser      => runParserPass()
       case Pass.Inspections => runInspectionPass()
     }
 
-    errors = errors ++ passErrors
+    errors ++= passErrors
     hasFatalErrors = hasFatalErrors || passErrors.exists(_.fatal)
 
     notifyObservers(DataEvent(pass, passErrors))
   }
 
   private def runTextPass(): Seq[Error] = {
-    tokens = Seq.empty
-    structure = None
-    errors = Seq.empty
-    hasFatalErrors = false
+    tokens          = Seq.empty
+    structure       = None
+    errors          = Seq.empty
+    hasFatalErrors  = false
 
     Seq.empty
   }

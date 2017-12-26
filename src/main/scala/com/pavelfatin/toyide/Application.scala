@@ -18,26 +18,17 @@
 package com.pavelfatin.toyide
 
 import java.awt.Dimension
-import javax.swing.UIManager
 
 import com.pavelfatin.toyide.ide.MainFrame
 import com.pavelfatin.toyide.languages.lisp.LispLanguage
 import com.pavelfatin.toyide.languages.toy.ToyLanguage
-import com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel
 
 import scala.swing._
 
 object Application extends SwingApplication {
-  private val LookAndFeel = new NimbusLookAndFeel()
-
   private val Languages = Seq(ToyLanguage, LispLanguage)
 
   override def startup(args: Array[String]): Unit = {
-    UIManager.setLookAndFeel(LookAndFeel)
-
-    // Workaround for https://bugs.openjdk.java.net/browse/JDK-8134828
-    UIManager.put("ScrollBar.minimumThumbSize", new Dimension(32, 32))
-
     selectLanguage().foreach(openMainFrame)
   }
 

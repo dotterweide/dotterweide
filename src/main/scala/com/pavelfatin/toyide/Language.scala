@@ -23,6 +23,7 @@ import inspection.Inspection
 import lexer.{TokenKind, Lexer}
 import parser.Parser
 
+/** Access to a programming language, including description, lexer, parser, etc. */
 trait Language {
   def name: String
 
@@ -32,12 +33,18 @@ trait Language {
 
   def parser: Parser
 
+  /** A map from color scheme names to the schemes. */
   def colorings: Map[String, Coloring]
 
+  /** Pairs of tokens which are symmetric and can be highlighted together,
+    * such as matching braces.
+    */
   def complements: Seq[(TokenKind, TokenKind)]
 
+  /** Default style for formatting the language with white space. */
   def format: Format
 
+  /** The syntactic prefix for line comments. */
   def comment: String
 
   def inspections: Seq[Inspection]

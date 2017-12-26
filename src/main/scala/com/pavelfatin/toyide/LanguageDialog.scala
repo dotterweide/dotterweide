@@ -25,14 +25,14 @@ import scala.swing._
 import scala.swing.event.WindowClosing
 
 class LanguageDialog(languages: Seq[Language]) extends Dialog {
-  private val table = new JTable(LangugeTableModel)
-  private val okButton = new Button(Action("OK")(onOk()))
-  private val cancelButton = new Button(Action("Cancel")(onCancel()))
+  private val table         = new JTable(LanguageTableModel)
+  private val okButton      = new Button(Action("OK")(onOk()))
+  private val cancelButton  = new Button(Action("Cancel")(onCancel()))
 
-  private var itemSelected = false
+  private var itemSelected  = false
 
-  modal = true
-  title = "Language selection - ToyIDE"
+  modal         = true
+  title         = "Language selection - ToyIDE"
   defaultButton = okButton
   preferredSize = new Dimension(350, 250)
 
@@ -62,7 +62,7 @@ class LanguageDialog(languages: Seq[Language]) extends Dialog {
     border = Swing.EmptyBorder(10)
     layoutManager.setVgap(3)
 
-    val contentPane = new ScrollPane(Component.wrap(table))
+    private val contentPane = new ScrollPane(Component.wrap(table))
 
     private val buttonsPane = new FlowPanel(FlowPanel.Alignment.Trailing)(
       okButton, Swing.HStrut(6), cancelButton) { hGap = 0; vGap = 0 }
@@ -79,14 +79,12 @@ class LanguageDialog(languages: Seq[Language]) extends Dialog {
     dispose()
   }
 
-  private def onCancel(): Unit = {
+  private def onCancel(): Unit =
     dispose()
-  }
 
-  private object LangugeTableModel extends AbstractTableModel {
-    def getRowCount: Int = languages.length
-
-    def getColumnCount = 2
+  private object LanguageTableModel extends AbstractTableModel {
+    def getRowCount   : Int = languages.length
+    def getColumnCount: Int = 2
 
     override def getColumnName(column: Int): String = column match {
       case 0 => "Name"

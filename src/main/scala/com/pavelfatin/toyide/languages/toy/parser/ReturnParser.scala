@@ -25,7 +25,7 @@ object ReturnParser extends Parser {
   def parse(in: TreeBuilder): Unit = {
     in.capturing(new Return()) {
       in.consume(RETURN)
-      if(!in.matches(SEMI)) {
+      if (!in.matches(SEMI)) {
         ExpressionParser.parse(in)
       }
       in.consume(SEMI)

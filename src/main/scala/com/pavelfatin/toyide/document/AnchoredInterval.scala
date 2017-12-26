@@ -20,14 +20,13 @@ package com.pavelfatin.toyide.document
 import com.pavelfatin.toyide.Interval
 
 class AnchoredInterval(document: Document, origin: Interval, beginBias: Bias = Bias.Right, endBias: Bias = Bias.Left) {
-  private val beginAnchor = document.createAnchorAt(origin.begin, beginBias)
-
-  private val endAnchor = document.createAnchorAt(origin.end, endBias)
+  private val beginAnchor = document.createAnchorAt(origin.begin, beginBias )
+  private val endAnchor   = document.createAnchorAt(origin.end  , endBias   )
 
   def interval = Interval(beginAnchor.offset, beginAnchor.offset.max(endAnchor.offset))
 
   def dispose(): Unit = {
-    beginAnchor.dispose()
-    endAnchor.dispose()
+    beginAnchor .dispose()
+    endAnchor   .dispose()
   }
 }

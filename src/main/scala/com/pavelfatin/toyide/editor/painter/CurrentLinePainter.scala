@@ -27,7 +27,7 @@ private class CurrentLinePainter(context: PainterContext) extends AbstractPainte
   terminal.onChange {
     case CaretMovement(from, to) =>
       val fromRectangle = lineRectangleAt(from)
-      val toRectangle = lineRectangleAt(to)
+      val toRectangle   = lineRectangleAt(to)
 
       if (fromRectangle != toRectangle) {
         notifyObservers(fromRectangle)

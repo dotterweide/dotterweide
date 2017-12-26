@@ -18,9 +18,9 @@
 package com.pavelfatin.toyide
 
 case class Interval(begin: Int, end: Int) extends IntervalLike {
-  if(begin < 0) throw new IllegalArgumentException("Begin must be positive: " + begin)
-  if(end < 0) throw new IllegalArgumentException("End must be positive: " + end)
-  if(length < 0) throw new IllegalArgumentException("Length must be positive: " + length)
+  if (begin < 0) throw new IllegalArgumentException("Begin must be positive: " + begin)
+  if (end < 0) throw new IllegalArgumentException("End must be positive: " + end)
+  if (length < 0) throw new IllegalArgumentException("Length must be positive: " + length)
 
   def intersection(interval: Interval): Interval = {
     val from = begin.max(interval.begin)

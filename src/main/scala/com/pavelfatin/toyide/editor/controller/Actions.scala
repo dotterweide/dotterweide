@@ -18,50 +18,31 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.formatter.Formatter
 import com.pavelfatin.toyide.editor._
+import com.pavelfatin.toyide.formatter.Formatter
 
 private class Actions(document: Document, terminal: Terminal, data: Data, adviser: Adviser,
                       formatter: Formatter, tabSize: Int, comment: String, history: History) extends EditorActions {
   private def historical(action: AnAction) = new HistoricalAction(action, document, terminal, history)
     
-  val complete = new Complete(document, terminal, data, adviser, history)
-
-  val copy: HistoricalAction = historical(new Copy(document, terminal))
-
-  val cut: HistoricalAction = historical(new Cut(document, terminal))
-
-  val duplicateLine: HistoricalAction = historical(new DuplicateLine(document, terminal))
-
-  val escape: HistoricalAction = historical(new Escape(terminal))
-
-  val format: HistoricalAction = historical(new Format(document, terminal, data, formatter, tabSize))
-
-  val gotoDeclaration: HistoricalAction = historical(new GotoDeclaration(terminal, data))
-
-  val indentSelection: HistoricalAction = historical(new IndentSelection(document, terminal, tabSize))
-
-  val moveLineDown: HistoricalAction = historical(new MoveLineDown(document, terminal))
-
-  val moveLineUp: HistoricalAction = historical(new MoveLineUp(document, terminal))
-
-  val optimize: HistoricalAction = historical(new Optimize(document, terminal, data))
-
-  val paste: HistoricalAction = historical(new Paste(document, terminal))
-
-  val redo = new Redo(document, terminal, history)
-
-  val removeLine: HistoricalAction = historical(new RemoveLine(document, terminal))
-
-  val rename = new Rename(document, terminal, data, history)
-
-  val selectAll: HistoricalAction = historical(new SelectAll(document, terminal))
-
-  val showUsages: HistoricalAction = historical(new ShowUsages(terminal, data))
-
-  val toggleLineComment: HistoricalAction = historical(new ToggleLineComment(document, terminal, comment))
-
-  val undo = new Undo(document, terminal, history)
-
-  val unindentSelection: HistoricalAction = historical(new UnindentSelection(document, terminal, tabSize))
+  val complete          : AnAction = new Complete(document, terminal, data, adviser, history)
+  val copy              : AnAction = historical(new Copy(document, terminal))
+  val cut               : AnAction = historical(new Cut(document, terminal))
+  val duplicateLine     : AnAction = historical(new DuplicateLine(document, terminal))
+  val escape            : AnAction = historical(new Escape(terminal))
+  val format            : AnAction = historical(new Format(document, terminal, data, formatter, tabSize))
+  val gotoDeclaration   : AnAction = historical(new GotoDeclaration(terminal, data))
+  val indentSelection   : AnAction = historical(new IndentSelection(document, terminal, tabSize))
+  val moveLineDown      : AnAction = historical(new MoveLineDown(document, terminal))
+  val moveLineUp        : AnAction = historical(new MoveLineUp(document, terminal))
+  val optimize          : AnAction = historical(new Optimize(document, terminal, data))
+  val paste             : AnAction = historical(new Paste(document, terminal))
+  val redo              : AnAction = new Redo(document, terminal, history)
+  val removeLine        : AnAction = historical(new RemoveLine(document, terminal))
+  val rename            : AnAction = new Rename(document, terminal, data, history)
+  val selectAll         : AnAction = historical(new SelectAll(document, terminal))
+  val showUsages        : AnAction = historical(new ShowUsages(terminal, data))
+  val toggleLineComment : AnAction = historical(new ToggleLineComment(document, terminal, comment))
+  val undo              : AnAction = new Undo(document, terminal, history)
+  val unindentSelection : AnAction = historical(new UnindentSelection(document, terminal, tabSize))
 }

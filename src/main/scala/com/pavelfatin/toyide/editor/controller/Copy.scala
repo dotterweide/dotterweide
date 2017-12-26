@@ -17,16 +17,17 @@
 
 package com.pavelfatin.toyide.editor.controller
 
-import java.awt.datatransfer.StringSelection
 import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
+
 import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.editor.{AnAction, Terminal}
 
 private class Copy(document: Document, terminal: Terminal) extends AnAction {
-  def keys = List("ctrl pressed C", "ctrl pressed INSERT")
+  def keys: Seq[String] = List("ctrl pressed C", "ctrl pressed INSERT")
 
   def apply(): Unit = {
-    if(terminal.selection.isEmpty)
+    if (terminal.selection.isEmpty)
       terminal.selection = Some(terminal.currentLineIntervalIn(document))
 
     terminal.selection.foreach { s =>

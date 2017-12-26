@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.editor.{AnAction, Terminal}
 
 private class RemoveLine(document: Document, terminal: Terminal) extends AnAction {
-  def keys = List("ctrl pressed Y")
+  def keys: Seq[String] = List("ctrl pressed Y")
 
   def apply(): Unit = {
     val range = terminal.currentLineIntervalIn(document)

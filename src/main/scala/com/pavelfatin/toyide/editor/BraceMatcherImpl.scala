@@ -22,26 +22,26 @@ import com.pavelfatin.toyide.lexer.{TokenKind, Token}
 private class BraceMatcherImpl(complements: Seq[(TokenKind, TokenKind)]) extends BraceMatcher {
   def braceTypeOf(token: Token, tokens: Seq[Token], offset: Int): BraceType = {
     def right(complement: (TokenKind, TokenKind)): Option[BraceType] = {
-      if(token.kind != complement._1) return None
+      if (token.kind != complement._1) return None
 
       val tail = tokens.dropWhile(!_.eq(token)).tail
 
       complementIn(tail, complement._1, complement._2).map { it =>
         if (token.span.begin == offset || it.span.end == offset) Paired else Inapplicable
       } orElse Some {
-        if(token.span.begin == offset) Unbalanced else Inapplicable
+        if (token.span.begin == offset) Unbalanced else Inapplicable
       }
     }
 
     def left(complement: (TokenKind, TokenKind)): Option[BraceType] = {
-      if(token.kind != complement._2) return None
+      if (token.kind != complement._2) return None
 
       val tail = tokens.takeWhile(!_.eq(token)).reverse
 
       complementIn(tail, complement._2, complement._1).map { it =>
         if (token.span.end == offset || it.span.begin == offset) Paired else Inapplicable
       } orElse Some {
-        if(token.span.end == offset) Unbalanced else Inapplicable
+        if (token.span.end == offset) Unbalanced else Inapplicable
       }
     }
 
@@ -53,9 +53,9 @@ private class BraceMatcherImpl(complements: Seq[(TokenKind, TokenKind)]) extends
   def complementIn(tail: Seq[Token], opening: TokenKind, closing: TokenKind): Option[Token] = {
     var level = 0
     tail.foreach { it =>
-      if(it.kind == opening) level += 1
-      if(it.kind == closing) {
-        if(level == 0) return Some(it)
+      if (it.kind == opening) level += 1
+      if (it.kind == closing) {
+        if (level == 0) return Some(it)
         level -= 1
       }
     }
