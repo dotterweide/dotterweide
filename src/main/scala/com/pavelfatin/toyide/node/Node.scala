@@ -73,7 +73,7 @@ trait Node extends Evaluable with Translatable with Optimizable {
     of(this)
   }
 
-  def isLeaf = token.isDefined
+  def isLeaf: Boolean = token.isDefined
 
   def elements: Seq[Node] = {
     def elements(node: Node): Stream[Node] =
@@ -114,7 +114,7 @@ trait Node extends Evaluable with Translatable with Optimizable {
       prefix + kind + "\n" + children.map(n => indent(n.content, 1)).mkString("\n")
   }
 
-  override def toString = {
+  override def toString: String = {
     val prefix = if(problem.isDefined) "error: " else ""
 
     if(isLeaf)
@@ -125,13 +125,13 @@ trait Node extends Evaluable with Translatable with Optimizable {
 }
 
 object NodeToken {
-  def unapply(node: Node) = node.token
+  def unapply(node: Node): Option[Token] = node.token
 }
 
 object NodeParent {
-  def unapply(node: Node) = node.parent
+  def unapply(node: Node): Option[Node] = node.parent
 }
 
 object NodeNextSibling {
-  def unapply(node: Node) = node.nextSibling
+  def unapply(node: Node): Option[Node] = node.nextSibling
 }

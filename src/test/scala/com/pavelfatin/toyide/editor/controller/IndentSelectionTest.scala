@@ -21,18 +21,18 @@ import org.junit.Test
 
 class IndentSelectionTest extends ActionTestBase(new IndentSelection(_, _, 2)) {
   @Test
-  def singleLine() {
+  def singleLine(): Unit = {
     assertEffectIs("[foo|]", "[  foo|]")
     assertEffectIs("[foo]ba|r", "[  foo]ba|r")
   }
 
   @Test
-  def multipleLines() {
+  def multipleLines(): Unit = {
     assertEffectIs("[foo\nbar|]", "[  foo\n  bar|]")
   }
 
   @Test
-  def tailLine() {
+  def tailLine(): Unit = {
     assertEffectIs("[foo\nbar\n|]", "[  foo\n  bar\n|]")
   }
 }

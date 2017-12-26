@@ -21,17 +21,17 @@ import org.junit.Test
 
 class CoreTest extends LibraryTestBase {
   @Test
-  def defmacro() {
+  def defmacro(): Unit = {
     assertValue("(macroexpand '(defmacro m [x] 1))", "(def m (macro m (x) 1))")
   }
 
   @Test
-  def defn() {
+  def defn(): Unit = {
     assertValue("(macroexpand '(defn f [x] 1))", "(def f (fn f (x) 1))")
   }
 
   @Test
-  def defnPloy() {
+  def defnPloy(): Unit = {
     assertValue("(defn-poly f ([] 1)) (f)", "1")
     assertValue("(defn-poly f ([x] x)) (f 1)", "1")
     assertValue("(defn-poly f ([x y] x)) (f 1 2)", "1")
@@ -45,7 +45,7 @@ class CoreTest extends LibraryTestBase {
   }
 
   @Test
-  def isTrue() {
+  def isTrue(): Unit = {
     assertValue("(true? true)", "true")
     assertValue("(true? false)", "false")
 
@@ -53,7 +53,7 @@ class CoreTest extends LibraryTestBase {
   }
 
   @Test
-  def isFalse() {
+  def isFalse(): Unit = {
     assertValue("(false? true)", "false")
     assertValue("(false? false)", "true")
 
@@ -61,7 +61,7 @@ class CoreTest extends LibraryTestBase {
   }
 
   @Test
-  def when() {
+  def when(): Unit = {
     assertValue("(when true)", "()")
 
     assertValue("(when true 1)", "1")
@@ -74,7 +74,7 @@ class CoreTest extends LibraryTestBase {
   }
 
   @Test
-  def cond() {
+  def cond(): Unit = {
     assertValue("(cond)", "()")
 
     assertValue("(cond true 1)", "1")
@@ -88,12 +88,12 @@ class CoreTest extends LibraryTestBase {
   }
 
   @Test
-  def elseForm() {
+  def elseForm(): Unit = {
     assertValue("else", "true")
   }
 
   @Test
-  def ifLet() {
+  def ifLet(): Unit = {
     assertValue("(if-let [x true] 1)", "1")
     assertValue("(if-let [x false] 1)", "()")
 
@@ -108,7 +108,7 @@ class CoreTest extends LibraryTestBase {
   }
 
   @Test
-  def threadSecond() {
+  def threadSecond(): Unit = {
     assertValue("(-> 4)", "4")
     assertValue("(-> 4 inc)", "5")
 
@@ -121,7 +121,7 @@ class CoreTest extends LibraryTestBase {
   }
 
   @Test
-  def threadLast() {
+  def threadLast(): Unit = {
     assertValue("(->> 4)", "4")
     assertValue("(->> 4 inc)", "5")
 

@@ -22,7 +22,7 @@ import org.junit.Test
 
 class LogicTest extends InterpreterTesting {
   @Test
-  def and() {
+  def and(): Unit = {
     assertValue("(and)", "true")
 
     assertValue("(and true)", "true")
@@ -47,7 +47,7 @@ class LogicTest extends InterpreterTesting {
   }
 
   @Test
-  def or() {
+  def or(): Unit = {
     assertValue("(or)", "false")
 
     assertValue("(or true)", "true")
@@ -72,7 +72,7 @@ class LogicTest extends InterpreterTesting {
   }
 
   @Test
-  def not() {
+  def not(): Unit = {
     assertValue("(not false)", "true")
     assertValue("(not true)", "false")
 

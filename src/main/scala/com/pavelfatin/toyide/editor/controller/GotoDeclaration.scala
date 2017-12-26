@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.editor.{AnAction, Terminal, Data}
 private class GotoDeclaration(terminal: Terminal, data: Data) extends AnAction {
   def keys = List("ctrl pressed B")
 
-  def apply() {
+  def apply(): Unit = {
     data.compute()
     for (reference <- data.referenceAt(terminal.offset);
          target <- reference.target) {

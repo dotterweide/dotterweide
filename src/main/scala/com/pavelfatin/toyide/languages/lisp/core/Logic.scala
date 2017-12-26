@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.Output
 import com.pavelfatin.toyide.languages.lisp.value._
 
 object And extends CoreFunction("and", isLazy = true) {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): BooleanValue = {
     val isFalse = arguments.toIterator.map(_.eval(environment, output)).exists {
       case BooleanValue(b) => !b
       case _ => expected("b1 b2 ...", arguments, environment)
@@ -31,7 +31,7 @@ object And extends CoreFunction("and", isLazy = true) {
 }
 
 object Or extends CoreFunction("or", isLazy = true) {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): BooleanValue = {
     val isTrue = arguments.toIterator.map(_.eval(environment, output)).exists {
       case BooleanValue(b) => b
       case _ => expected("b1 b2 ...", arguments, environment)
@@ -41,7 +41,7 @@ object Or extends CoreFunction("or", isLazy = true) {
 }
 
 object Not extends CoreFunction("not") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): BooleanValue = arguments match {
     case Seq(BooleanValue(b)) => BooleanValue(!b)
     case _ => expected("b", arguments, environment)
   }

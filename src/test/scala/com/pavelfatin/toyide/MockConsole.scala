@@ -23,21 +23,21 @@ import java.awt.Color
 class MockConsole extends Console {
   private val builder = new StringBuilder()
 
-  def clear() {
+  def clear(): Unit = {
     builder.clear()
   }
 
-  def print(s: String) {
+  def print(s: String): Unit = {
     builder.append(s)
   }
 
-  def print(s: String, color: Color) {
+  def print(s: String, color: Color): Unit = {
     print(s)
   }
 
-  def printLink(s: String, line: Int) {
+  def printLink(s: String, line: Int): Unit = {
     print(s)
   }
 
-  def text = builder.toString()
+  def text: String = builder.toString()
 }

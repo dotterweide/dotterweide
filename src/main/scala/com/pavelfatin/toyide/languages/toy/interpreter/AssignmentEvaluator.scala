@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.interpreter._
 import com.pavelfatin.toyide.Output
 
 trait AssignmentEvaluator extends ExpressionHolderEvaluator { self: Assignment =>
-  override def evaluate(context: Context, output: Output) = {
+  override def evaluate(context: Context, output: Output): Option[Value] = {
     val ref = reference.getOrElse(
       interrupt(context, "Reference for assignment not found %s", span.text))
 
@@ -31,7 +31,7 @@ trait AssignmentEvaluator extends ExpressionHolderEvaluator { self: Assignment =
 
     def local = target match {
       case v: VariableDeclaration => v.local
-      case p: Parameter => true
+      case _: Parameter => true
       case _ => interrupt(context, "Non-value target for reference %s: %s", ref.identifier, target.span.text)
     }
 

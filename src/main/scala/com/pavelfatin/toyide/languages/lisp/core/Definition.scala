@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.Output
 import com.pavelfatin.toyide.languages.lisp.value._
 
 object Def extends CoreFunction("def", isLazy = true) {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): ListValue = arguments match {
     case Seq(SymbolValue(name), expression) =>
       environment.setGlobal(name, expression.eval(environment, output))
       ListValue.Empty
@@ -30,7 +30,7 @@ object Def extends CoreFunction("def", isLazy = true) {
 }
 
 object Let extends CoreFunction("let", isLazy = true) with Bindings {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = arguments match {
     case Seq(ListValue(elements), expressions @ _*) =>
       val env = bind(elements, environment, output)
       expressions.map(_.eval(env, output)).lastOption.getOrElse(ListValue.Empty)

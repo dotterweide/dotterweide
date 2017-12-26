@@ -28,7 +28,7 @@ trait ReferenceToValueEvaluator extends ToyEvaluable { self: ReferenceToValue =>
 
     def local = node match {
       case v: VariableDeclaration => v.local
-      case p: Parameter => true
+      case _: Parameter => true
       case _ => interrupt(context, "Non-value target for reference %s: %s", identifier, node.span.text)
     }
 

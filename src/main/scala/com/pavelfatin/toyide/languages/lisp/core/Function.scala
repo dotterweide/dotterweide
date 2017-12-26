@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.languages.lisp.parameters.Parameters
 import com.pavelfatin.toyide.languages.lisp.value._
 
 object Fn extends CoreFunction("fn", isLazy = true) {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): UserFunction = {
     def createFunction(name: Option[String], parameterList: ListValue, expressions: Seq[Expression]) = {
       val parameters = Parameters.from(parameterList).fold(error(_, environment), identity)
       new UserFunction(name, parameters, expressions, environment.locals)
@@ -39,7 +39,7 @@ object Fn extends CoreFunction("fn", isLazy = true) {
 }
 
 object Apply extends CoreFunction("apply") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = arguments match {
     case Seq(f: FunctionValue, ListValue(expressions)) =>
       f.apply(expressions, environment, output)
     case _ => expected("f args", arguments, environment)

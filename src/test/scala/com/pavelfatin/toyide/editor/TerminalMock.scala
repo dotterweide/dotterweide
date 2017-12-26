@@ -19,12 +19,12 @@ package com.pavelfatin.toyide.editor
 
 import com.pavelfatin.toyide.Interval
 
-class TerminalMock(offset: Int, selection: Option[Interval]) extends AbstractTerminal {
-  super.offset = offset
+class TerminalMock(offset0: Int, selection0: Option[Interval]) extends AbstractTerminal {
+  offset = offset0
 
-  super.selection = selection
+  selection = selection0
 
-  def choose[T <: AnyRef](variants: Seq[T], query: String)(callback: T => Unit) {}
+  def choose[T <: AnyRef](variants: Seq[T], query: String)(callback: T => Unit): Unit = ()
 
-  def edit(s: String, title: String)(callback: Option[String] => Unit) {}
+  def edit(s: String, title: String)(callback: Option[String] => Unit): Unit = ()
 }

@@ -24,7 +24,7 @@ import com.pavelfatin.toyide.languages.lisp.LispType._
 import com.pavelfatin.toyide.languages.lisp.value._
 
 class TypeCheck(symbol: String, expectedType: LispType) extends CoreFunction(symbol) {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): BooleanValue = arguments match {
     case Seq(ValueType(t)) => BooleanValue(t == expectedType)
     case _ => expected("expr", arguments, environment)
   }

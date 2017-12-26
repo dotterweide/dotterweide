@@ -22,7 +22,7 @@ import org.junit.Test
 
 class StructuralBindingTest extends InterpreterTesting {
   @Test
-  def singular() {
+  def singular(): Unit = {
     assertValue("((fn [[]]) (list))", "()")
 
     assertValue("((fn [[x]] x) (list 1))", "1")
@@ -40,7 +40,7 @@ class StructuralBindingTest extends InterpreterTesting {
   }
 
   @Test
-  def plural() {
+  def plural(): Unit = {
     assertValue("((fn [[&]]) (list))", "()")
 
     assertValue("((fn [[& x]] x) (list))", "()")
@@ -62,14 +62,14 @@ class StructuralBindingTest extends InterpreterTesting {
   }
 
   @Test
-  def underscore() {
+  def underscore(): Unit = {
     assertValue("((fn [[_ y]] y) (list 1 2))", "2")
 
     assertError("((fn [[_]] _) (list 1))")
   }
 
   @Test
-  def combination() {
+  def combination(): Unit = {
     assertValue("((fn [a [b & c]] (list a b c)) 1 (list 2 3 4))", "(1 2 (3 4))")
     assertValue("((fn [[a & b] c] (list a b c)) (list 1 2 3) 4)", "(1 (2 3) 4)")
     assertValue("((fn [[a & b] [c & d]] (list a b c d)) (list 1 2 3) (list 4 5 6))", "(1 (2 3) 4 (5 6))")

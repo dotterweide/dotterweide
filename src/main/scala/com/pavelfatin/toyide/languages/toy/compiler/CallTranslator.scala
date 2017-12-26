@@ -18,10 +18,10 @@
 package com.pavelfatin.toyide.languages.toy.compiler
 
 import com.pavelfatin.toyide.languages.toy.node.Call
-import com.pavelfatin.toyide.compiler.Labels
+import com.pavelfatin.toyide.compiler.{Code, Labels}
 
 trait CallTranslator extends ToyTranslatable { self: Call =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val exp = expression.getOrElse(
       interrupt("Expression not found %s", span.text))
 

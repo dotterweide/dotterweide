@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.Helpers._
 
 class VoidValueTest extends InspectionTestBase(VoidValue) {
   @Test
-  def variable() {
+  def variable(): Unit = {
     assertMatches(marksIn("var v: integer = 1;")) {
       case Nil =>
     }
@@ -33,7 +33,7 @@ class VoidValueTest extends InspectionTestBase(VoidValue) {
   }
 
   @Test
-  def parameter() {
+  def parameter(): Unit = {
     assertMatches(marksIn("def f(p: integer): integer = {}")) {
       case Nil =>
     }
@@ -43,7 +43,7 @@ class VoidValueTest extends InspectionTestBase(VoidValue) {
   }
 
   @Test
-  def function() {
+  def function(): Unit = {
     assertMatches(marksIn("def f(): integer = {}")) {
       case Nil =>
     }

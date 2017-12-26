@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.interpreter._
 import com.pavelfatin.toyide.Output
 
 trait WhileEvaluator extends ConditionHolderEvaluator { self: While =>
-  override def evaluate(context: Context, output: Output) = {
+  override def evaluate(context: Context, output: Output): Option[Value] = {
     while (evaluateCondition(context, output)) {
       block.foreach {
         _.evaluate(context, output)

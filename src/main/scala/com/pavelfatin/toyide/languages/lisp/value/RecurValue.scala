@@ -20,7 +20,7 @@ package com.pavelfatin.toyide.languages.lisp.value
 import com.pavelfatin.toyide.Output
 
 case class RecurValue(arguments: Seq[Expression]) extends Expression {
-  def eval(environment: Environment, output: Output) =
+  def eval(environment: Environment, output: Output): Expression =
     environment.interrupt("Can only recur from tail position")
 
   def valueType = throw new UnsupportedOperationException()

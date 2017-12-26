@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.languages.toy.EvaluationTestBase
 
 class EvaluationTest extends EvaluationTestBase with InterpreterTesting {
   @Test
-  def stackOverflow() {
+  def stackOverflow(): Unit = {
     run("def f(): void = { f(); }")
 
     try {
@@ -36,7 +36,7 @@ class EvaluationTest extends EvaluationTestBase with InterpreterTesting {
   }
 
   @Test
-  def stackOverflowWithParameterAllocations() {
+  def stackOverflowWithParameterAllocations(): Unit = {
     run("def f(p: integer): void = { f(1); }")
 
     try {
@@ -49,23 +49,23 @@ class EvaluationTest extends EvaluationTestBase with InterpreterTesting {
   }
 
   @Test(expected = classOf[EvaluationException])
-  def valueAllocationsInSingleScope() {
+  def valueAllocationsInSingleScope(): Unit = {
     run("var a: integer = 1; var a: boolean = true;")
   }
 
   @Test(expected = classOf[EvaluationException])
-  def valueAllocationsInSingleScopeInFrame() {
+  def valueAllocationsInSingleScopeInFrame(): Unit = {
     run("def f(): void = { var a: integer = 1; var a: boolean = true; }; f();")
   }
 
   @Test
-  def valueAllocationsInDifferentScopes() {
+  def valueAllocationsInDifferentScopes(): Unit = {
     run("if (true) { var a: integer = 1; }; if (true) { var a: boolean = true; }")
     run("def f(): void = { if (true) { var a: integer = 1; }; if (true) { var a: boolean = true; } }; f();")
   }
 
   @Test
-  def simpleTrace() {
+  def simpleTrace(): Unit = {
     try {
       run("""
       print(1);
@@ -83,7 +83,7 @@ class EvaluationTest extends EvaluationTestBase with InterpreterTesting {
   }
 
   @Test
-  def complexTrace() {
+  def complexTrace(): Unit = {
     try {
       run("""
       def a(): void = {

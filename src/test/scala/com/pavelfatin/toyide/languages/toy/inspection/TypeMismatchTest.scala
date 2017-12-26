@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.Helpers._
 
 class TypeMismatchTest extends InspectionTestBase(TypeMismatch) {
   @Test
-  def variable() {
+  def variable(): Unit = {
     assertMatches(marksIn("var v: integer = 1;")) {
       case Nil =>
     }
@@ -40,7 +40,7 @@ class TypeMismatchTest extends InspectionTestBase(TypeMismatch) {
   }
 
   @Test
-  def assignment() {
+  def assignment(): Unit = {
     assertMatches(marksIn("var v: integer = 1; v = 2;")) {
       case Nil =>
     }
@@ -58,7 +58,7 @@ class TypeMismatchTest extends InspectionTestBase(TypeMismatch) {
   }
 
   @Test
-  def ifStatement() {
+  def ifStatement(): Unit = {
     assertMatches(marksIn("if (true) {}")) {
       case Nil =>
     }
@@ -75,7 +75,7 @@ class TypeMismatchTest extends InspectionTestBase(TypeMismatch) {
   }
 
   @Test
-  def whileStatement() {
+  def whileStatement(): Unit = {
     assertMatches(marksIn("while (true) {}")) {
       case Nil =>
     }
@@ -92,7 +92,7 @@ class TypeMismatchTest extends InspectionTestBase(TypeMismatch) {
   }
 
   @Test
-  def returnStatement() {
+  def returnStatement(): Unit = {
     assertMatches(marksIn("def f(): integer = { return 1; }")) {
       case Nil =>
     }
@@ -113,7 +113,7 @@ class TypeMismatchTest extends InspectionTestBase(TypeMismatch) {
   }
 
   @Test
-  def voidReturnStatement() {
+  def voidReturnStatement(): Unit = {
     assertMatches(marksIn("def f(): void = { return; }")) {
       case Nil =>
     }

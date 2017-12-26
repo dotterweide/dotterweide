@@ -20,7 +20,7 @@ package com.pavelfatin.toyide.editor
 import java.awt._
 import java.awt.event._
 import javax.swing.border.EmptyBorder
-import javax.swing.{Renderer => _, Painter => _, _}
+import javax.swing.{Painter => _, Renderer => _, _}
 
 import com.pavelfatin.toyide.Interval
 import com.pavelfatin.toyide.document.Document
@@ -49,7 +49,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   private val canvas = new CanvasImpl(Pane, scroll)
 
-  val component = {
+  val component: swing.Component = {
     val stripe = new Stripe(document, data, holder, grid, canvas)
     stripe.onChange { y =>
       val point = toPoint(terminal.offset)
@@ -70,13 +70,13 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     swing.Component.wrap(panel)
   }
 
-  def actions = controller.actions
+  def actions: EditorActions = controller.actions
 
-  def pane = swing.Component.wrap(Pane)
+  def pane: swing.Component = swing.Component.wrap(Pane)
 
-  def text = document.text
+  def text: String = document.text
 
-  def text_=(s: String) {
+  def text_=(s: String): Unit = {
     history.recording(document, terminal) {
       terminal.offset = 0
       terminal.selection = None
@@ -87,16 +87,16 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   private var _message: Option[String] = None
 
-  def message = _message
+  def message: Option[String] = _message
 
-  private def message_=(m: Option[String]) {
+  private def message_=(m: Option[String]): Unit = {
     if (_message != m) {
       _message = m
       notifyObservers()
     }
   }
 
-  def dispose() {
+  def dispose(): Unit = {
     tooltipHandler.dispose()
     timer.stop()
   }
@@ -124,7 +124,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     updateMessage()
   }
 
-  private def updateMessage() {
+  private def updateMessage(): Unit = {
     message = errorAt(terminal.offset).map(_.message)
   }
 
@@ -136,7 +136,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     point => document.toOffset(grid.toLocation(point)).flatMap(errorAt))
 
   private val timer = new Timer(500, new ActionListener() {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       if(shouldDisplayCaret) {
         canvas.caretVisible = !canvas.caretVisible
       }
@@ -174,7 +174,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     terminal.highlights = Seq.empty
   }
 
-  private def scrollToOffsetVisible(offset: Int) {
+  private def scrollToOffsetVisible(offset: Int): Unit = {
     val h = grid.cellSize.height
     val w = grid.cellSize.width
     val p = toPoint(offset)
@@ -190,7 +190,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     }
   }
 
-  private def updateCaret() {
+  private def updateCaret(): Unit = {
     canvas.caretVisible = shouldDisplayCaret
     timer.restart()
   }
@@ -201,19 +201,19 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   }
 
   Pane.addKeyListener(new KeyAdapter() {
-    override def keyPressed(e: KeyEvent) {
+    override def keyPressed(e: KeyEvent): Unit = {
       controller.processKeyPressed(e)
       updateCaret()
     }
 
-    override def keyTyped(e: KeyEvent) {
+    override def keyTyped(e: KeyEvent): Unit = {
       controller.processKeyTyped(e)
       updateCaret()
     }
   })
 
   Pane.addMouseListener(new MouseAdapter() {
-    override def mousePressed(e: MouseEvent) {
+    override def mousePressed(e: MouseEvent): Unit = {
       controller.processMousePressed(e)
       updateCaret()
       Pane.requestFocusInWindow()
@@ -221,28 +221,28 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   })
 
   Pane.addMouseMotionListener(new MouseMotionAdapter() {
-    override def mouseDragged(e: MouseEvent) {
+    override def mouseDragged(e: MouseEvent): Unit = {
       controller.processMouseDragged(e)
       updateCaret()
     }
 
-    override def mouseMoved(e: MouseEvent) {
+    override def mouseMoved(e: MouseEvent): Unit = {
       controller.processMouseMoved(e)
     }
   })
 
   Pane.addFocusListener(new FocusListener {
-    def focusGained(e: FocusEvent) {
+    def focusGained(e: FocusEvent): Unit = {
       updateCaret()
     }
 
-    def focusLost(e: FocusEvent) {
+    def focusLost(e: FocusEvent): Unit = {
       updateCaret()
     }
   })
 
   private object MyTerminal extends AbstractTerminal {
-    def choose[T <: AnyRef](variants: Seq[T], query: String)(callback: T => Unit) {
+    def choose[T <: AnyRef](variants: Seq[T], query: String)(callback: T => Unit): Unit = {
       val point = toPoint(offset)
       val shifted = new Point(point.x - grid.cellSize.width * query.length - 3, point.y + 20)
       val (popup, list) = ChooserFactory.createPopup(Pane, shifted, NormalFont, variants, listRenderer) { it =>
@@ -255,7 +255,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
       popupVisible = true
     }
 
-    def edit(text: String, title: String)(callback: Option[String] => Unit) {
+    def edit(text: String, title: String)(callback: Option[String] => Unit): Unit = {
       val dialog = DialogFactory.create(Pane, text, title) { result =>
         Pane.requestFocusInWindow() // to draw cursor immediately
         callback(result)
@@ -273,40 +273,40 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
     setFocusTraversalKeysEnabled(false)
 
-    def getPreferredScrollableViewportSize = getPreferredSize
+    def getPreferredScrollableViewportSize: Dimension = getPreferredSize
 
-    def getScrollableUnitIncrement(visibleRect: Rectangle, orientation: Int, direction: Int) = orientation match {
+    def getScrollableUnitIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int = orientation match {
       case SwingConstants.VERTICAL => grid.cellSize.height
       case SwingConstants.HORIZONTAL => grid.cellSize.width
     }
 
-    def getScrollableBlockIncrement(visibleRect: Rectangle, orientation: Int, direction: Int) = orientation match {
+    def getScrollableBlockIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int = orientation match {
       case SwingConstants.VERTICAL => visibleRect.height
       case SwingConstants.HORIZONTAL => visibleRect.width
     }
 
-    def getScrollableTracksViewportWidth = getParent match {
+    def getScrollableTracksViewportWidth: Boolean = getParent match {
       case vp: JViewport if vp.getWidth > getPreferredSize.width => true
       case _ => false
     }
 
-    def getScrollableTracksViewportHeight = getParent match {
+    def getScrollableTracksViewportHeight: Boolean = getParent match {
       case vp: JViewport if vp.getHeight > getPreferredSize.height => true
       case _ => false
     }
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       paintOn(g, painters.filterNot(_.immediate))
     }
 
-    def paintImmediately(painters: Seq[Painter]) {
+    def paintImmediately(painters: Seq[Painter]): Unit = {
       Option(getGraphics).foreach { graphics =>
         paintOn(graphics, painters)
         Toolkit.getDefaultToolkit.sync()
       }
     }
 
-    private def paintOn(g: Graphics, painters: Seq[Painter]) {
+    private def paintOn(g: Graphics, painters: Seq[Painter]): Unit = {
       val g2d = g.asInstanceOf[Graphics2D]
 
       renderingHints.foreach(it => g2d.addRenderingHints(it.asInstanceOf[java.util.Map[_, _]]))

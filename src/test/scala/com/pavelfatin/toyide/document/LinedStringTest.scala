@@ -22,7 +22,7 @@ import org.junit.Assert._
 
 class LinedStringTest {
   @Test
-  def construction() {
+  def construction(): Unit = {
     assertEquals(List(""), ls("").lines)
     assertEquals(List("foo"), ls("foo").lines)
     assertEquals(List("foo\n", ""), ls("foo\n").lines)
@@ -36,7 +36,7 @@ class LinedStringTest {
   }
   
   @Test
-  def length() {
+  def length(): Unit = {
     assertEquals(0, ls("").length)
     assertEquals(3, ls("foo").length)
     assertEquals(6, ls("foo\nam").length)
@@ -44,7 +44,7 @@ class LinedStringTest {
   }
 
   @Test
-  def charAt() {
+  def charAt(): Unit = {
     assertEquals('a', ls("a").charAt(0))
     assertEquals('a', ls("ab").charAt(0))
     assertEquals('b', ls("ab").charAt(1))
@@ -62,7 +62,7 @@ class LinedStringTest {
   }
 
   @Test
-  def asString() {
+  def asString(): Unit = {
     assertEquals("", ls("").toString)
     assertEquals("\n", ls("\n").toString)
     assertEquals("\n\n", ls("\n\n").toString)
@@ -77,22 +77,22 @@ class LinedStringTest {
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def charAtNegativeIndex() {
+  def charAtNegativeIndex(): Unit = {
     ls("").charAt(-1)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def charAtGreaterIndex() {
+  def charAtGreaterIndex(): Unit = {
     ls("foo").charAt(3)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def charAtGreaterIndexChained() {
+  def charAtGreaterIndexChained(): Unit = {
     ls("foo\nbar").charAt(7)
   }
 
   @Test
-  def subSequence() {
+  def subSequence(): Unit = {
     assertEquals(List(""), ls("").subSequence(0, 0).lines)
     assertEquals(List("a"), ls("a").subSequence(0, 1).lines)
     assertEquals(List("foo"), ls("foo").subSequence(0, 3).lines)
@@ -122,37 +122,37 @@ class LinedStringTest {
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def subSequenceNegativeStart() {
+  def subSequenceNegativeStart(): Unit = {
     ls("").subSequence(-1, 0)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def subSequenceNegativeEnd() {
+  def subSequenceNegativeEnd(): Unit = {
     ls("").subSequence(0, -1)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def subSequenceGreaterStart() {
+  def subSequenceGreaterStart(): Unit = {
     ls("foo").subSequence(4, 4)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def subSequenceGreaterEnd() {
+  def subSequenceGreaterEnd(): Unit = {
     ls("foo").subSequence(3, 4)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def subSequenceGreaterOnEmpty() {
+  def subSequenceGreaterOnEmpty(): Unit = {
     ls("").subSequence(0, 1)
   }
 
   @Test(expected = classOf[IllegalArgumentException])
-  def subSequenceNegativeInterval() {
+  def subSequenceNegativeInterval(): Unit = {
     ls("foo").subSequence(3, 2)
   }
 
    @Test
-  def concat() {
+  def concat(): Unit = {
     assertEquals(List(""), ls("").concat(ls("")).lines)
 
     assertEquals(List("foo"), ls("foo").concat(ls("")).lines)
@@ -180,7 +180,7 @@ class LinedStringTest {
   }
 
   @Test
-  def replace() {
+  def replace(): Unit = {
     assertEquals(List("foo"), ls("").replace(0, 0, "foo").lines)
     assertEquals(List("bar"), ls("foo").replace(0, 3, "bar").lines)
     assertEquals(List(""), ls("foo").replace(0, 3, "").lines)
@@ -193,7 +193,7 @@ class LinedStringTest {
   }
 
   @Test
-  def wraps() {
+  def wraps(): Unit = {
     assertEquals(List(), ls("").wraps)
     assertEquals(List(0), ls("\n").wraps)
     assertEquals(List(0, 1), ls("\n\n").wraps)
@@ -205,14 +205,14 @@ class LinedStringTest {
   }
 
   @Test
-  def immutability() {
+  def immutability(): Unit = {
     val original = ls("foo")
     original.replace(0, 3, "bar")
     assertEquals(List("foo"), original.lines)
   }
 
   @Test
-  def linesIdentity() {
+  def linesIdentity(): Unit = {
     val original = ls("foo\nbar\nmoo")
     val replaced = original.replace(4, 7, "goo")
     assertTrue(original.lines(0).eq(replaced.lines(0)))

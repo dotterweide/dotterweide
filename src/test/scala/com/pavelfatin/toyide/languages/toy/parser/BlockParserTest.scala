@@ -21,7 +21,7 @@ import org.junit.Test
 
 class BlockParserTest extends ParserTest(BlockParser) {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertParsed("{}",
       """
       block
@@ -31,7 +31,7 @@ class BlockParserTest extends ParserTest(BlockParser) {
   }
 
   @Test
-  def incomplete() {
+  def incomplete(): Unit = {
     assertParsed("{",
       """
       block
@@ -41,7 +41,7 @@ class BlockParserTest extends ParserTest(BlockParser) {
   }
 
   @Test
-  def variable() {
+  def variable(): Unit = {
     assertParsed("{ var a: integer = 1; }",
       """
       block
@@ -61,7 +61,7 @@ class BlockParserTest extends ParserTest(BlockParser) {
   }
 
   @Test
-  def variables() {
+  def variables(): Unit = {
     assertParsed("{ var a: integer = 1; var b: string = \"foo\"; }",
       """
       block
@@ -91,7 +91,7 @@ class BlockParserTest extends ParserTest(BlockParser) {
   }
 
   @Test
-  def assignment() {
+  def assignment(): Unit = {
     assertParsed("{ a = 1; }",
       """
       block
@@ -108,7 +108,7 @@ class BlockParserTest extends ParserTest(BlockParser) {
   }
 
   @Test
-  def assignments() {
+  def assignments(): Unit = {
     assertParsed("{ a = 1; b = 2; }",
       """
       block
@@ -132,7 +132,7 @@ class BlockParserTest extends ParserTest(BlockParser) {
   }
 
   @Test
-  def mixed() {
+  def mixed(): Unit = {
     assertParsed("{ b = 1; var a: integer = 2; a = 3; }",
       """
       block

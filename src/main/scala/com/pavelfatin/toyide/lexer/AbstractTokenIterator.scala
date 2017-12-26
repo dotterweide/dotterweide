@@ -23,15 +23,15 @@ abstract class AbstractTokenIterator(input: CharSequence) extends Iterator[Token
   private var index = 0
   private var marker = -1
 
-  def advance() {
+  def advance(): Unit = {
     advance(1)
   }
 
-  def advance(count: Int) {
+  def advance(count: Int): Unit = {
     index += count
   }
 
-  def mark() {
+  def mark(): Unit = {
     marker = index
   }
 
@@ -39,13 +39,13 @@ abstract class AbstractTokenIterator(input: CharSequence) extends Iterator[Token
 
   def captureChar: Span = captureChars(1)
 
-  def captureChars(count: Int) = {
+  def captureChars(count: Int): Span = {
     mark()
-    Range(0, count).foreach(n => advance())
+    Range(0, count).foreach(_ => advance())
     marked
   }
 
-  def skip(predicate: Char => Boolean) {
+  def skip(predicate: Char => Boolean): Unit = {
     while (hasNext && predicate(char)) advance()
   }
 

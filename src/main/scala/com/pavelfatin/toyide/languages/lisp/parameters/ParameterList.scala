@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.languages.lisp.value.{Expression, ListValue}
 import scala.Function._
 
 private class ParameterList(singularParameters: Seq[Parameters], pluralParameter: Option[Parameters]) extends AbstractParameters {
-  protected def bind0(argument: Expression) = {
+  protected def bind0(argument: Expression): Map[String, Expression] = {
     val arguments = argument match {
       case ListValue(expressions) => expressions
       case e => error("Cannot deconstruct non-list value: " + e.presentation)
@@ -50,7 +50,7 @@ private class ParameterList(singularParameters: Seq[Parameters], pluralParameter
     bindings.toMap
   }
 
-  def symbols = (singularParameters ++ pluralParameter.toSeq).flatMap(_.symbols)
+  def symbols: Seq[String] = (singularParameters ++ pluralParameter.toSeq).flatMap(_.symbols)
 
-  def presentation = singularParameters.size + pluralParameter.map(const("*")).mkString
+  def presentation: String = singularParameters.size + pluralParameter.map(const("*")).mkString
 }

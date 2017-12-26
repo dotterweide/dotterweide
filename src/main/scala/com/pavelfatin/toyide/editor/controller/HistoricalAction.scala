@@ -21,13 +21,13 @@ import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.editor.{AnAction, Terminal, History}
 
 private class HistoricalAction(delegate: AnAction, document: Document, terminal: Terminal, history: History) extends AnAction {
-  def keys = delegate.keys
+  def keys: Seq[String] = delegate.keys
 
-  override def enabled = delegate.enabled
+  override def enabled: Boolean = delegate.enabled
 
   delegate.onChange(notifyObservers())
 
-  def apply() {
+  def apply(): Unit = {
     history.recording(document, terminal) {
       delegate()
     }

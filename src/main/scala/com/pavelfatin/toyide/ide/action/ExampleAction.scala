@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.ide.EditorTab
 class ExampleAction(title0: String, mnemonic0: Char, tab: EditorTab, code: String) extends Action(title0) {
   mnemonic = mnemonic0
 
-  def apply() {
+  def apply(): Unit = {
     tab.text = code.filterNot(_ == '\r').trim
   }
 }

@@ -24,15 +24,15 @@ import org.junit.Assert._
 import com.pavelfatin.toyide.node.{Expression, NodeType}
 
 trait ExpressionTypeTestBase {
-  protected def assertTypeIs(code: String, nodeType: NodeType) {
+  protected def assertTypeIs(code: String, nodeType: NodeType): Unit = {
     assert(code, Some(nodeType))
   }
 
-  protected def assertNoType(code: String) {
+  protected def assertNoType(code: String): Unit = {
     assert(code, None)
   }
 
-  private def assert(code: String, expectedType: Option[NodeType]) {
+  private def assert(code: String, expectedType: Option[NodeType]): Unit = {
     val exp = ExpressionParser.parse(ToyLexer.analyze(code))
     assertNoProblemsIn(exp.elements)
     exp match {

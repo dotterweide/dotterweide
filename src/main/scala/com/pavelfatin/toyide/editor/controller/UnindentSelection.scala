@@ -26,9 +26,9 @@ private class UnindentSelection(document: Document, terminal: Terminal, tabSize:
 
   def keys = List("shift pressed TAB")
 
-  override def enabled = terminal.selection.isDefined
+  override def enabled: Boolean = terminal.selection.isDefined
 
-  def apply() {
+  def apply(): Unit = {
     terminal.selection.foreach { it =>
       val selection = if (document.toLocation(it.end).indent == 0) it.withEndShift(-1) else it
       val beginLine = document.lineNumberOf(selection.begin)

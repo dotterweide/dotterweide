@@ -29,31 +29,31 @@ private class ConsoleImpl(coloring: Coloring) extends JTextPane with Console {
   setFont(new Font(coloring.fontFamily, Font.PLAIN, coloring.fontSize))
   setEditable(false)
 
-  def print(s: String) {
+  def print(s: String): Unit = {
     doPrint(s, null)
   }
 
-  def print(s: String, color: Color) {
+  def print(s: String, color: Color): Unit = {
     val attributes = new SimpleAttributeSet()
     StyleConstants.setForeground(attributes, color)
     doPrint(s, attributes)
   }
 
-  def printLink(s: String, line: Int) {
+  def printLink(s: String, line: Int): Unit = {
     val attributes = new SimpleAttributeSet()
     StyleConstants.setForeground(attributes, LinkColor)
     doPrint(s, attributes)
   }
 
-  private def doPrint(s: String, attributes: AttributeSet) {
+  private def doPrint(s: String, attributes: AttributeSet): Unit = {
     SwingUtilities.invokeLater(new Runnable {
-      def run() {
+      def run(): Unit = {
         getDocument.insertString(getDocument.getLength, s, attributes)
       }
     })
   }
 
-  def clear() {
+  def clear(): Unit = {
     setText("")
   }
 }

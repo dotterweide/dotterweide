@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.interpreter._
 trait Expression extends Value {
   def eval(environment: Environment, output: Output): Expression
 
-  override def toString = "%s: %s".format(presentation, valueType.presentation)
+  override def toString: String = "%s: %s".format(presentation, valueType.presentation)
 }
 
 object Expression {

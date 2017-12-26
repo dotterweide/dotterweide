@@ -32,15 +32,15 @@ private class StatusBar extends FlowPanel(FlowPanel.Alignment.Left)() {
 
   contents += _message
 
-  def message = _message.text
+  def message: String = _message.text
 
-  def message_=(s: String) {
+  def message_=(s: String): Unit = {
     _message.text = s
   }
 
-  def position = _position.text
+  def position: String = _position.text
 
-  def position_=(s: String) {
+  def position_=(s: String): Unit = {
     _position.text = s
   }
 }

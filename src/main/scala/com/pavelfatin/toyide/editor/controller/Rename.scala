@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.editor.{AnAction, History, Data, Terminal}
 private class Rename(document: Document, terminal: Terminal, data: Data, history: History) extends AnAction {
   def keys = List("shift pressed F6")
 
-  def apply() {
+  def apply(): Unit = {
     data.compute()
     val leafs = data.connectedLeafsFor(terminal.offset)
     if (leafs.nonEmpty) {

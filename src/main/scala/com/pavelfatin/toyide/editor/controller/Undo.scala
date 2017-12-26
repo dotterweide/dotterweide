@@ -25,9 +25,9 @@ private class Undo(document: Document, terminal: Terminal, history: History) ext
 
   def keys = Seq("ctrl pressed Z")
 
-  override def enabled = history.canUndo
+  override def enabled: Boolean = history.canUndo
 
-  def apply() {
+  def apply(): Unit = {
     history.undo()
   }
 }

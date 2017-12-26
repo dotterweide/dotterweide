@@ -19,11 +19,11 @@ package com.pavelfatin.toyide.languages.toy.inspection
 
 import com.pavelfatin.toyide.languages.toy.parser.ProgramParser
 import com.pavelfatin.toyide.languages.toy.ToyLexer
-import com.pavelfatin.toyide.inspection.Inspection
+import com.pavelfatin.toyide.inspection.{Inspection, Mark}
 import com.pavelfatin.toyide.Helpers._
 
 class InspectionTestBase(inspection: Inspection) {
-  protected def marksIn(code: String) = {
+  protected def marksIn(code: String): List[Mark] = {
     val elements = ProgramParser.parse(ToyLexer.analyze(code)).elements
     assertNoProblemsIn(elements)
     elements.flatMap(inspection.inspect).toList

@@ -50,7 +50,7 @@ trait LiteralEvaluator extends ToyEvaluable { self: Literal =>
       val i = Integer.parseInt(s)
       IntegerValue(i)
     } catch {
-      case e: NumberFormatException => interrupt(context, "Wrong integer literal: %s", s)
+      case _: NumberFormatException => interrupt(context, "Wrong integer literal: %s", s)
     }
   }
 

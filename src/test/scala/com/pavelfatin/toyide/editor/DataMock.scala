@@ -17,22 +17,25 @@
 
 package com.pavelfatin.toyide.editor
 
+import com.pavelfatin.toyide.lexer.Token
+import com.pavelfatin.toyide.node.Node
+
 class DataMock extends Data {
   def text = ""
 
-  def tokens = Seq.empty
+  def tokens: Seq[Token] = Seq.empty
 
-  def structure = None
+  def structure: Option[Node] = None
 
-  def errors = Seq.empty
+  def errors: Seq[Error] = Seq.empty
 
-  def pass = Pass.Text
+  def pass: Pass = Pass.Text
 
   def hasNextPass = false
 
-  def nextPass() {}
+  def nextPass(): Unit = ()
 
-  def compute() {}
+  def compute(): Unit = ()
 
   def hasFatalErrors = false
 }

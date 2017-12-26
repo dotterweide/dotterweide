@@ -20,13 +20,13 @@ package com.pavelfatin.toyide.lexer
 import com.pavelfatin.toyide.Span
 
 case class Token(kind: TokenKind, span: Span, problem: Option[String] = None) {
-  override def toString = {
+  override def toString: String = {
     val prefix = if(problem.isDefined) "error: " else ""
     val s = if (kind.data) span.text else kind.name
     prefix + s
   }
 
-  def toCompleteString = {
+  def toCompleteString: String = {
     val prefix = if(problem.isDefined) "error: " else ""
     prefix + "%s(%s)".format(kind.name, span.text)
   }

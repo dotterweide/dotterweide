@@ -22,7 +22,7 @@ import org.junit.Test
 
 class MacroTest extends InterpreterTesting {
   @Test
-  def presentation() {
+  def presentation(): Unit = {
     assertValue("(macro [] 1)", "macro0")
     assertValue("(macro [x] 1)", "macro1")
     assertValue("(macro [x y] 1)", "macro2")
@@ -36,12 +36,12 @@ class MacroTest extends InterpreterTesting {
   }
 
   @Test
-  def evaluation() {
+  def evaluation(): Unit = {
     assertError("(eval (macro []))")
   }
 
   @Test
-  def application() {
+  def application(): Unit = {
     assertValue("((macro [] 1))", "1")
     assertValue("((macro [] 1 2))", "2")
 

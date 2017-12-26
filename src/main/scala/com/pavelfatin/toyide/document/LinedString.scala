@@ -24,9 +24,9 @@ private class LinedString private (val lines: List[CharSequence]) extends CharSe
     this(parseLines(s))
   }
 
-  lazy val length = lines.foldLeft(0)(_ + _.length)
+  lazy val length: Int = lines.foldLeft(0)(_ + _.length)
 
-  def charAt(index: Int) = charAt(index, lines)
+  def charAt(index: Int): Char = charAt(index, lines)
 
   def subSequence(start: Int, end: Int) = new LinedString(subLines(start, end))
 
@@ -37,7 +37,7 @@ private class LinedString private (val lines: List[CharSequence]) extends CharSe
 
   lazy val wraps: Seq[Int] = wrapsIn(lines, 0)
 
-  override lazy val toString = lines.foldLeft(new StringBuilder())(_ append _).toString()
+  override lazy val toString: String = lines.foldLeft(new StringBuilder())(_ append _).toString()
 
   private def charAt(index: Int, list: List[CharSequence]): Char = list match {
     case Nil => throw new IndexOutOfBoundsException()

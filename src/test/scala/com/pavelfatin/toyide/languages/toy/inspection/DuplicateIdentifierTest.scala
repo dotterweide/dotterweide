@@ -23,14 +23,14 @@ import com.pavelfatin.toyide.Helpers._
 
 class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   @Test
-  def functions() {
+  def functions(): Unit = {
     assertMatches(marksIn("def a(): void = {}; def b(): void = {}")) {
       case Nil =>
     }
   }
 
   @Test
-  def functionsClash() {
+  def functionsClash(): Unit = {
     val Message = DuplicateIdentifier.FunctionRedefinition("a")
     assertMatches(marksIn("def a(): void = {}; def a(p: integer): void = {}")) {
       case MarkData(Target("a", 24), Message) :: Nil =>
@@ -38,14 +38,14 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def variables() {
+  def variables(): Unit = {
     assertMatches(marksIn("var a: integer = 1; var b: integer = 2;")) {
       case Nil =>
     }
   }
 
   @Test
-  def variablesClash() {
+  def variablesClash(): Unit = {
     val Message = DuplicateIdentifier.VariableRedefinition("a")
     assertMatches(marksIn("var a: integer = 1; var a: boolean = true;")) {
       case MarkData(Target("a", 24), Message) :: Nil =>
@@ -53,14 +53,14 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def parameters() {
+  def parameters(): Unit = {
     assertMatches(marksIn("def f(a: integer, b: integer): void = {}")) {
       case Nil =>
     }
   }
 
   @Test
-  def parametersClash() {
+  def parametersClash(): Unit = {
     val Message = DuplicateIdentifier.ParameterRedefinition("a")
     assertMatches(marksIn("def f(a: integer, a: boolean): void = {}")) {
       case MarkData(Target("a", 18), Message) :: Nil =>
@@ -68,21 +68,21 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def functionAndVariable() {
+  def functionAndVariable(): Unit = {
     assertMatches(marksIn("def f(): void = {} var f: integer = 1;")) {
       case Nil =>
     }
   }
 
   @Test
-  def parameterAndVariable() {
+  def parameterAndVariable(): Unit = {
     assertMatches(marksIn("def f(a: integer): void = { var b: integer = 1; }")) {
       case Nil =>
     }
   }
 
   @Test
-  def parameterAndVariableClash() {
+  def parameterAndVariableClash(): Unit = {
     val Message = DuplicateIdentifier.ParameterRedefinition("a")
     assertMatches(marksIn("def f(a: integer): void = { var a: integer = 1; }")) {
       case MarkData(Target("a", 32), Message) :: Nil =>
@@ -90,14 +90,14 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def variablesInsideFunction() {
+  def variablesInsideFunction(): Unit = {
     assertMatches(marksIn("def f(): void = { var a: integer = 1; var b: integer = 2; }")) {
       case Nil =>
     }
   }
 
   @Test
-  def variablesInsideFunctionClash() {
+  def variablesInsideFunctionClash(): Unit = {
     val Message = DuplicateIdentifier.VariableRedefinition("a")
     assertMatches(marksIn("def f(): void = { var a: integer = 1; var a: integer = 2; }")) {
       case MarkData(Target("a", 42), Message) :: Nil =>
@@ -105,7 +105,7 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def parametersAndVariableInsideFunctionClash() {
+  def parametersAndVariableInsideFunctionClash(): Unit = {
     val Message = DuplicateIdentifier.ParameterRedefinition("a")
     assertMatches(marksIn("def f(a: integer, a: integer): void = { var a: integer = 1; }")) {
       case MarkData(Target("a", 18), Message) :: MarkData(Target("a", 44), Message) :: Nil =>
@@ -113,7 +113,7 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def parameterAndVariablesInsideFunctionClash() {
+  def parameterAndVariablesInsideFunctionClash(): Unit = {
     val Message1 = DuplicateIdentifier.ParameterRedefinition("a")
     val Message2 = DuplicateIdentifier.VariableRedefinition("a")
     assertMatches(marksIn("def f(a: integer): void = { var a: integer = 1; var a: integer = 2; }")) {
@@ -122,7 +122,7 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def multipleClash() {
+  def multipleClash(): Unit = {
     val Message = DuplicateIdentifier.VariableRedefinition("a")
     assertMatches(marksIn("var a: integer = 1; var a: integer = 2; var a: integer = 3;")) {
       case MarkData(Target("a", 24), Message) :: MarkData(Target("a", 44), Message) :: Nil =>
@@ -130,49 +130,49 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def functionScope() {
+  def functionScope(): Unit = {
     assertMatches(marksIn("def f(): void = { var a: integer = 1; }; var a: integer = 1;")) {
       case Nil =>
     }
   }
 
   @Test
-  def ifScope() {
+  def ifScope(): Unit = {
     assertMatches(marksIn("if (true) { var a: integer = 1; }; var a: integer = 1;")) {
       case Nil =>
     }
   }
 
   @Test
-  def elseScope() {
+  def elseScope(): Unit = {
     assertMatches(marksIn("if (true) { var a: integer = 1; } else { var a: integer = 1; }; var a: integer = 1;")) {
       case Nil =>
     }
   }
 
   @Test
-  def whileScope() {
+  def whileScope(): Unit = {
     assertMatches(marksIn("while (true) { var a: integer = 1; }; var a: integer = 1;")) {
       case Nil =>
     }
   }
 
   @Test
-  def nestedScope() {
+  def nestedScope(): Unit = {
     assertMatches(marksIn("if (true) { if (true) { var a: integer = 1; }; var a: integer = 1; }; var a: integer = 1;")) {
       case Nil =>
     }
   }
 
   @Test
-  def sameLevelScope() {
+  def sameLevelScope(): Unit = {
     assertMatches(marksIn("if (true) { var a: integer = 1; }; if (true) { var a: integer = 1; }")) {
       case Nil =>
     }
   }
 
   @Test
-  def redefinitionInFunctionScope() {
+  def redefinitionInFunctionScope(): Unit = {
     assertMatches(marksIn("var a: integer = 1; def f(a: integer): void = {}")) {
       case Nil =>
     }
@@ -182,7 +182,7 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def redefinitionInIfScope() {
+  def redefinitionInIfScope(): Unit = {
     val Message = DuplicateIdentifier.VariableRedefinition("a")
     assertMatches(marksIn("var a: integer = 1; if (true) { var a: integer = 1; }")) {
       case MarkData(Target("a", 36), Message) :: Nil =>
@@ -190,7 +190,7 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def redefinitionInWhileScope() {
+  def redefinitionInWhileScope(): Unit = {
     val Message = DuplicateIdentifier.VariableRedefinition("a")
     assertMatches(marksIn("var a: integer = 1; while (true) { var a: integer = 1; }")) {
       case MarkData(Target("a", 39), Message) :: Nil =>
@@ -198,7 +198,7 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def redefinitionInElseScope() {
+  def redefinitionInElseScope(): Unit = {
     val Message = DuplicateIdentifier.VariableRedefinition("a")
     assertMatches(marksIn("var a: integer = 1; if (true) {} else { var a: integer = 1; }")) {
       case MarkData(Target("a", 44), Message) :: Nil =>
@@ -206,7 +206,7 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def redefinitionInNestedControlScope() {
+  def redefinitionInNestedControlScope(): Unit = {
     val Message = DuplicateIdentifier.VariableRedefinition("a")
     assertMatches(marksIn("var a: integer = 1; if (true) { if (true) { var a: integer = 1; } }")) {
       case MarkData(Target("a", 48), Message) :: Nil =>
@@ -214,14 +214,14 @@ class DuplicateIdentifierTest extends InspectionTestBase(DuplicateIdentifier) {
   }
 
   @Test
-  def redefinitionInNestedFunctionScope() {
+  def redefinitionInNestedFunctionScope(): Unit = {
     assertMatches(marksIn("var a: integer = 1; def f(): void = { if (true) { var a: integer = 1; } }")) {
       case Nil =>
     }
   }
 
   @Test
-  def redefinitionInControlScopeInsideFunctionScope() {
+  def redefinitionInControlScopeInsideFunctionScope(): Unit = {
     val Message = DuplicateIdentifier.VariableRedefinition("a")
     assertMatches(marksIn("def f(): void = { var a: integer = 1; if (true) { var a: integer = 1; } }")) {
       case MarkData(Target("a", 54), Message) :: Nil =>

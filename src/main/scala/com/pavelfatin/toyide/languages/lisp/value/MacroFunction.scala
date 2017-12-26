@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.languages.lisp.parameters.Parameters
 class MacroFunction(val name: Option[String], parameters: Parameters, expressions: Seq[Expression], closure: Map[String, Expression]) extends FunctionValue {
   def isLazy = true
 
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = {
     val expansion = expand(arguments, environment, output)
     expansion.eval(environment, output)
   }
@@ -36,7 +36,7 @@ class MacroFunction(val name: Option[String], parameters: Parameters, expression
     expressions.map(_.eval(env, output)).lastOption.getOrElse(ListValue.Empty)
   }
 
-  def presentation = {
+  def presentation: String = {
     val prefix = name.fold("")(_ + "_")
     prefix + "macro" + parameters.presentation
   }

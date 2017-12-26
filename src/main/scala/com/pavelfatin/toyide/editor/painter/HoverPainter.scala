@@ -19,6 +19,7 @@ package com.pavelfatin.toyide.editor.painter
 
 import java.awt.font.TextAttribute
 import java.awt.{Color, Graphics, Rectangle}
+import java.io
 
 import com.pavelfatin.toyide.Interval
 import com.pavelfatin.toyide.editor._
@@ -43,8 +44,9 @@ private class HoverPainter(context: PainterContext) extends AbstractPainter(cont
 
   def id = "hover"
 
-  def paint(g: Graphics, bounds: Rectangle) {}
+  def paint(g: Graphics, bounds: Rectangle): Unit = ()
 
-  override def decorations = terminal.hover.flatMap(hoverInterval)
-    .map(interval => (interval, HoverAttributes)).toMap
+  override def decorations: Map[Interval, Map[TextAttribute, io.Serializable]] =
+    terminal.hover.flatMap(hoverInterval)
+      .map(interval => (interval, HoverAttributes)).toMap
 }

@@ -22,7 +22,8 @@ import com.pavelfatin.toyide.inspection.{Mark, Inspection}
 import com.pavelfatin.toyide.node.{Expression, Node}
 
 object OperatorApplication extends Inspection {
-  val Message = "Operator '%s' cannot be applied to '%s', '%s'".format(_: String, _: String, _: String)
+  val Message: (String, String, String) => String =
+    "Operator '%s' cannot be applied to '%s', '%s'".format(_: String, _: String, _: String)
 
   def inspect(node: Node): Seq[Mark] = node match {
     case exp @ BinaryExpression(Expression(leftType), token, Expression(rightType)) if exp.nodeType.isEmpty =>

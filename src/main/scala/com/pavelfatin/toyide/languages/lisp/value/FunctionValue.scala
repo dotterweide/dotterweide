@@ -19,13 +19,14 @@ package com.pavelfatin.toyide.languages.lisp.value
 
 import com.pavelfatin.toyide.Output
 import com.pavelfatin.toyide.languages.lisp.LispType
+import com.pavelfatin.toyide.node.NodeType
 
 trait FunctionValue extends Expression {
   def name: Option[String]
 
-  def valueType = LispType.FunctionType
+  def valueType: NodeType  = LispType.FunctionType
 
-  def eval(environment: Environment, output: Output) =
+  def eval(environment: Environment, output: Output): Expression =
     environment.interrupt("Evaluation of " + presentation)
 
   def isLazy: Boolean

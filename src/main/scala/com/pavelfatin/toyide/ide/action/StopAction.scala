@@ -34,7 +34,7 @@ class StopAction(title0: String, mnemonic0: Char, shortcut: String,
     enabled = launcher.active
   }
 
-  def apply() {
+  def apply(): Unit = {
     launcher.stop()
     output.print("\nStopped")
   }

@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.node._
 
 trait ToyTranslatable extends Translatable { self: Node =>
   protected def interrupt(message: String, values: Any*): Nothing =
-    throw new TranslationException(message.format(values: _*))
+    throw TranslationException(message.format(values: _*))
 
   protected def withLine(s: String): String = {
     val line = self.span.source.take(self.span.begin).count(_ == '\n')

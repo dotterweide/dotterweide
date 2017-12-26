@@ -35,7 +35,7 @@ class ContextImpl extends Context {
         "%s value not found: %s".format(place(local), name)))
   }
 
-  def put(local: Boolean, name: String, value: Value) {
+  def put(local: Boolean, name: String, value: Value): Unit = {
     storage(local).put(name, value) match {
       case Some(v) =>
         throw new IllegalStateException(
@@ -47,7 +47,7 @@ class ContextImpl extends Context {
     scope.append(name)
   }
 
-  def update(local: Boolean, name: String, value: Value) {
+  def update(local: Boolean, name: String, value: Value): Unit = {
     storage(local).put(name, value) match {
       case Some(previous) =>
         if (previous.valueType != value.valueType)
@@ -69,7 +69,7 @@ class ContextImpl extends Context {
       heap
   }
 
-  def inScope(action: => Unit) {
+  def inScope(action: => Unit): Unit = {
     allocations ::= ListBuffer()
     try {
       action
@@ -81,7 +81,7 @@ class ContextImpl extends Context {
     }
   }
 
-  private def clearAllocations() {
+  private def clearAllocations(): Unit = {
     val storage = frames.headOption.fold(heap)(_.values)
     for (name <- allocations.head) {
       storage.remove(name) match {
@@ -109,11 +109,11 @@ class ContextImpl extends Context {
     result
   }
 
-  def dropFrame(value: Option[Value]) {
+  def dropFrame(value: Option[Value]): Unit = {
     if (frames.isEmpty)
       throw new IllegalStateException("No frame to drop")
 
-    throw new ReturnException(value)
+    throw ReturnException(value)
   }
 
   def trace: Seq[Place] = frames.map(_.place)

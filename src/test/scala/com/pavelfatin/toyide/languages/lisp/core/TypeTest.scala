@@ -22,37 +22,37 @@ import org.junit.Test
 
 class TypeTest extends InterpreterTesting {
   @Test
-  def integer() {
+  def integer(): Unit = {
     assertValue("(integer? 1)", "true")
     assertValue("(integer? \\с)", "false")
   }
 
   @Test
-  def boolean() {
+  def boolean(): Unit = {
     assertValue("(boolean? false)", "true")
     assertValue("(boolean? 1)", "false")
   }
 
   @Test
-  def character() {
+  def character(): Unit = {
     assertValue("(character? \\c)", "true")
     assertValue("(character? 1)", "false")
   }
 
   @Test
-  def symbol() {
+  def symbol(): Unit = {
     assertValue("(symbol? 'do)", "true")
     assertValue("(symbol? 1)", "false")
   }
 
   @Test
-  def function() {
+  def function(): Unit = {
     assertValue("(function? do)", "true")
     assertValue("(function? 1)", "false")
   }
 
   @Test
-  def list() {
+  def list(): Unit = {
     assertValue("(list? (list))", "true")
     assertValue("(list? 1)", "false")
   }

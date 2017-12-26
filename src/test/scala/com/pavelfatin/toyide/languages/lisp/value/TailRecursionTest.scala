@@ -22,7 +22,7 @@ import org.junit.Test
 
 class TailRecursionTest extends InterpreterTesting {
   @Test
-  def tailRecursion() {
+  def tailRecursion(): Unit = {
     val limit = (EnvironmentImpl.MaxFrames + 1).toString
     assertValue("(loop [x 1] (if (< x %s) (recur (+ x 1)) x))".format(limit), limit)
   }

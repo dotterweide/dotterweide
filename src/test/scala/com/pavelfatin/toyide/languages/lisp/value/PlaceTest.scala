@@ -24,74 +24,74 @@ import org.junit.Test
 
 class PlaceTest extends InterpreterTesting {
   @Test
-  def undefinedSymbol() {
+  def undefinedSymbol(): Unit = {
     assertTrace("undefined", Place(Some("Test"), 0))
   }
 
   @Test
-  def emptyApplication() {
+  def emptyApplication(): Unit = {
     assertTrace("()", Place(Some("Test"), 0))
   }
 
   @Test
-  def applicationToValue() {
+  def applicationToValue(): Unit = {
     assertTrace("(1)", Place(Some("Test"), 0))
   }
 
   @Test
-  def coreFunction() {
+  def coreFunction(): Unit = {
     assertTrace("(error)", Place(Some("Test"), 0))
   }
 
   @Test
-  def userFunction() {
+  def userFunction(): Unit = {
     assertTrace("((fn []\n(error)))", Place(Some("Test"), 1), Place(Some("Test"), 0))
     assertTrace("((fn f []\n(error)))", Place(Some("Test.f"), 1), Place(Some("Test"), 0))
   }
 
   @Test
-  def macroFunction() {
+  def macroFunction(): Unit = {
     assertTrace("((macro []\n(error)))", Place(Some("Test"), 1), Place(Some("Test"), 0))
     assertTrace("((macro m []\n(error)))", Place(Some("Test.m"), 1), Place(Some("Test"), 0))
   }
 
   @Test
-  def functionLiteral() {
+  def functionLiteral(): Unit = {
     assertTrace("(\n#(error))", Place(Some("Test"), 1), Place(Some("Test"), 0))
   }
 
   @Test
-  def listInsideFunctionLiteral() {
+  def listInsideFunctionLiteral(): Unit = {
     assertTrace("(#(\n(error)))", Place(Some("Test"), 1), Place(Some("Test"), 0))
   }
 
   @Test
-  def apply() {
+  def apply(): Unit = {
     assertTrace("(apply error\n(list))", Place(Some("Test"), 0))
   }
 
   @Test
-  def quote() {
+  def quote(): Unit = {
     assertTrace("(eval\n'(error))", Place(Some("Test"), 1), Place(Some("Test"), 0))
   }
 
   @Test
-  def quasiQuote() {
+  def quasiQuote(): Unit = {
     assertTrace("(eval\n`(error))", Place(Some("Test"), 1), Place(Some("Test"), 0))
   }
 
   @Test
-  def multiple() {
+  def multiple(): Unit = {
     val code = "(def f (fn [] (error)))\n(def g (fn [] (f)))\n(g)"
     assertTrace(code, Place(Some("Test"), 0), Place(Some("Test"), 1), Place(Some("Test"), 2))
   }
 
   @Test
-  def undefinedSymbolInsideFunctionLiteral() {
+  def undefinedSymbolInsideFunctionLiteral(): Unit = {
     assertTrace("(#(\nfoo))", Place(Some("Test"), 1), Place(Some("Test"), 0))
   }
 
-  private def assertTrace(code: String, places: Place*) {
+  private def assertTrace(code: String, places: Place*): Unit = {
     try {
       run(code)
       fail("No stack trace")

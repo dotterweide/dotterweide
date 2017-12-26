@@ -76,7 +76,7 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
     grid.toRectangle(area)
   }
 
-  override def paint(g: Graphics, bounds: Rectangle) {
+  override def paint(g: Graphics, bounds: Rectangle): Unit = {
     lastEvent.foreach {
       case Replacement(begin, _, before, after) =>
         paintReplacement(g, begin, before, after)
@@ -84,7 +84,7 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
     lastEvent = None
   }
 
-  private def paintReplacement(g: Graphics, begin: Int, before: CharSequence, after: CharSequence) {
+  private def paintReplacement(g: Graphics, begin: Int, before: CharSequence, after: CharSequence): Unit = {
     val endAfter = begin + after.length
     val delta = after.length - before.length
 

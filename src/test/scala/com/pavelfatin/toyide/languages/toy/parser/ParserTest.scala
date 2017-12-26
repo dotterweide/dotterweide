@@ -26,7 +26,7 @@ abstract class ParserTest(parser: Parser, lexer: Lexer = ToyLexer) {
   def parsed(s: String): String =
     parser.parse(lexer.analyze(s)).content
 
-  def assertParsed(s: String, expectation: String) {
+  def assertParsed(s: String, expectation: String): Unit = {
     assertEquals(format(expectation), parsed(s).trim)
   }
 
@@ -34,7 +34,7 @@ abstract class ParserTest(parser: Parser, lexer: Lexer = ToyLexer) {
     val content = expectation.replace("\r\n", "\n")
       .replaceFirst("^ *\n", "").replaceFirst("\\s+$", "")
 
-    val indent = content.takeWhile(_ == ' ').size
+    val indent = content.takeWhile(_ == ' ').length
 
     content.split('\n').map(_.drop(indent)).mkString("\n")
   }

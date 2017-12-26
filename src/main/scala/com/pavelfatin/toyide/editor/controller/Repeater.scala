@@ -22,11 +22,11 @@ import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.editor.Terminal
 
 private trait Repeater { self: Observable =>
-  def repeat(document: Document, terminal: Terminal) {
-    document.onChange { event =>
+  def repeat(document: Document, terminal: Terminal): Unit = {
+    document.onChange { _ =>
       notifyObservers()
     }
-    terminal.onChange { event =>
+    terminal.onChange { _ =>
       notifyObservers()
     }
   }

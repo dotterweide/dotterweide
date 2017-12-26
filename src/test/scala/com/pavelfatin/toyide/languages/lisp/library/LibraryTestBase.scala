@@ -18,8 +18,9 @@
 package com.pavelfatin.toyide.languages.lisp.library
 
 import com.pavelfatin.toyide.languages.lisp.InterpreterTesting
+import com.pavelfatin.toyide.languages.lisp.value.Environment
 
 trait LibraryTestBase extends InterpreterTesting {
-  override def createEnvironment() = Library.instance.createEnvironment()
+  override def createEnvironment(): Environment = Library.instance.createEnvironment()
 }
 

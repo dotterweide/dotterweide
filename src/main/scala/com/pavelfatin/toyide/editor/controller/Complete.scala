@@ -24,7 +24,7 @@ private class Complete(document: Document, terminal: Terminal, data: Data,
                        adviser: Adviser, history: History) extends AnAction {
   def keys = List("ctrl pressed SPACE")
 
-  def apply() {
+  def apply(): Unit = {
     terminal.selection = None
     terminal.highlights = Seq.empty
     val label = Adviser.Anchor
@@ -51,7 +51,7 @@ private class Complete(document: Document, terminal: Terminal, data: Data,
     }
   }
 
-  private def insert(variant: Variant, query: String) {
+  private def insert(variant: Variant, query: String): Unit = {
     terminal.insertInto(document, variant.content.stripPrefix(query))
     terminal.offset += variant.shift
   }

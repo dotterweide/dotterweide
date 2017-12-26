@@ -30,20 +30,20 @@ trait Document extends LinesHolder with ObservableEvents[DocumentEvent] {
 
   def charAt(offset: Int): Char = characters.charAt(offset)
 
-  def charOptionAt(offset: Int) =
+  def charOptionAt(offset: Int): Option[Char] =
     if(offset >= 0 && offset < length) Some(charAt(offset)) else None
 
-  def insert(offset: Int, s: String)
+  def insert(offset: Int, s: String): Unit
 
-  def remove(begin: Int, end: Int)
+  def remove(begin: Int, end: Int): Unit
 
-  def remove(interval: Interval) {
+  def remove(interval: Interval): Unit = {
     remove(interval.begin, interval.end)
   }
 
-  def replace(begin: Int, end: Int, s: String)
+  def replace(begin: Int, end: Int, s: String): Unit
 
-  def replace(interval: Interval, s: String) {
+  def replace(interval: Interval, s: String): Unit = {
     replace(interval.begin, interval.end, s)
   }
 

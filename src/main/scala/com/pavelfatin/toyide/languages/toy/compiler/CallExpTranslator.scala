@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.languages.toy.node.CallExpression
 import com.pavelfatin.toyide.compiler.{Labels, Code}
 
 trait CallExpTranslator extends ToyTranslatable { self: CallExpression =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val ref = reference.getOrElse(
       interrupt("Function not found: %s", span.text))
 

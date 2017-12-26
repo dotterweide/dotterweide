@@ -33,7 +33,7 @@ object Add extends ArithmeticFunction("+") {
 }
 
 object Sub extends ArithmeticFunction("-") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): IntegerValue = arguments match {
     case Seq(IntegerValue(i)) => IntegerValue(-i)
     case Seq(IntegerValue(head), tail @ _*) => IntegerValue(toIntegers(tail, environment).fold(head)(_ - _))
     case _ => expected("i1 in...", arguments, environment)
@@ -46,7 +46,7 @@ object Mul extends ArithmeticFunction("*") {
 }
 
 object Div extends ArithmeticFunction("/") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): IntegerValue = {
     val xs = toIntegers(arguments, environment)
     if (xs.length < 2) expected("i1 i2 ...", arguments, environment)
     if (xs.tail.contains(0)) error("Division by zero: " + xs.mkString(" "), environment)
@@ -55,7 +55,7 @@ object Div extends ArithmeticFunction("/") {
 }
 
 object Mod extends ArithmeticFunction("mod") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): IntegerValue = arguments match {
     case Seq(IntegerValue(i1), IntegerValue(i2)) =>
       if (i2 == 0) error("Division by zero", environment) else IntegerValue(i1 % i2)
     case _ => expected("i1 i2", arguments, environment)

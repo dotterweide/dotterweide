@@ -22,7 +22,7 @@ import org.junit.Test
 
 class DefinitionTest extends InterpreterTesting {
   @Test
-  def definition() {
+  def definition(): Unit = {
     assertValue("(def x 1)", "()")
 
     assertError("(def x)")
@@ -50,7 +50,7 @@ class DefinitionTest extends InterpreterTesting {
   }
 
   @Test
-  def let() {
+  def let(): Unit = {
     assertValue("(let [x 1])", "()")
 
     assertValue("(let [x 1] x)", "1")

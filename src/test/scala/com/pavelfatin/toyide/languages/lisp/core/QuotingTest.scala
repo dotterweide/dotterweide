@@ -22,7 +22,7 @@ import org.junit.Test
 
 class QuotingTest extends InterpreterTesting {
   @Test
-  def quote() {
+  def quote(): Unit = {
     assertValue("(quote 1)", "1")
     assertValue("(quote true)", "true")
     assertValue("(quote \\c)", "\\c")
@@ -45,7 +45,7 @@ class QuotingTest extends InterpreterTesting {
   }
 
   @Test
-  def unquote() {
+  def unquote(): Unit = {
     assertValue("unquote", "core.unquote")
 
     assertError("(unquote)")
@@ -54,7 +54,7 @@ class QuotingTest extends InterpreterTesting {
   }
 
   @Test
-  def quasiquote() {
+  def quasiquote(): Unit = {
     assertValue("(quasiquote 1)", "1")
     assertValue("(quasiquote true)", "true")
     assertValue("(quasiquote \\c)", "\\c")
@@ -77,7 +77,7 @@ class QuotingTest extends InterpreterTesting {
   }
 
   @Test
-  def unquoting() {
+  def unquoting(): Unit = {
     assertValue("(quasiquote (unquote 1))", "1")
     assertValue("(quasiquote (unquote (+ 1 2)))", "3")
 
@@ -86,7 +86,7 @@ class QuotingTest extends InterpreterTesting {
   }
 
   @Test
-  def unquoteSplicing() {
+  def unquoteSplicing(): Unit = {
     assertValue("(quasiquote ((list 1 2)))", "((list 1 2))")
     assertValue("(quasiquote ((unquote-splicing (list 1 2))))", "(1 2)")
 
@@ -98,7 +98,7 @@ class QuotingTest extends InterpreterTesting {
   }
 
   @Test
-  def uniqueSymbolGeneration() {
+  def uniqueSymbolGeneration(): Unit = {
     assertValue("(gensym \"a\")", "a_0")
 
     assertValue("(list (gensym \"a\") (gensym \"a\"))", "(a_0 a_1)")
@@ -107,7 +107,7 @@ class QuotingTest extends InterpreterTesting {
   }
 
   @Test
-  def autoUniqueSymbolGeneration() {
+  def autoUniqueSymbolGeneration(): Unit = {
     assertValue("(quasiquote a#)", "a_0")
     assertValue("(quasiquote (a#))", "(a_0)")
     assertValue("(quasiquote (a# a#))", "(a_0 a_0)")

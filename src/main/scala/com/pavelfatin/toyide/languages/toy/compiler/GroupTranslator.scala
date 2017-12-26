@@ -18,10 +18,10 @@
 package com.pavelfatin.toyide.languages.toy.compiler
 
 import com.pavelfatin.toyide.languages.toy.node.Group
-import com.pavelfatin.toyide.compiler.Labels
+import com.pavelfatin.toyide.compiler.{Code, Labels}
 
 trait GroupTranslator extends ToyTranslatable { self: Group =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val exp = child.getOrElse(
       interrupt("Group expression not found: %s", span.text))
 

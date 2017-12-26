@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.parser.{TreeBuilder, Parser}
 import com.pavelfatin.toyide.languages.toy.node._
 
 object ProgramParser extends Parser {
-  def parse(in: TreeBuilder) {
+  def parse(in: TreeBuilder): Unit = {
     in.capturing(new Program()) {
       while(!in.isEOF) StatementParser.parse(in)
     }

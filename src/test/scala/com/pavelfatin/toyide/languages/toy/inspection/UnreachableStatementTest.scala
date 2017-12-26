@@ -23,49 +23,49 @@ import com.pavelfatin.toyide.Helpers._
 
 class UnreachableStatementTest extends InspectionTestBase(UnreachableStatement) {
   @Test
-  def program() {
+  def program(): Unit = {
     assertMatches(marksIn("return; println();")) {
       case Nil =>
     }
   }
 
   @Test
-  def returnIsLastStatement() {
+  def returnIsLastStatement(): Unit = {
     assertMatches(marksIn("def f(): void = { println(); return; }")) {
       case Nil =>
     }
   }
 
   @Test
-  def returnIsNestedStatement() {
+  def returnIsNestedStatement(): Unit = {
     assertMatches(marksIn("def f(): void = { if (false) { return; } println(); }")) {
       case Nil =>
     }
   }
 
   @Test
-  def unreachableStatement() {
+  def unreachableStatement(): Unit = {
     assertMatches(marksIn("def f(): void = { return; println(); }")) {
       case MarkData(Text("println();"), UnreachableStatement.Message) :: Nil =>
     }
   }
 
   @Test
-  def unreachableStatements() {
+  def unreachableStatements(): Unit = {
     assertMatches(marksIn("def f(): void = { return; println(); print(); }")) {
       case MarkData(Text("println();"), UnreachableStatement.Message) :: Nil =>
     }
   }
 
   @Test
-  def unreachableStatementWithComplexReturn() {
+  def unreachableStatementWithComplexReturn(): Unit = {
     assertMatches(marksIn("def f(): void = { if (true) { return; } else { return; } println(); }")) {
       case MarkData(Text("println();"), UnreachableStatement.Message) :: Nil =>
     }
   }
 
   @Test
-  def comment() {
+  def comment(): Unit = {
     assertMatches(marksIn("def f(): void = { return; // comment\n }")) {
       case Nil =>
     }

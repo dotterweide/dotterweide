@@ -23,7 +23,7 @@ import org.junit.Assert._
 import com.pavelfatin.toyide.Helpers._
 
 abstract class ActionTestBase(factory: (Document, Terminal) => AnAction) {
-  protected def assertEffectIs(before: String, after: String) {
+  protected def assertEffectIs(before: String, after: String): Unit = {
     val (document, terminal) = parseDocument(before)
     val action = factory(document, terminal)
     assertTrue(action.enabled)

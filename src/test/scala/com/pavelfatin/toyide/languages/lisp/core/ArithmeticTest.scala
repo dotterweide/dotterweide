@@ -22,7 +22,7 @@ import org.junit.Test
 
 class ArithmeticTest extends InterpreterTesting {
   @Test
-  def add() {
+  def add(): Unit = {
     assertValue("(+)", "0")
 
     assertValue("(+ 1)", "1")
@@ -38,7 +38,7 @@ class ArithmeticTest extends InterpreterTesting {
   }
 
   @Test
-  def sub() {
+  def sub(): Unit = {
     assertValue("(- 1)", "-1")
 
     assertValue("(- 3 1)", "2")
@@ -54,7 +54,7 @@ class ArithmeticTest extends InterpreterTesting {
   }
 
   @Test
-  def mul() {
+  def mul(): Unit = {
     assertValue("(*)", "1")
 
     assertValue("(* 2)", "2")
@@ -70,7 +70,7 @@ class ArithmeticTest extends InterpreterTesting {
   }
 
   @Test
-  def div() {
+  def div(): Unit = {
     assertValue("(/ 6 3)", "2")
     assertValue("(/ 6 3 2 )", "1")
 
@@ -88,7 +88,7 @@ class ArithmeticTest extends InterpreterTesting {
   }
 
   @Test
-  def mod() {
+  def mod(): Unit = {
     assertValue("(mod 5 3)", "2")
     assertValue("(mod 6 3)", "0")
 

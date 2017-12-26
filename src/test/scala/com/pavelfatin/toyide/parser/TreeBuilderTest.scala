@@ -23,18 +23,18 @@ import com.pavelfatin.toyide.node.{Node, NodeImpl}
 import com.pavelfatin.toyide.{MockNode, Span, MockLexer}
 
 class TreeBuilderTest {
-  def builderFor(s: String) = {
+  def builderFor(s: String): TreeBuilder = {
     new TreeBuilder(MockLexer.analyze(s))
   }
 
-  def assertBuild(tree: Node, expectation: String) {
+  def assertBuild(tree: Node, expectation: String): Unit = {
     assertEquals(expectation.trim.replace("\r\n", "\n"), tree.content.trim)
   }
 
   //TODO error, zero-span node
 
   @Test
-  def EOF() {
+  def EOF(): Unit = {
     val b1 = builderFor("")
     assertTrue(b1.isEOF)
 
@@ -61,12 +61,12 @@ class TreeBuilderTest {
   }
 
   @Test(expected = classOf[NoRootNodeException])
-  def noRootNode() {
+  def noRootNode(): Unit = {
     builderFor("").tree
   }
 
   @Test(expected = classOf[MultipleClosingException])
-  def multipleClosing() {
+  def multipleClosing(): Unit = {
     val b = builderFor("")
     val r = b.open()
     r.close(new MockNode())
@@ -74,7 +74,7 @@ class TreeBuilderTest {
   }
 
   @Test(expected = classOf[MultipleRootNodesException])
-  def multipleRootNodes() {
+  def multipleRootNodes(): Unit = {
     val b = builderFor("FooBar")
 
     val r1 = b.open()
@@ -89,24 +89,24 @@ class TreeBuilderTest {
   }
 
   @Test(expected = classOf[NoSuchTokenException])
-  def noSuchToken() {
+  def noSuchToken(): Unit = {
     builderFor("").consume()
   }
 
   @Test(expected = classOf[ConsumeWithoutRegionException])
-  def consumeWithoutRegion() {
+  def consumeWithoutRegion(): Unit = {
     builderFor("Foo").consume()
   }
 
   @Test(expected = classOf[UnclosedRegionException])
-  def unclosedRegion() {
+  def unclosedRegion(): Unit = {
     val b = builderFor("")
     b.open()
     b.tree
   }
 
   @Test(expected = classOf[IncorrectRegionsOrderException])
-  def incorrectRegionsOrder() {
+  def incorrectRegionsOrder(): Unit = {
     val b = builderFor("")
     val r1 = b.open()
     b.open()
@@ -114,7 +114,7 @@ class TreeBuilderTest {
   }
 
   @Test
-  def unexpectedToken() {
+  def unexpectedToken(): Unit = {
     val s = "Foo"
     val b = builderFor(s)
     val m = b.open()
@@ -141,7 +141,7 @@ node
   }
 
 @Test
-  def unexpectedTokens() {
+  def unexpectedTokens(): Unit = {
     val s = "Foo"
     val b = builderFor(s)
     val m = b.open()
@@ -159,7 +159,7 @@ node
   }
 
   @Test
-  def tokenExpected() {
+  def tokenExpected(): Unit = {
     val s = "Foo"
     val b = builderFor(s)
     val m = b.open()
@@ -193,7 +193,7 @@ node
   }
 
   @Test
-  def tokensExpected() {
+  def tokensExpected(): Unit = {
     val s = "Foo"
     val b = builderFor(s)
     val m = b.open()
@@ -213,7 +213,7 @@ node
   }
 
   @Test
-  def single() {
+  def single(): Unit = {
     val s = "Foo"
     val b = builderFor(s)
     val m = b.open()
@@ -240,7 +240,7 @@ node
   }
 
   @Test
-  def subsequent() {
+  def subsequent(): Unit = {
     val s = "FooBarMoo"
     val b = builderFor(s)
     val m = b.open()
@@ -281,7 +281,7 @@ node
   }
 
   @Test
-  def gap() {
+  def gap(): Unit = {
     val s = "Foo Bar"
     val b = builderFor(s)
     val m = b.open()
@@ -302,7 +302,7 @@ node
   }
 
   @Test
-  def hierarchy() {
+  def hierarchy(): Unit = {
     val s = "RedGreenBlueYellow"
     val b = builderFor(s)
     val r1 = b.open()
@@ -366,7 +366,7 @@ node
   }
 
   @Test
-  def collapseHolderNode() {
+  def collapseHolderNode(): Unit = {
     val s = "FooBar"
     val b = builderFor(s)
     val r1 = b.open()
@@ -374,7 +374,7 @@ node
     b.consume()
     b.consume()
     r2.close(new NodeImpl("nodeB"))
-    r1.close(new NodeImpl("nodeA"), true)
+    r1.close(new NodeImpl("nodeA"), collapseHolderNode = true)
     val tree = b.tree
 
     assertBuild(tree, """
@@ -402,18 +402,18 @@ nodeB
   }
 
   @Test
-  def collapseSeveralHolderNodes() {
+  def collapseSeveralHolderNodes(): Unit = {
     val s = "FooBar"
     val b = builderFor(s)
     val r1 = b.open()
 
     val r2 = b.open()
     b.consume()
-    r2.close(new NodeImpl("nodeB"), true)
+    r2.close(new NodeImpl("nodeB"), collapseHolderNode = true)
 
     val r3 = b.open()
     b.consume()
-    r3.close(new NodeImpl("nodeB"), true)
+    r3.close(new NodeImpl("nodeB"), collapseHolderNode = true)
 
     r1.close(new NodeImpl("nodeA"))
     assertBuild(b.tree, """
@@ -424,19 +424,19 @@ nodeA
   }
 
    @Test
-  def collapseSingleNode() {
+  def collapseSingleNode(): Unit = {
     val s = "Foo"
     val b = builderFor(s)
     val r1 = b.open()
     b.consume()
-    r1.close(new MockNode(), true)
+    r1.close(new MockNode(), collapseHolderNode = true)
     assertBuild(b.tree, """
 Foo
 """)
   }
 
   @Test
-  def doNotCollapseHoldersWithMultipleNodes() {
+  def doNotCollapseHoldersWithMultipleNodes(): Unit = {
     val s = "FooBar"
     val b = builderFor(s)
     val r1 = b.open()
@@ -449,7 +449,7 @@ Foo
     b.consume()
     r3.close(new NodeImpl("nodeB"))
 
-    r1.close(new NodeImpl("nodeA"), true)
+    r1.close(new NodeImpl("nodeA"), collapseHolderNode = true)
     assertBuild(b.tree, """
 nodeA
   nodeB
@@ -460,7 +460,7 @@ nodeA
   }
 
   @Test
-  def zeroSpanNode() {
+  def zeroSpanNode(): Unit = {
     val s = ""
     val b = builderFor(s)
     val m = b.open()
@@ -476,7 +476,7 @@ nodeA
   }
 
   @Test
-  def zeroSpanFirst() {
+  def zeroSpanFirst(): Unit = {
     val s = "Foo"
     val b = builderFor(s)
     val m = b.open()
@@ -492,7 +492,7 @@ nodeA
   }
 
   @Test
-  def fold() {
+  def fold(): Unit = {
     val s = "RedAndGreenAndBlueAndYellow"
     val b = builderFor(s)
     val r1 = b.open()
@@ -516,7 +516,7 @@ node
   }
 
   @Test
-  def foldSingleLevel() {
+  def foldSingleLevel(): Unit = {
     val s = "RedAndGreen"
     val b = builderFor(s)
     val r1 = b.open()
@@ -536,7 +536,7 @@ node
   }
 
   @Test
-  def foldIncompleteLevel() {
+  def foldIncompleteLevel(): Unit = {
     val s = "RedAnd"
     val b = builderFor(s)
     val r1 = b.open()
@@ -554,7 +554,7 @@ node
   }
 
   @Test
-  def foldSingleNode() {
+  def foldSingleNode(): Unit = {
     val s = "Red"
     val b = builderFor(s)
     val r1 = b.open()
@@ -570,7 +570,7 @@ node
   }
 
   @Test
-  def foldEmpty() {
+  def foldEmpty(): Unit = {
     val s = ""
     val b = builderFor(s)
     val r1 = b.open()
@@ -627,7 +627,7 @@ node
 //    assertEquals(None, node.nextSibling)
 //  }
 
-  private def consumeFrom(in: TreeBuilder) {
+  private def consumeFrom(in: TreeBuilder): Unit = {
     val region = in.open()
     in.consume()
     region.close(new MockNode())

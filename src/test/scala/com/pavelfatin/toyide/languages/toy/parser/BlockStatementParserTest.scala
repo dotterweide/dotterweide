@@ -21,7 +21,7 @@ import org.junit.Test
 
 class BlockStatementParserTest extends ParserTest(BlockStatementParser) {
   @Test
-  def variable() {
+  def variable(): Unit = {
     assertParsed("var a: integer = 1;",
       """
       variable
@@ -38,7 +38,7 @@ class BlockStatementParserTest extends ParserTest(BlockStatementParser) {
   }
 
     @Test
-  def assignment() {
+  def assignment(): Unit = {
       assertParsed("a = 1;",
           """
           assignment
@@ -52,7 +52,7 @@ class BlockStatementParserTest extends ParserTest(BlockStatementParser) {
     }
 
   @Test
-  def returnStatement() {
+  def returnStatement(): Unit = {
     assertParsed("return;",
       """
       return
@@ -62,7 +62,7 @@ class BlockStatementParserTest extends ParserTest(BlockStatementParser) {
   }
 
    @Test
-  def whileStatement() {
+  def whileStatement(): Unit = {
      assertParsed("while (i > 0) { a = a + 1; }",
         """
         while
@@ -93,7 +93,7 @@ class BlockStatementParserTest extends ParserTest(BlockStatementParser) {
    }
 
   @Test
-  def ifStatement() {
+  def ifStatement(): Unit = {
     assertParsed("if (i > 0) { a = a + 1; }",
       """
       if
@@ -124,7 +124,7 @@ class BlockStatementParserTest extends ParserTest(BlockStatementParser) {
   }
 
   @Test
-  def call() {
+  def call(): Unit = {
     assertParsed("foo(1, 2);",
       """
       call
@@ -144,7 +144,7 @@ class BlockStatementParserTest extends ParserTest(BlockStatementParser) {
   }
 
   @Test
-  def comment() {
+  def comment(): Unit = {
     assertParsed("// foo bar",
       """
       comment
@@ -153,7 +153,7 @@ class BlockStatementParserTest extends ParserTest(BlockStatementParser) {
   }
 
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertParsed(";",
       """
       empty
@@ -162,7 +162,7 @@ class BlockStatementParserTest extends ParserTest(BlockStatementParser) {
   }
 
   @Test
-  def wrong() {
+  def wrong(): Unit = {
     assertParsed("foo",
       """
       error: foo

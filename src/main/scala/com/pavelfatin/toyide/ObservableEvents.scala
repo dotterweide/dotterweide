@@ -20,15 +20,15 @@ package com.pavelfatin.toyide
 trait ObservableEvents[T] {
   private var observers = List[T => Unit]()
 
-  def onChange(action: T => Unit) {
+  def onChange(action: T => Unit): Unit = {
     observers ::= action
   }
 
-  def notifyObservers(event: T) {
+  def notifyObservers(event: T): Unit = {
     observers.foreach(_(event))
   }
 
-  def disconnect(action: T => Unit) {
+  def disconnect(action: T => Unit): Unit = {
     observers = observers.filterNot(_ == action)
   }
 }

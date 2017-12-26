@@ -22,14 +22,14 @@ import com.pavelfatin.toyide.languages.lisp.parameters.Parameters
 import com.pavelfatin.toyide.languages.lisp.value._
 
 object Eval extends CoreFunction("eval") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = arguments match {
     case Seq(expression) => expression.eval(environment, output)
     case _ => expected("expression", arguments, environment)
   }
 }
 
 object Macro extends CoreFunction("macro", isLazy = true) {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): MacroFunction = {
     def createMacro(name: Option[String], parameterList: ListValue, expressions: Seq[Expression]) = {
       val parameters = Parameters.from(parameterList).fold(error(_, environment), identity)
       new MacroFunction(name, parameters, expressions, environment.locals)
@@ -46,7 +46,7 @@ object Macro extends CoreFunction("macro", isLazy = true) {
 }
 
 object Macroexpand extends CoreFunction("macroexpand") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = arguments match {
     case Seq(ListValue(Seq(head, tail @ _*))) => head.eval(environment, output) match {
       case m: MacroFunction => m.expand(tail, environment, output)
       case _ => error("macro application expected", environment)

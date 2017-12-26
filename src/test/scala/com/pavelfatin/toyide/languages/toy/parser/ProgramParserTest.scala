@@ -21,7 +21,7 @@ import org.junit.Test
 
 class ProgramParserTest extends ParserTest(ProgramParser) {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertParsed("",
       """
       program
@@ -29,7 +29,7 @@ class ProgramParserTest extends ParserTest(ProgramParser) {
   }
 
   @Test
-  def semi() {
+  def semi(): Unit = {
     assertParsed(";",
       """
       program
@@ -39,7 +39,7 @@ class ProgramParserTest extends ParserTest(ProgramParser) {
   }
 
   @Test
-  def singleStatement() {
+  def singleStatement(): Unit = {
     assertParsed("a = 1;",
       """
       program
@@ -54,7 +54,7 @@ class ProgramParserTest extends ParserTest(ProgramParser) {
   }
 
   @Test
-  def error() {
+  def error(): Unit = {
     assertParsed("foo",
       """
       program

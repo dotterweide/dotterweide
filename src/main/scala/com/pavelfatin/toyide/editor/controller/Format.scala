@@ -24,7 +24,7 @@ import com.pavelfatin.toyide.editor.{AnAction, Terminal, Data}
 private class Format(document: Document, terminal: Terminal, data: Data, formatter: Formatter, tabSize: Int) extends AnAction {
   def keys = List("ctrl alt pressed L")
 
-  def apply() {
+  def apply(): Unit = {
     data.compute()
     data.structure.foreach { root =>
       val text = formatter.format(root, terminal.selection, tabSize)

@@ -24,7 +24,7 @@ import org.junit._
 
 class ReadingTest extends InterpreterTesting {
   @Test
-  def expressions() {
+  def expressions(): Unit = {
     assertRead("1", "1")
     assertRead("true", "true")
     assertRead("\\c", "\\c")
@@ -33,7 +33,7 @@ class ReadingTest extends InterpreterTesting {
   }
 
   @Test
-  def specialCharacters() {
+  def specialCharacters(): Unit = {
     assertRead("\\space", "\\space")
     assertRead("\\tab", "\\tab")
     assertRead("\\return", "\\return")
@@ -41,12 +41,12 @@ class ReadingTest extends InterpreterTesting {
   }
 
   @Test
-  def string() {
+  def string(): Unit = {
     assertRead("\"string\"", "(list \\s \\t \\r \\i \\n \\g)")
   }
 
   @Test
-  def stringEscapes() {
+  def stringEscapes(): Unit = {
     assertRead("\"\\t\"", "(list \\tab)")
     assertRead("\"\\r\"", "(list \\return)")
     assertRead("\"\\n\"", "(list \\newline)")
@@ -54,32 +54,32 @@ class ReadingTest extends InterpreterTesting {
   }
 
   @Test
-  def quote() {
+  def quote(): Unit = {
     assertRead("'symbol", "(quote symbol)")
   }
 
   @Test
-  def unquote() {
+  def unquote(): Unit = {
     assertRead("~symbol", "(unquote symbol)")
   }
 
   @Test
-  def unquoteSplicing() {
+  def unquoteSplicing(): Unit = {
     assertRead("~@symbol", "(unquote-splicing symbol)")
   }
 
   @Test
-  def quasiquote() {
+  def quasiquote(): Unit = {
     assertRead("`symbol", "(quasiquote symbol)")
   }
 
   @Test
-  def withinList() {
+  def withinList(): Unit = {
     assertRead("('x ~y `z)", "((quote x) (unquote y) (quasiquote z))")
   }
 
   @Test
-  def functionLiteral() {
+  def functionLiteral(): Unit = {
     assertRead("#()", "(fn () ())")
 
     assertRead("#(%)", "(fn (_p1) (_p1))")
@@ -103,7 +103,7 @@ class ReadingTest extends InterpreterTesting {
     assertRead("#(do (do %))", "(fn (_p1) (do (do _p1)))")
   }
 
-  private def assertRead(code: String, expected: String) {
+  private def assertRead(code: String, expected: String): Unit = {
     val root = InterpreterTesting.parse(code)
     val readable = root.elements.findBy[ReadableNode].getOrElse(
       throw new RuntimeException("No readable element found"))

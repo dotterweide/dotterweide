@@ -20,6 +20,7 @@ package com.pavelfatin.toyide.languages.toy.node
 import com.pavelfatin.toyide.node._
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.Extensions._
+import com.pavelfatin.toyide.languages.toy.ToyType
 import com.pavelfatin.toyide.languages.toy.interpreter._
 import com.pavelfatin.toyide.languages.toy.compiler._
 
@@ -27,17 +28,17 @@ class Assignment extends NodeImpl("assignment")
 with ExpressionHolder with AssignmentEvaluator with AssignmentTranslator {
   def reference: Option[ReferenceNode] = children.findBy[ReferenceNode]
 
-  def expression = children.dropWhile(!_.token.exists(_.kind == EQ)).findBy[Expression]
+  def expression: Option[Expression] = children.dropWhile(!_.token.exists(_.kind == EQ)).findBy[Expression]
 
-  def expectedType = reference.flatMap(_.target).collect {
+  def expectedType: Option[NodeType] = reference.flatMap(_.target).collect {
     case TypedNode(nodeType) => nodeType
   }
 }
 
 class Return extends NodeImpl("return") with ExpressionHolder with ReturnEvaluator with ReturnTranslator {
-  def expression = children.findBy[Expression]
+  def expression: Option[Expression] = children.findBy[Expression]
 
-  def expectedType = parents.findBy[FunctionDeclaration].flatMap(_.nodeType)
+  def expectedType: Option[ToyType with Product with Serializable] = parents.findBy[FunctionDeclaration].flatMap(_.nodeType)
 }
 
 object Return {
@@ -45,11 +46,11 @@ object Return {
 }
 
 class While extends NodeImpl("while") with BlockHolder with ConditionHolder with WhileEvaluator with WhileTranslator {
-  def expression = children.findBy[Expression]
+  def expression: Option[Expression] = children.findBy[Expression]
 }
 
 class If extends NodeImpl("if") with BlockHolder with ConditionHolder with IfEvaluator with IfTranslator {
-  def expression = children.findBy[Expression]
+  def expression: Option[Expression] = children.findBy[Expression]
 
   def elseBlock = children.filterBy[Block].lift(1)
 }
@@ -59,7 +60,7 @@ object If {
 }
 
 class Call extends NodeImpl("call") with CallEvaluator with CallTranslator {
-  def expression = children.findBy[CallExpression]
+  def expression: Option[CallExpression] = children.findBy[CallExpression]
 }
 
 class Comment extends NodeImpl("comment")

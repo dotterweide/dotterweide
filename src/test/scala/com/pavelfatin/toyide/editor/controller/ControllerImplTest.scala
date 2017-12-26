@@ -28,7 +28,7 @@ import com.pavelfatin.toyide.formatter.FormatterImpl
 
 class ControllerImplTest {
   @Test
-  def enter() {
+  def enter(): Unit = {
     assertEffectIs("|", "\n|")(_.processEnterPressed())
     assertEffectIs("|foo", "\n|foo")(_.processEnterPressed())
     assertEffectIs("foo|", "foo\n|")(_.processEnterPressed())
@@ -36,12 +36,12 @@ class ControllerImplTest {
   }
 
   @Test
-  def enterWithCaretHold() {
+  def enterWithCaretHold(): Unit = {
     assertEffectIs("foo|bar", "foo|\nbar")(_.processEnterPressed(true))
   }
 
   @Test
-  def enterWithIndent() {
+  def enterWithIndent(): Unit = {
     assertEffectIs("  foo|", "  foo\n  |")(_.processEnterPressed())
     assertEffectIs("  foo|bar", "  foo\n  |bar")(_.processEnterPressed())
 
@@ -49,7 +49,7 @@ class ControllerImplTest {
   }
 
   @Test
-  def enterWithIndentIncrease() {
+  def enterWithIndentIncrease(): Unit = {
     assertEffectIs("{|", "{\n  |")(_.processEnterPressed())
     assertEffectIs("  {|", "  {\n    |")(_.processEnterPressed())
 
@@ -57,7 +57,7 @@ class ControllerImplTest {
   }
 
   @Test
-  def enterWithIndentDecrease() {
+  def enterWithIndentDecrease(): Unit = {
     assertEffectIs("{|}", "{\n  |\n}")(_.processEnterPressed())
     assertEffectIs("  {|}", "  {\n    |\n  }")(_.processEnterPressed())
 
@@ -65,7 +65,7 @@ class ControllerImplTest {
   }
 
   @Test
-  def enterWithIndentPersists() {
+  def enterWithIndentPersists(): Unit = {
     assertEffectIs("|{", "\n|{")(_.processEnterPressed())
     assertEffectIs("  |{", "  \n  |{")(_.processEnterPressed())
 
@@ -86,18 +86,18 @@ class ControllerImplTest {
   }
 
   @Test
-  def enterBeforePureIndent() {
+  def enterBeforePureIndent(): Unit = {
     assertEffectIs("|  ", "\n|  ")(_.processEnterPressed())
   }
 
   @Test
-  def char() {
+  def char(): Unit = {
     assertEffectIs("|", "a|")(_.processCharInsertion('a'))
     assertEffectIs("a|c", "ab|c")(_.processCharInsertion('b'))
   }
 
   @Test
-  def charComplement() {
+  def charComplement(): Unit = {
     assertEffectIs("|", "(|)")(_.processCharInsertion('('))
     assertEffectIs("|", "[|]")(_.processCharInsertion('['))
     assertEffectIs("|", "{|}")(_.processCharInsertion('{'))
@@ -105,56 +105,56 @@ class ControllerImplTest {
   }
 
   @Test
-  def charComplementSuppression() {
+  def charComplementSuppression(): Unit = {
     assertEffectIs("|a", "(|a")(_.processCharInsertion('('))
     assertEffectIs("|1", "(|1")(_.processCharInsertion('('))
     assertEffectIs("|(", "(|(")(_.processCharInsertion('('))
   }
 
   @Test
-  def charComplementNonSuppression() {
+  def charComplementNonSuppression(): Unit = {
     assertEffectIs("|)", "[|])")(_.processCharInsertion('['))
     assertEffectIs("|)", "(|))")(_.processCharInsertion('('))
   }
 
   @Test
-  def charComplementOverwrite() {
+  def charComplementOverwrite(): Unit = {
     assertEffectIs("(|)", "()|")(_.processCharInsertion(')'))
   }
 
   @Test
-  def charClosingMark() {
+  def charClosingMark(): Unit = {
     assertEffectIs("|", "}|")(_.processCharInsertion('}'))
   }
 
   @Test
-  def charClosingMarkIndentDecrease() {
+  def charClosingMarkIndentDecrease(): Unit = {
     assertEffectIs("  foo\n  |", "  foo\n}|")(_.processCharInsertion('}'))
     assertEffectIs("    foo\n    |", "    foo\n  }|")(_.processCharInsertion('}'))
   }
 
   @Test
-  def charClosingMarkIndentDecreaseAfterIncrease() {
+  def charClosingMarkIndentDecreaseAfterIncrease(): Unit = {
     assertEffectIs("  {\n  |", "  {\n  }|")(_.processCharInsertion('}'))
   }
 
   @Test
-  def charClosingMarkIndentDecreaseBlocked() {
+  def charClosingMarkIndentDecreaseBlocked(): Unit = {
     assertEffectIs("    foo\n   a|", "    foo\n   a}|")(_.processCharInsertion('}'))
   }
 
   @Test
-  def charClosingMarkIndentIncrease() {
+  def charClosingMarkIndentIncrease(): Unit = {
     assertEffectIs("  foo\n|", "  foo\n}|")(_.processCharInsertion('}'))
     assertEffectIs("    foo\n|", "    foo\n  }|")(_.processCharInsertion('}'))
   }
 
   @Test
-  def charClosingMarkIndentIncreaseBlocked() {
+  def charClosingMarkIndentIncreaseBlocked(): Unit = {
     assertEffectIs("    foo\na|", "    foo\na}|")(_.processCharInsertion('}'))
   }
 
-  protected def assertEffectIs(before: String, after: String)(f: ControllerImpl => Unit) {
+  protected def assertEffectIs(before: String, after: String)(f: ControllerImpl => Unit): Unit = {
     doAssertEffectIs(before, after) { (document, terminal) =>
       val GridMock = new Grid(new Dimension(8, 8), new Insets(0, 0, 0, 0))
       val controller = new ControllerImpl(document, new DataMock(), terminal, GridMock, new AdviserMock(),
@@ -163,7 +163,7 @@ class ControllerImplTest {
     }
   }
 
-  private def doAssertEffectIs(before: String, after: String)(block: (Document, Terminal) => Unit) {
+  private def doAssertEffectIs(before: String, after: String)(block: (Document, Terminal) => Unit): Unit = {
     val (document, terminal) = parseDocument(before)
     block(document, terminal)
     val text = formatDocument(document, terminal)

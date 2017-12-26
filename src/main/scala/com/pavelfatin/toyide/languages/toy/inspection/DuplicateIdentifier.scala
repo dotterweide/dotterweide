@@ -23,11 +23,11 @@ import com.pavelfatin.toyide.inspection.{Mark, Inspection}
 import com.pavelfatin.toyide.Extensions._
 
 object DuplicateIdentifier extends Inspection {
-  val FunctionRedefinition = "Function %s is already defined in the scope".format(_: String)
+  val FunctionRedefinition: String => String = "Function %s is already defined in the scope".format(_: String)
 
-  val VariableRedefinition = "Variable %s is already defined in the scope".format(_: String)
+  val VariableRedefinition: String => String = "Variable %s is already defined in the scope".format(_: String)
 
-  val ParameterRedefinition = "Parameter %s is already defined".format(_: String)
+  val ParameterRedefinition: String => String = "Parameter %s is already defined".format(_: String)
 
   def inspect(node: Node): Seq[Mark] = node match {
     case scope: Scope =>

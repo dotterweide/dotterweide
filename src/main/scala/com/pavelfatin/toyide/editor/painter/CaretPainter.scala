@@ -37,7 +37,7 @@ private class CaretPainter(context: PainterContext) extends AbstractPainter(cont
     case _ =>
   }
 
-  override def paint(g: Graphics, bounds: Rectangle) {
+  override def paint(g: Graphics, bounds: Rectangle): Unit = {
     if (canvas.caretVisible) {
       val rectangle = caretRectangleAt(terminal.offset).intersection(bounds)
 

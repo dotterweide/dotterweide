@@ -21,7 +21,7 @@ import org.junit.Test
 
 class UnindentSelectionTest extends ActionTestBase(new UnindentSelection(_, _, 2)) {
   @Test
-  def singleLine() {
+  def singleLine(): Unit = {
     assertEffectIs("[  foo|]", "[foo|]")
     assertEffectIs("[  foo]ba|r", "[foo]ba|r")
     assertEffectIs("[ foo|]", "[foo|]")
@@ -30,12 +30,12 @@ class UnindentSelectionTest extends ActionTestBase(new UnindentSelection(_, _, 2
   }
 
   @Test
-  def multipleLines() {
+  def multipleLines(): Unit = {
     assertEffectIs("[  foo\n  bar|]", "[foo\nbar|]")
   }
 
   @Test
-  def tailLine() {
+  def tailLine(): Unit = {
     assertEffectIs("[  foo\n  bar\n]  mo|o", "[foo\nbar\n]  mo|o")
   }
 }

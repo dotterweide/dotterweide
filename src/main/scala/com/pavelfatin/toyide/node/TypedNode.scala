@@ -22,5 +22,5 @@ trait TypedNode extends Node {
 }
 
 object TypedNode {
-  def unapply(typed: TypedNode) = typed.nodeType
+  def unapply(typed: TypedNode): Option[NodeType] = typed.nodeType
 }

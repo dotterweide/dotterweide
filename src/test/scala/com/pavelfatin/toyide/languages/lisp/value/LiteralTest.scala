@@ -22,18 +22,18 @@ import org.junit.Test
 
 class LiteralTest extends InterpreterTesting {
   @Test
-  def integer() {
+  def integer(): Unit = {
     assertValue("123", "123")
   }
 
   @Test
-  def boolean() {
+  def boolean(): Unit = {
     assertValue("true", "true")
     assertValue("false", "false")
   }
 
   @Test
-  def character() {
+  def character(): Unit = {
     assertValue("\\c", "\\c")
   }
 }

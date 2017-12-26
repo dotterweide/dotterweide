@@ -24,7 +24,7 @@ import com.pavelfatin.toyide.Interval
 private class DuplicateLine(document: Document, terminal: Terminal) extends AnAction {
   def keys = List("ctrl pressed D")
 
-  def apply() {
+  def apply(): Unit = {
     val selection = terminal.selection
     val interval = selection.getOrElse {
       val line = document.toLocation(terminal.offset).line

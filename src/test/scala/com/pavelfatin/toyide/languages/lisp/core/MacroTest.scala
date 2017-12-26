@@ -22,7 +22,7 @@ import org.junit.Test
 
 class MacroTest extends InterpreterTesting {
   @Test
-  def eval() {
+  def eval(): Unit = {
     assertValue("(eval 1)", "1")
 
     assertValue("(eval (quote (+ 1 2)))", "3")
@@ -36,7 +36,7 @@ class MacroTest extends InterpreterTesting {
   }
 
   @Test
-  def macroFunction() {
+  def macroFunction(): Unit = {
     assertValue("(macro [])", "macro0")
     assertValue("(macro [x])", "macro1")
     assertValue("(macro [x y])", "macro2")
@@ -56,7 +56,7 @@ class MacroTest extends InterpreterTesting {
   }
 
   @Test
-  def macroExpand() {
+  def macroExpand(): Unit = {
     assertValue("(macroexpand (quote ((macro [x] (list (quote print) x)) (+ 1 2))))", "(print (+ 1 2))")
 
     assertError("(macroexpand)")

@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.languages.toy.node.{Parameter, VariableDeclaration,
 import com.pavelfatin.toyide.compiler.{Code, Labels}
 
 trait ReferenceToValueTranslator extends ToyTranslatable { self: ReferenceToValue =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val node = target.getOrElse(
       interrupt("Target value not found: %s", identifier))
 

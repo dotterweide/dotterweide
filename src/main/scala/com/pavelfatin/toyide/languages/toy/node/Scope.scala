@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.languages.toy.interpreter._
 import com.pavelfatin.toyide.languages.toy.compiler._
 
 trait Scope extends Node with ScopeEvaluator with ScopeTranslator {
-  def canRedefineOuterDeclarations = parent match {
+  def canRedefineOuterDeclarations: Boolean = parent match {
     case Some(_: FunctionDeclaration) => true
     case _ => false
   }
@@ -55,5 +55,5 @@ object ScopeDeclarations {
 }
 
 object ScopeExit {
-  def unapply(scope: Scope) = scope.exit
+  def unapply(scope: Scope): Option[Node] = scope.exit
 }

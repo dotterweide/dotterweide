@@ -23,14 +23,14 @@ import com.pavelfatin.toyide.Helpers._
 
 class IntegerRangeTest extends InspectionTestBase(IntegerRange) {
   @Test
-  def normal() {
+  def normal(): Unit = {
     assertMatches(marksIn("var v: integer = 123;")) {
       case Nil =>
     }
   }
 
   @Test
-  def tooLarge() {
+  def tooLarge(): Unit = {
     assertMatches(marksIn("var v: integer = 2147483648;")) {
       case MarkData(Text("2147483648"), IntegerRange.Message) :: Nil =>
     }

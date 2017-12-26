@@ -21,7 +21,7 @@ import org.junit.Test
 
 class ParametersParserTest extends ParserTest(ParametersParser) {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertParsed("()",
       """
       parameters
@@ -31,7 +31,7 @@ class ParametersParserTest extends ParserTest(ParametersParser) {
   }
 
   @Test
-  def incomplete() {
+  def incomplete(): Unit = {
     assertParsed("(",
       """
       parameters
@@ -41,7 +41,7 @@ class ParametersParserTest extends ParserTest(ParametersParser) {
   }
 
   @Test
-  def single() {
+  def single(): Unit = {
     assertParsed("(foo: integer)",
       """
       parameters
@@ -56,7 +56,7 @@ class ParametersParserTest extends ParserTest(ParametersParser) {
   }
 
   @Test
-  def pair() {
+  def pair(): Unit = {
     assertParsed("(foo: integer, bar: string)",
       """
       parameters
@@ -77,7 +77,7 @@ class ParametersParserTest extends ParserTest(ParametersParser) {
   }
 
   @Test
-  def triple() {
+  def triple(): Unit = {
     assertParsed("(foo: integer, bar: string, moo: boolean)",
       """
       parameters

@@ -27,7 +27,7 @@ class ProgramFormatTest extends FormatTestBase {
   // empty
 
   @Test
-  def statementSeparator() {
+  def statementSeparator(): Unit = {
     assertFormatted("var a: integer = 1;var b: integer = 2;", ProgramParser,
       "var a: integer = 1; var b: integer = 2;")
 
@@ -42,7 +42,7 @@ class ProgramFormatTest extends FormatTestBase {
   }
 
   @Test
-  def indentBraces() {
+  def indentBraces(): Unit = {
     assertFormatted("def f(): void = {}", ProgramParser, "def f(): void = {\n}")
 
     assertFormatted("def f(): void = {foo();}", ProgramParser, "def f(): void = {\n  foo();\n}")
@@ -57,23 +57,23 @@ class ProgramFormatTest extends FormatTestBase {
   }
 
   @Test
-  def indentElse() {
+  def indentElse(): Unit = {
     assertFormatted("if (true) {} else {}", ProgramParser, "if (true) {\n} else {\n}")
     assertFormatted("if (true) {} else {}\nfoo();", ProgramParser, "if (true) {\n} else {\n}\nfoo();")
   }
 
   @Test
-  def nestedIndent() {
+  def nestedIndent(): Unit = {
     assertFormatted("def f(): void = {if (true) {bar();}}", ProgramParser,
       "def f(): void = {\n  if (true) {\n    bar();\n  }\n}")
   }
 
   @Test
-  def error() {
+  def error(): Unit = {
     assertFormatted("a=1;foo;b=2;", ProgramParser,
-      "a = 1; foo; b = 2;", false)
+      "a = 1; foo; b = 2;", check = false)
 
     assertFormatted("var var", ProgramParser,
-      "var var", false)
+      "var var", check = false)
   }
 }

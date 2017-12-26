@@ -24,12 +24,12 @@ import com.pavelfatin.toyide.MockNode
 class NodeTest {
   def node(children: NodeImpl*): NodeImpl = {
     val node = new MockNode()
-    if(!children.isEmpty) node.children = children
+    if(children.nonEmpty) node.children = children
     node
   }
 
   @Test
-  def elements() {
+  def elements(): Unit = {
     val a = node()
     val b = node()
     val c = node(a, b)
@@ -41,7 +41,7 @@ class NodeTest {
   }
 
   @Test
-  def nextSiblings() {
+  def nextSiblings(): Unit = {
     val n1 = node()
     val n2 = node()
     val n3 = node()
@@ -55,7 +55,7 @@ class NodeTest {
   }
 
   @Test
-  def previousSiblings() {
+  def previousSiblings(): Unit = {
     val n1 = node()
     val n2 = node()
     val n3 = node()

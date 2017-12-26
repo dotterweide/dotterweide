@@ -34,7 +34,7 @@ private object DialogFactory {
     var done = false
 
     object OkAction extends AbstractAction("OK") {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         done = true
         dialog.dispose()
         callback(Some(field.getText))
@@ -42,7 +42,7 @@ private object DialogFactory {
     }
 
     object CancelAction extends AbstractAction("Cancel") {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         done = true
         dialog.dispose()
         callback(None)
@@ -74,7 +74,7 @@ private object DialogFactory {
     dialog.setContentPane(content)
 
     dialog.addWindowListener(new WindowAdapter() {
-      override def windowClosed(e: WindowEvent) {
+      override def windowClosed(e: WindowEvent): Unit = {
         if (!done) {
           done = true
           callback(None)

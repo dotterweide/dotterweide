@@ -44,11 +44,11 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
   
   canvas.onChange {
     case VisibleRectangleChanged(_) if !completeData && anchoredMatches.nonEmpty => update(complete = true)
-    case FocusChanged(hasFocus) => update(complete = true)
+    case FocusChanged(_) => update(complete = true)
     case _ =>
   }
 
-  private def update(complete: Boolean = false) {
+  private def update(complete: Boolean = false): Unit = {
     anchoredMatches.foreach(_.dispose())
 
     val previousMatches = anchoredMatches
@@ -77,7 +77,7 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
 
   def id = "match"
 
-  def paint(g: Graphics, bounds: Rectangle) {
+  def paint(g: Graphics, bounds: Rectangle): Unit = {
     anchoredMatches.foreach { it =>
       val rectangle = toRectangle(it.interval).intersection(bounds)
 

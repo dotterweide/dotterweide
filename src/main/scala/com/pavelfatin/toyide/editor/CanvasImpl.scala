@@ -33,7 +33,7 @@ private class CanvasImpl(component: JComponent, scrollPane: JScrollPane) extends
   })
 
   private val scrollListener = new AdjustmentListener {
-    def adjustmentValueChanged(e: AdjustmentEvent) {
+    def adjustmentValueChanged(e: AdjustmentEvent): Unit = {
       notifyObservers(VisibleRectangleChanged(component.getVisibleRect))
     }
   }
@@ -42,17 +42,17 @@ private class CanvasImpl(component: JComponent, scrollPane: JScrollPane) extends
   scrollPane.getHorizontalScrollBar.addAdjustmentListener(scrollListener)
 
   component.addComponentListener(new ComponentAdapter {
-    override def componentResized(e: ComponentEvent) {
+    override def componentResized(e: ComponentEvent): Unit = {
       notifyObservers(VisibleRectangleChanged(component.getVisibleRect))
     }
   })
 
   component.addFocusListener(new FocusListener {
-    def focusGained(e: FocusEvent) {
+    def focusGained(e: FocusEvent): Unit = {
       notifyObservers(FocusChanged(true))
     }
 
-    def focusLost(e: FocusEvent) {
+    def focusLost(e: FocusEvent): Unit = {
       notifyObservers(FocusChanged(false))
     }
   })
@@ -65,9 +65,9 @@ private class CanvasImpl(component: JComponent, scrollPane: JScrollPane) extends
 
   def hasFocus: Boolean = component.hasFocus
 
-  def caretVisible = _caretVisible
+  def caretVisible: Boolean = _caretVisible
 
-  def caretVisible_=(b: Boolean) {
+  def caretVisible_=(b: Boolean): Unit = {
     if (_caretVisible != b) {
       _caretVisible = b
       notifyObservers(CaretVisibilityChanged(b))

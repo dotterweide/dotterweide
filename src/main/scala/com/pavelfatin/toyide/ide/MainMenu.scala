@@ -67,7 +67,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
 
   private val toggleLineComment = new MenuItem("")
 
-  def bindTo(actions: EditorActions) {
+  def bindTo(actions: EditorActions): Unit = {
     bind(complete, "Complete", 'P', actions.complete)
     bind(copy, "Copy", 'C', actions.copy)
     bind(cut, "Cut", 'T', actions.cut)
@@ -90,12 +90,12 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
     bind(redo, "Redo", 'R', actions.redo)
   }
 
-  private def bind(item: MenuItem, title: String, mnemonic: Char, anAction: AnAction) {
+  private def bind(item: MenuItem, title: String, mnemonic: Char, anAction: AnAction): Unit = {
     item.action = new AnActionAdapter(title, mnemonic, anAction)
   }
 
   contents += new Menu("File") {
-    val parent = Component.wrap(frame.peer.getRootPane)
+    private val parent = Component.wrap(frame.peer.getRootPane)
     mnemonic = Key.F
     contents += new MenuItem(new NewAction("New", 'N', "ctrl pressed N", parent, tab))
     contents += new MenuItem(new OpenAction("Open...", 'O', "ctrl pressed O", parent, tab))
@@ -106,7 +106,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
     contents += new Separator()
     contents += new MenuItem(new Action("Exit") {
       mnemonic = 'X'
-      def apply() {
+      def apply(): Unit = {
         frame.dispose()
       }
     })
@@ -174,7 +174,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
 
       updateSelection()
 
-      private def updateSelection() {
+      private def updateSelection(): Unit = {
         selected = coloring.name == it
       }
     })
@@ -187,7 +187,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
       action = new Action(text) {
         mnemonic = 'S'
         accelerator = Some(KeyStroke.getKeyStroke("ctrl alt pressed S"))
-        def apply() {
+        def apply(): Unit = {
           tab.split = selected
         }
       }
@@ -200,7 +200,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
     contents += new MenuItem(new Action("License") {
       mnemonic = 'L'
 
-      def apply() {
+      def apply(): Unit = {
         val dialog = new InfoDialog(frame, "license.html", true)
         dialog.title = "License"
         dialog.preferredSize = new Dimension(600, 500)
@@ -214,7 +214,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
       mnemonic = 'A'
       accelerator = Some(KeyStroke.getKeyStroke("pressed F1"))
 
-      def apply() {
+      def apply(): Unit = {
         val dialog = new InfoDialog(frame, "about.html", false)
         dialog.title = "About the program"
         dialog.pack()

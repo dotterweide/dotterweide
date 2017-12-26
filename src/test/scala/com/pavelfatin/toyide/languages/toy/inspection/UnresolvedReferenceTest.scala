@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.Helpers._
 
 class UnresolvedReferenceTest extends InspectionTestBase(UnresolvedReference) {
   @Test
-  def variable() {
+  def variable(): Unit = {
     assertMatches(marksIn("var v: integer = 1; v = 2;")) {
       case Nil =>
     }
@@ -36,7 +36,7 @@ class UnresolvedReferenceTest extends InspectionTestBase(UnresolvedReference) {
   }
 
   @Test
-  def parameter() {
+  def parameter(): Unit = {
     assertMatches(marksIn("def f(p: integer): integer = { var v: integer = p; }")) {
       case Nil =>
     }
@@ -49,7 +49,7 @@ class UnresolvedReferenceTest extends InspectionTestBase(UnresolvedReference) {
   }
 
   @Test
-  def function() {
+  def function(): Unit = {
     assertMatches(marksIn("def f(): integer = {}; f();")) {
       case Nil =>
     }
@@ -62,7 +62,7 @@ class UnresolvedReferenceTest extends InspectionTestBase(UnresolvedReference) {
   }
 
   @Test
-  def builtInFunctions() {
+  def builtInFunctions(): Unit = {
     assertMatches(marksIn("print();")) {
       case Nil =>
     }

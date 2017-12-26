@@ -20,47 +20,47 @@ package com.pavelfatin.toyide.editor
 import com.pavelfatin.toyide.Interval
 
 sealed trait TerminalEvent {
-  def undo(terminal: Terminal)
+  def undo(terminal: Terminal): Unit
 
-  def redo(terminal: Terminal)
+  def redo(terminal: Terminal): Unit
 }
 
 case class CaretMovement(from: Int, to: Int) extends TerminalEvent {
-  def undo(terminal: Terminal) {
+  def undo(terminal: Terminal): Unit = {
     terminal.offset = from
   }
 
-  def redo(terminal: Terminal) {
+  def redo(terminal: Terminal): Unit = {
     terminal.offset = to
   }
 }
 
 case class SelectionChange(from: Option[Interval], to: Option[Interval]) extends TerminalEvent {
-  def undo(terminal: Terminal) {
+  def undo(terminal: Terminal): Unit = {
     terminal.selection = from
   }
 
-  def redo(terminal: Terminal) {
+  def redo(terminal: Terminal): Unit = {
     terminal.selection = to
   }
 }
 
 case class HighlightsChange(from: Seq[Interval], to: Seq[Interval]) extends TerminalEvent {
-  def undo(terminal: Terminal) {
+  def undo(terminal: Terminal): Unit = {
     terminal.highlights = from
   }
 
-  def redo(terminal: Terminal) {
+  def redo(terminal: Terminal): Unit = {
     terminal.highlights = to
   }
 }
 
 case class HoverChange(from: Option[Int], to: Option[Int]) extends TerminalEvent {
-  def undo(terminal: Terminal) {
+  def undo(terminal: Terminal): Unit = {
     terminal.hover = from
   }
 
-  def redo(terminal: Terminal) {
+  def redo(terminal: Terminal): Unit = {
     terminal.hover = to
   }
 }

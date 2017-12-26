@@ -24,7 +24,7 @@ import com.pavelfatin.toyide.languages.lisp.LispTokens._
 import com.pavelfatin.toyide.lexer.TokenKind
 
 class LispColoring(colors: Map[String, Color]) extends AbstractColoring(colors) {
-  def attributesFor(kind: TokenKind) = {
+  def attributesFor(kind: TokenKind): Attributes = {
     val foreground = apply(colorId(kind))
     val weight = weightFor(kind)
     val style = styleFor(kind)

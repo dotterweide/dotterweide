@@ -20,5 +20,5 @@ package com.pavelfatin.toyide.interpreter
 trait DelegateValue[T] extends Value {
   def content: T
 
-  def presentation = content.toString
+  def presentation: String = content.toString
 }

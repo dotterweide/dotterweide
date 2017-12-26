@@ -22,12 +22,12 @@ import org.junit.Assert._
 
 class ToyLexerTest {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertTokens("", "")
   }
 
   @Test
-  def whitespace() {
+  def whitespace(): Unit = {
     assertTokens(" ", "WS( )")
     assertTokens("  ", "WS(  )")
     assertTokens("\t", "WS(\t)")
@@ -37,7 +37,7 @@ class ToyLexerTest {
   }
 
   @Test
-  def comment() {
+  def comment(): Unit = {
     assertTokens("//foo", "COMMENT(//foo)")
     assertTokens("// foo", "COMMENT(// foo)")
     assertTokens("///", "COMMENT(///)")
@@ -47,18 +47,18 @@ class ToyLexerTest {
   }
 
   @Test
-  def number() {
+  def number(): Unit = {
     assertTokens("123", "NUMBER_LITERAL(123)")
     assertTokens("1", "NUMBER_LITERAL(1)")
   }
 
   @Test
-  def sequence() {
+  def sequence(): Unit = {
     assertTokens("1 23  4", "NUMBER_LITERAL(1), WS( ), NUMBER_LITERAL(23), WS(  ), NUMBER_LITERAL(4)")
   }
 
   @Test
-  def string() {
+  def string(): Unit = {
     assertTokens("\"abc\"", "STRING_LITERAL(\"abc\")")
     assertTokens("\"a\"", "STRING_LITERAL(\"a\")")
     assertTokens("\"a\" \"b\"", "STRING_LITERAL(\"a\"), WS( ), STRING_LITERAL(\"b\")")
@@ -67,7 +67,7 @@ class ToyLexerTest {
   }
 
   @Test
-  def unclosedString() {
+  def unclosedString(): Unit = {
     assertTokens("\"", "error: STRING_LITERAL(\")")
     assertTokens("\"a", "error: STRING_LITERAL(\"a)")
     assertTokens("\"abc", "error: STRING_LITERAL(\"abc)")
@@ -81,13 +81,13 @@ class ToyLexerTest {
   }
 
   @Test
-  def boolean() {
+  def boolean(): Unit = {
     assertTokens("true", "BOOLEAN_LITERAL(true)")
     assertTokens("false", "BOOLEAN_LITERAL(false)")
   }
 
   @Test
-  def keyword() {
+  def keyword(): Unit = {
     assertTokens("var", "VAR(var)")
     assertTokens("def", "DEF(def)")
     assertTokens("while", "WHILE(while)")
@@ -97,12 +97,12 @@ class ToyLexerTest {
   }
 
   @Test
-  def keywords() {
+  def keywords(): Unit = {
     assertTokens("def def", "DEF(def), WS( ), DEF(def)")
   }
 
   @Test
-  def types() {
+  def types(): Unit = {
     assertTokens("integer", "INTEGER(integer)")
     assertTokens("boolean", "BOOLEAN(boolean)")
     assertTokens("string", "STRING(string)")
@@ -110,7 +110,7 @@ class ToyLexerTest {
   }
 
   @Test
-  def char() {
+  def char(): Unit = {
     assertTokens("=", "EQ(=)")
     assertTokens(",", "COMMA(,)")
     assertTokens(":", "COLON(:)")
@@ -128,12 +128,12 @@ class ToyLexerTest {
   }
 
   @Test
-  def chars() {
+  def chars(): Unit = {
     assertTokens("+ ++", "PLUS(+), WS( ), PLUS(+), PLUS(+)")
   }
 
   @Test
-  def relations() {
+  def relations(): Unit = {
     assertTokens("==", "EQ_EQ(==)")
     assertTokens("!=", "BANG_EQ(!=)")
     assertTokens("<", "LT(<)")
@@ -143,13 +143,13 @@ class ToyLexerTest {
   }
 
   @Test
-  def logical() {
+  def logical(): Unit = {
     assertTokens("||", "BAR_BAR(||)")
     assertTokens("&&", "AMP_AMP(&&)")
   }
 
   @Test
-  def identifier() {
+  def identifier(): Unit = {
     assertTokens("a", "IDENT(a)")
     assertTokens("foo", "IDENT(foo)")
     assertTokens("foo1", "IDENT(foo1)")
@@ -157,21 +157,21 @@ class ToyLexerTest {
   }
 
   @Test
-  def identifierAsKeyword() {
+  def identifierAsKeyword(): Unit = {
     assertTokens("defdef", "IDENT(defdef)")
   }
 
   @Test
-  def identifiers() {
+  def identifiers(): Unit = {
     assertTokens("foo bar", "IDENT(foo), WS( ), IDENT(bar)")
   }
 
   @Test
-  def unknownChar() {
+  def unknownChar(): Unit = {
     assertTokens("&", "error: UNKNOWN(&)")
   }
 
-  def assertTokens(input: String, expectation: String) {
+  def assertTokens(input: String, expectation: String): Unit = {
     assertEquals(expectation, ToyLexer.analyze(input).map(_.toCompleteString).mkString(", "))
   }
 }

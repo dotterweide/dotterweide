@@ -26,7 +26,7 @@ class AnchoredInterval(document: Document, origin: Interval, beginBias: Bias = B
 
   def interval = Interval(beginAnchor.offset, beginAnchor.offset.max(endAnchor.offset))
 
-  def dispose() {
+  def dispose(): Unit = {
     beginAnchor.dispose()
     endAnchor.dispose()
   }

@@ -22,14 +22,14 @@ import org.junit.Test
 
 class EntityFormatTest extends FormatTestBase {
   @Test
-  def typeSpec() {
+  def typeSpec(): Unit = {
     assertFormatted(":void", TypeSpecParser, ": void")
     assertFormatted(": void", TypeSpecParser, ": void")
     assertFormatted(":  void", TypeSpecParser, ": void")
   }
 
   @Test
-  def typedIdent() {
+  def typedIdent(): Unit = {
     assertFormatted("foo:integer", ParameterParser, "foo: integer")
     assertFormatted("foo: integer", ParameterParser, "foo: integer")
     assertFormatted("foo:  integer", ParameterParser, "foo: integer")
@@ -37,7 +37,7 @@ class EntityFormatTest extends FormatTestBase {
   }
 
   @Test
-  def parameters() {
+  def parameters(): Unit = {
     assertFormatted("()", ParametersParser, "()")
     assertFormatted("(a: integer)", ParametersParser, "(a: integer)")
     assertFormatted("( a: integer)", ParametersParser, "(a: integer)")
@@ -50,12 +50,12 @@ class EntityFormatTest extends FormatTestBase {
   }
 
   @Test
-  def block() {
+  def block(): Unit = {
     assertFormatted("{}", BlockParser, "{\n}")
   }
 
   @Test
-  def function() {
+  def function(): Unit = {
     assertFormatted("def  foo(): void={\n}", FunctionParser, "def foo(): void = {\n}")
     assertFormatted("def foo(): void={\n}", FunctionParser, "def foo(): void = {\n}")
     assertFormatted("def foo(): void ={\n}", FunctionParser, "def foo(): void = {\n}")
@@ -67,7 +67,7 @@ class EntityFormatTest extends FormatTestBase {
   }
 
   @Test
-  def variable() {
+  def variable(): Unit = {
     assertFormatted("var  foo: integer=1;", VariableParser, "var foo: integer = 1;")
     assertFormatted("var foo: integer=1 ;", VariableParser, "var foo: integer = 1;")
     assertFormatted("var foo: integer=1;", VariableParser, "var foo: integer = 1;")
@@ -80,14 +80,14 @@ class EntityFormatTest extends FormatTestBase {
   }
 
   @Test
-  def returnStatement() {
+  def returnStatement(): Unit = {
     assertFormatted("return 1;", ReturnParser, "return 1;")
     assertFormatted("return  1;", ReturnParser, "return 1;")
     assertFormatted("return 1 ;", ReturnParser, "return 1;")
   }
 
   @Test
-  def arguments() {
+  def arguments(): Unit = {
     assertFormatted("()", ArgumentsParser, "()")
     assertFormatted("(1)", ArgumentsParser, "(1)")
     assertFormatted("( 1)", ArgumentsParser, "(1)")
@@ -100,19 +100,19 @@ class EntityFormatTest extends FormatTestBase {
   }
 
   @Test
-  def callExpression() {
+  def callExpression(): Unit = {
     assertFormatted("foo()", CallExpressionParser, "foo()")
     assertFormatted("foo ()", CallExpressionParser, "foo()")
   }
 
   @Test
-  def call() {
+  def call(): Unit = {
     assertFormatted("foo();", CallParser, "foo();")
     assertFormatted("foo() ;", CallParser, "foo();")
   }
 
   @Test
-  def ifStatement() {
+  def ifStatement(): Unit = {
     assertFormatted("if(true) {\n}", IfParser, "if (true) {\n}")
     assertFormatted("if (true) {\n}", IfParser, "if (true) {\n}")
     assertFormatted("if  (true) {\n}", IfParser, "if (true) {\n}")
@@ -125,7 +125,7 @@ class EntityFormatTest extends FormatTestBase {
   }
 
   @Test
-  def whileStatement() {
+  def whileStatement(): Unit = {
     assertFormatted("while(true) {\n}", WhileParser, "while (true) {\n}")
     assertFormatted("while (true) {\n}", WhileParser, "while (true) {\n}")
     assertFormatted("while  (true) {\n}", WhileParser, "while (true) {\n}")
@@ -134,7 +134,7 @@ class EntityFormatTest extends FormatTestBase {
   }
 
   @Test
-  def assignment() {
+  def assignment(): Unit = {
     assertFormatted("foo=1;", AssignmentParser, "foo = 1;")
     assertFormatted("foo=1 ;", AssignmentParser, "foo = 1;")
     assertFormatted("foo =1;", AssignmentParser, "foo = 1;")
@@ -145,7 +145,7 @@ class EntityFormatTest extends FormatTestBase {
   }
 
   @Test
-  def comment() {
+  def comment(): Unit = {
     assertFormatted("// some stuff", CommentParser, "// some stuff")
   }
 }

@@ -21,7 +21,7 @@ import org.junit.Test
 
 class CallParserTest extends ParserTest(CallParser) {
   @Test
-  def normal() {
+  def normal(): Unit = {
     assertParsed("foo(1, 2);",
       """
       call

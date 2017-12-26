@@ -21,13 +21,13 @@ import com.pavelfatin.toyide.node.Node
 import com.pavelfatin.toyide.inspection.{Decoration, Mark, Inspection}
 
 object Optimization extends Inspection {
-  val Message = "Can be simplified to '%s' (use Code / Optimize)".format(_: String)
+  val Message: String => String = "Can be simplified to '%s' (use Code / Optimize)".format(_: String)
 
   def inspect(node: Node): Seq[Mark] = {
     node.parent match {
       case Some(p) if p.optimized.isDefined => Seq.empty
       case _ => node.optimized match {
-        case Some(s) if s != node.span.text => Seq(Mark(node, Message(s), Decoration.Fill, true))
+        case Some(s) if s != node.span.text => Seq(Mark(node, Message(s), Decoration.Fill, warning = true))
         case _ => Seq.empty
       }
     }

@@ -18,10 +18,11 @@
 package com.pavelfatin.toyide.languages.toy.node
 
 import com.pavelfatin.toyide.node._
-import com.pavelfatin.toyide.lexer.Token
+import com.pavelfatin.toyide.lexer.{Token, TokenKind}
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.languages.toy.ToyType._
 import com.pavelfatin.toyide.Extensions._
+import com.pavelfatin.toyide.languages.toy.ToyType
 import com.pavelfatin.toyide.languages.toy.interpreter._
 import com.pavelfatin.toyide.languages.toy.compiler._
 import com.pavelfatin.toyide.languages.toy.optimizer.ToyExpressionOptimizer
@@ -30,17 +31,17 @@ trait ToyExpression extends Expression with ToyExpressionOptimizer
 
 class Literal extends NodeImpl("literal")
 with ToyExpression with LiteralEvaluator with TypeCheck with LiteralTranslator {
-  protected def tokenKind = children.headOption.flatMap(_.token).map(_.kind)
+  protected def tokenKind: Option[TokenKind] = children.headOption.flatMap(_.token).map(_.kind)
 
   override def constant = true
 
-  lazy val nodeType = tokenKind.collect {
-    case STRING_LITERAL => StringType
-    case NUMBER_LITERAL => IntegerType
+  lazy val nodeType: Option[ToyType with Product with Serializable] = tokenKind.collect {
+    case STRING_LITERAL  => StringType
+    case NUMBER_LITERAL  => IntegerType
     case BOOLEAN_LITERAL => BooleanType
   }
 
-  override def toString = "%s(%s)".format(kind, span.text)
+  override def toString: String = "%s(%s)".format(kind, span.text)
 }
 
 class PrefixExpression extends NodeImpl("prefixExpression")
@@ -49,9 +50,9 @@ with ToyExpression with PrefixExpressionEvaluator with TypeCheck with PrefixExpr
 
   def expression: Option[Expression] = children.findBy[Expression]
 
-  override def constant = expression.map(_.constant).getOrElse(false)
+  override def constant: Boolean = expression.exists(_.constant)
 
-  lazy val nodeType = {
+  lazy val nodeType: Option[ToyType with Product with Serializable] = {
     prefix.map(_.kind).zip(expression.flatMap(_.nodeType)).headOption collect {
       case (BANG, BooleanType) => BooleanType
       case (PLUS | MINUS, IntegerType) => IntegerType
@@ -66,26 +67,26 @@ object PrefixExpression {
 class BinaryExpression extends NodeImpl("binaryExpression")
 with ToyExpression with BinaryExpressionEvaluator with TypeCheck with BinaryExpressionTranslator {
   def parts: Option[(Expression, Token, Expression)] = children match {
-    case (left: Expression) :: NodeToken(token) :: (right: Expression) :: Nil => Some(left, token, right)
+    case (left: Expression) :: NodeToken(_token) :: (right: Expression) :: Nil => Some(left, _token, right)
     case _ => None
   }
 
-  override def constant = children match {
+  override def constant: Boolean = children match {
     case (l: Expression) :: _ ::  (r: Expression) :: Nil if l.constant && r.constant => true
-    case (l @ Expression(BooleanType)) :: NodeToken(Token(kind, _, _)) ::  (r @ Expression(BooleanType)) :: Nil =>
-      kind match {
-        case AMP_AMP => l.optimized == Some("false")
-        case BAR_BAR => l.optimized == Some("true")
+    case (l @ Expression(BooleanType)) :: NodeToken(Token(_kind, _, _)) ::  (Expression(BooleanType)) :: Nil =>
+      _kind match {
+        case AMP_AMP => l.optimized.contains("false")
+        case BAR_BAR => l.optimized.contains("true")
         case _ => false
       }
     case _ => false
   }
 
   private def signature = parts collect {
-    case (Expression(leftType), token, Expression(rightType)) => (leftType, token.kind, rightType)
+    case (Expression(leftType), _token, Expression(rightType)) => (leftType, _token.kind, rightType)
   }
 
-  lazy val nodeType = signature.collect {
+  lazy val nodeType: Option[ToyType with Product with Serializable] = signature.collect {
     case (BooleanType, AMP_AMP, BooleanType) => BooleanType
 
     case (BooleanType, BAR_BAR, BooleanType) => BooleanType
@@ -114,7 +115,7 @@ with ToyExpression with BinaryExpressionEvaluator with TypeCheck with BinaryExpr
 }
 
 object BinaryExpression {
-  def unapply(exp: BinaryExpression) = exp.parts
+  def unapply(exp: BinaryExpression): Option[(Expression, Token, Expression)] = exp.parts
 }
 
 class CallExpression extends NodeImpl("callExpression")
@@ -137,16 +138,16 @@ with ToyExpression with CallExpEvaluator with TypeCheck with CallExpTranslator {
 
   def rightBrace: Option[Node] = arguments.flatMap(_.children.lastOption)
 
-  lazy val nodeType = reference.flatMap { it =>
+  lazy val nodeType: Option[ToyType with Product with Serializable] = reference.flatMap { it =>
     if (it.predefined) Some(VoidType) else function.flatMap(_.nodeType)
   }
 }
 
 class Group extends NodeImpl("group")
 with ToyExpression with GroupEvaluator with TypeCheck with GroupTranslator {
-  def child = children.findBy[Expression]
+  def child: Option[Expression] = children.findBy[Expression]
 
-  override def constant = child.map(_.constant).getOrElse(false)
+  override def constant: Boolean = child.exists(_.constant)
 
-  lazy val nodeType = child.flatMap(_.nodeType)
+  lazy val nodeType: Option[NodeType] = child.flatMap(_.nodeType)
 }

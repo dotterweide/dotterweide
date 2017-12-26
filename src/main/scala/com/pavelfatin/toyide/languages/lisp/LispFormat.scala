@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.languages.lisp.LispTokens._
 import com.pavelfatin.toyide.lexer.TokenKind
 
 object LispFormat extends Format {
-  def distanceFor(a: TokenKind, b: TokenKind) = (a, b) match {
+  def distanceFor(a: TokenKind, b: TokenKind): Distance = (a, b) match {
     case (LPAREN | LBRACKET, _) => Joint
     case (_, RPAREN | RBRACKET) => Joint
     case (RPAREN | RBRACKET, LPAREN | LBRACKET) => Lines

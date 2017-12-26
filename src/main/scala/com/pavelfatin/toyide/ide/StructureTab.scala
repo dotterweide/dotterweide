@@ -36,29 +36,29 @@ private class StructureTab(data: Data, terminal: Terminal) extends BorderPanel {
       val root = data.structure.getOrElse(
         throw new IllegalStateException("No root node after parser pass"))
 
-      tree.setModel(new DefaultTreeModel(new TreeNodeAdapter(root)))
+      tree.setModel(new DefaultTreeModel(TreeNodeAdapter(root)))
     case _ =>
   }
 
   tree.addTreeSelectionListener(new TreeSelectionListener() {
-    def valueChanged(e: TreeSelectionEvent) {
+    def valueChanged(e: TreeSelectionEvent): Unit = {
       updateTreeHighlight()
     }
   })
 
   tree.addFocusListener(new FocusAdapter() {
-    override def focusGained(e: FocusEvent) {
+    override def focusGained(e: FocusEvent): Unit = {
       terminal.selection = None
       updateTreeHighlight()
     }
 
-    override def focusLost(e: FocusEvent) {
+    override def focusLost(e: FocusEvent): Unit = {
       terminal.highlights = Seq.empty
       tree.clearSelection()
     }
   })
 
-  private def updateTreeHighlight() {
+  private def updateTreeHighlight(): Unit = {
     val selection = Option(tree.getSelectionPath).map(_.getLastPathComponent.asInstanceOf[TreeNodeAdapter])
     selection.map(_.delegate).foreach { node =>
       terminal.highlights = Seq(node.span.interval)

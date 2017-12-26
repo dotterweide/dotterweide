@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.compiler.{Code, Labels}
 
 trait PrefixExpressionTranslator extends ToyTranslatable { self: PrefixExpression =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val t = prefix.getOrElse(
       interrupt("Prefix token not found: %s", span.text))
 

@@ -25,12 +25,12 @@ import org.junit.Assert._
 
 class ScopeTest {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertEquals(None, exitIn(""))
   }
 
   @Test
-  def statements() {
+  def statements(): Unit = {
     assertEquals(None, exitIn("""
       var v: integer = 0;
       v = 1;
@@ -43,12 +43,12 @@ class ScopeTest {
   }
 
   @Test
-  def returnStatement() {
+  def returnStatement(): Unit = {
     assertEquals(Some(0), exitIn("return;"))
   }
 
   @Test
-  def severalExits() {
+  def severalExits(): Unit = {
     assertEquals(Some(1), exitIn("""
     var a: integer = 1;
     return;
@@ -58,13 +58,13 @@ class ScopeTest {
   }
 
   @Test
-  def returnInsideHolders() {
+  def returnInsideHolders(): Unit = {
     assertEquals(None, exitIn("while (false) { return; }"))
     assertEquals(None, exitIn("def f(): void = { return; }"))
   }
 
   @Test
-  def ifWithElse() {
+  def ifWithElse(): Unit = {
     assertEquals(None, exitIn("if (false) { return; }"))
     assertEquals(None, exitIn("if (false) {} else { return; }"))
     assertEquals(None, exitIn("if (false) { if (false) { return; } else {} } else { return; }"))

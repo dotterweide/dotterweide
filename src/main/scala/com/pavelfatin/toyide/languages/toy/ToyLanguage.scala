@@ -17,20 +17,23 @@
 
 package com.pavelfatin.toyide.languages.toy
 
-import com.pavelfatin.toyide.editor.ColorScheme
+import com.pavelfatin.toyide.editor.{Adviser, ColorScheme}
+import com.pavelfatin.toyide.formatter.Format
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.languages.toy.inspection._
 import com.pavelfatin.toyide.languages.toy.parser.ProgramParser
-import com.pavelfatin.toyide.{FileType, Language}
+import com.pavelfatin.toyide.lexer.Lexer
+import com.pavelfatin.toyide.parser.Parser
+import com.pavelfatin.toyide.{Example, FileType, Language}
 
 object ToyLanguage extends Language {
   def name = "Toy"
 
   def description = "C-like imperative language"
 
-  def lexer = ToyLexer
+  def lexer: Lexer = ToyLexer
 
-  def parser = ProgramParser
+  def parser: Parser = ProgramParser
 
   def colorings = Map(
     "Light" -> new ToyColoring(ColorScheme.LightColors),
@@ -38,7 +41,7 @@ object ToyLanguage extends Language {
 
   def complements = Seq((LBRACE, RBRACE), (LPAREN, RPAREN))
 
-  def format = ToyFormat
+  def format: Format = ToyFormat
 
   def comment = "//"
 
@@ -46,9 +49,9 @@ object ToyLanguage extends Language {
     VoidValue, Applicability, TypeMismatch, OperatorApplication, IntegerRange, PrefixApplication,
     MissingReturn, UnreachableStatement, UnusedDeclaration, PredefinedIdentifier, Optimization, DivisionByZero)
 
-  def adviser = ToyAdviser
+  def adviser: Adviser = ToyAdviser
 
   def fileType = FileType("Toy file", "toy")
 
-  def examples = ToyExamples.Values
+  def examples: Seq[Example] = ToyExamples.Values
 }

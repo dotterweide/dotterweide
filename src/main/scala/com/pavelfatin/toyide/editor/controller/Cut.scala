@@ -25,7 +25,7 @@ import com.pavelfatin.toyide.editor.{AnAction, Terminal}
 private class Cut(document: Document, terminal: Terminal) extends AnAction {
   def keys = List("ctrl pressed X", "shift pressed DELETE")
 
-  def apply() {
+  def apply(): Unit = {
     if(terminal.selection.isEmpty)
       terminal.selection = Some(terminal.currentLineIntervalIn(document))
 

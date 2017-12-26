@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.lexer.{Token, TokenKind, Lexer}
 object MockLexer extends Lexer {
   private val TokenPattern = """(\p{Lu}|[(){}])\p{Ll}*""".r
 
-  def analyze(input: CharSequence) = {
+  def analyze(input: CharSequence): Iterator[Token] = {
     TokenPattern.findAllIn(input).matchData.map { m =>
       Token(MockTokenKind, Span(input, m.start, m.end))
     }

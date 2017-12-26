@@ -27,7 +27,7 @@ import scala.io.Source
 
 class IOTest extends LibraryTestBase {
   @Test
-  def exists() {
+  def exists(): Unit = {
     withTempFile { file =>
       assertValue("(exists? \"" + format(file.getPath) + "\")", "true")
       file.delete()
@@ -36,7 +36,7 @@ class IOTest extends LibraryTestBase {
   }
 
   @Test
-  def directory() {
+  def directory(): Unit = {
     withTempFile { file =>
       assertValue("(directory? \"" + format(file.getPath) + "\")", "false")
       assertValue("(directory? \"" + format(file.getParent) + "\")", "true")
@@ -44,7 +44,7 @@ class IOTest extends LibraryTestBase {
   }
 
   @Test
-  def read() {
+  def read(): Unit = {
     withTempFile { file =>
       write(file, "data")
       assertValue("(read (open \"" + format(file.getPath) + "\"))", "(\\d \\a \\t \\a)")
@@ -52,7 +52,7 @@ class IOTest extends LibraryTestBase {
   }
 
   @Test
-  def write() {
+  def write(): Unit = {
     withTempFile { file =>
       run("(let [file (open \"" + format(file.getPath) + "\")] (write file \"data\") (close file))")
       assertEquals("data", read(file))
@@ -61,7 +61,7 @@ class IOTest extends LibraryTestBase {
 
   private def format(path: String) = path.replace('\\', '/')
 
-  private def withTempFile(f: File => Unit) {
+  private def withTempFile(f: File => Unit): Unit = {
     val file = File.createTempFile("toyide", "test")
     file.deleteOnExit()
     try {
@@ -71,7 +71,7 @@ class IOTest extends LibraryTestBase {
     }
   }
 
-  private def write(file: File, s: String) {
+  private def write(file: File, s: String): Unit = {
     val writer = new FileWriter(file)
     writer.write(s)
     writer.close()

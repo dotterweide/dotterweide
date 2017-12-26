@@ -20,9 +20,9 @@ package com.pavelfatin.toyide.ide
 import com.pavelfatin.toyide.Observable
 
 trait Launcher extends Observable {
-  def launch(action: => Unit)
+  def launch(action: => Unit): Unit
 
-  def stop()
+  def stop(): Unit
 
   def active: Boolean
 }

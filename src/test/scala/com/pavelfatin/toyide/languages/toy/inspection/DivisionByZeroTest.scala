@@ -23,14 +23,14 @@ import com.pavelfatin.toyide.Helpers._
 
 class DivisionByZeroTest extends InspectionTestBase(DivisionByZero) {
   @Test
-  def division() {
+  def division(): Unit = {
     assertMatches(marksIn("print(1 / 2);")) {
       case Nil =>
     }
   }
 
   @Test
-  def divisionByZero() {
+  def divisionByZero(): Unit = {
     assertMatches(marksIn("print(1 / 0);")) {
         case MarkData(Text("1 / 0"), DivisionByZero.Message) :: Nil =>
     }

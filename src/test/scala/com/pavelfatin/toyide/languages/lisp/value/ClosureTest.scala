@@ -22,7 +22,7 @@ import org.junit.Test
 
 class ClosureTest extends InterpreterTesting {
   @Test
-  def accessibility() {
+  def accessibility(): Unit = {
     assertValue("((let [x 1] (fn [] x)))", "1")
     assertValue("((let [x 1] (let [y 2] (fn [] (+ x y)))))", "3")
 
@@ -31,7 +31,7 @@ class ClosureTest extends InterpreterTesting {
   }
 
   @Test
-  def priority() {
+  def priority(): Unit = {
     assertValue("((let [x 1] (fn [x] x)) 2)", "2")
     assertValue("((let [x 1] (let [x 2] (fn [] x))))", "2")
     assertValue("(let [x 1] ((let [x 2] (fn [] x))))", "2")

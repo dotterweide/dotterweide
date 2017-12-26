@@ -32,7 +32,7 @@ trait Environment {
 
   def clearLocals: Environment
 
-  def setGlobal(name: String, value: Expression)
+  def setGlobal(name: String, value: Expression): Unit
 
   def nextId(): Int
 

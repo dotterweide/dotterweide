@@ -25,9 +25,9 @@ private class Redo(document: Document, terminal: Terminal, history: History) ext
 
   def keys = Seq("shift ctrl pressed Z")
 
-  override def enabled = history.canRedo
+  override def enabled: Boolean = history.canRedo
 
-  def apply() {
+  def apply(): Unit = {
     history.redo()
   }
 }

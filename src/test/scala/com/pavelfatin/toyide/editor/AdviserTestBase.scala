@@ -22,19 +22,19 @@ import com.pavelfatin.toyide.parser.Parser
 import org.junit.Assert._
 
 abstract class AdviserTestBase(lexer: Lexer, parser: Parser, adviser: Adviser) {
-  protected def assertVariantsAre(code: String)(expected: String*) {
+  protected def assertVariantsAre(code: String)(expected: String*): Unit = {
     assertVariants(code, _.toList == expected.toList)
   }
 
-  protected def assertVariantsInclude(code: String)(expected: String*) {
+  protected def assertVariantsInclude(code: String)(expected: String*): Unit = {
     assertVariants(code, variants => expected.forall(variants.contains))
   }
 
-  protected def assertVariantsExclude(code: String)(expected: String*) {
+  protected def assertVariantsExclude(code: String)(expected: String*): Unit = {
     assertVariants(code, variants => !expected.exists(variants.contains))
   }
 
-  private def assertVariants(code: String, check: Seq[String] => Boolean) {
+  private def assertVariants(code: String, check: Seq[String] => Boolean): Unit = {
     val label = Adviser.Anchor
     val s = code.replaceFirst("\\|", label)
     val root = parser.parse(lexer.analyze(s))

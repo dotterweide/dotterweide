@@ -25,9 +25,9 @@ private class MoveLineUp(document: Document, terminal: Terminal) extends AnActio
 
   def keys = List("shift ctrl pressed UP")
 
-  override def enabled = document.lineNumberOf(terminal.offset) > 0
+  override def enabled: Boolean = document.lineNumberOf(terminal.offset) > 0
 
-  def apply() {
+  def apply(): Unit = {
     val location = document.toLocation(terminal.offset)
 
     val source = document.intervalOf(location.line)

@@ -22,5 +22,5 @@ trait Expression extends TypedNode {
 }
 
 object Expression {
-  def unapply(expression: Expression) = expression.nodeType
+  def unapply(expression: Expression): Option[NodeType] = expression.nodeType
 }

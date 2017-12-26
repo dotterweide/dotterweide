@@ -28,7 +28,7 @@ import com.pavelfatin.toyide.node.NodeImpl
 class ProgramNode extends NodeImpl("program") {
   def expressions: Seq[ExpressionNode] = children.filterBy[ExpressionNode]
 
-  override def evaluate(context: Context, output: Output) = {
+  override def evaluate(context: Context, output: Output): Option[Expression] = {
     val environment = Library.instance.createEnvironment()
     val value = evaluate(ProgramNode.Source, environment, output)
     Some(value)
@@ -40,7 +40,7 @@ class ProgramNode extends NodeImpl("program") {
   }
 
   override def translate(className: String, labels: Labels) =
-    throw new TranslationException("Translation to bytecode is not yet implemented.")
+    throw TranslationException("Translation to bytecode is not yet implemented.")
 }
 
 object ProgramNode {

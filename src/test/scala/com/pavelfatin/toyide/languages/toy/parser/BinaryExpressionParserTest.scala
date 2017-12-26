@@ -21,7 +21,7 @@ import org.junit.Test
 
 class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertParsed("",
       """
       error: leaf
@@ -29,7 +29,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def number() {
+  def number(): Unit = {
     assertParsed("1",
       """
       literal
@@ -38,7 +38,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
   
   @Test
-  def error() {
+  def error(): Unit = {
     assertParsed("=",
       """
       error: EQ
@@ -55,7 +55,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
   
   @Test
-  def continuation() {
+  def continuation(): Unit = {
     assertParsed("1 =",
       """
       literal
@@ -64,7 +64,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
   
   @Test
-  def expected() {
+  def expected(): Unit = {
     assertParsed("1 +",
       """
       binaryExpression
@@ -76,7 +76,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def braces() {
+  def braces(): Unit = {
     assertParsed("(1)",
       """
       group
@@ -88,7 +88,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def bracesEof() {
+  def bracesEof(): Unit = {
     assertParsed("(1",
       """
       group
@@ -100,7 +100,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def bracesUnexpected() {
+  def bracesUnexpected(): Unit = {
     assertParsed("(1 true",
       """
       group
@@ -112,7 +112,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def multiplication() {
+  def multiplication(): Unit = {
     assertParsed("1 * 2",
       """
       binaryExpression
@@ -125,7 +125,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def prefix() {
+  def prefix(): Unit = {
     assertParsed("-1",
       """
       prefixExpression
@@ -136,7 +136,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def prefixBoolean() {
+  def prefixBoolean(): Unit = {
     assertParsed("!false",
       """
       prefixExpression
@@ -147,7 +147,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def prefixMultiple() {
+  def prefixMultiple(): Unit = {
     assertParsed("--1",
       """
       prefixExpression
@@ -160,7 +160,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def id() {
+  def id(): Unit = {
     assertParsed("foo * bar",
       """
       binaryExpression
@@ -173,7 +173,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def callExp() {
+  def callExp(): Unit = {
     assertParsed("foo(2 + 3) * bar",
       """
       binaryExpression
@@ -196,7 +196,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def division() {
+  def division(): Unit = {
     assertParsed("1 / 2",
       """
       binaryExpression
@@ -209,7 +209,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def addition() {
+  def addition(): Unit = {
     assertParsed("1 + 2",
       """
       binaryExpression
@@ -222,7 +222,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def subtraction() {
+  def subtraction(): Unit = {
     assertParsed("1 - 2",
       """
       binaryExpression
@@ -235,7 +235,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def series() {
+  def series(): Unit = {
     assertParsed("1 + 2 - 3",
       """
       binaryExpression
@@ -252,7 +252,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def priority() {
+  def priority(): Unit = {
     assertParsed("1 + 2 * 3",
       """
       binaryExpression
@@ -317,7 +317,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def relation() {
+  def relation(): Unit = {
     assertParsed("1 + 2 < 3",
       """
       binaryExpression
@@ -334,7 +334,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def equality() {
+  def equality(): Unit = {
     assertParsed("1 + 2 <= 3 == foo",
       """
       binaryExpression
@@ -355,7 +355,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def boolean() {
+  def boolean(): Unit = {
     assertParsed("(true == false)",
       """
       group
@@ -371,7 +371,7 @@ class BinaryExpressionParserTest extends ParserTest(ExpressionParser) {
   }
 
   @Test
-  def logical() {
+  def logical(): Unit = {
     assertParsed("(true || false && true == false)",
       """
       group

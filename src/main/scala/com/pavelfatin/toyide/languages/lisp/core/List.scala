@@ -27,14 +27,14 @@ object NewList extends CoreFunction("list") {
 }
 
 object Cons extends CoreFunction("cons") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): ListValue = arguments match {
     case Seq(x, ListValue(l)) => ListValue(x :: l)
     case _ => expected("x list", arguments, environment)
   }
 }
 
 object First extends CoreFunction("first") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = arguments match {
     case Seq(ListValue(l)) =>
       if (l.isEmpty) error("first on empty list", environment) else l.head
     case _ => expected("list", arguments, environment)
@@ -42,7 +42,7 @@ object First extends CoreFunction("first") {
 }
 
 object Rest extends CoreFunction("rest") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): ListValue = arguments match {
     case Seq(ListValue(l)) =>
       if (l.isEmpty) error("rest on empty list", environment) else ListValue(l.tail)
     case _ => expected("list", arguments, environment)

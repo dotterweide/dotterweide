@@ -21,7 +21,7 @@ import org.junit.Test
 
 abstract class EvaluationTestBase {
   @Test
-  def callToPredefinedFunction() {
+  def callToPredefinedFunction(): Unit = {
     assertOutput("print();", "")
     assertOutput("print(1);", "1")
     assertOutput("print(1, 2, 3);", "123")
@@ -32,72 +32,72 @@ abstract class EvaluationTestBase {
   }
 
   @Test
-  def program() {
+  def program(): Unit = {
     assertOutput("", "")
     assertOutput("print(1);", "1")
     assertOutput("print(1); print(2); print(3);", "123")
   }
 
   @Test
-  def variable() {
+  def variable(): Unit = {
     assertOutput("var v: integer = 1;", "")
     assertOutput("var v: integer = 1; print(v);", "1")
   }
 
   @Test
-  def variableInScope() {
+  def variableInScope(): Unit = {
     assertOutput("if (true) { var v: integer = 1; }", "")
     assertOutput("if (true) { var v: integer = 1; print(v); }", "1")
   }
 
   @Test
-  def variableInScopes() {
+  def variableInScopes(): Unit = {
     assertOutput("if (true) { var v: integer = 1; }; if (true) { var v: boolean = true; }", "")
     assertOutput("if (true) { var v: integer = 1; print(v); }; if (true) { var v: string = \"s\"; print(v); }", "1s")
   }
 
   @Test
-  def variableInNestedScopes() {
+  def variableInNestedScopes(): Unit = {
     assertOutput("if (true) { var a: integer = 1; if (true) { var b: integer = 2; } }", "")
     assertOutput("if (true) { var a: integer = 1; if (true) { var b: integer = 2; print(b); }; print(a); }", "21")
   }
 
   @Test
-  def variableInitializationMoment() {
+  def variableInitializationMoment(): Unit = {
     assertOutput("var a: integer = 1; a = 2; var b: integer = a; print(b);", "2")
   }
 
   @Test
-  def localVariable() {
+  def localVariable(): Unit = {
     assertOutput("def f(): void = { var v: integer = 1; }; f();", "")
     assertOutput("def f(): void = { var v: integer = 1; print(v); }; f();", "1")
   }
 
   @Test
-  def localVariableInScope() {
+  def localVariableInScope(): Unit = {
     assertOutput("def f(): void = { if (true) { var v: integer = 1; } }; f();", "")
     assertOutput("def f(): void = { if (true) { var v: integer = 1; print(v); } }; f();", "1")
   }
 
   @Test
-  def localVariableInScopes() {
+  def localVariableInScopes(): Unit = {
     assertOutput("def f(): void = { if (true) { var v: integer = 1; }; if (true) { var v: boolean = true; } }; f();", "")
     assertOutput("def f(): void = { if (true) { var v: integer = 1; print(v); }; if (true) { var v: string = \"s\"; print(v); } }; f();", "1s")
   }
 
   @Test
-  def localVariableInNestedScopes() {
+  def localVariableInNestedScopes(): Unit = {
     assertOutput("def f(): void = { if (true) { var a: integer = 1; if (true) { var b: integer = 2; } } }; f();", "")
     assertOutput("def f(): void = { if (true) { var a: integer = 1; if (true) { var b: integer = 2; print(b); }; print(a); } }; f();", "21")
   }
 
   @Test
-  def localVariableInitializationMoment() {
+  def localVariableInitializationMoment(): Unit = {
     assertOutput("def f(): void = { var a: integer = 1; a = 2; var b: integer = a; print(b); }; f();", "2")
   }
 
   @Test
-  def variableInitializerValueDuplication() {
+  def variableInitializerValueDuplication(): Unit = {
     assertOutput("""
     var a: integer = 1;
     print(a);
@@ -110,7 +110,7 @@ abstract class EvaluationTestBase {
   }
 
   @Test
-  def assignment() {
+  def assignment(): Unit = {
     assertOutput("var v: integer = 1; v = 2; print(v);", "2")
     assertOutput("var v: integer = 1; v = v + 2; print(v);", "3")
     assertOutput("def f(i: integer): void = { i = 2; print(i); }; f(1);", "2")
@@ -118,7 +118,7 @@ abstract class EvaluationTestBase {
   }
 
   @Test
-  def assignmentExpressionValueDuplication() {
+  def assignmentExpressionValueDuplication(): Unit = {
     assertOutput("""
     var a: integer = 1;
     print(a);
@@ -131,7 +131,7 @@ abstract class EvaluationTestBase {
   }
 
   @Test
-  def valueInstances() {
+  def valueInstances(): Unit = {
     assertOutput("""
     var a: integer = 1;
     def f(): integer = {
@@ -152,35 +152,35 @@ abstract class EvaluationTestBase {
   }
 
   @Test
-  def functionDeclaration() {
+  def functionDeclaration(): Unit = {
     assertOutput("def f(): void = { print(1); }", "")
   }
 
   @Test
-  def functionCall() {
+  def functionCall(): Unit = {
     assertOutput("def f(): void = { print(1); }; f();", "1")
   }
 
   @Test
-  def functionBlock() {
+  def functionBlock(): Unit = {
     assertOutput("def f(): void = { print(1); print(2); print(3); }; f();", "123")
   }
 
   @Test
-  def functionParameters() {
+  def functionParameters(): Unit = {
     assertOutput("def f(i: integer): void = { print(i); }; f(1);", "1")
     assertOutput("def f(a: integer, b: integer): void = { print(a, b); }; f(1, 2);", "12")
     assertOutput("def f(a: integer, b: string): void = { print(a, b); }; f(1, \"s\");", "1s")
   }
 
   @Test
-  def functionParameterSource() {
+  def functionParameterSource(): Unit = {
     assertOutput("var i: integer = 1; def f(i: integer): void = { print(i); }; f(2);", "2")
     assertOutput("var i: integer = 1; def f(i: integer): void = {}; f(2); print(i);", "1")
   }
 
   @Test
-  def functionParameterValueDuplication() {
+  def functionParameterValueDuplication(): Unit = {
     assertOutput("""
     var v: integer = 1;
     def f(p: integer): void = {
@@ -194,39 +194,39 @@ abstract class EvaluationTestBase {
   }
 
   @Test
-  def functionResult() {
+  def functionResult(): Unit = {
     assertOutput("def f(): integer = { return 1; }; print(f());", "1")
   }
 
   @Test
-  def functionResultWithSideEffect() {
+  def functionResultWithSideEffect(): Unit = {
     assertOutput("def f(): integer = { print(1); return 2; }; print(f());", "12")
   }
 
   @Test
-  def functionReturnBreaksEvaluation() {
+  def functionReturnBreaksEvaluation(): Unit = {
     assertOutput("def f(): void = { return; print(1); }; f();", "")
     assertOutput("def f(): integer = { return 1; print(2); }; print(f());", "1")
   }
 
   @Test
-  def functionReturnFromControlStatementBreaksEvaluation() {
+  def functionReturnFromControlStatementBreaksEvaluation(): Unit = {
     assertOutput("def f(): void = { if (true) { return; print(1); }; print(2); }; f();", "")
   }
 
   @Test
-  def variableFromFunction() {
+  def variableFromFunction(): Unit = {
     assertOutput("var v: integer = 1; def f(): void = { print(v); }; f();", "1")
   }
 
   @Test
-  def ifStatement() {
+  def ifStatement(): Unit = {
     assertOutput("if (true) { print(1); }", "1")
     assertOutput("if (false) { print(1); }", "")
   }
 
   @Test
-  def ifStatementMultiple() {
+  def ifStatementMultiple(): Unit = {
     assertOutput(
       "if (true) { print(1); }" +
       "if (false) { print(2); }" +
@@ -237,29 +237,29 @@ abstract class EvaluationTestBase {
   }
 
   @Test
-  def ifStatementBlock() {
+  def ifStatementBlock(): Unit = {
     assertOutput("if (true) { print(1); print(2); print(3); }", "123")
   }
 
   @Test
-  def ifStatementWithElse() {
+  def ifStatementWithElse(): Unit = {
     assertOutput("if (true) { print(1); } else { print(2); }", "1")
     assertOutput("if (false) { print(1); } else { print(2); }", "2")
   }
 
   @Test
-  def elseStatementBlock() {
+  def elseStatementBlock(): Unit = {
     assertOutput("if (false) {} else { print(1); print(2); print(3); }", "123")
   }
 
   @Test
-  def whileStatement() {
+  def whileStatement(): Unit = {
     assertOutput("while (false) { print(42); }", "")
     assertOutput("var i: integer = 1; while (i <= 5) { print(i); i = i + 1; }", "12345")
   }
 
   @Test
-  def recursiveFunction() {
+  def recursiveFunction(): Unit = {
     assertOutput("""
     def f(i: integer): void = {
       if (i > 0) {
@@ -283,7 +283,7 @@ abstract class EvaluationTestBase {
   }
 
   @Test
-  def recursiveFunctionWithResult() {
+  def recursiveFunctionWithResult(): Unit = {
     assertOutput("""
     def f(i: integer): string = {
       if (i == 0) {
@@ -296,7 +296,7 @@ abstract class EvaluationTestBase {
   }
 
   @Test
-  def tailRecursiveFunction() {
+  def tailRecursiveFunction(): Unit = {
     assertOutput("""
     def f(i: integer, s: string): void = {
       if (i == 0) {
@@ -310,7 +310,7 @@ abstract class EvaluationTestBase {
   }
 
   @Test
-  def tailRecursiveFunctionWithResult() {
+  def tailRecursiveFunctionWithResult(): Unit = {
     assertOutput("""
     def f(i: integer, s: string): string = {
       if (i == 0) {
@@ -322,5 +322,5 @@ abstract class EvaluationTestBase {
     """, "54321")
   }
 
-  protected def assertOutput(code: String, expected: String)
+  protected def assertOutput(code: String, expected: String): Unit
 }

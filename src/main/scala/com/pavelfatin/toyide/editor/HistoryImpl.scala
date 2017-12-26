@@ -25,7 +25,7 @@ class HistoryImpl extends History {
 
   private var record = false
 
-  def recording(document: Document, terminal: Terminal)(block: => Unit) {
+  def recording(document: Document, terminal: Terminal)(block: => Unit): Unit = {
     if (record)
       throw new IllegalStateException("Nested recording")
 
@@ -50,9 +50,9 @@ class HistoryImpl extends History {
     record = false
   }
 
-  def canUndo = toUndo.nonEmpty
+  def canUndo: Boolean = toUndo.nonEmpty
 
-  def undo() {
+  def undo(): Unit = {
     if (!canUndo)
       throw new IllegalStateException("Nothing to undo")
 
@@ -63,9 +63,9 @@ class HistoryImpl extends History {
     }
   }
 
-  def canRedo = toRedo.nonEmpty
+  def canRedo: Boolean = toRedo.nonEmpty
 
-  def redo() {
+  def redo(): Unit = {
     if (!canRedo)
       throw new IllegalStateException("Nothing to redo")
 
@@ -76,20 +76,20 @@ class HistoryImpl extends History {
     }
   }
 
-  def clear() {
+  def clear(): Unit = {
     toUndo = List.empty
     toRedo = List.empty
   }
 
   private case class Action(document: Document, terminal: Terminal, events: List[AnyRef]) {
-    def undo() {
+    def undo(): Unit = {
       events.foreach {
         case it: DocumentEvent => it.undo(document)
         case it: TerminalEvent => it.undo(terminal)
       }
     }
 
-    def redo() {
+    def redo(): Unit = {
       events.reverse.foreach {
         case it: DocumentEvent => it.redo(document)
         case it: TerminalEvent => it.redo(terminal)

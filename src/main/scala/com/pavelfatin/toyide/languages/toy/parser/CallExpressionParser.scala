@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.languages.toy.node._
 
 object CallExpressionParser extends Parser {
-  def parse(in: TreeBuilder) {
+  def parse(in: TreeBuilder): Unit = {
     in.capturing(new CallExpression()) {
       in.capturing(new ReferenceToFunction()) {
         in.consume(IDENT)

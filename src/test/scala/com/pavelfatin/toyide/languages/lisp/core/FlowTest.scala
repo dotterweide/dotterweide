@@ -22,7 +22,7 @@ import org.junit.Test
 
 class FlowTest extends InterpreterTesting {
   @Test
-  def program() {
+  def program(): Unit = {
     assertValue("", "()")
     assertValue("1", "1")
     assertValue("1 2 3", "3")
@@ -31,7 +31,7 @@ class FlowTest extends InterpreterTesting {
   }
 
   @Test
-  def doForm() {
+  def doForm(): Unit = {
     assertValue("(do)", "()")
     assertValue("(do 1)", "1")
     assertValue("(do 1 2 3)", "3")
@@ -43,7 +43,7 @@ class FlowTest extends InterpreterTesting {
   }
 
   @Test
-  def ifForm() {
+  def ifForm(): Unit = {
     assertValue("(if true 1)", "1")
     assertValue("(if false 1)", "()")
 
@@ -54,7 +54,7 @@ class FlowTest extends InterpreterTesting {
   }
 
   @Test
-  def ifElse() {
+  def ifElse(): Unit = {
     assertValue("(if true 1 2)", "1")
     assertValue("(if false 1 2)", "2")
 
@@ -65,7 +65,7 @@ class FlowTest extends InterpreterTesting {
   }
 
   @Test
-  def ifCondition() {
+  def ifCondition(): Unit = {
     assertValue("(if '() 1 2)", "2")
     assertValue("(if '(1 2 3) 1 2)", "1")
 
@@ -74,20 +74,20 @@ class FlowTest extends InterpreterTesting {
   }
 
   @Test
-  def ifValue() {
+  def ifValue(): Unit = {
     assertValue("if", "core.if")
     assertValue("(def f if) (f true 1)", "1")
   }
 
   @Test
-  def ifErrors() {
+  def ifErrors(): Unit = {
     assertError("(if)")
     assertError("(if true)")
     assertError("(if true 1 2 3)")
   }
 
   @Test
-  def error() {
+  def error(): Unit = {
     assertError("(error \"foo\")", "foo")
     assertError("(error 1)", "1")
 
@@ -99,7 +99,7 @@ class FlowTest extends InterpreterTesting {
   }
 
   @Test
-  def loop() {
+  def loop(): Unit = {
     assertValue("(loop [])", "()")
     assertValue("(loop [] 1)", "1")
     assertValue("(loop [] 1 2)", "2")
@@ -112,7 +112,7 @@ class FlowTest extends InterpreterTesting {
   }
 
   @Test
-  def recurInLoop() {
+  def recurInLoop(): Unit = {
     assertOutput("(loop [x 1] (if (< x 4) (do (print x) (recur (+ x 1)))))", "123")
 
     assertOutput("(loop [x 1 y (* x 2)] (if (< x 4) (do (print y) (recur (+ x 1) (+ x 1)))))", "223")
@@ -121,7 +121,7 @@ class FlowTest extends InterpreterTesting {
   }
 
   @Test
-  def recurInFunction() {
+  def recurInFunction(): Unit = {
     assertOutput("((fn [x] (if (< x 4) (do (print x) (recur (+ x 1))))) 1)", "123")
 
     assertOutput("((fn [x y] (if (< x 4) (do (print y) (recur (+ x 1) (+ x 1))))) 1 2)", "223")

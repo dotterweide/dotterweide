@@ -21,56 +21,56 @@ import org.junit.Test
 
 class ArithmeticTest extends LibraryTestBase {
   @Test
-  def inc() {
+  def inc(): Unit = {
     assertValue("(inc 3)", "4")
   }
 
   @Test
-  def dec() {
+  def dec(): Unit = {
     assertValue("(dec 3)", "2")
   }
 
   @Test
-  def even() {
+  def even(): Unit = {
     assertValue("(even? 1)", "false")
     assertValue("(even? 2)", "true")
   }
 
   @Test
-  def odd() {
+  def odd(): Unit = {
     assertValue("(odd? 1)", "true")
     assertValue("(odd? 2)", "false")
   }
 
   @Test
-  def zero() {
+  def zero(): Unit = {
     assertValue("(zero? 0)", "true")
     assertValue("(zero? 1)", "false")
   }
 
   @Test
-  def pos() {
+  def pos(): Unit = {
     assertValue("(pos? 1)", "true")
     assertValue("(pos? 0)", "false")
     assertValue("(pos? -1)", "false")
   }
 
   @Test
-  def neg() {
+  def neg(): Unit = {
     assertValue("(neg? -1)", "true")
     assertValue("(neg? 0)", "false")
     assertValue("(neg? 1)", "false")
   }
 
   @Test
-  def sum() {
+  def sum(): Unit = {
     assertValue("(sum nil)", "0")
 
     assertValue("(sum '(1 2))", "3")
   }
 
   @Test
-  def product() {
+  def product(): Unit = {
     assertValue("(product '())", "1")
 
     assertValue("(product '(2 3))", "6")

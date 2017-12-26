@@ -22,27 +22,27 @@ import org.junit.Assert._
 
 class DocumentImplAnchorTest {
   @Test
-  def nothingLeftBias() {
-    assertBehaviorIs("[", "[") { document =>
+  def nothingLeftBias(): Unit = {
+    assertBehaviorIs("[", "[") { _ =>
       Unit
     }
-    assertBehaviorIs("foo[bar", "foo[bar") { document =>
-      Unit
-    }
-  }
-
-  @Test
-  def nothingRightBias() {
-    assertBehaviorIs("]", "]") { document =>
-      Unit
-    }
-    assertBehaviorIs("foo]bar", "foo]bar") { document =>
+    assertBehaviorIs("foo[bar", "foo[bar") { _ =>
       Unit
     }
   }
 
   @Test
-  def insertLeftBias() {
+  def nothingRightBias(): Unit = {
+    assertBehaviorIs("]", "]") { _ =>
+      Unit
+    }
+    assertBehaviorIs("foo]bar", "foo]bar") { _ =>
+      Unit
+    }
+  }
+
+  @Test
+  def insertLeftBias(): Unit = {
     assertBehaviorIs("foo[bar", "foSOMEo[bar") { document =>
       document.insert(2, "SOME")
     }
@@ -55,7 +55,7 @@ class DocumentImplAnchorTest {
   }
 
   @Test
-  def insertRightBias() {
+  def insertRightBias(): Unit = {
     assertBehaviorIs("foo]bar", "foSOMEo]bar") { document =>
       document.insert(2, "SOME")
     }
@@ -68,7 +68,7 @@ class DocumentImplAnchorTest {
   }
 
   @Test
-  def removeLeftBias() {
+  def removeLeftBias(): Unit = {
     assertBehaviorIs("foo[bar", "o[bar") { document =>
       document.remove(0, 2)
     }
@@ -105,7 +105,7 @@ class DocumentImplAnchorTest {
   }
 
   @Test
-  def removeRightBias() {
+  def removeRightBias(): Unit = {
     assertBehaviorIs("foo]bar", "o]bar") { document =>
       document.remove(0, 2)
     }
@@ -142,7 +142,7 @@ class DocumentImplAnchorTest {
   }
 
   @Test
-  def replaceLeftBias() {
+  def replaceLeftBias(): Unit = {
     assertBehaviorIs("foo[bar", "SOMEo[bar") { document =>
       document.replace(0, 2, "SOME")
     }
@@ -179,7 +179,7 @@ class DocumentImplAnchorTest {
   }
 
   @Test
-  def replaceRightBias() {
+  def replaceRightBias(): Unit = {
     assertBehaviorIs("foo]bar", "SOMEo]bar") { document =>
       document.replace(0, 2, "SOME")
     }
@@ -215,7 +215,7 @@ class DocumentImplAnchorTest {
     }
   }
 
-  private def assertBehaviorIs(before: String, after: String)(action: Document => Unit) {
+  private def assertBehaviorIs(before: String, after: String)(action: Document => Unit): Unit = {
     val document = new DocumentImpl(before.diff(Seq('[', ']')))
     val (index, bias) = if (before.contains("[")) (before.indexOf('['), Bias.Left) else (before.indexOf(']'), Bias.Right)
     val anchor = document.createAnchorAt(index, bias)

@@ -22,52 +22,52 @@ import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.languages.toy.node._
 
 object ExpressionParser extends Parser {
-  def parse(in: TreeBuilder) {
+  def parse(in: TreeBuilder): Unit = {
     logicalOr()
 
-    def logicalOr() {
-      in.folding(new BinaryExpression(), true) {
+    def logicalOr(): Unit = {
+      in.folding(new BinaryExpression(), collapseHolderNode = true) {
         logicalAnd()
         while (in.grasp(BAR_BAR)) logicalAnd()
       }
     }
 
-    def logicalAnd() {
-      in.folding(new BinaryExpression(), true) {
+    def logicalAnd(): Unit = {
+      in.folding(new BinaryExpression(), collapseHolderNode = true) {
         equality()
         while (in.grasp(AMP_AMP)) equality()
       }
     }
 
-    def equality() {
-      in.folding(new BinaryExpression(), true) {
+    def equality(): Unit = {
+      in.folding(new BinaryExpression(), collapseHolderNode = true) {
         relation()
         while (in.grasp(EQ_EQ, BANG_EQ)) relation()
       }
     }
 
-    def relation() {
-      in.folding(new BinaryExpression(), true) {
+    def relation(): Unit = {
+      in.folding(new BinaryExpression(), collapseHolderNode = true) {
         addition()
         while (in.grasp(LT, LT_EQ, GT_EQ, GT)) addition()
       }
     }
 
-    def addition() {
-      in.folding(new BinaryExpression(), true) {
+    def addition(): Unit = {
+      in.folding(new BinaryExpression(), collapseHolderNode = true) {
         multiplication()
         while (in.grasp(PLUS, MINUS)) multiplication()
       }
     }
 
-    def multiplication() {
-      in.folding(new BinaryExpression(), true) {
+    def multiplication(): Unit = {
+      in.folding(new BinaryExpression(), collapseHolderNode = true) {
         prefix()
         while (in.grasp(STAR, SLASH, PERCENT)) prefix()
       }
     }
 
-    def prefix() {
+    def prefix(): Unit = {
       if (in.matches(PLUS, MINUS, BANG)) {
         in.capturing(new PrefixExpression()) {
           in.consume()
@@ -78,7 +78,7 @@ object ExpressionParser extends Parser {
       }
     }
 
-    def atom() {
+    def atom(): Unit = {
       if (in.matches(LPAREN)) {
         in.capturing(new Group()) {
           in.consume()

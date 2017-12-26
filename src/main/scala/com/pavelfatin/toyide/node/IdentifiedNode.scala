@@ -22,15 +22,15 @@ trait IdentifiedNode extends Node {
 
   def identifier: String = id.map(_.span.text).mkString
 
-  override def toString = "%s(%s)".format(kind, identifier)
+  override def toString: String = "%s(%s)".format(kind, identifier)
 }
 
 object IdentifiedNode {
-  def unapply(node: IdentifiedNode) =
+  def unapply(node: IdentifiedNode): Option[(Node, String)] =
     node.id.map((_, node.identifier))
 }
 
 object IdentifiedNodeId {
-  def unapply(node: IdentifiedNode) =
+  def unapply(node: IdentifiedNode): Option[Node] =
     node.id
 }

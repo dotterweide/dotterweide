@@ -28,5 +28,5 @@ object Adviser {
 }
 
 case class Variant(title: String, content: String, shift: Int) {
-  override def toString = title
+  override def toString: String = title
 }

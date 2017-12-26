@@ -33,7 +33,7 @@ class InvokeAction(title0: String, mnemonic0: Char, shortcut: String, data: Data
     enabled = !launcher.active
   }
 
-  def apply() {
+  def apply(): Unit = {
     data.compute()
     if (!data.hasFatalErrors) {
       data.structure.foreach { root =>

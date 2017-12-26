@@ -25,7 +25,7 @@ class UserFunction(val name: Option[String], parameters: Parameters, expressions
 
   def isLazy = false
 
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = {
     val bindings = parameters.bind(ListValue(arguments)).fold(error(_, environment), identity)
 
     val initialEnvironment = environment.clearLocals.addLocals(closure ++ bindings)
@@ -35,7 +35,7 @@ class UserFunction(val name: Option[String], parameters: Parameters, expressions
     }
   }
 
-  def presentation = {
+  def presentation: String = {
     val prefix = name.map(_ + "_").getOrElse("")
     prefix + "fn" + parameters.presentation
   }

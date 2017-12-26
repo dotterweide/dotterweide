@@ -22,22 +22,22 @@ import org.junit.Test
 
 class FormattingTest extends InterpreterTesting {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertOutput("(print)", "")
   }
 
   @Test
-  def integer() {
+  def integer(): Unit = {
     assertOutput("(print 1)", "1")
   }
 
   @Test
-  def boolean() {
+  def boolean(): Unit = {
     assertOutput("(print true)", "true")
   }
 
   @Test
-  def character() {
+  def character(): Unit = {
     assertOutput("(print \\c)", "\\c")
     assertOutput("(print \\space)", "\\space")
     assertOutput("(print \\tab)", "\\tab")
@@ -46,18 +46,18 @@ class FormattingTest extends InterpreterTesting {
   }
 
   @Test
-  def list() {
+  def list(): Unit = {
     assertOutput("(print (list))", "()")
     assertOutput("(print (list 1 2 3))", "(1 2 3)")
   }
 
   @Test
-  def string() {
+  def string(): Unit = {
     assertOutput("(print \"string\")", "string")
   }
 
   @Test
-  def multiple() {
+  def multiple(): Unit = {
     assertOutput("(print 1 2 3)", "1 2 3")
     assertOutput("(print true false true)", "true false true")
     assertOutput("(print \\a \\b \\c)", "\\a \\b \\c")

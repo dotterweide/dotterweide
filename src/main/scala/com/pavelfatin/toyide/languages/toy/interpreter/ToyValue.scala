@@ -19,19 +19,20 @@ package com.pavelfatin.toyide.languages.toy.interpreter
 
 import com.pavelfatin.toyide.interpreter.DelegateValue
 import com.pavelfatin.toyide.languages.toy.ToyType
+import com.pavelfatin.toyide.node.NodeType
 
 sealed trait ToyValue[T] extends DelegateValue[T]
 
 object ToyValue {
   case class StringValue(content: String) extends ToyValue[String] {
-    def valueType = ToyType.StringType
+    def valueType: NodeType = ToyType.StringType
   }
 
   case class IntegerValue(content: Int) extends ToyValue[Int] {
-    def valueType = ToyType.IntegerType
+    def valueType: NodeType = ToyType.IntegerType
   }
 
   case class BooleanValue(content: Boolean) extends ToyValue[Boolean] {
-    def valueType = ToyType.BooleanType
+    def valueType: NodeType = ToyType.BooleanType
   }
 }

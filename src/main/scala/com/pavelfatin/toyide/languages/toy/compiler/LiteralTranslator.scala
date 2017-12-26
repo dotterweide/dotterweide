@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.languages.toy.ToyType
 import com.pavelfatin.toyide.compiler.{Code, Labels}
 
 trait LiteralTranslator extends ToyTranslatable { self: Literal =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val s = span.text
 
     val content = nodeType match {

@@ -20,5 +20,5 @@ package com.pavelfatin.toyide.editor
 import com.pavelfatin.toyide.node.Node
 
 class AdviserMock extends Adviser {
-  def variants(root: Node, anchor: Node) = Seq.empty
+  def variants(root: Node, anchor: Node): Seq[Variant] = Seq.empty
 }

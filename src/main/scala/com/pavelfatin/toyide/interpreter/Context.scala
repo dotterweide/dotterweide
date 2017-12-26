@@ -20,15 +20,15 @@ package com.pavelfatin.toyide.interpreter
 trait Context {
   def get(local: Boolean, name: String): Value
 
-  def put(local: Boolean, name: String, value: Value)
+  def put(local: Boolean, name: String, value: Value): Unit
 
-  def update(local: Boolean, name: String, value: Value)
+  def update(local: Boolean, name: String, value: Value): Unit
 
-  def inScope(action: => Unit)
+  def inScope(action: => Unit): Unit
 
   def inFrame(place: Place)(action: => Unit): Option[Value]
 
-  def dropFrame(value: Option[Value])
+  def dropFrame(value: Option[Value]): Unit
 
   def trace: Seq[Place]
 }

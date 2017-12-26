@@ -25,7 +25,7 @@ import java.awt.Color
 private class NodeInterpreter(console: Console) extends Runner {
   private val ErrorColor = new Color(127, 0, 0)
 
-  def run(root: Node) {
+  def run(root: Node): Unit = {
     console.clear()
     console.print("Started:\n")
     val before = System.currentTimeMillis

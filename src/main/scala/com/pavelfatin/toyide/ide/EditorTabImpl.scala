@@ -34,33 +34,33 @@ private class EditorTabImpl(val fileType: FileType, val history: History,
 
   updateLayout()
 
-  def text = primaryEditor.text
+  def text: String = primaryEditor.text
 
-  def text_=(s: String) {
+  def text_=(s: String): Unit = {
     primaryEditor.text = s
     _original = s
     history.clear()
   }
 
-  def file = _file
+  def file: Option[File] = _file
 
-  def file_=(file: Option[File]) {
+  def file_=(file: Option[File]): Unit = {
     _file = file
     notifyObservers()
   }
 
-  def changed = text != _original
+  def changed: Boolean = text != _original
 
-  def split = _split
+  def split: Boolean = _split
 
-  def split_=(b: Boolean) {
+  def split_=(b: Boolean): Unit = {
     _split = b
     updateLayout()
     val editor = if (split) secondaryEditor else primaryEditor
     editor.pane.requestFocusInWindow()
   }
 
-  private def updateLayout() {
+  private def updateLayout(): Unit = {
     val editors = if (split) {
       val pane = new SplitPane(Orientation.Horizontal, primaryEditor.component, secondaryEditor.component)
       pane.resizeWeight = 0.5D

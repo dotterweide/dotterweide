@@ -26,17 +26,17 @@ class SymbolNode extends NodeImpl("symbol")
 
   def read0(source: String) = SymbolValue(text, Some(placeIn(source)))
 
-  def id = source
+  def id: Option[NodeImpl] = source
 
-  def source = if (quoted) children.drop(1).headOption else children.headOption
+  def source: Option[NodeImpl] = if (quoted) children.drop(1).headOption else children.headOption
 
-  def target = if (!resolvable) None else accessibleSymbols.find {
+  def target: Option[SymbolNode] = if (!resolvable) None else accessibleSymbols.find {
     case SymbolNode(name) => name == identifier
   }
 
-  override def identifier = source.map(_.span.text).mkString
+  override def identifier: String = source.map(_.span.text).mkString
 
-  def predefined = CoreFunction.Names.contains(identifier)
+  def predefined: Boolean = CoreFunction.Names.contains(identifier)
 
   def resolvable: Boolean = !(predefined || declaration || title)
 
@@ -45,11 +45,11 @@ class SymbolNode extends NodeImpl("symbol")
   }
 
   private def title: Boolean = parent.exists {
-    case ListNode(SymbolNode("fn" | "macro"), name: SymbolNode, etc @ _*) => name == this
+    case ListNode(SymbolNode("fn" | "macro"), name: SymbolNode, _*) => name == this
     case _ => false
   }
 
-  override def toString = "%s(%s)".format(kind, identifier)
+  override def toString: String = "%s(%s)".format(kind, identifier)
 }
 
 object SymbolNode {

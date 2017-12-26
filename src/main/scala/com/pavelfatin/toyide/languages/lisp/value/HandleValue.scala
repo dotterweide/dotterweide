@@ -23,19 +23,20 @@ import java.net.Socket
 import com.pavelfatin.toyide.interpreter.Value
 import com.pavelfatin.toyide.languages.lisp.LispType
 import com.pavelfatin.toyide.languages.lisp.value.AbstractHandleValue._
+import com.pavelfatin.toyide.node.NodeType
 
 import scala.annotation.tailrec
 
 trait HandleValue extends Value with EvaluableToSelf {
-  def valueType = LispType.HandleType
+  def valueType: NodeType  = LispType.HandleType
 
   def read(terminator: Option[Char]): Seq[Char]
 
-  def write(chars: Seq[Char])
+  def write(chars: Seq[Char]): Unit
 
-  def flush()
+  def flush(): Unit
 
-  def close()
+  def close(): Unit
 }
 
 abstract class AbstractHandleValue(name: String, input: InputStream, output: OutputStream) extends HandleValue {
@@ -43,24 +44,24 @@ abstract class AbstractHandleValue(name: String, input: InputStream, output: Out
 
   private val bufferedOutput = new BufferedOutputStream(output)
 
-  def presentation = name
+  def presentation: String = name
 
-  def read(terminator: Option[Char]) = {
+  def read(terminator: Option[Char]): List[Char] = {
     val builder = new StringBuilder()
     readAll(bufferedInput, builder, terminator)
     builder.toList
   }
 
-  def write(chars: Seq[Char]) {
+  def write(chars: Seq[Char]): Unit = {
     val buffer = chars.map(_.toByte).toArray
     bufferedOutput.write(buffer)
   }
 
-  def flush() {
+  def flush(): Unit = {
     bufferedOutput.flush()
   }
 
-  def close() {
+  def close(): Unit = {
     bufferedOutput.flush()
 
     bufferedInput.close()
@@ -70,12 +71,12 @@ abstract class AbstractHandleValue(name: String, input: InputStream, output: Out
 
 private object AbstractHandleValue {
   @tailrec
-  private def readAll(input: InputStream, builder: StringBuilder, terminator: Option[Char]) {
+  private def readAll(input: InputStream, builder: StringBuilder, terminator: Option[Char]): Unit = {
       val b = input.read()
       if (b >= 0) {
         val char = b.toChar
         builder.append(char)
-        if (!terminator.exists(_ == char)) {
+        if (!terminator.contains(char)) {
           readAll(input, builder, terminator)
         }
       }
@@ -88,7 +89,7 @@ class FileHandleValue(file: File)
 class SocketHandleValue(socket: Socket)
   extends AbstractHandleValue(socket.getRemoteSocketAddress.toString, socket.getInputStream, socket.getOutputStream) {
 
-  override def close() {
+  override def close(): Unit = {
     super.close()
     socket.close()
   }

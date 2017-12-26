@@ -23,35 +23,35 @@ import com.pavelfatin.toyide.Helpers._
 
 class MissingReturnTest extends InspectionTestBase(MissingReturn) {
   @Test
-  def program() {
+  def program(): Unit = {
     assertMatches(marksIn("")) {
       case Nil =>
     }
   }
 
   @Test
-  def voidFunction() {
+  def voidFunction(): Unit = {
     assertMatches(marksIn("def f(): void = {}")) {
       case Nil =>
     }
   }
 
   @Test
-  def nonVoidFunction() {
+  def nonVoidFunction(): Unit = {
     assertMatches(marksIn("def f(): integer = {}")) {
       case MarkData(Text("}"), MissingReturn.Message) :: Nil =>
     }
   }
 
   @Test
-  def withReturn() {
+  def withReturn(): Unit = {
     assertMatches(marksIn("def f(): integer = { return 1; }")) {
       case Nil =>
     }
   }
 
   @Test
-  def withComplexReturn() {
+  def withComplexReturn(): Unit = {
     assertMatches(marksIn("def f(): integer = { if (true) { return 1; } else { return 2; } }")) {
       case Nil =>
     }

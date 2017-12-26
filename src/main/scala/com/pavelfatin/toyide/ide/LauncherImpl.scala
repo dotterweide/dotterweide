@@ -22,13 +22,13 @@ import javax.swing.SwingUtilities
 private class LauncherImpl extends Launcher {
   private var thread: Option[Thread] = None
 
-  def launch(action: => Unit) {
+  def launch(action: => Unit): Unit = {
     thread = Some(new Thread(new MyRunnable(() => action)))
     thread.foreach(_.start())
     notifyObservers()
   }
 
-  def stop() {
+  def stop(): Unit = {
     thread.foreach(_.stop())
     thread = None
     notifyObservers()
@@ -37,11 +37,11 @@ private class LauncherImpl extends Launcher {
   def active: Boolean = thread.isDefined
 
   private class MyRunnable(action: () => Unit) extends Runnable {
-    def run() {
+    def run(): Unit = {
       action()
 
       SwingUtilities.invokeLater(new Runnable {
-        def run() {
+        def run(): Unit = {
           stop()
         }
       })

@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.languages.toy.node.Return
 import com.pavelfatin.toyide.compiler.{Code, Labels}
 
 trait ReturnTranslator extends ToyTranslatable { self: Return =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val returnCode = expression.map { exp =>
       val t = exp.nodeType.getOrElse(
         interrupt("Unknown return expression type: %s", span.text))

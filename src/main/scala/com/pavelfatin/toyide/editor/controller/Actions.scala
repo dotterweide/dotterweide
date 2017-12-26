@@ -27,41 +27,41 @@ private class Actions(document: Document, terminal: Terminal, data: Data, advise
     
   val complete = new Complete(document, terminal, data, adviser, history)
 
-  val copy = historical(new Copy(document, terminal))
+  val copy: HistoricalAction = historical(new Copy(document, terminal))
 
-  val cut = historical(new Cut(document, terminal))
+  val cut: HistoricalAction = historical(new Cut(document, terminal))
 
-  val duplicateLine = historical(new DuplicateLine(document, terminal))
+  val duplicateLine: HistoricalAction = historical(new DuplicateLine(document, terminal))
 
-  val escape = historical(new Escape(terminal))
+  val escape: HistoricalAction = historical(new Escape(terminal))
 
-  val format = historical(new Format(document, terminal, data, formatter, tabSize))
+  val format: HistoricalAction = historical(new Format(document, terminal, data, formatter, tabSize))
 
-  val gotoDeclaration = historical(new GotoDeclaration(terminal, data))
+  val gotoDeclaration: HistoricalAction = historical(new GotoDeclaration(terminal, data))
 
-  val indentSelection = historical(new IndentSelection(document, terminal, tabSize))
+  val indentSelection: HistoricalAction = historical(new IndentSelection(document, terminal, tabSize))
 
-  val moveLineDown = historical(new MoveLineDown(document, terminal))
+  val moveLineDown: HistoricalAction = historical(new MoveLineDown(document, terminal))
 
-  val moveLineUp = historical(new MoveLineUp(document, terminal))
+  val moveLineUp: HistoricalAction = historical(new MoveLineUp(document, terminal))
 
-  val optimize = historical(new Optimize(document, terminal, data))
+  val optimize: HistoricalAction = historical(new Optimize(document, terminal, data))
 
-  val paste = historical(new Paste(document, terminal))
+  val paste: HistoricalAction = historical(new Paste(document, terminal))
 
   val redo = new Redo(document, terminal, history)
 
-  val removeLine = historical(new RemoveLine(document, terminal))
+  val removeLine: HistoricalAction = historical(new RemoveLine(document, terminal))
 
   val rename = new Rename(document, terminal, data, history)
 
-  val selectAll = historical(new SelectAll(document, terminal))
+  val selectAll: HistoricalAction = historical(new SelectAll(document, terminal))
 
-  val showUsages = historical(new ShowUsages(terminal, data))
+  val showUsages: HistoricalAction = historical(new ShowUsages(terminal, data))
 
-  val toggleLineComment = historical(new ToggleLineComment(document, terminal, comment))
+  val toggleLineComment: HistoricalAction = historical(new ToggleLineComment(document, terminal, comment))
 
   val undo = new Undo(document, terminal, history)
 
-  val unindentSelection = historical(new UnindentSelection(document, terminal, tabSize))
+  val unindentSelection: HistoricalAction = historical(new UnindentSelection(document, terminal, tabSize))
 }

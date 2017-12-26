@@ -18,8 +18,9 @@
 package com.pavelfatin.toyide.editor.painter
 
 import java.awt.font.TextAttribute
-import java.awt.{Graphics, Rectangle}
+import java.awt.{Color, Graphics, Rectangle}
 
+import com.pavelfatin.toyide.Interval
 import com.pavelfatin.toyide.editor.{Coloring, SelectionChange}
 
 private class SelectionPainter(context: PainterContext) extends AbstractPainter(context) with Decorator {
@@ -32,7 +33,7 @@ private class SelectionPainter(context: PainterContext) extends AbstractPainter(
     case _ =>
   }
 
-  override def paint(g: Graphics, bounds: Rectangle) {
+  override def paint(g: Graphics, bounds: Rectangle): Unit = {
     val rectangles = terminal.selection.toSeq.flatMap(rectanglesOf)
       .map(_.intersection(bounds)).filterNot(_.isEmpty)
 
@@ -42,6 +43,6 @@ private class SelectionPainter(context: PainterContext) extends AbstractPainter(
     }
   }
 
-  override def decorations = terminal.selection
+  override def decorations: Map[Interval, Map[TextAttribute, Color]] = terminal.selection
     .map(interval => (interval, Map(TextAttribute.FOREGROUND -> coloring(Coloring.SelectionForeground)))).toMap
 }

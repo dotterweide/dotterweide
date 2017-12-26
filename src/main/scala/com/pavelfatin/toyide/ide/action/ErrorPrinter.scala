@@ -24,7 +24,7 @@ import java.awt.Color
 private object ErrorPrinter {
   private val ErrorColor = new Color(127, 0, 0)
 
-  def print(data: Data, console: Console) {
+  def print(data: Data, console: Console): Unit = {
     console.clear()
     console.print("Errors found:\n", ErrorColor)
     data.errors.filter(_.fatal).foreach { it =>

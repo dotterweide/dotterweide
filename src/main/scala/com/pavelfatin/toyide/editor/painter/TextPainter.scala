@@ -60,7 +60,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
     notifyObservers(canvas.visibleRectangle)
   }
 
-  override def paint(g: Graphics, bounds: Rectangle) {
+  override def paint(g: Graphics, bounds: Rectangle): Unit = {
     val area = grid.toArea(bounds)
 
     if (singleLineChanged && area.height == 1) {
@@ -75,7 +75,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
     singleLineChanged = false
   }
 
-  private def updateString() {
+  private def updateString(): Unit = {
     if (data.pass == Pass.Text) {
       data.nextPass()
     }
@@ -83,7 +83,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
     stringValid = true
   }
 
-  private def paintLine(g: Graphics, area: Area) {
+  private def paintLine(g: Graphics, area: Area): Unit = {
     val rectangle = grid.toRectangle(area)
 
     val lineInterval = document.intervalOf(area.line)
@@ -100,7 +100,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
     }
   }
 
-  private def paintArea(g: Graphics, area: Area) {
+  private def paintArea(g: Graphics, area: Area): Unit = {
     val decorated = decorate(string, decorators, intervalOf(area), 0)
 
     Range(area.line, (area.line + area.height).min(document.linesCount)).foreach { line =>

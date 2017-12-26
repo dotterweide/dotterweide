@@ -18,11 +18,11 @@
 package com.pavelfatin.toyide.editor
 
 import com.pavelfatin.toyide.lexer.TokenKind
-import com.pavelfatin.toyide.formatter.Format
+import com.pavelfatin.toyide.formatter.{Distance, Format}
 import com.pavelfatin.toyide.formatter.Distance._
 
 class MockFormat extends Format {
-  def distanceFor(a: TokenKind, b: TokenKind) = Joint
+  def distanceFor(a: TokenKind, b: TokenKind): Distance = Joint
 
   def indentDeltaFor(a: TokenKind, b: TokenKind) = 0
 }

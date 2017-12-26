@@ -23,9 +23,9 @@ import com.pavelfatin.toyide.inspection.{Mark, Inspection}
 import com.pavelfatin.toyide.languages.toy.ToyType._
 
 object Applicability extends Inspection {
-  val Mismatch = "Type mismatch, expected: %s, actual: %s".format(_: String, _: String)
-  val Missed = "Function %s: unspecified parameters: %s".format(_: String, _: String)
-  val Excessive = "Function %s: excessive argument".format(_: String)
+  val Mismatch: (String, String) => String = "Type mismatch, expected: %s, actual: %s".format(_: String, _: String)
+  val Missed: (String, String) => String = "Function %s: unspecified parameters: %s".format(_: String, _: String)
+  val Excessive: String => String = "Function %s: excessive argument".format(_: String)
   val Void = "Void argument"
 
   def inspect(node: Node): Seq[Mark] = node match {

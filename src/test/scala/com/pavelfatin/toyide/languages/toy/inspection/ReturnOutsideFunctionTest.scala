@@ -23,14 +23,14 @@ import com.pavelfatin.toyide.Helpers._
 
 class ReturnOutsideFunctionTest extends InspectionTestBase(ReturnOutsideFunction) {
   @Test
-  def inside() {
+  def inside(): Unit = {
     assertMatches(marksIn("def f(): void = { return; }")) {
       case Nil =>
     }
   }
 
   @Test
-  def outside() {
+  def outside(): Unit = {
     assertMatches(marksIn("return;")) {
       case MarkData(_, ReturnOutsideFunction.Message) :: Nil =>
     }

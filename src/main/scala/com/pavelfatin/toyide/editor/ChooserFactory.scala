@@ -24,7 +24,7 @@ import java.awt.event._
 
 private object ChooserFactory {
   def createPopup[T <: AnyRef](parent: JComponent, point: Point, font: Font, variants: Seq[T], renderer: ListCellRenderer[AnyRef])
-                              (callback: Option[T] => Unit) = {
+                              (callback: Option[T] => Unit): (Popup, JList[AnyRef]) = {
     val list = createList(variants, font)
 
     list.setCellRenderer(renderer)
@@ -37,14 +37,14 @@ private object ChooserFactory {
     val popup = factory.getPopup(parent, pane, shift.x + point.x, shift.y + point.y)
 
     list.addFocusListener(new FocusAdapter() {
-      override def focusLost(e: FocusEvent) {
+      override def focusLost(e: FocusEvent): Unit = {
         callback(None)
         popup.hide()
       }
     })
 
     list.addKeyListener(new KeyAdapter() {
-      override def keyTyped(e: KeyEvent) {
+      override def keyTyped(e: KeyEvent): Unit = {
         if (e.getKeyChar == KeyEvent.VK_ESCAPE) {
           callback(None)
           popup.hide()
@@ -73,14 +73,14 @@ private object ChooserFactory {
     val last = list.getActionMap.get("selectLastRow")
 
     list.getActionMap.put("selectPreviousRow", new AbstractAction() {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         val action = if (list.getSelectedIndex == 0) last else previous
         action.actionPerformed(e)
       }
     })
 
     list.getActionMap.put("selectNextRow", new AbstractAction() {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         val action = if (list.getSelectedIndex == list.getModel.getSize - 1) first else next
         action.actionPerformed(e)
       }

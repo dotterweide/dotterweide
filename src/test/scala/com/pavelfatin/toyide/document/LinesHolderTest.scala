@@ -22,7 +22,7 @@ import org.junit.Assert._
 
 class LinesHolderTest {
   @Test
-  def linesCount() {
+  def linesCount(): Unit = {
     assertEquals(1, Lines(0).linesCount)
     assertEquals(1, Lines(5).linesCount)
     assertEquals(2, Lines(5, 1).linesCount)
@@ -31,7 +31,7 @@ class LinesHolderTest {
   }
 
   @Test
-  def lineIndex() {
+  def lineIndex(): Unit = {
     assertEquals(0, Lines(0).lineNumberOf(0))
     assertEquals(0, Lines(1).lineNumberOf(0))
     assertEquals(0, Lines(2).lineNumberOf(1))
@@ -43,17 +43,17 @@ class LinesHolderTest {
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def lineIndexGreater() {
+  def lineIndexGreater(): Unit = {
     Lines(0).lineNumberOf(1)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def lineIndexLess() {
+  def lineIndexLess(): Unit = {
     Lines(0).lineNumberOf(-1)
   }
 
   @Test
-  def startOffset() {
+  def startOffset(): Unit = {
     assertEquals(0, Lines(0).startOffsetOf(0))
     assertEquals(0, Lines(1).startOffsetOf(0))
     assertEquals(0, Lines(1, 0).startOffsetOf(0))
@@ -65,17 +65,17 @@ class LinesHolderTest {
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def startOffsetGreater() {
+  def startOffsetGreater(): Unit = {
     Lines(5).startOffsetOf(1)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def startOffsetLess() {
+  def startOffsetLess(): Unit = {
     Lines(5).startOffsetOf(-1)
   }
 
   @Test
-  def endOffset() {
+  def endOffset(): Unit = {
     assertEquals(0, Lines(0).endOffsetOf(0))
     assertEquals(1, Lines(1).endOffsetOf(0))
     assertEquals(1, Lines(5, 1).endOffsetOf(0))
@@ -85,17 +85,17 @@ class LinesHolderTest {
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def endOffsetGreater() {
+  def endOffsetGreater(): Unit = {
     Lines(5).endOffsetOf(1)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def endOffsetLess() {
+  def endOffsetLess(): Unit = {
     Lines(5).endOffsetOf(-1)
   }
 
   @Test
-  def toLocation() {
+  def toLocation(): Unit = {
     assertEquals(Location(0, 0), Lines(0).toLocation(0))
     assertEquals(Location(0, 3), Lines(5).toLocation(3))
     assertEquals(Location(1, 2), Lines(7, 3).toLocation(6))
@@ -103,17 +103,17 @@ class LinesHolderTest {
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def loLocationGreater() {
+  def loLocationGreater(): Unit = {
     Lines(0).toLocation(1)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def loLocationLess() {
+  def loLocationLess(): Unit = {
     Lines(0).toLocation(-1)
   }
 
   @Test
-  def toOffset() {
+  def toOffset(): Unit = {
     assertEquals(Some(0), Lines(0).toOffset(Location(0, 0)))
     assertEquals(None, Lines(0).toOffset(Location(0, 1)))
     assertEquals(None, Lines(0).toOffset(Location(1, 0)))
@@ -124,7 +124,7 @@ class LinesHolderTest {
   }
 
   @Test
-  def toNearestOffset() {
+  def toNearestOffset(): Unit = {
     assertEquals(0, Lines(0).toNearestOffset(Location(0, 0)))
     assertEquals(0, Lines(0).toNearestOffset(Location(0, 1)))
     assertEquals(0, Lines(0).toNearestOffset(Location(1, 0)))
@@ -140,7 +140,7 @@ class LinesHolderTest {
   }
 
   @Test
-  def maximumIndent() {
+  def maximumIndent(): Unit = {
     assertEquals(0, Lines(0).maximumIndent)
     assertEquals(3, Lines(3).maximumIndent)
     assertEquals(3, Lines(5, 3).maximumIndent)

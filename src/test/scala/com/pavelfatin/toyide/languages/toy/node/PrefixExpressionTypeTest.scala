@@ -22,33 +22,33 @@ import com.pavelfatin.toyide.languages.toy.ToyType._
 
 class PrefixExpressionTypeTest extends ExpressionTypeTestBase {
   @Test
-  def positive() {
+  def positive(): Unit = {
     assertTypeIs("+1", IntegerType)
   }
 
   @Test
-  def negative() {
+  def negative(): Unit = {
     assertTypeIs("-1", IntegerType)
   }
 
   @Test
-  def recursive() {
+  def recursive(): Unit = {
     assertTypeIs("+++1", IntegerType)
   }
 
   @Test
-  def wrong() {
+  def wrong(): Unit = {
     assertNoType("-true")
     assertNoType("-\"foo\"")
   }
 
   @Test
-  def not() {
+  def not(): Unit = {
     assertTypeIs("!false", BooleanType)
   }
 
   @Test
-  def notWrong() {
+  def notWrong(): Unit = {
     assertNoType("!1")
   }
 }

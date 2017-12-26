@@ -25,14 +25,14 @@ import org.junit.{Assert, Test}
 
 class ToyOptimizationTest {
   @Test
-  def literals() {
+  def literals(): Unit = {
     assertOptimized("print(1);", "print(1);")
     assertOptimized("print(\"foo\");", "print(\"foo\");")
     assertOptimized("print(true);", "print(true);")
   }
 
   @Test
-  def prefixExpresion() {
+  def prefixExpresion(): Unit = {
     assertOptimized("print(!true);", "print(false);")
     assertOptimized("print(!!true);", "print(true);")
 
@@ -40,34 +40,34 @@ class ToyOptimizationTest {
   }
 
   @Test
-  def groupExpresion() {
+  def groupExpresion(): Unit = {
     assertOptimized("print((1));", "print(1);")
   }
 
   @Test
-  def binaryExpresion() {
+  def binaryExpresion(): Unit = {
     assertOptimized("print(1 + 2);", "print(3);")
 
     assertOptimized("print(1 + a);", "print(1 + a);")
   }
 
   @Test
-  def nestedExpresions() {
+  def nestedExpresions(): Unit = {
     assertOptimized("print(1 + 2 + 3);", "print(6);")
   }
   
   @Test
-  def multipleExpresions() {
+  def multipleExpresions(): Unit = {
     assertOptimized("print(1 + 2); print(3 + 4);", "print(3); print(7);")
   }
 
   @Test
-  def stingExpression() {
+  def stingExpression(): Unit = {
     assertOptimized("print(\"foo\" + \" \" + 1);", "print(\"foo 1\");")
   }
 
   @Test
-  def binaryExpresionLazy() {
+  def binaryExpresionLazy(): Unit = {
     val a = "var a: boolean = true; "
 
     assertOptimized("print(false && true);", "print(false);")
@@ -92,12 +92,12 @@ class ToyOptimizationTest {
   }
 
   @Test
-  def divisionByZero() {
+  def divisionByZero(): Unit = {
     assertOptimized("print(1 / 0);", "print(1 / 0);")
   }
 
 
-  protected def assertOptimized(before: String, after: String) {
+  protected def assertOptimized(before: String, after: String): Unit = {
     val clean = before.filterNot(_ == '\r')
     val root = ProgramParser.parse(ToyLexer.analyze(clean))
     assertNoProblemsIn(root.elements)

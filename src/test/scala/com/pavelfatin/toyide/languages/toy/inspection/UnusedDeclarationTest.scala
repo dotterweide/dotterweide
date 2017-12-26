@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.Helpers._
 
 class UnusedDeclarationTest extends InspectionTestBase(UnusedDeclaration) {
   @Test
-  def variable() {
+  def variable(): Unit = {
     assertMatches(marksIn("var v: integer = 1; println(v);")) {
       case Nil =>
     }
@@ -36,7 +36,7 @@ class UnusedDeclarationTest extends InspectionTestBase(UnusedDeclaration) {
   }
 
   @Test
-  def function() {
+  def function(): Unit = {
     assertMatches(marksIn("def f(): integer = {}; println(f());")) {
       case Nil =>
     }
@@ -49,7 +49,7 @@ class UnusedDeclarationTest extends InspectionTestBase(UnusedDeclaration) {
   }
 
   @Test
-  def parameter() {
+  def parameter(): Unit = {
     assertMatches(marksIn("def f(p: integer): void = { println(p); }; println(f());")) {
       case Nil =>
     }
@@ -62,7 +62,7 @@ class UnusedDeclarationTest extends InspectionTestBase(UnusedDeclaration) {
   }
 
   @Test
-  def order() {
+  def order(): Unit = {
     val Message = UnusedDeclaration.Message("variable", "v")
 
     assertMatches(marksIn("println(v); var v: integer = 1;")) {
@@ -71,7 +71,7 @@ class UnusedDeclarationTest extends InspectionTestBase(UnusedDeclaration) {
   }
 
   @Test
-  def nestedScope() {
+  def nestedScope(): Unit = {
     assertMatches(marksIn("var v: integer = 1; if (true) { println(v); }")) {
       case Nil =>
     }
@@ -87,7 +87,7 @@ class UnusedDeclarationTest extends InspectionTestBase(UnusedDeclaration) {
   }
 
   @Test
-  def selfUsage() {
+  def selfUsage(): Unit = {
     val Message = UnusedDeclaration.Message("function", "f")
 
     assertMatches(marksIn("def f(): integer = { println(f()); }")) {

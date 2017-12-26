@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.interpreter._
 import com.pavelfatin.toyide.Output
 
 trait VariableDeclarationEvaluator extends ExpressionHolderEvaluator { self: VariableDeclaration =>
-  override def evaluate(context: Context, output: Output) = {
+  override def evaluate(context: Context, output: Output): Option[Value] = {
     val value = evaluateExpression(context, output)
     wrap(context) {
       context.put(local, identifier, value)

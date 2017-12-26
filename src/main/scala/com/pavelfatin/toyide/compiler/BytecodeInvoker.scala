@@ -23,16 +23,16 @@ import com.pavelfatin.toyide.Output
 
 object BytecodeInvoker {
   @throws(classOf[InvocationException])
-  def invoke(code: Array[Byte], name: String, output: Output) {
+  def invoke(code: Array[Byte], name: String, output: Output): Unit = {
     val loader = new DynamicClassLoader()
 
     val mainClass = loader.define(name, code)
     val constructor = mainClass.getConstructor(classOf[PrintStream])
-    val instance = constructor.newInstance(new PrintStream(new OutputAdapter(output)));
-    val mainMethod = mainClass.getMethod("run", classOf[Array[String]]);
+    val instance = constructor.newInstance(new PrintStream(new OutputAdapter(output)))
+    val mainMethod = mainClass.getMethod("run", classOf[Array[String]])
 
     try {
-      mainMethod.invoke(instance, Array[String]());
+      mainMethod.invoke(instance, Array[String]())
     } catch {
       case e: InvocationTargetException =>
         val cause = e.getCause
@@ -41,18 +41,18 @@ object BytecodeInvoker {
           val line = it.getLineNumber
           if (method == "run") Place(None, line) else Place(Some(method), line)
         }
-        throw new InvocationException(cause.toString, places)
+        throw InvocationException(cause.toString, places)
     }
   }
 
   private class DynamicClassLoader extends ClassLoader {
-    def define(className: String, bytecode: Array[Byte]) = {
-      super.defineClass(className, bytecode, 0, bytecode.length);
+    def define(className: String, bytecode: Array[Byte]): Class[_] = {
+      super.defineClass(className, bytecode, 0, bytecode.length)
     }
   }
 
   private class OutputAdapter(output: Output) extends OutputStream {
-    def write(b: Int) {
+    def write(b: Int): Unit = {
       output.print(b.toChar.toString)
     }
   }

@@ -22,7 +22,7 @@ import org.junit.Test
 
 class DeclarationTest extends InterpreterTesting {
   @Test
-  def singular() {
+  def singular(): Unit = {
     assertOK("(fn [])")
     assertOK("(fn [x])")
     assertOK("(fn [x y])")
@@ -33,7 +33,7 @@ class DeclarationTest extends InterpreterTesting {
   }
 
   @Test
-  def plural() {
+  def plural(): Unit = {
     assertOK("(fn [&])")
     assertOK("(fn [x &])")
     assertOK("(fn [& x])")
@@ -48,13 +48,13 @@ class DeclarationTest extends InterpreterTesting {
   }
 
   @Test
-  def duplicates() {
+  def duplicates(): Unit = {
     assertError("(fn [x x])")
     assertError("(fn [x & x])")
   }
 
   @Test
-  def underscore() {
+  def underscore(): Unit = {
     assertOK("(fn [_ _])")
     assertOK("(fn [_ & _])")
   }

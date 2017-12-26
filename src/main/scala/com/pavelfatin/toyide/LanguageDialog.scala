@@ -64,7 +64,7 @@ class LanguageDialog(languages: Seq[Language]) extends Dialog {
 
     val contentPane = new ScrollPane(Component.wrap(table))
 
-    val buttonsPane = new FlowPanel(FlowPanel.Alignment.Trailing)(
+    private val buttonsPane = new FlowPanel(FlowPanel.Alignment.Trailing)(
       okButton, Swing.HStrut(6), cancelButton) { hGap = 0; vGap = 0 }
 
     add(contentPane, BorderPanel.Position.Center)
@@ -74,26 +74,26 @@ class LanguageDialog(languages: Seq[Language]) extends Dialog {
   def selection: Option[Language] =
     if (itemSelected) Some(languages(table.getSelectedRow)) else None
 
-  private def onOk() {
+  private def onOk(): Unit = {
     itemSelected = true
     dispose()
   }
 
-  private def onCancel() {
+  private def onCancel(): Unit = {
     dispose()
   }
 
   private object LangugeTableModel extends AbstractTableModel {
-    def getRowCount = languages.length
+    def getRowCount: Int = languages.length
 
     def getColumnCount = 2
 
-    override def getColumnName(column: Int) = column match {
+    override def getColumnName(column: Int): String = column match {
       case 0 => "Name"
       case 1 => "Description"
     }
 
-    def getValueAt(rowIndex: Int, columnIndex: Int) = {
+    def getValueAt(rowIndex: Int, columnIndex: Int): String = {
       val language = languages(rowIndex)
 
       columnIndex match {

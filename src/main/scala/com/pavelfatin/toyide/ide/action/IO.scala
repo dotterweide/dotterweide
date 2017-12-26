@@ -21,7 +21,7 @@ import java.io.{FileWriter, BufferedWriter, File}
 import io.Source
 
 private object IO {
-  def write(file: File, text: String) {
+  def write(file: File, text: String): Unit = {
     val s = text.replaceAll("\n", System.getProperty("line.separator"))
     val writer = new BufferedWriter(new FileWriter(file))
     try {

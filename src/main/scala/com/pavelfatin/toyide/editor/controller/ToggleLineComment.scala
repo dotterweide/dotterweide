@@ -24,7 +24,7 @@ import com.pavelfatin.toyide.Interval
 private class ToggleLineComment(document: Document, terminal: Terminal, comment: String) extends AnAction {
   def keys = List("ctrl pressed SLASH")
 
-  def apply() {
+  def apply(): Unit = {
     val interval = terminal.currentLineIntervalIn(document)
     val line = document.text(interval)
 
@@ -46,7 +46,7 @@ private class ToggleLineComment(document: Document, terminal: Terminal, comment:
     moveCaretDown()
   }
 
-  private def moveCaretDown() {
+  private def moveCaretDown(): Unit = {
     if (document.lineNumberOf(terminal.offset) < document.linesCount - 1) {
       val line = document.lineNumberOf(terminal.offset)
       val indent = terminal.offset - document.startOffsetOf(line)

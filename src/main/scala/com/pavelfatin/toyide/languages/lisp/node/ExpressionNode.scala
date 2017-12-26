@@ -30,7 +30,7 @@ trait ExpressionNode extends Node with ReadableNode with QuotableNode {
   private def enclosure: Option[String] = {
     val enclosures = parents.flatMap {
       case list: ListNode => list.expressions match {
-        case Seq(SymbolNode("fn" | "macro" | "defn" | "defmacro"), SymbolNode(name), etc @ _ *) => Seq(name)
+        case Seq(SymbolNode("fn" | "macro" | "defn" | "defmacro"), SymbolNode(name), _ *) => Seq(name)
         case _ => Seq.empty
       }
       case _ => Seq.empty

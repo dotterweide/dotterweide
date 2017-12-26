@@ -22,13 +22,13 @@ import org.junit.Test
 
 class ConsoleTest extends InterpreterTesting {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertOutput("", "")
     assertOutput("1", "")
   }
 
   @Test
-  def print() {
+  def print(): Unit = {
     assertOutput("(print)", "")
     assertOutput("(print 1 2 3)", "1 2 3")
 
@@ -39,7 +39,7 @@ class ConsoleTest extends InterpreterTesting {
   }
 
   @Test
-  def println() {
+  def println(): Unit = {
     assertOutput("(println)", "\n")
     assertOutput("(println 1 2 3)", "1 2 3\n")
 
@@ -50,7 +50,7 @@ class ConsoleTest extends InterpreterTesting {
   }
 
   @Test
-  def trace() {
+  def trace(): Unit = {
     assertValue("(trace 1)", "1")
     assertValue("(trace true)", "true")
     assertValue("(trace \\c)", "\\c")
@@ -69,7 +69,7 @@ class ConsoleTest extends InterpreterTesting {
   }
 
   @Test
-  def format() {
+  def format(): Unit = {
     assertValue("(format 123)", "(\\1 \\2 \\3)")
     assertOutput("(format 123)", "")
   }

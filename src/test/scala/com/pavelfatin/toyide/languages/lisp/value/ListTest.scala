@@ -22,22 +22,22 @@ import org.junit.Test
 
 class ListTest extends InterpreterTesting {
   @Test
-  def emptyApplication() {
+  def emptyApplication(): Unit = {
     assertError("()", "Empty application")
   }
 
   @Test
-  def applicationToValue() {
+  def applicationToValue(): Unit = {
     assertError("(1)", "Cannot apply to 1")
   }
 
   @Test
-  def evaluationOrder() {
+  def evaluationOrder(): Unit = {
     assertOutput("((trace list) (trace 1) (trace 2))", "core.list12")
   }
 
   @Test
-  def macroCaching() {
+  def macroCaching(): Unit = {
     val definition = "(def m (macro [x] (trace x))) "
 
     assertOutput(definition + "(m 1) (m 2)", "12")

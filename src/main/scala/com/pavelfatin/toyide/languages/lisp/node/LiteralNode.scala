@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.languages.lisp.value._
 import com.pavelfatin.toyide.node.NodeImpl
 
 trait LiteralNode extends ExpressionNode {
-  override def toString = "%s(%s)".format(kind, span.text)
+  override def toString: String = "%s(%s)".format(kind, span.text)
 }
 
 class IntegerLiteralNode extends NodeImpl("integer") with LiteralNode {
@@ -34,7 +34,7 @@ class BooleanLiteralNode extends NodeImpl("boolean") with LiteralNode {
 }
 
 class CharacterLiteralNode extends NodeImpl("character") with LiteralNode {
-  def read0(source: String) = {
+  def read0(source: String): CharacterValue = {
     val c = text.substring(1) match {
       case "return" => '\r'
       case "newline" => '\n'
@@ -47,7 +47,7 @@ class CharacterLiteralNode extends NodeImpl("character") with LiteralNode {
 }
 
 class StringLiteralNode extends NodeImpl("string") with LiteralNode {
-  def read0(source: String) = {
+  def read0(source: String): Expression = {
     val s = text
     val characters = s.substring(1, s.length - 1)
       .replace("\\r", "\r")
@@ -55,6 +55,6 @@ class StringLiteralNode extends NodeImpl("string") with LiteralNode {
       .replace("\\t", "\t")
       .replace("\\\\", "\\")
       .toSeq
-    NewList(characters.map(CharacterValue(_)))
+    NewList(characters.map(CharacterValue))
   }
 }

@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.parser.{TreeBuilder, Parser}
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
 
 object StatementParser extends Parser {
-  def parse(in: TreeBuilder) {
+  def parse(in: TreeBuilder): Unit = {
     if(in.matches(DEF)) {
       FunctionParser.parse(in)
     } else {

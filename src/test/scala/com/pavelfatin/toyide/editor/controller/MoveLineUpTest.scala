@@ -21,7 +21,7 @@ import org.junit.Test
 
 class MoveLineUpTest extends ActionTestBase(new MoveLineUp(_, _)) {
   @Test
-  def line() {
+  def line(): Unit = {
     assertEffectIs("foo\n|bar", "|bar\nfoo")
 
     assertEffectIs("foo\n|bar\n", "|bar\nfoo\n")

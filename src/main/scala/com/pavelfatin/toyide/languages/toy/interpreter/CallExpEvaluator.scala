@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.languages.toy.node.CallExpression
 import com.pavelfatin.toyide.Output
 
 trait CallExpEvaluator extends ToyEvaluable { self: CallExpression =>
-  override def evaluate(context: Context, output: Output) = {
+  override def evaluate(context: Context, output: Output): Option[Value] = {
     val ref = reference.getOrElse(
       interrupt(context, "Function not found: %s", span.text))
 
@@ -76,7 +76,7 @@ trait CallExpEvaluator extends ToyEvaluable { self: CallExpression =>
       context.inFrame(place) {
         context.inScope {
           for ((name, value) <- arguments)
-            context.put(true, name, value)
+            context.put(local = true, name, value)
 
           block.evaluate(context, output)
         }

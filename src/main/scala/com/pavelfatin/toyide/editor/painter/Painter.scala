@@ -26,5 +26,5 @@ trait Painter extends ObservableEvents[Rectangle] {
 
   def immediate: Boolean = false
 
-  def paint(g: Graphics, bounds: Rectangle)
+  def paint(g: Graphics, bounds: Rectangle): Unit
 }

@@ -20,15 +20,15 @@ package com.pavelfatin.toyide.editor
 import com.pavelfatin.toyide.document.Document
 
 trait History {
-  def recording(document: Document, terminal: Terminal)(block: => Unit)
+  def recording(document: Document, terminal: Terminal)(block: => Unit): Unit
 
   def canUndo: Boolean
 
-  def undo()
+  def undo(): Unit
 
   def canRedo: Boolean
 
-  def redo()
+  def redo(): Unit
 
-  def clear()
+  def clear(): Unit
 }

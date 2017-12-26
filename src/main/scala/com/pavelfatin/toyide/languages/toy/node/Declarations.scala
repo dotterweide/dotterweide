@@ -22,6 +22,7 @@ import com.pavelfatin.toyide.lexer.TokenKind
 import com.pavelfatin.toyide.languages.toy.ToyType._
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.Extensions._
+import com.pavelfatin.toyide.languages.toy.ToyType
 import com.pavelfatin.toyide.languages.toy.interpreter._
 import com.pavelfatin.toyide.languages.toy.compiler._
 
@@ -30,7 +31,7 @@ class Block extends NodeImpl("block") with Scope
 class Program extends NodeImpl("program") with Scope
 
 trait UsableNode extends IdentifiedNode {
-  def scope = parents.findBy[Scope]
+  def scope: Option[Scope] = parents.findBy[Scope]
 
   def usages: Seq[ReferenceNode] = {
     scope match {
@@ -42,50 +43,51 @@ trait UsableNode extends IdentifiedNode {
 
 class FunctionDeclaration extends NodeImpl("function") with BlockHolder
 with UsableNode with NamedNode with TypedNode with FunctionDeclarationTranslator {
-  def id = children.drop(1).headOption
+  def id: Option[NodeImpl] = children.drop(1).headOption
 
   def parametersNode: Option[Parameters] = children.findBy[Parameters]
 
   def parameters: Seq[Parameter] = parametersNode.map(_.parameters).getOrElse(Seq.empty)
 
-  def name = "%s(%s): %s".format(
+  def name: String = "%s(%s): %s".format(
     identifier, parameters.map(_.name).mkString(", "), nodeType.map(_.presentation).getOrElse("undefined"))
 
   def typeSpec: Option[TypeSpec] = children.findBy[TypeSpec]
 
-  def typeId = typeSpec.flatMap(_.typeId)
+  def typeId: Option[Node] = typeSpec.flatMap(_.typeId)
 
-  def nodeType = typeSpec.flatMap(_.declaredType)
+  def nodeType: Option[ToyType with Product with Serializable] = typeSpec.flatMap(_.declaredType)
 }
 
 object FunctionBlock {
-  def unapply(function: FunctionDeclaration) = function.block
+  def unapply(function: FunctionDeclaration): Option[Block] = function.block
 }
 
 class VariableDeclaration extends NodeImpl("variable") with UsableNode with NamedNode
-with TypedNode with ExpressionHolder with VariableDeclarationEvaluator with VariableDeclarationTranslator {
-  def id = children.drop(1).headOption
+  with TypedNode with ExpressionHolder with VariableDeclarationEvaluator with VariableDeclarationTranslator {
 
-  def name = "%s: %s".format(
+  def id: Option[NodeImpl] = children.drop(1).headOption
+
+  def name: String = "%s: %s".format(
     identifier, nodeType.map(_.presentation).getOrElse("undefined"))
 
   def typeSpec: Option[TypeSpec] = children.findBy[TypeSpec]
 
-  def typeId = typeSpec.flatMap(_.typeId)
+  def typeId: Option[Node] = typeSpec.flatMap(_.typeId)
 
-  def nodeType = typeSpec.flatMap(_.declaredType)
+  def nodeType: Option[ToyType with Product with Serializable] = typeSpec.flatMap(_.declaredType)
 
-  def expression = children.dropWhile(!_.token.exists(_.kind == EQ)).findBy[Expression]
+  def expression: Option[Expression] = children.dropWhile(!_.token.exists(_.kind == EQ)).findBy[Expression]
 
-  def expectedType = nodeType
+  def expectedType: Option[ToyType with Product with Serializable] = nodeType
 
-  def local = parents.findBy[FunctionDeclaration].isDefined
+  def local: Boolean = parents.findBy[FunctionDeclaration].isDefined
 }
 
 class TypeSpec extends NodeImpl("typeSpec") {
   def typeId: Option[Node] = children.lastOption
 
-  def declaredType = typeId.flatMap(_.token).flatMap(token => from(token.kind))
+  def declaredType: Option[ToyType with Product with Serializable] = typeId.flatMap(_.token).flatMap(token => from(token.kind))
 
   private def from(kind: TokenKind) = Some(kind).collect {
     case STRING => StringType
@@ -96,20 +98,20 @@ class TypeSpec extends NodeImpl("typeSpec") {
 }
 
 class Parameter extends NodeImpl("parameter") with UsableNode with NamedNode with TypedNode {
-  def id = children.headOption
+  def id: Option[NodeImpl] = children.headOption
 
-  override def scope = parent match {
-    case Some(parameters: Parameters) => parents.findBy[FunctionDeclaration].flatMap(_.block)
+  override def scope: Option[Scope] = parent match {
+    case Some(_: Parameters) => parents.findBy[FunctionDeclaration].flatMap(_.block)
     case _ => super.scope
   }
 
-  def name = "%s: %s".format(identifier, typeSpec.flatMap(_.typeId).map(_.span.text).mkString)
+  def name: String = "%s: %s".format(identifier, typeSpec.flatMap(_.typeId).map(_.span.text).mkString)
 
   def typeSpec: Option[TypeSpec] = children.findBy[TypeSpec]
 
-  def typeId = typeSpec.flatMap(_.typeId)
+  def typeId: Option[Node] = typeSpec.flatMap(_.typeId)
 
-  def nodeType = typeSpec.flatMap(_.declaredType)
+  def nodeType: Option[ToyType with Product with Serializable] = typeSpec.flatMap(_.declaredType)
 }
 
 class Parameters extends NodeImpl("parameters") {

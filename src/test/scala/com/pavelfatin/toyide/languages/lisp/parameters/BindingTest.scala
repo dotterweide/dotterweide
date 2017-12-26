@@ -22,7 +22,7 @@ import org.junit.Test
 
 class BindingTest extends InterpreterTesting {
   @Test
-  def singular() {
+  def singular(): Unit = {
     assertValue("((fn []))", "()")
 
     assertValue("((fn [x] x) 1)", "1")
@@ -37,7 +37,7 @@ class BindingTest extends InterpreterTesting {
   }
 
   @Test
-  def plural() {
+  def plural(): Unit = {
     assertValue("((fn [&]))", "()")
 
     assertValue("((fn [& x] x))", "()")
@@ -56,7 +56,7 @@ class BindingTest extends InterpreterTesting {
   }
 
   @Test
-  def underscore() {
+  def underscore(): Unit = {
     assertValue("((fn [_ y] y) 1 2)", "2")
 
     assertError("((fn [_] _) 1)")

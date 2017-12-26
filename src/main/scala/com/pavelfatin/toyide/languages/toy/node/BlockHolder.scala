@@ -25,5 +25,5 @@ trait BlockHolder { self: Node =>
 }
 
 object BlockHolder {
-  def unapply(holder: BlockHolder) = holder.block
+  def unapply(holder: BlockHolder): Option[Block] = holder.block
 }

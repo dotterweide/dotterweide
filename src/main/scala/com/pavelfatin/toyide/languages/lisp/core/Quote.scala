@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.Output
 import com.pavelfatin.toyide.languages.lisp.value._
 
 object Quote extends CoreFunction("quote", isLazy = true) {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = arguments match {
     case Seq(expression) => expression
     case _ => expected("expression", arguments, environment)
   }
@@ -30,8 +30,8 @@ object Quote extends CoreFunction("quote", isLazy = true) {
 }
 
 object Unquote extends CoreFunction("unquote", isLazy = true) {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
-    case Seq(expression) => error("not applicable outside syntax quoting", environment)
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = arguments match {
+    case Seq(_) => error("not applicable outside syntax quoting", environment)
     case _ => expected("expression", arguments, environment)
   }
 
@@ -44,8 +44,8 @@ object Unquote extends CoreFunction("unquote", isLazy = true) {
 }
 
 object UnquoteSplicing extends CoreFunction("unquote-splicing", isLazy = true) {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
-    case Seq(expression) => error("not applicable outside syntax quoting", environment)
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = arguments match {
+    case Seq(_) => error("not applicable outside syntax quoting", environment)
     case _ => expected("expression", arguments, environment)
   }
 
@@ -58,19 +58,19 @@ object UnquoteSplicing extends CoreFunction("unquote-splicing", isLazy = true) {
 }
 
 object GenSym extends CoreFunction("gensym") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): SymbolValue = arguments match {
     case Seq(StringValue(prefix)) => SymbolValue(prefix + "_" + environment.nextId())
     case _ => expected("prefix", arguments, environment)
   }
 }
 
 object Quasiquote extends CoreFunction("quasiquote", isLazy = true) {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = arguments match {
     case Seq(expression) =>
       val names = new NameGenerator(environment)
       def quasiquote(expression: Expression): Expression = expression match {
         case Unquote(value) => value.eval(environment, output)
-        case UnquoteSplicing(value) => error("splicing outside of list", environment)
+        case UnquoteSplicing(_) => error("splicing outside of list", environment)
         case list @ ListValue(values) =>
           val splicedValues = values.flatMap {
             case UnquoteSplicing(value) => value.eval(environment, output) match {

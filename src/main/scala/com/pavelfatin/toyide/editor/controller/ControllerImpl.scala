@@ -45,7 +45,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   def actions: EditorActions =
     new Actions(document, terminal, data, adviser, formatter, tabSize, comment, history)
 
-  def processKeyPressed(e: KeyEvent) {
+  def processKeyPressed(e: KeyEvent): Unit = {
     if(isModifierKey(e.getKeyCode)) return
 
     notifyObservers(ActionStarted(isImmediate(e)))
@@ -59,7 +59,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     notifyObservers(ActionFinished)
   }
 
-  def processKeyTyped(e: KeyEvent) {
+  def processKeyTyped(e: KeyEvent): Unit = {
     notifyObservers(ActionStarted(immediate = true))
 
     history.recording(document, terminal) {
@@ -69,7 +69,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     notifyObservers(ActionFinished)
   }
 
-  def processActions(e: KeyEvent) {
+  def processActions(e: KeyEvent): Unit = {
     val keyStroke = AWTKeyStroke.getAWTKeyStroke(e.getKeyCode, e.getModifiers).toString
 
     for (action <- actions.all
@@ -85,7 +85,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     case _ => false
   }
 
-  def doProcessKeyPressed(e: KeyEvent) {
+  def doProcessKeyPressed(e: KeyEvent): Unit = {
     if(e.isShiftDown && terminal.selection.isEmpty) origin = terminal.offset
 
     e.getKeyCode match {
@@ -94,7 +94,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
           if (e.isControlDown) {
             terminal.offset = seek(-1)
           } else {
-            terminal.offset = terminal.selection.filter(s => !e.isShiftDown).fold(terminal.offset - 1)(_.begin)
+            terminal.offset = terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset - 1)(_.begin)
           }
           terminal.selection = if(e.isShiftDown) fromOriginTo(terminal.offset) else None
         }
@@ -103,7 +103,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
           if (e.isControlDown) {
             terminal.offset = seek(1)
           } else {
-            terminal.offset = terminal.selection.filter(s => !e.isShiftDown).fold(terminal.offset + 1)(_.end)
+            terminal.offset = terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset + 1)(_.end)
           }
           terminal.selection = if(e.isShiftDown) fromOriginTo(terminal.offset) else None
         }
@@ -165,7 +165,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     }
   }
 
-  private def jumpTo(targetLine: Int, shiftPressed: Boolean) {
+  private def jumpTo(targetLine: Int, shiftPressed: Boolean): Unit = {
     val line = document.lineNumberOf(terminal.offset)
     val indent = terminal.offset - document.startOffsetOf(line)
     val target = document.startOffsetOf(targetLine) + indent
@@ -173,7 +173,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     terminal.selection = if(shiftPressed) fromOriginTo(terminal.offset) else None
   }
 
-  def doProcessKeyTyped(e: KeyEvent) {
+  def doProcessKeyTyped(e: KeyEvent): Unit = {
     e.getKeyChar match {
       case c if c == KeyEvent.VK_ENTER && !e.isAltDown && !e.isShiftDown =>
         if (terminal.selection.isDefined) {
@@ -189,7 +189,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     }
   }
 
-  def processEnterPressed(hold: Boolean = false) {
+  def processEnterPressed(hold: Boolean = false): Unit = {
     val oldOffset = terminal.offset
     val n = document.lineNumberOf(terminal.offset)
     val prefix = document.text(document.startOffsetOf(n), terminal.offset)
@@ -205,7 +205,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     terminal.offset = if (hold) oldOffset else oldOffset + indent + 1
   }
 
-  def processCharInsertion(c: Char) {
+  def processCharInsertion(c: Char): Unit = {
     val nextChar = document.charOptionAt(terminal.offset)
     val prevChar = document.charOptionAt(terminal.offset - 1)
 
@@ -236,7 +236,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     }
   }
 
-  def processMousePressed(e: MouseEvent) {
+  def processMousePressed(e: MouseEvent): Unit = {
     val navigation = (e.getButton == MouseEvent.BUTTON1 && e.isControlDown) || e.getButton == MouseEvent.BUTTON2
     val targetOffset = if(navigation) {
       for(i <- document.toOffset(grid.toLocation(e.getPoint));
@@ -256,13 +256,13 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     terminal.selection = leafSpan.map(_.interval)
   }
 
-  def processMouseDragged(e: MouseEvent) {
+  def processMouseDragged(e: MouseEvent): Unit = {
     terminal.offset = document.toNearestOffset(grid.toLocation(e.getPoint))
     val offsets = Seq(origin, terminal.offset).sorted
     terminal.selection = Some(Interval(offsets(0), offsets(1)))
   }
 
-  def processMouseMoved(e: MouseEvent) {
+  def processMouseMoved(e: MouseEvent): Unit = {
     val hover = if(e.isControlDown) {
       document.toOffset(grid.toLocation(e.getPoint))
     } else {

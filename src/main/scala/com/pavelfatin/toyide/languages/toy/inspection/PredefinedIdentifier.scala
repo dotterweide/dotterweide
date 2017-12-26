@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.inspection.{Mark, Inspection}
 import com.pavelfatin.toyide.node.Node
 
 object PredefinedIdentifier extends Inspection {
-  val Message = "Function name '%s' is predefined".format(_: String)
+  val Message: String => String = "Function name '%s' is predefined".format(_: String)
 
   def inspect(node: Node): Seq[Mark] = node match {
     case f: FunctionDeclaration if List("print", "println").contains(f.identifier) =>

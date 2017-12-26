@@ -20,12 +20,12 @@ package com.pavelfatin.toyide.languages.lisp.parameters
 import com.pavelfatin.toyide.languages.lisp.value.Expression
 
 private class NamedParameter(name: String) extends AbstractParameters {
-  protected def bind0(argument: Expression) =
+  protected def bind0(argument: Expression): Map[String, Expression] =
     if (isPlaceholder) Map.empty else Map(name -> argument)
 
   private def isPlaceholder: Boolean = name == NamedParameter.Placeholder
 
-  def symbols = if (isPlaceholder) Seq.empty else Seq(name)
+  def symbols: Seq[String] = if (isPlaceholder) Seq.empty else Seq(name)
 
   def presentation = throw new UnsupportedOperationException()
 }

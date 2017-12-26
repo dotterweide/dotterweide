@@ -20,5 +20,5 @@ package com.pavelfatin.toyide.document
 trait Anchor {
   def offset: Int
 
-  def dispose()
+  def dispose(): Unit
 }

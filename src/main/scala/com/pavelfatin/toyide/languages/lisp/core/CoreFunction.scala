@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.languages.lisp.value._
 abstract class CoreFunction(val name0: String, val isLazy: Boolean = false) extends FunctionValue {
   def name = Some(name0)
 
-  def presentation = "core." + name0
+  def presentation: String = "core." + name0
 
   protected def expected(parameters: String, arguments: Seq[Expression], environment: Environment): Nothing =
     environment.interrupt("%s syntax: (%s %s), application: (%s %s)"

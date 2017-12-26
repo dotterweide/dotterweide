@@ -37,7 +37,7 @@ class MainFrame(language: Language, text: String) extends Frame {
       secondaryEditor.dispose()
   }
 
-  override def closeOperation() {
+  override def closeOperation(): Unit = {
     launcher.stop()
     dispose()
   }
@@ -54,7 +54,7 @@ class MainFrame(language: Language, text: String) extends Frame {
   private val data = primaryEditor.data
 
   private val timer = new Timer(10, new ActionListener() {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       if (data.hasNextPass) {
         data.nextPass()
       }
@@ -82,31 +82,31 @@ class MainFrame(language: Language, text: String) extends Frame {
   private val menu = new MainMenu(tab, this, primaryEditor.data, new NodeInterpreter(console),
     new NodeInvoker(console), launcher, console, coloring, language.examples)
 
-  private def updateTitle() {
+  private def updateTitle(): Unit = {
     val name = tab.file.map(_.getName.replaceAll("\\.%s".format(language.fileType.extension), ""))
     title = "%s - ToyIDE 1.2.3".format(name.getOrElse("Untitled"))
   }
 
-  private def updateMessageFor(editor: Editor) {
+  private def updateMessageFor(editor: Editor): Unit = {
     status.message = editor.message.mkString
   }
 
-  private def updateCaretLocationFor(editor: Editor) {
+  private def updateCaretLocationFor(editor: Editor): Unit = {
     val Location(line, indent) = editor.document.toLocation(editor.terminal.offset)
     val selection = editor.terminal.selection.map(_.length.formatted("/%d")).mkString
     status.position = "%d:%d%s".format(line + 1, indent + 1, selection)
   }
 
-  private def register(editor: Editor) {
+  private def register(editor: Editor): Unit = {
     editor.onChange {
       if (editor.pane.hasFocus) updateMessageFor(editor)
     }
-    editor.terminal.onChange { event =>
+    editor.terminal.onChange { _ =>
       if (editor.pane.hasFocus) updateCaretLocationFor(editor)
     }
     // TODO use scala.swing listener
     editor.pane.peer.addFocusListener(new FocusAdapter {
-      override def focusGained(e: FocusEvent) {
+      override def focusGained(e: FocusEvent): Unit = {
         updateMessageFor(editor)
         updateCaretLocationFor(editor)
         menu.bindTo(editor.actions)

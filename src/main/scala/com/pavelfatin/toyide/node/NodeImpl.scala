@@ -35,9 +35,9 @@ class NodeImpl(val kind: String) extends Node {
 
   private var _children: Seq[NodeImpl] = Seq.empty
 
-  def children = _children
+  def children: Seq[NodeImpl] = _children
 
-  def children_=(children: Seq[NodeImpl]) {
+  def children_=(children: Seq[NodeImpl]): Unit = {
     val first = children.head.span
     span = Span(first.source, first.begin, children.last.span.end)
     _children = children
@@ -50,14 +50,14 @@ class NodeImpl(val kind: String) extends Node {
 }
 
 object NodeImpl {
-  def createLeaf(token: Token) = {
+  def createLeaf(token: Token): NodeImpl = {
     val node = new NodeImpl("leaf")
     node.token = Some(token)
     node.span = token.span
     node
   }
 
-  def createError(token: Option[Token], span: Span, message: String) = {
+  def createError(token: Option[Token], span: Span, message: String): NodeImpl = {
     val node = new NodeImpl("leaf")
     node.span = span
     node.token = token

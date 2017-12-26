@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.languages.toy.node.Scope
 import com.pavelfatin.toyide.compiler.{Labels, Code}
 
 trait ScopeTranslator extends ToyTranslatable { self: Scope =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     children.foldLeft(Code())(_ + _.translate(name, labels))
   }
 }

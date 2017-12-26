@@ -30,13 +30,13 @@ private class AnActionAdapter(title: String, key: Char, anAction: AnAction) exte
 
   anAction.onChange {
     SwingUtilities.invokeLater(new Runnable {
-      def run() {
+      def run(): Unit = {
         enabled = anAction.enabled
       }
     })
   }
 
-  def apply() {
+  def apply(): Unit = {
     anAction()
   }
 }

@@ -20,11 +20,11 @@ package com.pavelfatin.toyide
 trait Observable {
   private var observers = List[() => Unit]()
 
-  def onChange(action: => Unit) {
+  def onChange(action: => Unit): Unit = {
     observers ::= (() => action)
   }
 
-  def notifyObservers() {
+  def notifyObservers(): Unit = {
     observers.foreach(_())
   }
 }

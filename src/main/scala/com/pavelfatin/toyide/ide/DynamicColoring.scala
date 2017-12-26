@@ -18,7 +18,7 @@
 package com.pavelfatin.toyide.ide
 
 import com.pavelfatin.toyide.Observable
-import com.pavelfatin.toyide.editor.Coloring
+import com.pavelfatin.toyide.editor.{Attributes, Coloring}
 import com.pavelfatin.toyide.lexer.TokenKind
 
 private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring with Observable {
@@ -30,7 +30,7 @@ private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring
   
   def name: String = _name 
   
-  def name_=(name: String) {
+  def name_=(name: String): Unit = {
     if (_name != name) {
       _name = name
       _coloring = delegates(name)
@@ -41,9 +41,9 @@ private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring
 
   def apply(id: String) = _coloring(id)
 
-  def fontFamily = _coloring.fontFamily
+  def fontFamily: String = _coloring.fontFamily
 
   def fontSize: Int = _coloring.fontSize
 
-  def attributesFor(kind: TokenKind) = _coloring.attributesFor(kind)
+  def attributesFor(kind: TokenKind): Attributes = _coloring.attributesFor(kind)
 }

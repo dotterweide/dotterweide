@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.languages.toy.node._
 import com.pavelfatin.toyide.compiler.{Code, Labels}
 
 trait AssignmentTranslator extends ToyTranslatable { self: Assignment =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val ref = reference match {
       case Some(it: ReferenceToValue) => it
       case Some(_) => interrupt("Incorrect target for assignment %s", span.text)

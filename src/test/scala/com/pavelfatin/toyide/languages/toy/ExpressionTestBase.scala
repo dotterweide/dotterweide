@@ -21,7 +21,7 @@ import org.junit.Test
 
 abstract class ExpressionTestBase {
   @Test
-  def literals() {
+  def literals(): Unit = {
     assertOutput("print(\"foo\");", "foo")
 
     assertOutput("print(123);", "123")
@@ -31,7 +31,7 @@ abstract class ExpressionTestBase {
   }
 
   @Test
-  def booleanAnd() {
+  def booleanAnd(): Unit = {
     assertOutput("print(true && true);", "true")
     assertOutput("print(true && false);", "false")
     assertOutput("print(false && true);", "false")
@@ -39,13 +39,13 @@ abstract class ExpressionTestBase {
   }
 
   @Test
-  def booleanAndLazyEvaluation() {
+  def booleanAndLazyEvaluation(): Unit = {
     assertOutput("def f(): boolean = { print(1); return true; } print(true && f());", "1true")
     assertOutput("def f(): boolean = { print(1); return true; } print(false && f());", "false")
   }
 
   @Test
-  def booleanOr() {
+  def booleanOr(): Unit = {
     assertOutput("print(true || true);", "true")
     assertOutput("print(true || false);", "true")
     assertOutput("print(false || true);", "true")
@@ -53,59 +53,59 @@ abstract class ExpressionTestBase {
   }
 
   @Test
-  def booleanOrLazyEvaluation() {
+  def booleanOrLazyEvaluation(): Unit = {
     assertOutput("def f(): boolean = { print(1); return true; } print(true || f());", "true")
     assertOutput("def f(): boolean = { print(1); return true; } print(false || f());", "1true")
   }
 
   @Test
-  def integerGt() {
+  def integerGt(): Unit = {
     assertOutput("print(1 > 2);", "false")
     assertOutput("print(2 > 1);", "true")
     assertOutput("print(2 > 2);", "false")
   }
 
   @Test
-  def integerGtEq() {
+  def integerGtEq(): Unit = {
     assertOutput("print(1 >= 2);", "false")
     assertOutput("print(2 >= 1);", "true")
     assertOutput("print(2 >= 2);", "true")
   }
 
   @Test
-  def integerLt() {
+  def integerLt(): Unit = {
     assertOutput("print(1 < 2);", "true")
     assertOutput("print(2 < 1);", "false")
     assertOutput("print(2 < 2);", "false")
   }
 
   @Test
-  def integerLtEq() {
+  def integerLtEq(): Unit = {
     assertOutput("print(1 <= 2);", "true")
     assertOutput("print(2 <= 1);", "false")
     assertOutput("print(2 <= 2);", "true")
   }
 
   @Test
-  def stringEq() {
+  def stringEq(): Unit = {
     assertOutput("print(\"foo\" == \"foo\");", "true")
     assertOutput("print(\"foo\" == \"bar\");", "false")
   }
 
   @Test
-  def stringEqNonConstant() {
+  def stringEqNonConstant(): Unit = {
     assertOutput("print(\"foo\" + 1 == \"foo2\");", "false")
     assertOutput("print(\"foo\" + 2 == \"foo2\");", "true")
   }
 
   @Test
-  def integerEq() {
+  def integerEq(): Unit = {
     assertOutput("print(1 == 1);", "true")
     assertOutput("print(1 == 2);", "false")
   }
 
   @Test
-  def booleanEq() {
+  def booleanEq(): Unit = {
     assertOutput("print(true == true);", "true")
     assertOutput("print(false == false);", "true")
     assertOutput("print(true == false);", "false")
@@ -113,25 +113,25 @@ abstract class ExpressionTestBase {
   }
 
   @Test
-  def stringNotEq() {
+  def stringNotEq(): Unit = {
     assertOutput("print(\"foo\" != \"foo\");", "false")
     assertOutput("print(\"foo\" != \"bar\");", "true")
   }
 
   @Test
-  def stringNotEqNonConstant() {
+  def stringNotEqNonConstant(): Unit = {
     assertOutput("print(\"foo\" + 2 != \"foo2\");", "false")
     assertOutput("print(\"foo\" + 1 != \"foo2\");", "true")
   }
 
   @Test
-  def integerNotEq() {
+  def integerNotEq(): Unit = {
     assertOutput("print(1 != 1);", "false")
     assertOutput("print(1 != 2);", "true")
   }
 
   @Test
-  def booleanNotEq() {
+  def booleanNotEq(): Unit = {
     assertOutput("print(true != true);", "false")
     assertOutput("print(false != false);", "false")
     assertOutput("print(true != false);", "true")
@@ -139,7 +139,7 @@ abstract class ExpressionTestBase {
   }
 
   @Test
-  def integerCalculations() {
+  def integerCalculations(): Unit = {
     assertOutput("print(1 + 2);", "3")
     assertOutput("print(3 - 2);", "1")
     assertOutput("print(2 * 3);", "6")
@@ -149,7 +149,7 @@ abstract class ExpressionTestBase {
   }
 
   @Test
-  def prefixExpression() {
+  def prefixExpression(): Unit = {
     assertOutput("print(+3);", "3")
     assertOutput("print(-3);", "-3")
     assertOutput("print(--3);", "3")
@@ -160,24 +160,24 @@ abstract class ExpressionTestBase {
   }
 
   @Test
-  def stringConcatenation() {
+  def stringConcatenation(): Unit = {
     assertOutput("print(\"foo\" + \"bar\");", "foobar")
     assertOutput("print(\"foo\" + 1);", "foo1")
     assertOutput("print(\"foo\" + true);", "footrue")
   }
 
   @Test
-  def group() {
+  def group(): Unit = {
     assertOutput("print((1 + 2));", "3")
   }
 
   @Test
-  def complexExpression() {
+  def complexExpression(): Unit = {
     assertOutput("print(1 + 2 * 3 * (4 + 5));", "55")
   }
 
   @Test
-  def evaluationOrder() {
+  def evaluationOrder(): Unit = {
     assertOutput("""
       def a(): integer = { print(1); return 1; }
       def b(): integer = { print(2); return 2; }
@@ -185,5 +185,5 @@ abstract class ExpressionTestBase {
     """, "123")
   }
 
-  protected def assertOutput(code: String, expected: String)
+  protected def assertOutput(code: String, expected: String): Unit
 }

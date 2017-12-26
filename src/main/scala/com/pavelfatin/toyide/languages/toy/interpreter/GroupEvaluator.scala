@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.interpreter._
 import com.pavelfatin.toyide.Output
 
 trait GroupEvaluator extends ToyEvaluable { self: Group =>
-  override def evaluate(context: Context, output: Output) = {
+  override def evaluate(context: Context, output: Output): Option[Value] = {
     val exp = child.getOrElse(
       interrupt(context, "Group expression not found: %s", span.text))
 

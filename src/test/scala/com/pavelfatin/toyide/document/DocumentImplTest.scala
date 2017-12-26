@@ -22,7 +22,7 @@ import org.junit.Assert._
 
 class DocumentImplTest {
   @Test
-  def length() {
+  def length(): Unit = {
     assertEquals(0, new DocumentImpl("").length)
     assertEquals(1, new DocumentImpl("a").length)
     assertEquals(2, new DocumentImpl("ab").length)
@@ -31,7 +31,7 @@ class DocumentImplTest {
   }
   
   @Test
-  def linesCount() {
+  def linesCount(): Unit = {
     assertEquals(1, new DocumentImpl("").linesCount)
     assertEquals(1, new DocumentImpl("ab").linesCount)
     assertEquals(2, new DocumentImpl("ab\n").linesCount)
@@ -41,7 +41,7 @@ class DocumentImplTest {
   }
   
   @Test
-  def lineNumber() {
+  def lineNumber(): Unit = {
     assertEquals(0, new DocumentImpl("").lineNumberOf(0))
     assertEquals(0, new DocumentImpl("a").lineNumberOf(1))
     
@@ -58,7 +58,7 @@ class DocumentImplTest {
   }
   
   @Test
-  def startOffset() {
+  def startOffset(): Unit = {
     assertEquals(0, new DocumentImpl("").startOffsetOf(0))
     assertEquals(0, new DocumentImpl("a").startOffsetOf(0))
     assertEquals(0, new DocumentImpl("ab").startOffsetOf(0))
@@ -75,7 +75,7 @@ class DocumentImplTest {
   }  
   
   @Test
-  def endOffset() {
+  def endOffset(): Unit = {
     assertEquals(0, new DocumentImpl("").endOffsetOf(0))
     assertEquals(1, new DocumentImpl("a").endOffsetOf(0))
     assertEquals(2, new DocumentImpl("ab").endOffsetOf(0))
@@ -91,7 +91,7 @@ class DocumentImplTest {
   }
 
   @Test
-  def text() {
+  def text(): Unit = {
     val document = new DocumentImpl()
     document.text = "foo"
     assertEquals("foo", document.text)
@@ -100,164 +100,164 @@ class DocumentImplTest {
   }
 
   @Test
-  def insert() {
+  def insert(): Unit = {
     val document = new DocumentImpl()
     document.insert(0, "foo")
     assertEquals("foo", document.text)
   }
 
   @Test
-  def insertBefore() {
+  def insertBefore(): Unit = {
     val document = new DocumentImpl("bar")
     document.insert(0, "foo")
     assertEquals("foobar", document.text)
   }
 
   @Test
-  def insertAfter() {
+  def insertAfter(): Unit = {
     val document = new DocumentImpl("foo")
     document.insert(3, "bar")
     assertEquals("foobar", document.text)
   }
 
   @Test
-  def insertBetween() {
+  def insertBetween(): Unit = {
     val document = new DocumentImpl("foomoo")
     document.insert(3, "bar")
     assertEquals("foobarmoo", document.text)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def insertOffsetNegative() {
+  def insertOffsetNegative(): Unit = {
     val document = new DocumentImpl("foo")
     document.insert(-1, "foo")
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def insertOffsetOut() {
+  def insertOffsetOut(): Unit = {
     val document = new DocumentImpl("foo")
     document.insert(4, "foo")
   }
 
   @Test
-  def remove() {
+  def remove(): Unit = {
     val document = new DocumentImpl("foobarmoo")
     document.remove(3, 6)
     assertEquals("foomoo", document.text)
   }
 
   @Test
-  def removeEmpty() {
+  def removeEmpty(): Unit = {
     val document = new DocumentImpl("foobar")
     document.remove(3, 3)
     assertEquals("foobar", document.text)
   }
 
   @Test
-  def removeAll() {
+  def removeAll(): Unit = {
     val document = new DocumentImpl("foo")
     document.remove(0, 3)
     assertEquals("", document.text)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def removeBeginNegative() {
+  def removeBeginNegative(): Unit = {
     val document = new DocumentImpl("foo")
     document.remove(-1, 0)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def removeBeginOut() {
+  def removeBeginOut(): Unit = {
     val document = new DocumentImpl("foo")
     document.remove(4, 3)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def removeEndNegative() {
+  def removeEndNegative(): Unit = {
     val document = new DocumentImpl("foo")
     document.remove(0, -1)
   }
 
   @Test(expected = classOf[IllegalArgumentException])
-  def removeNegativeInterval() {
+  def removeNegativeInterval(): Unit = {
     val document = new DocumentImpl("foo")
     document.remove(2, 1)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def removeEndOut() {
+  def removeEndOut(): Unit = {
     val document = new DocumentImpl("foo")
     document.remove(0, 4)
   }
 
   @Test
-  def replace() {
+  def replace(): Unit = {
     val document = new DocumentImpl("foobarmoo")
     document.replace(3, 6, "goo")
     assertEquals("foogoomoo", document.text)
   }
 
   @Test
-  def replaceWithLonger() {
+  def replaceWithLonger(): Unit = {
     val document = new DocumentImpl("foobarmoo")
     document.replace(3, 6, "12345")
     assertEquals("foo12345moo", document.text)
   }
 
   @Test
-  def replaceWithShorter() {
+  def replaceWithShorter(): Unit = {
     val document = new DocumentImpl("foobarmoo")
     document.replace(3, 6, "_")
     assertEquals("foo_moo", document.text)
   }
 
   @Test
-  def replaceWithEmpty() {
+  def replaceWithEmpty(): Unit = {
     val document = new DocumentImpl("foobarmoo")
     document.replace(3, 6, "")
     assertEquals("foomoo", document.text)
   }
 
   @Test
-  def replaceEmpty() {
+  def replaceEmpty(): Unit = {
     val document = new DocumentImpl("foomoo")
     document.replace(3, 3, "bar")
     assertEquals("foobarmoo", document.text)
   }
 
   @Test
-  def replaceAll() {
+  def replaceAll(): Unit = {
     val document = new DocumentImpl("foo")
     document.replace(0, 3, "bar")
     assertEquals("bar", document.text)
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def replaceBeginNegative() {
+  def replaceBeginNegative(): Unit = {
     val document = new DocumentImpl("foo")
     document.replace(-1, 0, "")
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def replaceBeginOut() {
+  def replaceBeginOut(): Unit = {
     val document = new DocumentImpl("foo")
     document.replace(4, 3, "")
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def replaceEndNegative() {
+  def replaceEndNegative(): Unit = {
     val document = new DocumentImpl("foo")
     document.replace(0, -1, "")
   }
 
   @Test(expected = classOf[IndexOutOfBoundsException])
-  def replaceEndOut() {
+  def replaceEndOut(): Unit = {
     val document = new DocumentImpl("foo")
     document.replace(0, 4, "")
   }
 
   @Test(expected = classOf[IllegalArgumentException])
-  def replaceNegativeInterval() {
+  def replaceNegativeInterval(): Unit = {
     val document = new DocumentImpl("foo")
     document.replace(2, 1, "")
   }

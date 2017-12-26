@@ -21,11 +21,12 @@ import com.pavelfatin.toyide.Output
 import com.pavelfatin.toyide.interpreter.{DelegateValue, Place}
 import com.pavelfatin.toyide.languages.lisp.LispType
 import com.pavelfatin.toyide.languages.lisp.core.CoreFunction
+import com.pavelfatin.toyide.node.NodeType
 
 class SymbolValue private (val content: String, val place: Option[Place]) extends DelegateValue[String] with Expression {
-  def valueType = LispType.SymbolType
+  def valueType: NodeType = LispType.SymbolType
 
-  def eval(environment: Environment, output: Output) = {
+  def eval(environment: Environment, output: Output): Expression = {
     CoreFunction.NameToFunction.get(content).orElse(environment.lookup(content))
       .getOrElse(environment.interrupt("Undefined symbol: " + content, place))
   }

@@ -23,9 +23,9 @@ import com.pavelfatin.toyide.languages.toy.interpreter._
 import com.pavelfatin.toyide.languages.toy.compiler._
 
 trait ToyReference extends ReferenceNode {
-  def source = children.headOption
+  def source: Option[Node] = children.headOption
 
-  protected def targetIn(filter: Scope => Seq[IdentifiedNode]) = source.flatMap { node =>
+  protected def targetIn(filter: Scope => Seq[IdentifiedNode]): Option[IdentifiedNode] = source.flatMap { node =>
     parents.filterBy[Scope].flatMap(filter)
       .filter(_.span.begin < node.span.begin)
       .find(it => it.identifier == identifier)
@@ -35,16 +35,16 @@ trait ToyReference extends ReferenceNode {
 class ReferenceToFunction extends NodeImpl("referenceToFunction") with ToyReference {
   private val PredefinedIdentifiers = List("print", "println")
 
-  lazy val target = targetIn(_.functions)
+  lazy val target: Option[IdentifiedNode] = targetIn(_.functions)
 
-  def predefined = PredefinedIdentifiers.contains(identifier)
+  def predefined: Boolean = PredefinedIdentifiers.contains(identifier)
 }
 
 class ReferenceToValue extends NodeImpl("referenceToValue") with ToyReference
 with ToyExpression with ReferenceToValueEvaluator with TypeCheck with ReferenceToValueTranslator {
-  lazy val target = targetIn(_.values)
+  lazy val target: Option[IdentifiedNode] = targetIn(_.values)
 
-  lazy val nodeType = target.collect {
+  lazy val nodeType: Option[NodeType] = target.collect {
     case TypedNode(t) => t
   }
 

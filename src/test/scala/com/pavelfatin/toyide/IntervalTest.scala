@@ -22,22 +22,22 @@ import org.junit.Assert._
 
 class IntervalTest {
   @Test(expected = classOf[IllegalArgumentException])
-  def negativeBegin() {
+  def negativeBegin(): Unit = {
     Interval(-1, 0)
   }
 
   @Test(expected = classOf[IllegalArgumentException])
-  def negativeEnd() {
+  def negativeEnd(): Unit = {
     Interval(0, -1)
   }
 
   @Test(expected = classOf[IllegalArgumentException])
-  def negativeLength() {
+  def negativeLength(): Unit = {
     Interval(1, 0)
   }
 
   @Test
-  def length() {
+  def length(): Unit = {
     assertEquals(0, Interval(3, 3).length)
     assertEquals(1, Interval(3, 4).length)
     assertEquals(2, Interval(3, 5).length)
@@ -45,7 +45,7 @@ class IntervalTest {
   }
 
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertTrue(Interval(3, 3).empty)
     assertFalse(Interval(3, 4).empty)
     assertFalse(Interval(3, 5).empty)
@@ -53,7 +53,7 @@ class IntervalTest {
   }
 
   @Test
-  def includes() {
+  def includes(): Unit = {
     assertFalse(Interval(5, 5).includes(5))
 
     assertFalse(Interval(5, 6).includes(4))
@@ -73,7 +73,7 @@ class IntervalTest {
   }
 
   @Test
-  def includesInterval() {
+  def includesInterval(): Unit = {
     assertFalse(Interval(5, 5).includes(Interval(5, 5)))
     assertFalse(Interval(5, 7).includes(Interval(6, 6)))
     assertFalse(Interval(5, 5).includes(Interval(5, 7)))
@@ -94,7 +94,7 @@ class IntervalTest {
   }
 
   @Test
-  def intersectsWith() {
+  def intersectsWith(): Unit = {
     assertNotIntersect(Interval(5, 5), Interval(5, 5))
     assertNotIntersect(Interval(4, 4), Interval(5, 5))
     assertNotIntersect(Interval(6, 6), Interval(5, 5))
@@ -123,12 +123,12 @@ class IntervalTest {
     assertIntersect(Interval(4, 5), Interval(3, 7))
   }
 
-  protected def assertIntersect(a: Interval, b: Interval) {
+  protected def assertIntersect(a: Interval, b: Interval): Unit = {
     assertTrue(a.intersectsWith(b))
     assertTrue(b.intersectsWith(a))
   }
 
-  protected def assertNotIntersect(a: Interval, b: Interval) {
+  protected def assertNotIntersect(a: Interval, b: Interval): Unit = {
     assertFalse(a.intersectsWith(b))
     assertFalse(b.intersectsWith(a))
   }

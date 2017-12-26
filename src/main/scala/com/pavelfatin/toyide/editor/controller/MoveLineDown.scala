@@ -25,9 +25,9 @@ private class MoveLineDown(document: Document, terminal: Terminal) extends AnAct
 
   def keys = List("shift ctrl pressed DOWN")
 
-  override def enabled = document.lineNumberOf(terminal.offset) < document.linesCount - 1
+  override def enabled: Boolean = document.lineNumberOf(terminal.offset) < document.linesCount - 1
 
-  def apply() {
+  def apply(): Unit = {
     val location = document.toLocation(terminal.offset)
 
     val source = document.intervalOf(location.line)

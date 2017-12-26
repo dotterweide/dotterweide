@@ -22,7 +22,7 @@ import org.junit.Test
 
 class ComparisonTest extends InterpreterTesting {
   @Test
-  def gt() {
+  def gt(): Unit = {
     assertValue("(> 1 2)", "false")
     assertValue("(> 2 1)", "true")
     assertValue("(> 1 1)", "false")
@@ -41,7 +41,7 @@ class ComparisonTest extends InterpreterTesting {
   }
 
   @Test
-  def gtEq() {
+  def gtEq(): Unit = {
     assertValue("(>= 1 2)", "false")
     assertValue("(>= 2 1)", "true")
     assertValue("(>= 1 1)", "true")
@@ -60,7 +60,7 @@ class ComparisonTest extends InterpreterTesting {
   }
 
   @Test
-  def lt() {
+  def lt(): Unit = {
     assertValue("(< 1 2)", "true")
     assertValue("(< 2 1)", "false")
     assertValue("(< 1 1)", "false")
@@ -79,7 +79,7 @@ class ComparisonTest extends InterpreterTesting {
   }
 
   @Test
-  def ltEq() {
+  def ltEq(): Unit = {
     assertValue("(<= 1 2)", "true")
     assertValue("(<= 2 1)", "false")
     assertValue("(<= 1 1)", "true")
@@ -98,7 +98,7 @@ class ComparisonTest extends InterpreterTesting {
   }
 
   @Test
-  def eq() {
+  def eq(): Unit = {
     assertValue("(= 1 2)", "false")
     assertValue("(= 2 1)", "false")
     assertValue("(= 1 1)", "true")

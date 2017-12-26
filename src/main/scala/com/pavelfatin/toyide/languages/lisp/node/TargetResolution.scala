@@ -24,14 +24,14 @@ trait TargetResolution { self: ExpressionNode =>
     parents.flatMap(localSymbolsIn).toSeq ++ parents.last.children.flatMap(globalSymbolsIn).toSeq
 
   protected def localSymbolsIn(node: Node): Set[SymbolNode] = node match {
-    case ListNode(SymbolNode("fn" | "macro"), ListNode(ps @ _*), etc @ _*) => symbolsInPatterns(ps)
-    case ListNode(SymbolNode("loop" | "let" | "if-let"), ListNode(bs @ _*), etc @ _*) => symbolsInBindings(bs)
-    case ListNode(SymbolNode("fn" | "macro" | "defn" | "defmacro"), SymbolNode(_), ListNode(ps @ _*), etc @ _*) => symbolsInPatterns(ps)
+    case ListNode(SymbolNode("fn" | "macro"), ListNode(ps @ _*), _*) => symbolsInPatterns(ps)
+    case ListNode(SymbolNode("loop" | "let" | "if-let"), ListNode(bs @ _*), _*) => symbolsInBindings(bs)
+    case ListNode(SymbolNode("fn" | "macro" | "defn" | "defmacro"), SymbolNode(_), ListNode(ps @ _*), _*) => symbolsInPatterns(ps)
     case _ => Set.empty
   }
 
   protected def globalSymbolsIn(node: Node): Set[SymbolNode] = node match {
-    case ListNode(SymbolNode("def" | "defn" | "defmacro"), symbol: SymbolNode, etc @ _*) => Set(symbol)
+    case ListNode(SymbolNode("def" | "defn" | "defmacro"), symbol: SymbolNode, _*) => Set(symbol)
     case _ => Set.empty
   }
 

@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.inspection.{Mark, Inspection}
 import com.pavelfatin.toyide.languages.toy.ToyType
 
 object TypeMismatch extends Inspection {
-  val Message = "Type mismatch, expected: %s, actual: %s".format(_: String, _: String)
+  val Message: (String, String) => String = "Type mismatch, expected: %s, actual: %s".format(_: String, _: String)
 
   val ReturnFromVoidFunctionMessage = "Cannot return a value from a function with void return type"
 

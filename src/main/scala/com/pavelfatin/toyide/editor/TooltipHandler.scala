@@ -38,7 +38,7 @@ private class TooltipHandler(component: JComponent, lookup: Point => Option[Erro
   private var popup: Option[Popup] = None
 
   private val tooltipTimer = new Timer(Timeout, new ActionListener() {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       for (point <- pointer; error <- lookup(point)) {
         val p = createPopup(error, new Point(point.x + TooltipShift.width, point.y + TooltipShift.height))
         popup = Some(p)
@@ -50,8 +50,8 @@ private class TooltipHandler(component: JComponent, lookup: Point => Option[Erro
   tooltipTimer.setRepeats(false)
 
   component.addMouseMotionListener(new MouseAdapter() {
-    override def mouseMoved(e: MouseEvent) {
-      val p = e.getPoint;
+    override def mouseMoved(e: MouseEvent): Unit = {
+      val p = e.getPoint
 
       for (point <- pointer; if p.distance(point.x, point.y) < 7)
         return
@@ -63,7 +63,7 @@ private class TooltipHandler(component: JComponent, lookup: Point => Option[Erro
   })
 
   component.addMouseListener(new MouseAdapter() {
-    override def mouseExited(e: MouseEvent) {
+    override def mouseExited(e: MouseEvent): Unit = {
       tooltipTimer.stop()
     }
   })
@@ -78,7 +78,7 @@ private class TooltipHandler(component: JComponent, lookup: Point => Option[Erro
 
   private def createLabel(error: Error): JLabel = {
     new JLabel(error.message) {
-      override def paint(g: Graphics) {
+      override def paint(g: Graphics): Unit = {
         g.setColor(TooltipBackground)
         g.fillRect(0, 0, getWidth, getHeight)
         super.paint(g)
@@ -86,7 +86,7 @@ private class TooltipHandler(component: JComponent, lookup: Point => Option[Erro
     }
   }
 
-  def dispose() {
+  def dispose(): Unit = {
     tooltipTimer.stop()
   }
 }

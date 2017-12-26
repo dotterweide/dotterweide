@@ -31,7 +31,7 @@ object IntegerRange extends Inspection {
         Integer.parseInt(l.span.text)
         Seq.empty
       } catch {
-        case e: NumberFormatException =>
+        case _: NumberFormatException =>
           Seq(Mark(l, Message))
       }
     case _ => Seq.empty

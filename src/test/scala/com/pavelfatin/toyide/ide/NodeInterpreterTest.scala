@@ -24,14 +24,14 @@ import org.junit.{Assert, Test}
 
 class NodeInterpreterTest {
   @Test
-  def output() {
+  def output(): Unit = {
     Assert.assertEquals("""Started:
 233168
 Finished (n ms)""".filter(_ != '\r'), run(ToyExamples.Euler1).replaceFirst("\\d+ ms", "n ms"))
   }
 
   @Test
-  def exception() {
+  def exception(): Unit = {
     Assert.assertEquals("""Started:
 
 Error: Division by zero

@@ -22,22 +22,22 @@ import org.junit.Test
 
 class LispAdviserTest extends AdviserTestBase(LispLexer, LispParser, LispAdviser) {
   @Test
-  def coreSymbol() {
+  def coreSymbol(): Unit = {
     assertVariantsInclude("|")("def")
   }
 
   @Test
-  def librarySymbol() {
+  def librarySymbol(): Unit = {
     assertVariantsInclude("|")("map")
   }
 
   @Test
-  def userSymbol() {
+  def userSymbol(): Unit = {
     assertVariantsInclude("(def someSymbol 1) |")("someSymbol")
   }
 
   @Test
-  def anhorExclusion() {
+  def anhorExclusion(): Unit = {
     assertVariantsExclude("(def |)")(Adviser.Anchor)
   }
 }

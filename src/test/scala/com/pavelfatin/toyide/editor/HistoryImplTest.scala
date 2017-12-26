@@ -25,24 +25,24 @@ import com.pavelfatin.toyide.Interval
 
 class HistoryImplTest {
   @Test
-  def initialState() {
+  def initialState(): Unit = {
     val history = new HistoryImpl()
     assertFalse(history.canUndo)
     assertFalse(history.canRedo)
   }
 
   @Test(expected = classOf[IllegalStateException])
-  def illegalUndo() {
+  def illegalUndo(): Unit = {
     new HistoryImpl().undo()
   }
 
   @Test(expected = classOf[IllegalStateException])
-  def illegalRedo() {
+  def illegalRedo(): Unit = {
     new HistoryImpl().undo()
   }
 
   @Test(expected = classOf[IllegalStateException])
-  def nestedRecording() {
+  def nestedRecording(): Unit = {
     val history = new HistoryImpl()
     val (document, terminal) = parseDocument("|")
     history.recording(document, terminal) {
@@ -50,7 +50,7 @@ class HistoryImplTest {
     }
   }
 
-  def caretMovementsAreNotRecorded() {
+  def caretMovementsAreNotRecorded(): Unit = {
     val history = new HistoryImpl()
     val (document, terminal) = parseDocument("|foo")
     history.recording(document, terminal) {
@@ -60,37 +60,37 @@ class HistoryImplTest {
   }
 
   @Test
-  def insert() {
-    assertEffectsAre("|", "|foo") { (document, terminal) =>
+  def insert(): Unit = {
+    assertEffectsAre("|", "|foo") { (document, _) =>
       document.insert(0, "foo")
     }
-    assertEffectsAre("|fooMoo", "|fooBarMoo") { (document, terminal) =>
+    assertEffectsAre("|fooMoo", "|fooBarMoo") { (document, _) =>
       document.insert(3, "Bar")
     }
   }
 
   @Test
-  def remove() {
-    assertEffectsAre("|foo", "|") { (document, terminal) =>
+  def remove(): Unit = {
+    assertEffectsAre("|foo", "|") { (document, _) =>
       document.remove(0, 3)
     }
-    assertEffectsAre("|fooBarMoo", "|fooMoo") { (document, terminal) =>
+    assertEffectsAre("|fooBarMoo", "|fooMoo") { (document, _) =>
       document.remove(3, 6)
     }
   }
 
   @Test
-  def replace() {
-    assertEffectsAre("|foo", "|bar") { (document, terminal) =>
+  def replace(): Unit = {
+    assertEffectsAre("|foo", "|bar") { (document, _) =>
       document.replace(0, 3, "bar")
     }
-    assertEffectsAre("|fooBarMoo", "|fooGooMoo") { (document, terminal) =>
+    assertEffectsAre("|fooBarMoo", "|fooGooMoo") { (document, _) =>
       document.replace(3, 6, "Goo")
     }
   }
 
   @Test
-  def caret() {
+  def caret(): Unit = {
     assertEffectsAre("|", "foo|") { (document, terminal) =>
       document.insert(0, "foo")
       terminal.offset += 3
@@ -106,7 +106,7 @@ class HistoryImplTest {
   }
 
   @Test
-  def selection() {
+  def selection(): Unit = {
     assertEffectsAre("|", "[|foo]") { (document, terminal) =>
       document.insert(0, "foo")
       terminal.selection = Some(Interval(0, 3))
@@ -130,7 +130,7 @@ class HistoryImplTest {
   }
 
   @Test
-  def sequence() {
+  def sequence(): Unit = {
     assertEffectsAre("|", "Q|ED[ob]r") { (document, terminal) =>
       document.insert(0, "bar")
       document.insert(0, "foo")
@@ -145,19 +145,19 @@ class HistoryImplTest {
   }
 
   @Test
-  def sequenceOrder() {
-    assertEffectsAre("|", "|") { (document, terminal) =>
+  def sequenceOrder(): Unit = {
+    assertEffectsAre("|", "|") { (document, _) =>
       document.insert(0, "foo")
       document.remove(0, 3)
     }
-    assertEffectsAre("|foo", "|foo") { (document, terminal) =>
+    assertEffectsAre("|foo", "|foo") { (document, _) =>
       document.remove(0, 3)
       document.insert(0, "foo")
     }
   }
 
   @Test
-  def undoRedo() {
+  def undoRedo(): Unit = {
     val history = new HistoryImpl()
 
     val (document, terminal) = parseDocument("|")
@@ -194,7 +194,7 @@ class HistoryImplTest {
   }
 
   @Test
-  def recordingClearsRedo() {
+  def recordingClearsRedo(): Unit = {
     val history = new HistoryImpl()
 
     val (document, terminal) = parseDocument("|")
@@ -219,7 +219,7 @@ class HistoryImplTest {
     assertEquals("|ac", formatDocument(document, terminal))
   }
 
-  protected def assertEffectsAre(before: String, after: String)(action: (Document, Terminal) => Unit) {
+  protected def assertEffectsAre(before: String, after: String)(action: (Document, Terminal) => Unit): Unit = {
     val (document, terminal) = parseDocument(before)
 
     val history = new HistoryImpl()

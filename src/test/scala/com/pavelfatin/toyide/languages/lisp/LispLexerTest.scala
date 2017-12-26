@@ -22,12 +22,12 @@ import org.junit.Test
 
 class LispLexerTest {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertTokens("", "")
   }
 
   @Test
-  def whitespace() {
+  def whitespace(): Unit = {
     assertTokens(" ", "WS( )")
     assertTokens("  ", "WS(  )")
     assertTokens("\t", "WS(\t)")
@@ -37,7 +37,7 @@ class LispLexerTest {
   }
 
   @Test
-  def comment() {
+  def comment(): Unit = {
     assertTokens(";foo", "COMMENT(;foo)")
     assertTokens("; foo", "COMMENT(; foo)")
     assertTokens(";;", "COMMENT(;;)")
@@ -47,7 +47,7 @@ class LispLexerTest {
   }
 
   @Test
-  def integerLiteral() {
+  def integerLiteral(): Unit = {
     assertTokens("1", "INTEGER_LITERAL(1)")
     assertTokens("123", "INTEGER_LITERAL(123)")
 
@@ -57,13 +57,13 @@ class LispLexerTest {
   }
 
   @Test
-  def booleanLiteral() {
+  def booleanLiteral(): Unit = {
     assertTokens("true", "BOOLEAN_LITERAL(true)")
     assertTokens("false", "BOOLEAN_LITERAL(false)")
   }
 
   @Test
-  def stringLiteral() {
+  def stringLiteral(): Unit = {
     assertTokens("\"abc\"", "STRING_LITERAL(\"abc\")")
     assertTokens("\"a\"", "STRING_LITERAL(\"a\")")
     assertTokens("\"a\" \"b\"", "STRING_LITERAL(\"a\"), WS( ), STRING_LITERAL(\"b\")")
@@ -72,7 +72,7 @@ class LispLexerTest {
   }
 
   @Test
-  def unclosedStringLiteral() {
+  def unclosedStringLiteral(): Unit = {
     assertTokens("\"", "error: STRING_LITERAL(\")")
     assertTokens("\"a", "error: STRING_LITERAL(\"a)")
     assertTokens("\"abc", "error: STRING_LITERAL(\"abc)")
@@ -86,7 +86,7 @@ class LispLexerTest {
   }
 
   @Test
-  def characterLiteral() {
+  def characterLiteral(): Unit = {
     assertTokens("\\a", "CHARACTER_LITERAL(\\a)")
 
     assertTokens("\\space", "CHARACTER_LITERAL(\\space)")
@@ -99,17 +99,17 @@ class LispLexerTest {
   }
 
   @Test
-  def unclosedCharacterLiteral() {
+  def unclosedCharacterLiteral(): Unit = {
     assertTokens("\\", "error: CHARACTER_LITERAL(\\)")
   }
 
   @Test
-  def predefinedSymbol() {
+  def predefinedSymbol(): Unit = {
     assertTokens("let", "PREDEFINED_SYMBOL(let)")
   }
 
   @Test
-  def customSymbol() {
+  def customSymbol(): Unit = {
     assertTokens("name", "CUSTOM_SYMBOL(name)")
     assertTokens("name123", "CUSTOM_SYMBOL(name123)")
     assertTokens("name+-*/?><=&_%\'", "CUSTOM_SYMBOL(name+-*/?><=&_%\')")
@@ -120,7 +120,7 @@ class LispLexerTest {
   }
 
   @Test
-  def char() {
+  def char(): Unit = {
     assertTokens(",", "COMMA(,)")
     assertTokens("#", "HASH(#)")
     assertTokens("'", "QUOTE(')")
@@ -132,7 +132,7 @@ class LispLexerTest {
   }
 
   @Test
-  def tilde() {
+  def tilde(): Unit = {
     assertTokens("~", "TILDE(~)")
     assertTokens("~@", "TILDE_AT(~@)")
 
@@ -140,16 +140,16 @@ class LispLexerTest {
   }
 
   @Test
-  def unknownChar() {
+  def unknownChar(): Unit = {
     assertTokens("{", "error: UNKNOWN({)")
   }
 
   @Test
-  def sequence() {
+  def sequence(): Unit = {
     assertTokens("1 23  4", "INTEGER_LITERAL(1), WS( ), INTEGER_LITERAL(23), WS(  ), INTEGER_LITERAL(4)")
   }
 
-  def assertTokens(input: String, expectation: String) {
+  def assertTokens(input: String, expectation: String): Unit = {
     assertEquals(expectation, LispLexer.analyze(input).map(_.toCompleteString).mkString(", "))
   }
 }

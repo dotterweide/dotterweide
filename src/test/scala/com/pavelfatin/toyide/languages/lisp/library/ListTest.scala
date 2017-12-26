@@ -21,12 +21,12 @@ import org.junit.Test
 
 class ListTest extends LibraryTestBase {
   @Test
-  def nil() {
+  def nil(): Unit = {
     assertValue("nil", "()")
   }
 
   @Test
-  def count() {
+  def count(): Unit = {
     assertValue("(count nil)", "0")
     assertValue("(count '(1))", "1")
     assertValue("(count '(1 2))", "2")
@@ -34,7 +34,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def repeat() {
+  def repeat(): Unit = {
     assertValue("(repeat 0 7)", "()")
     assertValue("(repeat 1 7)", "(7)")
     assertValue("(repeat 3 7)", "(7 7 7)")
@@ -43,7 +43,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def range() {
+  def range(): Unit = {
     assertValue("(range 0 0)", "()")
     assertValue("(range 0 1)", "(0)")
     assertValue("(range 0 3)", "(0 1 2)")
@@ -54,7 +54,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def nth() {
+  def nth(): Unit = {
     assertValue("(nth '(1) 0)", "1")
 
     assertValue("(nth '(1 2 3) 0)", "1")
@@ -63,7 +63,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def every() {
+  def every(): Unit = {
     assertValue("(every? even? '(2 4 6))", "true")
 
     assertValue("(every? even? '(1 4 6))", "false")
@@ -72,7 +72,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def some() {
+  def some(): Unit = {
     assertValue("(some odd? '(2 4 6))", "()")
 
     assertValue("(some odd? '(1 4 6))", "true")
@@ -83,7 +83,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def foldLeft() {
+  def foldLeft(): Unit = {
     assertValue("(fold-left (fn [x y] (+ x y)) 3 nil)", "3")
     assertValue("(fold-left (fn [x y] (+ x y)) 3 '(1))", "4")
     assertValue("(fold-left (fn [x y] (+ x y)) 3 '(1 2 4))", "10")
@@ -92,7 +92,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def foldRight() {
+  def foldRight(): Unit = {
     assertValue("(fold-right (fn [x y] (+ x y)) 3 nil)", "3")
     assertValue("(fold-right (fn [x y] (+ x y)) 3 '(1))", "4")
     assertValue("(fold-right (fn [x y] (+ x y)) 3 '(1 2 4))", "10")
@@ -101,7 +101,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def reduceLeft() {
+  def reduceLeft(): Unit = {
     assertValue("(reduce-left (fn [x y] (+ x y)) '(1))", "1")
     assertValue("(reduce-left (fn [x y] (+ x y)) '(1 2 4))", "7")
 
@@ -111,7 +111,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def reduceRight() {
+  def reduceRight(): Unit = {
     assertValue("(reduce-right (fn [x y] (+ x y)) '(1))", "1")
     assertValue("(reduce-right (fn [x y] (+ x y)) '(1 2 4))", "7")
 
@@ -121,24 +121,24 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def reduce() {
+  def reduce(): Unit = {
     assertValue("(reduce + '(1 2 3))", "6")
     assertValue("(reduce + 2 '(1 2 3))", "8")
   }
 
   @Test
-  def reverse() {
+  def reverse(): Unit = {
     assertValue("(reverse '(1 2 3))", "(3 2 1)")
   }
 
   @Test
-  def concat() {
+  def concat(): Unit = {
     assertValue("(concat '(1 2) '(3 4 5) '(7))", "(1 2 3 4 5 7)")
     assertValue("(concat)", "()")
   }
 
   @Test
-  def last() {
+  def last(): Unit = {
     assertValue("(last '(1))", "1")
     assertValue("(last '(1 2 3))", "3")
 
@@ -146,23 +146,23 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def map() {
+  def map(): Unit = {
     assertValue("(map (fn [x] (+ x 2)) '(1 3 7))", "(3 5 9)")
   }
 
   @Test
-  def mapAll() {
+  def mapAll(): Unit = {
     assertValue("(map-all list '(1 3 7) '(2 4 8))", "((1 2) (3 4) (7 8))")
   }
 
   @Test
-  def mapcat() {
+  def mapcat(): Unit = {
     assertValue("(mapcat reverse '((3 2 1 0) (6 5 4) (9 8 7)))", "(0 1 2 3 4 5 6 7 8 9)")
     assertValue("(mapcat list '(1 2 3) '(4 5 6))", "(1 4 2 5 3 6)")
   }
 
   @Test
-  def flatten() {
+  def flatten(): Unit = {
     assertValue("(flatten nil)", "()")
     assertValue("(flatten '(1))", "(1)")
     assertValue("(flatten '(1 2 3))", "(1 2 3)")
@@ -172,12 +172,12 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def filter() {
+  def filter(): Unit = {
     assertValue("(filter (fn [x] (> x 2)) '(1 3 2 7))", "(3 7)")
   }
 
   @Test
-  def separate() {
+  def separate(): Unit = {
     assertValue("(separate (fn [x] (> x 0)) '(1 2 3 4))", "((1 2 3 4) ())")
 
     assertValue("(separate (fn [x] (< x 3)) '(1 2 3 4))", "((1 2) (3 4))")
@@ -187,7 +187,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def take() {
+  def take(): Unit = {
     assertValue("(take 0 '(1 2 3 4 5))", "()")
     assertValue("(take 1 '(1 2 3 4 5))", "(1)")
     assertValue("(take 3 '(1 2 3 4 5))", "(1 2 3)")
@@ -198,7 +198,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def drop() {
+  def drop(): Unit = {
     assertValue("(drop 0 '(1 2 3 4 5))", "(1 2 3 4 5)")
     assertValue("(drop 1 '(1 2 3 4 5))", "(2 3 4 5)")
     assertValue("(drop 3 '(1 2 3 4 5))", "(4 5)")
@@ -209,7 +209,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def takeLast() {
+  def takeLast(): Unit = {
     assertValue("(take-last 1 nil)", "()")
 
     assertValue("(take-last 1 '(1 2 3))", "(3)")
@@ -220,7 +220,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def dropLast() {
+  def dropLast(): Unit = {
     assertValue("(drop-last 1 nil)", "()")
 
     assertValue("(drop-last 1 '(1 2 3))", "(1 2)")
@@ -231,7 +231,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def splitAt() {
+  def splitAt(): Unit = {
     assertValue("(split-at 0 '(1 2 3 4 5))", "(() (1 2 3 4 5))")
     assertValue("(split-at 1 '(1 2 3 4 5))", "((1) (2 3 4 5))")
     assertValue("(split-at 2 '(1 2 3 4 5))", "((1 2) (3 4 5))")
@@ -242,7 +242,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def partition() {
+  def partition(): Unit = {
     assertValue("(partition 1 nil)", "()")
 
     assertValue("(partition 1 '(1))", "((1))")
@@ -255,7 +255,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def takeWhile() {
+  def takeWhile(): Unit = {
     assertValue("(take-while #(< % 3) nil)", "()")
 
     assertValue("(take-while #(< % 3) '(1 2 3 4 5))", "(1 2)")
@@ -265,7 +265,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def dropWhile() {
+  def dropWhile(): Unit = {
     assertValue("(drop-while #(< % 3) nil)", "()")
 
     assertValue("(drop-while #(< % 3) '(1 2 3 4 5))", "(3 4 5)")
@@ -275,7 +275,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def splitWith() {
+  def splitWith(): Unit = {
     assertValue("(split-with (fn [_] true) nil)", "(() ())")
     assertValue("(split-with (fn [_] true) '(1 2 3))", "((1 2 3) ())")
 
@@ -290,7 +290,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def partitionBy() {
+  def partitionBy(): Unit = {
     assertValue("(partition-by (fn [x] x) nil)", "()")
     assertValue("(partition-by (fn [x] 0) '(1 2 3))", "((1 2 3))")
     assertValue("(partition-by (fn [x] x) '(1 2 3))", "((1) (2) (3))")
@@ -298,7 +298,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def zip() {
+  def zip(): Unit = {
     assertValue("(zip nil nil)", "()")
     assertValue("(zip '(1) '(2))", "((1 2))")
     assertValue("(zip '(1 2 3) '(4 5 6 7))", "((1 4) (2 5) (3 6))")
@@ -306,19 +306,19 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def zipAll() {
+  def zipAll(): Unit = {
     assertValue("(zip-all '(1 2 3) '(4 5 6) '(7 8 9))", "((1 4 7) (2 5 8) (3 6 9))")
   }
 
   @Test
-  def unzip() {
+  def unzip(): Unit = {
     assertValue("(unzip nil)", "(() ())")
     assertValue("(unzip '((1 2)))", "((1) (2))")
     assertValue("(unzip '((1 4) (2 5) (3 6)))", "((1 2 3) (4 5 6))")
   }
 
   @Test
-  def firstIndexOf() {
+  def firstIndexOf(): Unit = {
     assertValue("(first-index-of (fn [_] true) nil)", "()")
 
     assertValue("(first-index-of (fn [_] true) '(1))", "0")
@@ -337,7 +337,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def split() {
+  def split(): Unit = {
     assertValue("(split (fn [_] true) nil)", "(())")
     assertValue("(split (fn [_] true) '(1))", "(() ())")
     assertValue("(split (fn [_] true) '(1 2 3))", "(() () () ())")
@@ -354,7 +354,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def join() {
+  def join(): Unit = {
     assertValue("(join nil nil)", "()")
     assertValue("(join nil '((1)))", "(1)")
     assertValue("(join nil '((1) (2) (3)))", "(1 2 3)")
@@ -371,7 +371,7 @@ class ListTest extends LibraryTestBase {
   }
 
   @Test
-  def get() {
+  def get(): Unit = {
     assertValue("(get nil 1 \\z)", "\\z")
 
     assertValue("(get '(1) 1 \\z)", "\\z")

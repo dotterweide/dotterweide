@@ -21,7 +21,7 @@ import org.junit.Test
 
 class FunctionParserTest extends ParserTest(FunctionParser) {
   @Test
-  def normal() {
+  def normal(): Unit = {
     assertParsed("def foo(): integer = {};",
       """
       function

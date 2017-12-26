@@ -25,7 +25,7 @@ import com.pavelfatin.toyide.editor.{AnAction, Terminal}
 private class Paste(document: Document, terminal: Terminal) extends AnAction {
   def keys = List("ctrl pressed V", "shift pressed INSERT")
 
-  def apply() {
+  def apply(): Unit = {
     val contents = Toolkit.getDefaultToolkit.getSystemClipboard.getContents(null)
     if(contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
       val text = contents.getTransferData(DataFlavor.stringFlavor).asInstanceOf[String]

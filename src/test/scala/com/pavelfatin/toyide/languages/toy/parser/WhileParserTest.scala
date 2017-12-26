@@ -21,7 +21,7 @@ import org.junit.Test
 
 class WhileParserTest extends ParserTest(WhileParser) {
   @Test
-  def normal() {
+  def normal(): Unit = {
     assertParsed("while (i > 0) { a = a + 1; }",
       """
       while

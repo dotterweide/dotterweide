@@ -17,7 +17,7 @@
 
 package com.pavelfatin.toyide.editor
 
-import java.awt.Font
+import java.awt.{Component, Font}
 import javax.swing.border.EmptyBorder
 import javax.swing.{DefaultListCellRenderer, JComponent, JList, ListCellRenderer}
 
@@ -27,7 +27,7 @@ private class VariantCellRenderer(lexer: Lexer, coloring: Coloring) extends List
   private val delegate = new DefaultListCellRenderer().asInstanceOf[ListCellRenderer[AnyRef]]
 
   override def getListCellRendererComponent(list: JList[_ <: AnyRef], value: AnyRef, index: Int,
-                                            isSelected: Boolean, cellHasFocus: Boolean) = {
+                                            isSelected: Boolean, cellHasFocus: Boolean): Component = {
     val s = value.toString
 
     val result = delegate.getListCellRendererComponent(list, s, index, isSelected, cellHasFocus)

@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.languages.toy.ToyType._
 import com.pavelfatin.toyide.compiler.{Code, Labels}
 
 trait BinaryExpressionTranslator extends ToyTranslatable { self: BinaryExpression =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val (leftNode, token, rightNode) = parts.getOrElse(
       interrupt("Incorrect binary expression: %s", span.text))
 

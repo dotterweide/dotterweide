@@ -17,27 +17,30 @@
 
 package com.pavelfatin.toyide.ide
 
+import java.util
 import javax.swing.tree.TreeNode
+
 import com.pavelfatin.toyide.node.Node
+
 import collection.JavaConversions._
 
 private case class TreeNodeAdapter(delegate: Node) extends TreeNode {
-  private def convert(node: Node) = new TreeNodeAdapter(node)
+  private def convert(node: Node) = TreeNodeAdapter(node)
 
-  def children = delegate.children.map(convert).toIterator
+  def children: util.Enumeration[TreeNodeAdapter] = delegate.children.map(convert).toIterator
 
-  def isLeaf = delegate.isLeaf
+  def isLeaf: Boolean = delegate.isLeaf
 
-  def getAllowsChildren = !isLeaf
+  def getAllowsChildren: Boolean = !isLeaf
 
-  def getIndex(node: TreeNode) =
+  def getIndex(node: TreeNode): Int =
     delegate.children.indexWhere(node.asInstanceOf[TreeNodeAdapter].delegate == _)
 
-  def getParent = delegate.parent.map(convert).orNull
+  def getParent: TreeNodeAdapter = delegate.parent.map(convert).orNull
 
-  def getChildCount = delegate.children.size
+  def getChildCount: Int = delegate.children.size
 
-  def getChildAt(childIndex: Int) = convert(delegate.children(childIndex))
+  def getChildAt(childIndex: Int): TreeNodeAdapter = convert(delegate.children(childIndex))
 
-  override def toString = delegate.toString
+  override def toString: String = delegate.toString
 }

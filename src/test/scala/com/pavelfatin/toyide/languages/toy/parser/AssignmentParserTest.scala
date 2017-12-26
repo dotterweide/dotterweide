@@ -21,7 +21,7 @@ import org.junit.Test
 
 class AssignmentParserTest extends ParserTest(AssignmentParser) {
   @Test
-  def normal() {
+  def normal(): Unit = {
     assertParsed("a = 1;",
       """
       assignment
@@ -35,7 +35,7 @@ class AssignmentParserTest extends ParserTest(AssignmentParser) {
   }
 
   @Test
-  def noSemi() {
+  def noSemi(): Unit = {
     assertParsed("a = 1",
       """
       assignment
@@ -49,7 +49,7 @@ class AssignmentParserTest extends ParserTest(AssignmentParser) {
   }
 
   @Test
-  def noExpression() {
+  def noExpression(): Unit = {
     assertParsed("a =",
       """
       assignment

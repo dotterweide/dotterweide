@@ -21,21 +21,21 @@ import com.pavelfatin.toyide.Output
 import java.awt.Color
 
 trait Console extends Output {
-  def print(s: String, color: Color)
+  def print(s: String, color: Color): Unit
 
-  def printLink(s: String, line: Int)
+  def printLink(s: String, line: Int): Unit
 
-  def clear()
+  def clear(): Unit
 }
 
 object Console {
   object Null extends Console {
-    def print(s: String) {}
+    def print(s: String): Unit = ()
 
-    def print(s: String, color: Color) {}
+    def print(s: String, color: Color): Unit = ()
 
-    def printLink(s: String, line: Int) {}
+    def printLink(s: String, line: Int): Unit = ()
 
-    def clear() {}
+    def clear(): Unit = ()
   }
 }

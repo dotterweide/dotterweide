@@ -21,7 +21,7 @@ import org.junit.Test
 
 class DuplicateLineTest extends ActionTestBase(new DuplicateLine(_, _)) {
   @Test
-  def line() {
+  def line(): Unit = {
     assertEffectIs("|", "\n|")
     assertEffectIs("f|oo", "foo\nf|oo")
     assertEffectIs("foo|", "foo\nfoo|")
@@ -29,7 +29,7 @@ class DuplicateLineTest extends ActionTestBase(new DuplicateLine(_, _)) {
   }
 
   @Test
-  def selection() {
+  def selection(): Unit = {
     assertEffectIs("[fo|o]", "foo[fo|o]")
     assertEffectIs("[|foo]", "foo[|foo]")
     assertEffectIs("[foo|]", "foo[foo|]")

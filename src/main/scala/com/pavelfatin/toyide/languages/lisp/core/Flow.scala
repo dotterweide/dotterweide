@@ -22,12 +22,12 @@ import com.pavelfatin.toyide.languages.lisp.parameters.Parameters
 import com.pavelfatin.toyide.languages.lisp.value._
 
 object Do extends CoreFunction("do") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) =
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression =
     arguments.lastOption.getOrElse(ListValue.Empty)
 }
 
 object If extends CoreFunction("if", isLazy = true) {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = {
     arguments match {
       case Seq(condition, left) =>
         if (isTruthy(condition.eval(environment, output))) left.eval(environment, output)
@@ -47,12 +47,12 @@ object If extends CoreFunction("if", isLazy = true) {
 }
 
 object Error extends CoreFunction("error") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) =
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression =
     environment.interrupt(Expression.format(arguments))
 }
 
 object Loop extends CoreFunction("loop", isLazy = true) with Bindings with TailCalls {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = arguments match {
     case Seq(ListValue(elements), expressions @ _*) =>
       val parameterList = ListValue(elements.grouped(2).toSeq.map(_.head))
 

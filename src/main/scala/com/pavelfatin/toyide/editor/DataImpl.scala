@@ -24,7 +24,7 @@ import com.pavelfatin.toyide.node.Node
 import com.pavelfatin.toyide.parser.Parser
 
 private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspections: Seq[Inspection]) extends Data {
-  def text = document.text
+  def text: String = document.text
 
   var tokens = Seq.empty[Token]
 
@@ -32,7 +32,7 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
 
   var errors = Seq.empty[Error]
 
-  var hasFatalErrors = errors.exists(_.fatal)
+  var hasFatalErrors: Boolean = errors.exists(_.fatal)
 
   var pass: Pass = Pass.Text
 
@@ -40,22 +40,22 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
     run(Pass.Text)
   }
 
-  def hasNextPass = pass.next.isDefined
+  def hasNextPass: Boolean = pass.next.isDefined
 
-  def nextPass() {
+  def nextPass(): Unit = {
     val next = pass.next.getOrElse(
       throw new IllegalStateException("Next pass is unavailable"))
 
     run(next)
   }
 
-  def compute() {
+  def compute(): Unit = {
     while (hasNextPass) {
       nextPass()
     }
   }
 
-  private def run(p: Pass) {
+  private def run(p: Pass): Unit = {
     pass = p
 
     val passErrors = p match {

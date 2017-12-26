@@ -28,7 +28,7 @@ import java.io.{File, FileOutputStream}
 class ExportToClassAction(title0: String, mnemonic0: Char, data: Data, parent: Component) extends Action(title0) {
   mnemonic = mnemonic0
 
-  def apply() {
+  def apply(): Unit = {
     data.compute()
     if (!data.hasFatalErrors) {
       data.structure.foreach { root =>
@@ -48,7 +48,7 @@ class ExportToClassAction(title0: String, mnemonic0: Char, data: Data, parent: C
     }
   }
 
-  private def save(root: Node, file: File) {
+  private def save(root: Node, file: File): Unit = {
     val (name, path) = if (file.getName.endsWith(".class")) (file.getName.dropRight(6), file.getPath)
       else (file.getName, "%s.class".format(file.getPath))
 

@@ -29,7 +29,7 @@ trait QuotableNode { self: Node with ReadableNode =>
 
   def quoted: Boolean = prefixKind.isDefined
 
-  final def read(source: String) = {
+  final def read(source: String): Expression = {
     val value = read0(source)
 
     prefixKind collect {

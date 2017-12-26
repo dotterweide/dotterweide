@@ -21,7 +21,7 @@ import org.junit.Test
 
 class CommentParserTest extends ParserTest(CommentParser) {
   @Test
-  def singleLine() {
+  def singleLine(): Unit = {
     assertParsed("//foo",
       """
       comment
@@ -30,7 +30,7 @@ class CommentParserTest extends ParserTest(CommentParser) {
   }
 
   @Test
-  def multipleLines() {
+  def multipleLines(): Unit = {
     assertParsed("//foo\n//bar\n//moo",
       """
       comment

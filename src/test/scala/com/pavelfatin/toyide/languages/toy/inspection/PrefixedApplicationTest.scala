@@ -23,21 +23,21 @@ import com.pavelfatin.toyide.Helpers._
 
 class PrefixedApplicationTest extends InspectionTestBase(PrefixApplication) {
   @Test
-  def applicable() {
+  def applicable(): Unit = {
     assertMatches(marksIn("println(-1);")) {
       case Nil =>
     }
   }
 
   @Test
-  def unknownExpressionType() {
+  def unknownExpressionType(): Unit = {
     assertMatches(marksIn("println(-v);")) {
       case Nil =>
     }
   }
 
   @Test
-  def inapplicable() {
+  def inapplicable(): Unit = {
     val Message = PrefixApplication.Message("-", "boolean")
 
     assertMatches(marksIn("println(-true);")) {

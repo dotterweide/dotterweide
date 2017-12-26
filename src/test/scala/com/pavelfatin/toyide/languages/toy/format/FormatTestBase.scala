@@ -26,7 +26,7 @@ import com.pavelfatin.toyide.formatter.FormatterImpl
 class FormatTestBase {
   private val formatter = new FormatterImpl(ToyFormat)
 
-  protected def assertFormatted(code: String, parser: Parser, expectation: String, check: Boolean = true) {
+  protected def assertFormatted(code: String, parser: Parser, expectation: String, check: Boolean = true): Unit = {
     val node = parser.parse(ToyLexer.analyze(code))
     if(check) assertNoProblemsIn(node.elements)
     val actual = formatter.format(node, None, 2)

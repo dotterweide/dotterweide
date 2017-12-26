@@ -17,21 +17,21 @@
 
 package com.pavelfatin.toyide.editor
 
-import com.pavelfatin.toyide.node.{IdentifiedNode, ReferenceNodeTarget, Node}
+import com.pavelfatin.toyide.node.{IdentifiedNode, Node, ReferenceNode, ReferenceNodeTarget}
 import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.Interval
 
 package object controller {
   private[controller] implicit class DataExt(val data: Data) extends AnyVal {
-    def leafAt(offset: Int) = data.structure.flatMap { root =>
+    def leafAt(offset: Int): Option[Node] = data.structure.flatMap { root =>
       root.offsetOf(offset).flatMap(root.leafAt)
     }
 
-    def referenceAt(offset: Int) = data.structure.flatMap { root =>
+    def referenceAt(offset: Int): Option[ReferenceNode] = data.structure.flatMap { root =>
       root.offsetOf(offset).flatMap(root.referenceAt)
     }
 
-    def identifierAt(offset: Int) = data.structure.flatMap { root =>
+    def identifierAt(offset: Int): Option[IdentifiedNode] = data.structure.flatMap { root =>
       root.offsetOf(offset).flatMap(root.identifierAt)
     }
 
@@ -57,7 +57,7 @@ package object controller {
   }
 
   private[controller] implicit class TerminalExt(val terminal: Terminal) extends AnyVal {
-    def currentLineIntervalIn(document: Document) = {
+    def currentLineIntervalIn(document: Document): Interval = {
       val line = document.lineNumberOf(terminal.offset)
       val begin = document.startOffsetOf(line)
       val postfix = 1.min(document.linesCount - line - 1)
@@ -65,7 +65,7 @@ package object controller {
       Interval(begin, end)
     }
 
-    def insertInto(document: Document, s: String) {
+    def insertInto(document: Document, s: String): Unit = {
       if(terminal.selection.isDefined) {
         val sel = terminal.selection.get
         terminal.selection = None

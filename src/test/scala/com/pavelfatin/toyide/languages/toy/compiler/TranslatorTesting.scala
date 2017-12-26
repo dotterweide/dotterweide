@@ -17,17 +17,17 @@
 
 package com.pavelfatin.toyide.languages.toy.compiler
 
-import org.junit.Assert._
 import com.pavelfatin.toyide.Helpers._
-import com.pavelfatin.toyide.languages.toy.parser.ProgramParser
-import com.pavelfatin.toyide.languages.toy.ToyLexer
 import com.pavelfatin.toyide.MockConsole
-import com.pavelfatin.toyide.compiler.{Labels, BytecodeInvoker, Assembler}
+import com.pavelfatin.toyide.compiler.{Assembler, BytecodeInvoker}
+import com.pavelfatin.toyide.languages.toy.ToyLexer
+import com.pavelfatin.toyide.languages.toy.parser.ProgramParser
+import org.junit.Assert._
 
 trait TranslatorTesting {
   private val Name = "Main"
 
-  protected def assertOutput(code: String, expected: String) {
+  protected def assertOutput(code: String, expected: String): Unit = {
     assertEquals(expected, run(code))
   }
 

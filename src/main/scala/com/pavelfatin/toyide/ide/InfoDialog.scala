@@ -17,13 +17,14 @@
 
 package com.pavelfatin.toyide.ide
 
-import java.awt.{Graphics, Desktop}
-import scala.swing._
-import javax.swing.{Action => _, _}
+import java.awt.{Desktop, Graphics}
+import javax.swing.border._
+import javax.swing.event._
 import javax.swing.text._
 import javax.swing.text.html._
-import javax.swing.event._
-import javax.swing.border._
+import javax.swing.{Action => _, _}
+
+import scala.swing._
 
 private class InfoDialog(owner: Window, file: String, scrolling: Boolean) extends Dialog(owner) {
   modal = true
@@ -40,7 +41,7 @@ private class InfoDialog(owner: Window, file: String, scrolling: Boolean) extend
   }
 
   private val action = new Action("OK") {
-    def apply() {
+    def apply(): Unit = {
       dispose()
     }
   }
@@ -68,7 +69,7 @@ private class InfoDialog(owner: Window, file: String, scrolling: Boolean) extend
 }
 
 private class EtchedBottomBorder extends EtchedBorder {
-  override def paintBorder(c: java.awt.Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override def paintBorder(c: java.awt.Component, g: Graphics, x: Int, y: Int, width: Int, height: Int): Unit = {
     g.translate(x, y)
     g.setColor(if (etchType == EtchedBorder.LOWERED) getShadowColor(c) else getHighlightColor(c))
     g.drawLine(0, height - 2, width - 1, height - 2)
@@ -79,7 +80,7 @@ private class EtchedBottomBorder extends EtchedBorder {
 
   override def getBorderInsets(c: java.awt.Component) = new Insets(0, 0, 2, 0)
 
-  override def getBorderInsets(c: java.awt.Component, insets: java.awt.Insets) = {
+  override def getBorderInsets(c: java.awt.Component, insets: java.awt.Insets): Insets = {
     insets.left = 0
     insets.top = 0
     insets.right = 0
@@ -89,7 +90,7 @@ private class EtchedBottomBorder extends EtchedBorder {
 }
 
 private class LinkRedirector extends HyperlinkListener {
-  def hyperlinkUpdate(event: HyperlinkEvent) {
+  def hyperlinkUpdate(event: HyperlinkEvent): Unit = {
     event.getEventType match {
       case HyperlinkEvent.EventType.ACTIVATED => Desktop.getDesktop.browse(event.getURL.toURI)
       case _ =>
@@ -98,7 +99,7 @@ private class LinkRedirector extends HyperlinkListener {
 }
 
 private class SynchronousHTMLEditorKit extends HTMLEditorKit {
-  override def createDefaultDocument = {
+  override def createDefaultDocument: AbstractDocument = {
     val doc = super.createDefaultDocument.asInstanceOf[AbstractDocument]
     doc.setAsynchronousLoadPriority(-1)
     doc
@@ -108,7 +109,7 @@ private class SynchronousHTMLEditorKit extends HTMLEditorKit {
 }
 
 private class SynchronousImageViewFactory(impl: ViewFactory) extends ViewFactory {
-  def create(elem: Element) = {
+  def create(elem: Element): View = {
     impl.create(elem) match {
       case iv: ImageView =>
         iv.setLoadsSynchronously(true)

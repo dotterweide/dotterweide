@@ -20,7 +20,7 @@ package com.pavelfatin.toyide.languages.toy
 import com.pavelfatin.toyide.lexer.TokenKind
 
 object ToyTokens {
-  val COMMENT = TokenKind("COMMENT", true)
+  val COMMENT = TokenKind("COMMENT", data = true)
 
   val COMMA = TokenKind("COMMA")
   val COLON = TokenKind("COLON")
@@ -69,9 +69,9 @@ object ToyTokens {
 
   val Types = Seq(STRING, INTEGER, BOOLEAN, VOID)
 
-  val NUMBER_LITERAL = TokenKind("NUMBER_LITERAL", true)
-  val STRING_LITERAL = TokenKind("STRING_LITERAL", true)
-  val BOOLEAN_LITERAL = TokenKind("BOOLEAN_LITERAL", true)
+  val NUMBER_LITERAL = TokenKind("NUMBER_LITERAL", data = true)
+  val STRING_LITERAL = TokenKind("STRING_LITERAL", data = true)
+  val BOOLEAN_LITERAL = TokenKind("BOOLEAN_LITERAL", data = true)
 
-  val IDENT = TokenKind("IDENT", true)
+  val IDENT = TokenKind("IDENT", data = true)
 }

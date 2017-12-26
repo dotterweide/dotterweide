@@ -22,9 +22,9 @@ import com.pavelfatin.toyide.languages.lisp.value.Environment
 private class NameGenerator(environment: Environment) {
   private var aliases = Map[String, String]()
 
-  def unique(name: String) = aliases.get(name).getOrElse {
+  def unique(name: String): String = aliases.getOrElse(name, {
     val alias = name + "_" + environment.nextId()
     aliases += name -> alias
     alias
-  }
+  })
 }

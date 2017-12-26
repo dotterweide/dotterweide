@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.node.Node
 
 object Optimizer {
-  def optimize(root: Node, document: Document) {
+  def optimize(root: Node, document: Document): Unit = {
     optimizationsIn(root).reverse.foreach(p => document.replace(p._1.span.interval, p._2))
   }
 

@@ -23,14 +23,14 @@ import com.pavelfatin.toyide.Helpers._
 
 class OperatorApplicationTest extends InspectionTestBase(OperatorApplication) {
   @Test
-  def applicable() {
+  def applicable(): Unit = {
     assertMatches(marksIn("println(1 + 2);")) {
       case Nil =>
     }
   }
 
   @Test
-  def unknownOperandsType() {
+  def unknownOperandsType(): Unit = {
     assertMatches(marksIn("println(1 + v);")) {
       case Nil =>
     }
@@ -43,7 +43,7 @@ class OperatorApplicationTest extends InspectionTestBase(OperatorApplication) {
   }
 
   @Test
-  def inapplicable() {
+  def inapplicable(): Unit = {
     val Message = OperatorApplication.Message("+", "integer", "boolean")
 
     assertMatches(marksIn("println(1 + true);")) {

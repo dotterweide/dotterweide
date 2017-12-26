@@ -20,32 +20,33 @@ package com.pavelfatin.toyide.editor.painter
 import java.awt.{Graphics, Point, Rectangle}
 
 import com.pavelfatin.toyide.Interval
-import com.pavelfatin.toyide.editor.Area
+import com.pavelfatin.toyide.document.Document
+import com.pavelfatin.toyide.editor.{Area, Canvas, Coloring, Data, Grid, Terminal}
 
 private abstract class AbstractPainter(context: PainterContext) extends Painter {
-  protected def document = context.document
+  protected def document: Document = context.document
 
-  protected def terminal = context.terminal
+  protected def terminal: Terminal = context.terminal
 
-  protected def data = context.data
+  protected def data: Data = context.data
 
-  protected def canvas = context.canvas
+  protected def canvas: Canvas = context.canvas
 
-  protected def grid = context.grid
+  protected def grid: Grid = context.grid
 
-  protected def coloring = context.coloring
+  protected def coloring: Coloring = context.coloring
 
   protected def contains(chars: CharSequence, char: Char): Boolean =
     Range(0, chars.length).exists(i => chars.charAt(i) == char)
 
-  protected def fill(g: Graphics, r: Rectangle) {
+  protected def fill(g: Graphics, r: Rectangle): Unit = {
     g.fillRect(r.x, r.y, r.width, r.height)
   }
 
   protected def toPoint(offset: Int): Point =
     grid.toPoint(document.toLocation(offset))
 
-  protected def notifyObservers(interval: Interval) {
+  protected def notifyObservers(interval: Interval): Unit = {
     rectanglesOf(interval).foreach(notifyObservers)
   }
 

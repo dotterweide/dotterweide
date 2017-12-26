@@ -22,7 +22,7 @@ import org.junit.Test
 
 class ListTest extends InterpreterTesting {
   @Test
-  def list() {
+  def list(): Unit = {
     assertValue("(list)", "()")
     assertValue("(list 1)", "(1)")
     assertValue("(list 1 2 3)", "(1 2 3)")
@@ -35,7 +35,7 @@ class ListTest extends InterpreterTesting {
   }
 
   @Test
-  def cons() {
+  def cons(): Unit = {
     assertValue("(cons 1 (list))", "(1)")
     assertValue("(cons 1 (cons 2 (list)))", "(1 2)")
     assertValue("(cons 1 (cons 2 (list 3)))", "(1 2 3)")
@@ -55,7 +55,7 @@ class ListTest extends InterpreterTesting {
   }
 
   @Test
-  def first() {
+  def first(): Unit = {
     assertValue("(first (list 1))", "1")
     assertValue("(first (list 1 2))", "1")
     assertValue("(first (list 1 2 3))", "1")
@@ -71,7 +71,7 @@ class ListTest extends InterpreterTesting {
   }
 
   @Test
-  def rest() {
+  def rest(): Unit = {
     assertValue("(rest (list 1))", "()")
     assertValue("(rest (list 1 2))", "(2)")
     assertValue("(rest (list 1 2 3))", "(2 3)")

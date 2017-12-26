@@ -21,32 +21,32 @@ import org.junit.Test
 
 abstract class ExampleTestBase {
   @Test
-  def euler1() {
+  def euler1(): Unit = {
     assertOutput(ToyExamples.Euler1, "233168")
   }
 
   @Test
-  def euler2() {
+  def euler2(): Unit = {
     assertOutput(ToyExamples.Euler2, "4613732")
   }
 
   @Test
-  def euler6() {
+  def euler6(): Unit = {
     assertOutput(ToyExamples.Euler6, "25164150")
   }
 
   @Test
-  def fibonacci() {
+  def fibonacci(): Unit = {
     assertOutput(ToyExamples.FibonacciNumbers, "0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 ")
   }
 
   @Test
-  def primes() {
+  def primes(): Unit = {
     assertOutput(ToyExamples.PrimeNumbers, "2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 ")
   }
 
   @Test
-  def multiplicationTable() {
+  def multiplicationTable(): Unit = {
     assertOutput(ToyExamples.MultiplicationTable,
 """ 4  6  8 10 12 14 16 18
  6  9 12 15 18 21 24 27
@@ -59,5 +59,5 @@ abstract class ExampleTestBase {
 """.filter(_ != '\r').split("\n").map(_ + ' ').mkString("\n") + '\n')
   }
 
-  protected def assertOutput(code: String, expected: String)
+  protected def assertOutput(code: String, expected: String): Unit
 }

@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.languages.lisp.value.Expression
 import scala.util.control.Exception._
 
 trait AbstractParameters extends Parameters {
-  final def bind(argument: Expression) =
+  final def bind(argument: Expression): Either[String, Map[String, Expression]] =
     catching(classOf[BindingException])
       .either(bind0(argument)).left.map(_.getMessage)
 

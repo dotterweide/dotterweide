@@ -22,7 +22,7 @@ import org.junit.Assert._
 
 class HelpersTest {
   @Test
-  def parseAndFormat() {
+  def parseAndFormat(): Unit = {
     val code = "[so|me] code"
 
     val (document, view) = Helpers.parseDocument(code)

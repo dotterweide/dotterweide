@@ -20,23 +20,24 @@ package com.pavelfatin.toyide.languages.lisp.value
 import com.pavelfatin.toyide.Output
 import com.pavelfatin.toyide.interpreter.DelegateValue
 import com.pavelfatin.toyide.languages.lisp.LispType
+import com.pavelfatin.toyide.node.NodeType
 
 trait EvaluableToSelf extends Expression {
   def eval(environment: Environment, output: Output): Expression = this
 }
 
 case class BooleanValue(content: Boolean) extends DelegateValue[Boolean] with EvaluableToSelf {
-  def valueType = LispType.BooleanType
+  def valueType: NodeType = LispType.BooleanType
 }
 
 case class IntegerValue(content: Int) extends DelegateValue[Int] with EvaluableToSelf {
-  def valueType = LispType.IntegerType
+  def valueType: NodeType = LispType.IntegerType
 }
 
 case class CharacterValue(content: Char) extends DelegateValue[Char] with EvaluableToSelf {
-  def valueType = LispType.CharacterType
+  def valueType: NodeType = LispType.CharacterType
 
-  override def presentation = {
+  override def presentation: String = {
     val s = content match {
       case ' ' => "space"
       case '\t' => "tab"

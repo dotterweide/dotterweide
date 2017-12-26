@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.formatter._
 import com.pavelfatin.toyide.formatter.Distance._
 
 object ToyFormat extends Format {
-  def distanceFor(a: TokenKind, b: TokenKind) = (a, b) match {
+  def distanceFor(a: TokenKind, b: TokenKind): Distance = (a, b) match {
     case (_, PLUS) => Space
     case (PLUS, _) => Space
     case (_, MINUS) => Space
@@ -61,11 +61,11 @@ object ToyFormat extends Format {
     case (_, RBRACE) => Lines
     case (RBRACE, _) => Lines
     case (SEMI, _) => LinesOrSpace
-    case (l, r) if Keywords.contains(l) => Space
+    case (l, _) if Keywords.contains(l) => Space
     case _ => Joint
   }
 
-  def indentDeltaFor(a: TokenKind, b: TokenKind) = (a, b) match {
+  def indentDeltaFor(a: TokenKind, b: TokenKind): Int = (a, b) match {
     case (LBRACE, RBRACE) => 0
     case (_, ELSE) => 0
     case (LBRACE, _) => 1

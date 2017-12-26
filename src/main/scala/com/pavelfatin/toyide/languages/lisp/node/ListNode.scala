@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.languages.lisp.value.ListValue
 import com.pavelfatin.toyide.node.NodeImpl
 
 class ListNode extends NodeImpl("list") with ExpressionNode {
-  protected def read0(source: String) = prefixKind match {
+  protected def read0(source: String): ListValue = prefixKind match {
     case Some(HASH) => FunctionLiteral.readFrom(this, source)
     case _ => ListValue(expressions.map(_.read(source)), Some(placeIn(source)))
   }

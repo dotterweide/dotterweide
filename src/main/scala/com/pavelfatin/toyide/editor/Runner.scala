@@ -20,5 +20,5 @@ package com.pavelfatin.toyide.editor
 import com.pavelfatin.toyide.node.Node
 
 trait Runner {
-  def run(root: Node)
+  def run(root: Node): Unit
 }

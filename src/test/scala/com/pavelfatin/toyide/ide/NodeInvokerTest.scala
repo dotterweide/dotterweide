@@ -24,20 +24,20 @@ import org.junit.{Assert, Test}
 
 class NodeInvokerTest {
   @Test
-  def output() {
+  def output(): Unit = {
     Assert.assertEquals("""Started:
 233168
 Finished (n ms)""".filter(_ != '\r'), run(ToyExamples.Euler1).replaceFirst("\\d+ ms", "n ms"))
   }
 
   @Test
-  def translationException() {
+  def translationException(): Unit = {
     Assert.assertEquals("Compilation error.\nInitializer expression not found: var a: integer = ;".filter(_ != '\r'),
       run("var a: integer = ;"))
   }
 
   @Test
-  def invocationException() {
+  def invocationException(): Unit = {
     Assert.assertEquals("""Started:
 
 java.lang.ArithmeticException: / by zero

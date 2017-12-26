@@ -18,7 +18,7 @@
 package com.pavelfatin.toyide.editor.painter
 
 import java.awt.font.TextAttribute
-import java.awt.{Graphics, Rectangle}
+import java.awt.{Color, Graphics, Rectangle}
 
 import com.pavelfatin.toyide.Interval
 import com.pavelfatin.toyide.editor._
@@ -34,7 +34,7 @@ private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends
     case _ =>
   }
 
-  override def paint(g: Graphics, bounds: Rectangle) {
+  override def paint(g: Graphics, bounds: Rectangle): Unit = {
     def relevant(rectangles: Seq[Rectangle]) =
       rectangles.map(_.intersection(bounds)).filterNot(_.isEmpty)
 
@@ -53,7 +53,7 @@ private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends
     }
   }
 
-  override def decorations =
+  override def decorations: Map[Interval, Map[TextAttribute, Color]] =
     (intervalsOf(_ == Decoration.Red)
       .map(it => (it, Map(TextAttribute.FOREGROUND -> coloring(Coloring.RedForeground)))) ++
       intervalsOf(_ == Decoration.Dim)
@@ -73,10 +73,10 @@ private object ErrorPainter {
     (removedErrors ++ addedErrors).map(_.interval)
   }
 
-  private def drawWavyLine(g: Graphics, x: Int, y: Int, length: Int) {
+  private def drawWavyLine(g: Graphics, x: Int, y: Int, length: Int): Unit = {
     val xs = Range(x, x + length, 2)
     val points = xs.size
-    val ys = Stream.continually(()).flatMap(it => Seq(y + 1, y - 1)).take(points)
+    val ys = Stream.continually(()).flatMap(_ => Seq(y + 1, y - 1)).take(points)
     g.drawPolyline(xs.toArray, ys.toArray, points)
   }
 }

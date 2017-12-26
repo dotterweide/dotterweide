@@ -27,7 +27,7 @@ class SaveAction(title0: String, mnemonic0: Char, shortcut: String,
 
   accelerator = Some(KeyStroke.getKeyStroke(shortcut))
 
-  def apply() {
+  def apply(): Unit = {
     if (tab.file.isDefined) {
       tab.file.foreach(IO.write(_, tab.text))
     } else {

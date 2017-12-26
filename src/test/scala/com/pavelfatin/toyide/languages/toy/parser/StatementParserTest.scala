@@ -20,8 +20,8 @@ package com.pavelfatin.toyide.languages.toy.parser
 import org.junit.Test
 
 class StatementParserTest extends ParserTest(StatementParser) {
-    @Test
-  def function() {
+  @Test
+  def function(): Unit = {
       assertParsed("def foo(): integer = {}",
           """
           function
@@ -41,7 +41,7 @@ class StatementParserTest extends ParserTest(StatementParser) {
     }
 
   @Test
-  def blockStatement() {
+  def blockStatement(): Unit = {
     assertParsed("a = 1;",
       """
       assignment

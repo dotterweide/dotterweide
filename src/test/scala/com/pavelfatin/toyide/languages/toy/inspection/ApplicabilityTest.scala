@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.Helpers._
 
 class ApplicabilityTest extends InspectionTestBase(Applicability) {
   @Test
-  def fine() {
+  def fine(): Unit = {
     assertMatches(marksIn("def f(): void = {}; f();")) {
       case Nil =>
     }
@@ -36,7 +36,7 @@ class ApplicabilityTest extends InspectionTestBase(Applicability) {
   }
 
   @Test
-  def excessive() {
+  def excessive(): Unit = {
     val Message1 = Applicability.Excessive("f(): void")
 
     assertMatches(marksIn("def f(): void = {}; f(1);")) {
@@ -51,7 +51,7 @@ class ApplicabilityTest extends InspectionTestBase(Applicability) {
   }
 
   @Test
-  def missed() {
+  def missed(): Unit = {
     val Message1 = Applicability.Missed("f(a: integer): void", "a")
 
     assertMatches(marksIn("def f(a: integer): void = {}; f();")) {
@@ -66,7 +66,7 @@ class ApplicabilityTest extends InspectionTestBase(Applicability) {
   }
 
   @Test
-  def mismatch() {
+  def mismatch(): Unit = {
     val Message1 = Applicability.Mismatch("integer", "boolean")
 
     assertMatches(marksIn("def f(a: integer): void = {}; f(true);")) {
@@ -81,7 +81,7 @@ class ApplicabilityTest extends InspectionTestBase(Applicability) {
   }
 
   @Test
-  def voidToPredefined() {
+  def voidToPredefined(): Unit = {
     assertMatches(marksIn("print(print());")) {
       case MarkData(Text("print()"), Applicability.Void) :: Nil =>
     }

@@ -24,24 +24,24 @@ trait LinesHolder {
 
   protected def wraps: Seq[Int]
 
-  def linesCount = wraps.size + 1
+  def linesCount: Int = wraps.size + 1
 
-  def lineNumberOf(offset: Int) = {
+  def lineNumberOf(offset: Int): Int = {
     if(offset < 0 || offset > length) throw new IndexOutOfBoundsException()
     wraps.view.takeWhile(_ < offset).size
   }
 
-  def startOffsetOf(line: Int) = {
+  def startOffsetOf(line: Int): Int = {
     if(line < 0 || line >= linesCount) throw new IndexOutOfBoundsException()
     if(line == 0) 0 else wraps(line - 1) + 1
   }
 
-  def endOffsetOf(line: Int) = {
+  def endOffsetOf(line: Int): Int = {
     if(line < 0 || line >= linesCount) throw new IndexOutOfBoundsException()
     if(line == wraps.size) length else wraps(line)
   }
 
-  def intervalOf(line: Int) = {
+  def intervalOf(line: Int): Interval = {
     if(line < 0 || line >= linesCount) throw new IndexOutOfBoundsException()
     Interval(startOffsetOf(line), endOffsetOf(line))
   }
@@ -64,7 +64,7 @@ trait LinesHolder {
     offset.min(endOffsetOf(line))
   }
 
-  def maximumIndent = Range(0, linesCount).view
+  def maximumIndent: Int = Range(0, linesCount).view
           .map(line => toLocation(endOffsetOf(line)).indent).max
 }
 

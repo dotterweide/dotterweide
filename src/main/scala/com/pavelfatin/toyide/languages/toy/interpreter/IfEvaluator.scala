@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.interpreter._
 import com.pavelfatin.toyide.Output
 
 trait IfEvaluator extends ConditionHolderEvaluator { self: If =>
-  override def evaluate(context: Context, output: Output) = {
+  override def evaluate(context: Context, output: Output): Option[Value] = {
     if (evaluateCondition(context, output)) {
       val scope = block.getOrElse(
         interrupt(context, "If block not found %s", span.text))

@@ -23,12 +23,12 @@ import org.junit.Test
 
 class ToyAdviserTest extends AdviserTestBase(ToyLexer, ProgramParser, ToyAdviser) {
   @Test
-  def insideEmptyProgram() {
+  def insideEmptyProgram(): Unit = {
     assertVariantsAre("|")("print", "println", "def", "var", "if", "while")
   }
 
   @Test
-  def atIdentifier() {
+  def atIdentifier(): Unit = {
     assertVariantsAre("def |")()
     assertVariantsAre("def foo|")()
     assertVariantsAre("def |foo")()
@@ -41,35 +41,35 @@ class ToyAdviserTest extends AdviserTestBase(ToyLexer, ProgramParser, ToyAdviser
   }
 
   @Test
-  def afterKeyword() {
+  def afterKeyword(): Unit = {
     assertVariantsAre("if |")()
     assertVariantsAre("while |")()
   }
 
   @Test
-  def afterIf() {
+  def afterIf(): Unit = {
     assertVariantsAre("if (true) {} |")("print", "println", "def", "var", "else", "if", "while")
     assertVariantsAre("if (true) {} else {} |")("print", "println", "def", "var", "if", "while")
   }
 
   @Test
-  def insideControlStructure() {
+  def insideControlStructure(): Unit = {
     assertVariantsAre("if (true) {|}")("print", "println", "if", "while")
   }
 
   @Test
-  def afterIfInsideControlStructure() {
+  def afterIfInsideControlStructure(): Unit = {
     assertVariantsAre("if (true) { if (true) {} |}")("print", "println", "else", "if", "while")
   }
 
   @Test
-  def insideFunction() {
+  def insideFunction(): Unit = {
     assertVariantsAre("def f(): void = {|}")("f", "print", "println", "return", "if", "while")
     assertVariantsAre("def f(): void = { if (true) {|} }")("f", "print", "println", "return", "if", "while")
   }
 
   @Test
-  def insideTypeSpecifier() {
+  def insideTypeSpecifier(): Unit = {
     assertVariantsAre("var v:|")("string", "integer", "boolean")
     assertVariantsAre("var v:| = true;")("string", "integer", "boolean")
 
@@ -81,50 +81,50 @@ class ToyAdviserTest extends AdviserTestBase(ToyLexer, ProgramParser, ToyAdviser
   }
 
   @Test
-  def insideExpression() {
+  def insideExpression(): Unit = {
     assertVariantsAre("if (|")("true", "false")
     assertVariantsAre("if (|) {}")("true", "false")
   }
 
   @Test
-  def insideArguments() {
+  def insideArguments(): Unit = {
     assertVariantsAre("f(|")("true", "false")
     assertVariantsAre("f(|);")("true", "false")
   }
 
   @Test
-  def variable() {
+  def variable(): Unit = {
     assertVariantsAre("var a: integer = 1;|")("a", "print", "println", "def", "var", "if", "while")
     assertVariantsAre("|;var a: integer = 1")("print", "println", "def", "var", "if", "while")
   }
 
   @Test
-  def function() {
+  def function(): Unit = {
     assertVariantsAre("def f(): void = {};|")("f", "print", "println", "def", "var", "if", "while")
     assertVariantsAre("def f(): void = {|}")("f", "print", "println", "return", "if", "while")
     assertVariantsAre("|;def f(): void = {}")("print", "println", "def", "var", "if", "while")
   }
 
   @Test
-  def parameter() {
+  def parameter(): Unit = {
     assertVariantsAre("def f(p: integer): void = {|}")("p", "f", "print", "println", "return", "if", "while")
     assertVariantsAre("def f(p: integer): void = {};|")("f", "print", "println", "def", "var", "if", "while")
   }
 
   @Test
-  def insideBinaryExpression() {
+  def insideBinaryExpression(): Unit = {
     assertVariantsAre("if (true && |")("true", "false")
     assertVariantsAre("if (true && |) {}")("true", "false")
   }
 
   @Test
-  def insidePrefixExpression() {
+  def insidePrefixExpression(): Unit = {
     assertVariantsAre("if (!|")("true", "false")
     assertVariantsAre("if (!|) {}")("true", "false")
   }
 
   @Test
-  def referenceInsideHolders() {
+  def referenceInsideHolders(): Unit = {
     assertVariantsAre("var a: integer = 1; if (|")("a", "true", "false")
     assertVariantsAre("var a: integer = 1; foo(|")("a", "true", "false")
     assertVariantsAre("var a: integer = 1; var b:|")("string", "integer", "boolean")
@@ -132,7 +132,7 @@ class ToyAdviserTest extends AdviserTestBase(ToyLexer, ProgramParser, ToyAdviser
   }
 
   @Test
-  def sorting() {
+  def sorting(): Unit = {
     assertVariantsAre("def f(a: integer, b: integer): void = { if (|) }")("a", "b", "f", "true", "false")
     assertVariantsAre("def f(b: integer, a: integer): void = { if (|) }")("a", "b", "f", "true", "false")
 
@@ -144,18 +144,18 @@ class ToyAdviserTest extends AdviserTestBase(ToyLexer, ProgramParser, ToyAdviser
   }
 
   @Test
-  def order() {
+  def order(): Unit = {
     assertVariantsAre("var a: integer = 1; def b(): void = {}; def f(c: integer): void = { if (|) }")("c", "b", "f", "a", "true", "false")
   }
 
   @Test
-  def duplicates() {
+  def duplicates(): Unit = {
     assertVariantsAre("var v: integer = 1; var v: integer = 1; if (|)")("v", "true", "false")
     assertVariantsAre("var v: integer = 1; def f(v: integer): void = { if (|) }")("v", "f", "true", "false")
   }
 
   @Test
-  def variableItself() {
+  def variableItself(): Unit = {
     assertVariantsAre("var a: integer = |")("true", "false")
     assertVariantsAre("var a: integer = 1; var b: integer = |")("a", "true", "false")
   }

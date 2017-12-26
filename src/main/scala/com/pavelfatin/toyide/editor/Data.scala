@@ -37,9 +37,9 @@ trait Data extends ObservableEvents[DataEvent] {
 
   def hasNextPass: Boolean
 
-  def nextPass()
+  def nextPass(): Unit
 
-  def compute()
+  def compute(): Unit
 }
 
 case class DataEvent(pass: Pass, errors: Seq[Error])

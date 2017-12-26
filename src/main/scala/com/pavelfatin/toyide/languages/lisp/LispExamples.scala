@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.Example
 import com.pavelfatin.toyide.languages.lisp.library.Library
 
 object LispExamples {
-  val WebServerCode = load("/examples/WebServer.lisp")
+  val WebServerCode: String = load("/examples/WebServer.lisp")
 
   private def load(file: String): String = {
     val source = io.Source.fromURL(getClass.getResource(file))

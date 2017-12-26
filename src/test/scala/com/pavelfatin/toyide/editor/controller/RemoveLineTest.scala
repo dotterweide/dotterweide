@@ -21,7 +21,7 @@ import org.junit.Test
 
 class RemoveLineTest extends ActionTestBase(new RemoveLine(_, _)) {
   @Test
-  def line() {
+  def line(): Unit = {
     assertEffectIs("1\n|2\n3", "1\n|3")
     assertEffectIs("|foo", "|")
     assertEffectIs("|[foo]", "|")

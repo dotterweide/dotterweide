@@ -21,7 +21,7 @@ import org.junit.Test
 
 class ReturnParserTest extends ParserTest(ReturnParser) {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertParsed("return;",
       """
       return
@@ -31,7 +31,7 @@ class ReturnParserTest extends ParserTest(ReturnParser) {
   }
 
   @Test
-  def value() {
+  def value(): Unit = {
     assertParsed("return true;",
       """
       return

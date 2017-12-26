@@ -21,28 +21,28 @@ import com.pavelfatin.toyide.Output
 import com.pavelfatin.toyide.languages.lisp.value._
 
 object Gt extends CoreFunction(">") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): BooleanValue = arguments match {
     case Seq(IntegerValue(i1), IntegerValue(i2)) => BooleanValue(i1 > i2)
     case _ => expected("i1 i2", arguments, environment)
   }
 }
 
 object GtEq extends CoreFunction(">=") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): BooleanValue = arguments match {
     case Seq(IntegerValue(i1), IntegerValue(i2)) => BooleanValue(i1 >= i2)
     case _ => expected("i1 i2", arguments, environment)
   }
 }
 
 object Lt extends CoreFunction("<") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): BooleanValue = arguments match {
     case Seq(IntegerValue(i1), IntegerValue(i2)) => BooleanValue(i1 < i2)
     case _ => expected("i1 i2", arguments, environment)
   }
 }
 
 object LtEq extends CoreFunction("<=") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): BooleanValue = arguments match {
     case Seq(IntegerValue(i1), IntegerValue(i2)) => BooleanValue(i1 <= i2)
     case _ => expected("i1 i2", arguments, environment)
   }

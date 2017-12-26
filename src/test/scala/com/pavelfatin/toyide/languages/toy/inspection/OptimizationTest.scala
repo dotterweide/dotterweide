@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.Helpers._
 
 class OptimizationTest extends InspectionTestBase(Optimization) {
   @Test
-  def literals() {
+  def literals(): Unit = {
     assertMatches(marksIn("var v: integer = 1;")) {
       case Nil =>
     }
@@ -34,7 +34,7 @@ class OptimizationTest extends InspectionTestBase(Optimization) {
   }
 
   @Test
-  def expression() {
+  def expression(): Unit = {
     val Message = Optimization.Message("3")
 
     assertMatches(marksIn("var v: void = 1 + 2;")) {
@@ -43,7 +43,7 @@ class OptimizationTest extends InspectionTestBase(Optimization) {
   }
 
   @Test
-  def nestedExpression() {
+  def nestedExpression(): Unit = {
     val Message = Optimization.Message("6")
 
     assertMatches(marksIn("var v: void = 1 + 2 + 3;")) {

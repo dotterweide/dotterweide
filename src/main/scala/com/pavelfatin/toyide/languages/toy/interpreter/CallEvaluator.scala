@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.interpreter._
 import com.pavelfatin.toyide.Output
 
 trait CallEvaluator extends ToyEvaluable { self: Call =>
-  override def evaluate(context: Context, output: Output) = {
+  override def evaluate(context: Context, output: Output): Option[Value] = {
     val exp = expression.getOrElse(
       interrupt(context, "Expression not found %s", span.text))
 

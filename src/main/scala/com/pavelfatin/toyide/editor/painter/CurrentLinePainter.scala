@@ -36,7 +36,7 @@ private class CurrentLinePainter(context: PainterContext) extends AbstractPainte
     case _ =>
   }
 
-  override def paint(g: Graphics, bounds: Rectangle) {
+  override def paint(g: Graphics, bounds: Rectangle): Unit = {
     val rectangle = lineRectangleAt(terminal.offset).intersection(bounds)
 
     if (!rectangle.isEmpty) {

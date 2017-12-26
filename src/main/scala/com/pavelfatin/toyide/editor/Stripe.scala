@@ -23,7 +23,9 @@ import java.awt._
 import event._
 import com.pavelfatin.toyide.{ObservableEvents, Interval}
 
-private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: Grid, canvas: Canvas) extends JComponent with ObservableEvents[Int] {
+private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: Grid, canvas: Canvas)
+  extends JComponent with ObservableEvents[Int] {
+
   private val MarkSize = new Dimension(14, 4)
   private val DefaultDelay = ToolTipManager.sharedInstance().getInitialDelay
   private val Led = new Rectangle(2, 2, MarkSize.width - 4, MarkSize.width - 4)
@@ -53,27 +55,27 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
   }
 
   addComponentListener(new ComponentAdapter() {
-    override def componentResized(e: ComponentEvent) {
+    override def componentResized(e: ComponentEvent): Unit = {
       updateDescriptors()
     }
   })
 
   addMouseListener(new MouseAdapter() {
-    override def mousePressed(e: MouseEvent) {
+    override def mousePressed(e: MouseEvent): Unit = {
       notifyObservers(gridY(toLine(e.getPoint.y)))
     }
 
-    override def mouseEntered(e: MouseEvent) {
+    override def mouseEntered(e: MouseEvent): Unit = {
       ToolTipManager.sharedInstance().setInitialDelay(200)
     }
 
-    override def mouseExited(e: MouseEvent) {
+    override def mouseExited(e: MouseEvent): Unit = {
       ToolTipManager.sharedInstance().setInitialDelay(DefaultDelay)
     }
   })
 
   addMouseMotionListener(new MouseMotionAdapter() {
-    override def mouseMoved(e: MouseEvent) {
+    override def mouseMoved(e: MouseEvent): Unit = {
       if(Led.contains(e.getPoint)) {
         val message = status match {
           case Status.Waiting => "Analyzing..."
@@ -105,12 +107,12 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
 
   private def warnings = descriptors.filter(!_.error.fatal)
 
-  private def update() {
+  private def update(): Unit = {
     updateStatus()
     updateDescriptors()
   }
 
-  private def updateStatus() {
+  private def updateStatus(): Unit = {
     val newStatus = statusIn(data)
 
     if (status != newStatus) {
@@ -119,7 +121,7 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
     }
   }
 
-  private def updateDescriptors() {
+  private def updateDescriptors(): Unit = {
     val newDescriptors = descriptorsIn(holder)
 
     if (descriptors != newDescriptors) {
@@ -141,12 +143,12 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
 
   private def lineHeight = toY(1) - toY(0)
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     paint(g, status)
     paint(g, descriptors)
   }
 
-  private def paint(g: Graphics, status: Status) {
+  private def paint(g: Graphics, status: Status): Unit = {
     val led = status match {
       case Status.Waiting => Color.LIGHT_GRAY
       case Status.Normal => Color.GREEN
@@ -158,7 +160,7 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
     g.fill3DRect(Led.x, Led.y, Led.width, Led.height, false)
   }
 
-  private def paint(g: Graphics, descriptors: Seq[Descriptor]) {
+  private def paint(g: Graphics, descriptors: Seq[Descriptor]): Unit = {
     descriptors.sortBy(_.error.fatal).foreach { it =>
       val color = if (it.error.fatal) Color.RED else Color.YELLOW
       g.setColor(color)
@@ -170,12 +172,10 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
   private def statusIn(data: Data): Status = {
     val errors = data.errors
 
-    data.hasNextPass match {
-      case true => Status.Waiting
-      case false =>
-        if(errors.isEmpty) Status.Normal
-        else if (data.hasFatalErrors) Status.Errors else Status.Warnings
-    }
+    if      (data.hasNextPass)    Status.Waiting
+    else if (errors.isEmpty)      Status.Normal
+    else if (data.hasFatalErrors) Status.Errors
+    else                          Status.Warnings
   }
 
   private def descriptorsIn(holder: ErrorHolder): Seq[Descriptor] = {

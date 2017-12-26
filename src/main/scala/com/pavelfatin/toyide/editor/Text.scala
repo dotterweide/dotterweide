@@ -22,7 +22,7 @@ import java.text.AttributedString
 import java.awt.font.TextAttribute
 
 case class Attributes(color: Color, background: Option[Color], weight: Weight, style: Style, underlined: Boolean) {
-  def decorate(result: AttributedString, begin: Int, end: Int) {
+  def decorate(result: AttributedString, begin: Int, end: Int): Unit = {
     result.addAttribute(TextAttribute.FOREGROUND, color, begin, end)
     background.foreach(it => result.addAttribute(TextAttribute.BACKGROUND, it, begin, end))
 

@@ -25,12 +25,12 @@ import com.pavelfatin.toyide.MockConsole
 
 class TranslationTest extends EvaluationTestBase with TranslatorTesting {
   @Test(expected = classOf[TranslationException])
-  def translationError() {
+  def translationError(): Unit = {
     val root = ProgramParser.parse(ToyLexer.analyze("var a: integer = ;"))
     root.translate("Main", new Labels()).toText("Main")
   }
 
-  def customClassName() {
+  def customClassName(): Unit = {
     val root = ProgramParser.parse(ToyLexer.analyze("var a: integer = 1; print(a);"))
     val bytecode = Assembler.assemble(root, "Foo")
     val output = new MockConsole()
@@ -39,14 +39,14 @@ class TranslationTest extends EvaluationTestBase with TranslatorTesting {
   }
 
   @Test
-  def localsWithLargeIndex() {
+  def localsWithLargeIndex(): Unit = {
     assertOutput("def f(a: integer, b: integer, c: integer): void = { var i: integer = 1; }; f(1, 2, 3); ", "")
     assertOutput("def f(a: integer, b: integer, c: integer, d: integer): void = { print(d); }; f(1, 2, 3, 4); ", "4")
     assertOutput("def f(a: integer, b: integer, c: integer, d: integer): void = { d = 1; }; f(1, 2, 3, 4); ", "")
   }
 
   @Test
-  def stackOverflow() {
+  def stackOverflow(): Unit = {
     run("def f(): void = { f(); }")
 
     try {
@@ -59,7 +59,7 @@ class TranslationTest extends EvaluationTestBase with TranslatorTesting {
   }
 
   @Test
-  def stackOverflowWithParameterAllocations() {
+  def stackOverflowWithParameterAllocations(): Unit = {
     run("def f(p: integer): void = { f(1); }")
 
     try {
@@ -72,7 +72,7 @@ class TranslationTest extends EvaluationTestBase with TranslatorTesting {
   }
 
   @Test
-  def simpleTrace() {
+  def simpleTrace(): Unit = {
     try {
       run("""
       print(1);
@@ -90,7 +90,7 @@ class TranslationTest extends EvaluationTestBase with TranslatorTesting {
   }
 
   @Test
-  def complexTrace() {
+  def complexTrace(): Unit = {
     try {
       run("""
       def a(): void = {

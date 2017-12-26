@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.editor.{AnAction, Terminal, Data}
 private class ShowUsages(terminal: Terminal, data: Data) extends AnAction {
   def keys = List("shift ctrl pressed F7")
 
-  def apply() {
+  def apply(): Unit = {
     data.compute()
     terminal.highlights = data.connectedLeafsFor(terminal.offset).map(_.span.interval)
   }

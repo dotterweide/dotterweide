@@ -17,17 +17,20 @@
 
 package com.pavelfatin.toyide.languages.lisp
 
-import com.pavelfatin.toyide.editor.ColorScheme
-import com.pavelfatin.toyide.{FileType, Language}
+import com.pavelfatin.toyide.editor.{Adviser, ColorScheme}
+import com.pavelfatin.toyide.formatter.Format
+import com.pavelfatin.toyide.lexer.Lexer
+import com.pavelfatin.toyide.parser.Parser
+import com.pavelfatin.toyide.{Example, FileType, Language}
 
 object LispLanguage extends Language {
   def name = "Lisp"
 
   def description = "Clojure-like functional language"
 
-  def lexer = LispLexer
+  def lexer: Lexer = LispLexer
 
-  def parser = LispParser
+  def parser: Parser = LispParser
 
   def colorings = Map(
     "Light" -> new LispColoring(ColorScheme.LightColors),
@@ -35,15 +38,15 @@ object LispLanguage extends Language {
 
   def complements = Seq(LispTokens.Parens, LispTokens.Brackets)
 
-  def format = LispFormat
+  def format: Format = LispFormat
 
   def comment = ";"
 
   def inspections = Seq()
 
-  def adviser = LispAdviser
+  def adviser: Adviser = LispAdviser
 
   def fileType = FileType("Lisp file", "lisp")
 
-  def examples = LispExamples.Values
+  def examples: Seq[Example] = LispExamples.Values
 }

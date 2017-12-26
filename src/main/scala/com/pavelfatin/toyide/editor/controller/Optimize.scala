@@ -24,7 +24,7 @@ import com.pavelfatin.toyide.optimizer.Optimizer
 private class Optimize(document: Document, terminal: Terminal, data: Data) extends AnAction {
   def keys = List("ctrl alt pressed O")
 
-  def apply() {
+  def apply(): Unit = {
     data.compute()
     data.structure.foreach { root =>
       terminal.highlights = Seq.empty

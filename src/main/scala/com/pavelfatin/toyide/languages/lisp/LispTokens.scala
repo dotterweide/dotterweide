@@ -20,7 +20,7 @@ package com.pavelfatin.toyide.languages.lisp
 import com.pavelfatin.toyide.lexer.TokenKind
 
 object LispTokens {
-  val COMMENT = TokenKind("COMMENT", true)
+  val COMMENT = TokenKind("COMMENT", data = true)
 
   val COMMA = TokenKind("COMMA")
 
@@ -36,22 +36,22 @@ object LispTokens {
   val LPAREN = TokenKind("LPAREN")
   val RPAREN = TokenKind("RPAREN")
 
-  val Parens = (LPAREN, RPAREN)
+  val Parens: (TokenKind, TokenKind) = (LPAREN, RPAREN)
 
   val LBRACKET = TokenKind("LBRACKET")
   val RBRACKET = TokenKind("RBRACKET")
 
-  val Brackets = (LBRACKET, RBRACKET)
+  val Brackets: (TokenKind, TokenKind) = (LBRACKET, RBRACKET)
 
-  val INTEGER_LITERAL = TokenKind("INTEGER_LITERAL", true)
-  val BOOLEAN_LITERAL = TokenKind("BOOLEAN_LITERAL", true)
-  val STRING_LITERAL = TokenKind("STRING_LITERAL", true)
-  val CHARACTER_LITERAL = TokenKind("CHARACTER_LITERAL", true)
+  val INTEGER_LITERAL = TokenKind("INTEGER_LITERAL", data = true)
+  val BOOLEAN_LITERAL = TokenKind("BOOLEAN_LITERAL", data = true)
+  val STRING_LITERAL = TokenKind("STRING_LITERAL", data = true)
+  val CHARACTER_LITERAL = TokenKind("CHARACTER_LITERAL", data = true)
 
   val Literals = Seq(INTEGER_LITERAL, BOOLEAN_LITERAL, STRING_LITERAL, CHARACTER_LITERAL)
 
-  val PREDEFINED_SYMBOL = TokenKind("PREDEFINED_SYMBOL", true)
-  val CUSTOM_SYMBOL = TokenKind("CUSTOM_SYMBOL", true)
+  val PREDEFINED_SYMBOL = TokenKind("PREDEFINED_SYMBOL", data = true)
+  val CUSTOM_SYMBOL = TokenKind("CUSTOM_SYMBOL", data = true)
 
   val Symbols = Seq(PREDEFINED_SYMBOL, CUSTOM_SYMBOL)
 }

@@ -22,7 +22,7 @@ import org.junit.Assert._
 
 class ObservableEventsTest {
   @Test
-  def singleNotification() {
+  def singleNotification(): Unit = {
     val observable = new ObservableEvents[String]() {}
     var events = List[String]()
     observable.onChange(events ::= _)
@@ -31,7 +31,7 @@ class ObservableEventsTest {
   }
 
   @Test
-  def multipleNotifications() {
+  def multipleNotifications(): Unit = {
     val observable = new ObservableEvents[String]() {}
     var events = List[String]()
     observable.onChange(events ::= _)
@@ -41,7 +41,7 @@ class ObservableEventsTest {
   }
 
   @Test
-  def disconnection() {
+  def disconnection(): Unit = {
     val observable = new ObservableEvents[String]() {}
     var events = List[String]()
     val recorder = events ::= (_: String)

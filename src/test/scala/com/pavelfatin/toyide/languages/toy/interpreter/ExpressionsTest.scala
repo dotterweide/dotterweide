@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.languages.toy.ExpressionTestBase
 
 class ExpressionsTest extends ExpressionTestBase with InterpreterTesting {
   @Test
-  def divisionByZero() {
+  def divisionByZero(): Unit = {
     try {
       run("print(1 / 0);")
     } catch {
@@ -34,7 +34,7 @@ class ExpressionsTest extends ExpressionTestBase with InterpreterTesting {
   }
 
   @Test
-  def modulusWithZero() {
+  def modulusWithZero(): Unit = {
     try {
       run("print(1 % 0);")
     } catch {

@@ -29,13 +29,13 @@ class SaveAsAction(title0: String, mnemonic0: Char, shortcut: String,
 
   accelerator = Some(KeyStroke.getKeyStroke(shortcut))
 
-  def apply() {
+  def apply(): Unit = {
     SaveAsAction.performOn(tab, parent)
   }
 }
 
 private object SaveAsAction {
-  def performOn(tab: EditorTab, parent: Component, selection: Option[File] = None) {
+  def performOn(tab: EditorTab, parent: Component, selection: Option[File] = None): Unit = {
     val chooser = new FileChooser()
     chooser.title = "Save As"
     chooser.fileFilter = new FileNameExtensionFilter(tab.fileType.name, tab.fileType.extension)
@@ -65,7 +65,7 @@ private object SaveAsAction {
     new File(path)
   }
 
-  private def doSave(file: File, tab: EditorTab) {
+  private def doSave(file: File, tab: EditorTab): Unit = {
     IO.write(file, tab.text)
     tab.file = Some(file)
   }

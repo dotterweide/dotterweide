@@ -36,11 +36,11 @@ trait Editor extends Observable {
 
   def text: String
 
-  def text_=(s: String)
+  def text_=(s: String): Unit
 
   def actions: EditorActions
 
   def message: Option[String]
 
-  def dispose()
+  def dispose(): Unit
 }

@@ -22,13 +22,13 @@ import com.pavelfatin.toyide.languages.toy.node._
 import com.pavelfatin.toyide.inspection.{Decoration, Mark, Inspection}
 
 object UnresolvedReference extends Inspection {
-  val Message = "Cannot resolve %s '%s'".format(_: String, _: String)
+  val Message: (String, String) => String = "Cannot resolve %s '%s'".format(_: String, _: String)
 
   def inspect(node: Node): Seq[Mark] = node match {
     case ref @ ReferenceNode(Some(source), None) if !ref.predefined =>
       node match {
         case _: ReferenceToFunction => Seq(Mark(node, Message("function", source.span.text), Decoration.Red))
-        case _: ReferenceToValue => Seq(Mark(node, Message("value", source.span.text), Decoration.Red))
+        case _: ReferenceToValue    => Seq(Mark(node, Message("value"   , source.span.text), Decoration.Red))
       }
     case _ => Seq.empty
   }

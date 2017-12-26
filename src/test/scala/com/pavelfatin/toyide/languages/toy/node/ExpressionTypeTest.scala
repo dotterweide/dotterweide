@@ -22,14 +22,14 @@ import com.pavelfatin.toyide.languages.toy.ToyType._
 
 class ExpressionTypeTest extends ExpressionTypeTestBase {
   @Test
-  def literals() {
+  def literals(): Unit = {
     assertTypeIs("\"foo\"", StringType)
     assertTypeIs("1", IntegerType)
     assertTypeIs("true", BooleanType)
   }
 
   @Test
-  def reduce() {
+  def reduce(): Unit = {
     assertTypeIs("\"foo\" + 1", StringType)
     assertTypeIs("1 + 2", IntegerType)
     assertNoType("1 + \"foo\"")
@@ -38,7 +38,7 @@ class ExpressionTypeTest extends ExpressionTypeTestBase {
   }
 
   @Test
-  def addition() {
+  def addition(): Unit = {
     assertTypeIs("1 + 2", IntegerType)
     assertTypeIs("1 - 2", IntegerType)
     assertTypeIs("\"foo\" + \"foo\"", StringType)
@@ -57,7 +57,7 @@ class ExpressionTypeTest extends ExpressionTypeTestBase {
   }
 
   @Test
-  def predefinedCall() {
+  def predefinedCall(): Unit = {
     assertTypeIs("print(1);", VoidType)
     assertTypeIs("println(1);", VoidType)
   }

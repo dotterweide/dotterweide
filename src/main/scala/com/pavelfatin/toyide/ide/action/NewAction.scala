@@ -27,7 +27,7 @@ class NewAction(title0: String, mnemonic0: Char, shortcut: String,
 
   accelerator = Some(KeyStroke.getKeyStroke(shortcut))
 
-  def apply() {
+  def apply(): Unit = {
     tab.text = ""
     tab.file = None
   }

@@ -17,8 +17,9 @@
 
 package com.pavelfatin.toyide.languages.lisp.examples
 
-import com.pavelfatin.toyide.languages.lisp.{LispExamples, InterpreterTesting}
+import com.pavelfatin.toyide.languages.lisp.{InterpreterTesting, LispExamples}
 import com.pavelfatin.toyide.languages.lisp.library.Library
+import com.pavelfatin.toyide.languages.lisp.value.Environment
 import org.junit.Assert._
 import org.junit.{Before, Test}
 
@@ -31,30 +32,30 @@ class WebServerTest extends InterpreterTesting {
 
   private val handle = new MockHandle()
 
-  override def createEnvironment() = Library.instance.createEnvironment()
+  override def createEnvironment(): Environment = Library.instance.createEnvironment()
     .addLocals(Map("mock-socket" -> handle))
 
   @Before
-  def resetHandle() {
+  def resetHandle(): Unit = {
     handle.reset()
   }
 
   @Test
-  def normal() {
+  def normal(): Unit = {
     assertResponse("/scala-license.txt", load("/NormalResponse.txt"))
   }
 
   @Test
-  def notFound() {
+  def notFound(): Unit = {
     assertResponse("/unknown.html", load("/NotFoundResponse.txt"))
   }
 
   @Test
-  def index() {
+  def index(): Unit = {
     assertResponse("/", load("/IndexResponse.txt"))
   }
 
-  private def assertResponse(uri: String, expected: String) {
+  private def assertResponse(uri: String, expected: String): Unit = {
     handle.input = RequestTemplate.format(uri)
     run(Code)
     assertEquals(expected, handle.output)

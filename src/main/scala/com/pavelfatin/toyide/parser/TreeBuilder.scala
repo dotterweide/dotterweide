@@ -34,22 +34,22 @@ class TreeBuilder(input: Iterator[Token]) {
     advance()
   }
 
-  def ahead(kinds: TokenKind*) = {
+  def ahead(kinds: TokenKind*): Boolean = {
     in.hasNext && kinds.contains(in.head.kind)
   }
 
-  def matches(kinds: TokenKind*) = {
+  def matches(kinds: TokenKind*): Boolean = {
     head.exists(token => kinds.contains(token.kind))
   }
 
-  def consume(kinds: TokenKind*) {
+  def consume(kinds: TokenKind*): Unit = {
     if(matches(kinds: _*))
       consume()
     else
       error("Expected %s".format(kinds.map(_.name).mkString(", ")))
   }
 
-  def consume() {
+  def consume(): Unit = {
     val token = head.getOrElse(throw new NoSuchTokenException())
     if(regions.tail.isEmpty) throw new ConsumeWithoutRegionException()
     regions.head.add(NodeImpl.createLeaf(token))
@@ -62,7 +62,7 @@ class TreeBuilder(input: Iterator[Token]) {
     matched
   }
 
-  def error(message: String) {
+  def error(message: String): Unit = {
     val region = regions.head
 
     if(region.hasProblem) return
@@ -77,11 +77,11 @@ class TreeBuilder(input: Iterator[Token]) {
     }
   }
 
-  def isEOF = !hasNext && head.isEmpty
+  def isEOF: Boolean = !hasNext && head.isEmpty
 
   private def hasNext = in.hasNext
 
-  def advance() {
+  def advance(): Unit = {
     head = if(hasNext) Some(in.next()) else None
     head.foreach { token =>
       headSpan = token.span
@@ -89,10 +89,10 @@ class TreeBuilder(input: Iterator[Token]) {
   }
 
   def tree: NodeImpl = {
-    if(!regions.tail.isEmpty) throw new UnclosedRegionException
+    if(regions.tail.nonEmpty) throw new UnclosedRegionException
     val nodes = regions.head.nodes
     val root = nodes.headOption.getOrElse(throw new NoRootNodeException)
-    if(!nodes.tail.isEmpty) throw new MultipleRootNodesException()
+    if(nodes.tail.nonEmpty) throw new MultipleRootNodesException()
     root
   }
 
@@ -102,13 +102,13 @@ class TreeBuilder(input: Iterator[Token]) {
     region
   }
 
-  def capturing(node: NodeImpl, collapseHolderNode: Boolean = false)(action: => Unit) {
+  def capturing(node: NodeImpl, collapseHolderNode: Boolean = false)(action: => Unit): Unit = {
     val region = open()
     action
     region.close(node, collapseHolderNode)
   }
 
-  def folding(node: => NodeImpl, collapseHolderNode: Boolean = false, length: Int = 3)(action: => Unit) {
+  def folding(node: => NodeImpl, collapseHolderNode: Boolean = false, length: Int = 3)(action: => Unit): Unit = {
     val region = open()
     action
     region.fold(node, collapseHolderNode, length)
@@ -118,26 +118,25 @@ class TreeBuilder(input: Iterator[Token]) {
     private var entries: List[NodeImpl] = Nil
     private var closed = false
 
-    def close(node: NodeImpl, collapseHolderNode: Boolean) {
+    def close(node: NodeImpl, collapseHolderNode: Boolean): Unit = {
       capture(node, collapseHolderNode)(children => children)
     }
 
-    def fold(node: => NodeImpl, collapseHolderNode: Boolean, length: Int) {
+    def fold(node: => NodeImpl, collapseHolderNode: Boolean, length: Int): Unit = {
       capture(node, collapseHolderNode) {
         case Nil => Nil
-        case head :: Nil => Seq(head)
-        case head :: tail => {
-          val root = tail.grouped(length - 1).foldLeft(head) { (left, part) =>
+        case _head :: Nil => Seq(_head)
+        case _head :: tail =>
+          val root = tail.grouped(length - 1).foldLeft(_head) { (left, part) =>
             val parent = node // call-by-name for factory method
             parent.children = Seq(left) ++ part
             parent
           }
           root.children
-        }
       }
     }
 
-    private def capture(node: NodeImpl, collapseHolderNode: Boolean = false)(f: Seq[NodeImpl] => Seq[NodeImpl]) {
+    private def capture(node: NodeImpl, collapseHolderNode: Boolean = false)(f: Seq[NodeImpl] => Seq[NodeImpl]): Unit = {
       if(closed) throw new MultipleClosingException
       if(!this.eq(regions.head)) throw new IncorrectRegionsOrderException
       regions = regions.tail
@@ -152,21 +151,21 @@ class TreeBuilder(input: Iterator[Token]) {
       closed = true
     }
 
-    def add(node: NodeImpl) {
+    def add(node: NodeImpl): Unit = {
       if(closed) throw new RuntimeException("Unable to add node to closed region")
       entries ::= node
     }
 
-    def hasProblem = entries.exists(_.elements.exists(_.problem.isDefined))
+    def hasProblem: Boolean = entries.exists(_.elements.exists(_.problem.isDefined))
 
-    def nodes = entries.reverse
+    def nodes: List[NodeImpl] = entries.reverse
   }
 }
 
 trait Region {
-  def close(node: NodeImpl, collapseHolderNode: Boolean = false)
+  def close(node: NodeImpl, collapseHolderNode: Boolean = false): Unit
 
-  def fold(node: => NodeImpl, collapseHolderNode: Boolean = false, length: Int = 3)
+  def fold(node: => NodeImpl, collapseHolderNode: Boolean = false, length: Int = 3): Unit
 }
 
 class NoRootNodeException extends RuntimeException

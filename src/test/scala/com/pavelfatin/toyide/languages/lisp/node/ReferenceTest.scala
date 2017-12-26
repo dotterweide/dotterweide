@@ -25,14 +25,14 @@ import org.junit.Test
 
 class ReferenceTest {
   @Test
-  def unknown() {
+  def unknown(): Unit = {
     assertMatches(targetIn("x")) {
       case None =>
     }
   }
 
   @Test
-  def fn() {
+  def fn(): Unit = {
     assertMatches(targetIn("(fn [x])")) {
       case None =>
     }
@@ -60,7 +60,7 @@ class ReferenceTest {
   }
 
   @Test
-  def macroFn() {
+  def macroFn(): Unit = {
     assertMatches(targetIn("(macro [x])")) {
       case None =>
     }
@@ -88,7 +88,7 @@ class ReferenceTest {
   }
 
   @Test
-  def loop() {
+  def loop(): Unit = {
     assertMatches(targetIn("(loop [x 1])")) {
       case None =>
     }
@@ -113,7 +113,7 @@ class ReferenceTest {
   }
 
   @Test
-  def let() {
+  def let(): Unit = {
     assertMatches(targetIn("(let [x 1])")) {
       case None =>
     }
@@ -138,7 +138,7 @@ class ReferenceTest {
   }
 
   @Test
-  def ifLet() {
+  def ifLet(): Unit = {
     assertMatches(targetIn("(if-let [x 1])")) {
       case None =>
     }
@@ -163,7 +163,7 @@ class ReferenceTest {
   }
 
   @Test
-  def define() {
+  def define(): Unit = {
     assertMatches(targetIn("(def x 1)")) {
       case None =>
     }
@@ -176,7 +176,7 @@ class ReferenceTest {
   }
 
   @Test
-  def defn() {
+  def defn(): Unit = {
     assertMatches(targetIn("(defn f [])")) {
       case None =>
     }
@@ -202,7 +202,7 @@ class ReferenceTest {
   }
 
   @Test
-  def defmacro() {
+  def defmacro(): Unit = {
     assertMatches(targetIn("(defmacro m [])")) {
       case None =>
     }
@@ -228,7 +228,7 @@ class ReferenceTest {
   }
 
   @Test
-  def precedence() {
+  def precedence(): Unit = {
     assertMatches(targetIn("(fn [x] (fn [x] x))")) {
       case Some(Offset(13)) =>
     }

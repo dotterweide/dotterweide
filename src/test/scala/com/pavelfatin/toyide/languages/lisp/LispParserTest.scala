@@ -22,7 +22,7 @@ import org.junit.Test
 
 class LispParserTest {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertParsed("",
       """
         |program
@@ -30,7 +30,7 @@ class LispParserTest {
   }
 
   @Test
-  def comment() {
+  def comment(): Unit = {
     assertParsed("; foo",
       """
         |program
@@ -40,7 +40,7 @@ class LispParserTest {
   }
 
   @Test
-  def integerLiteral() {
+  def integerLiteral(): Unit = {
     assertParsed("1",
       """
         |program
@@ -57,7 +57,7 @@ class LispParserTest {
   }
 
   @Test
-  def booleanLiteral() {
+  def booleanLiteral(): Unit = {
     assertParsed("true",
       """
         |program
@@ -74,7 +74,7 @@ class LispParserTest {
   }
 
   @Test
-  def characterLiteral() {
+  def characterLiteral(): Unit = {
     assertParsed("\\c",
       """
         |program
@@ -91,7 +91,7 @@ class LispParserTest {
   }
 
   @Test
-  def stringLiteral() {
+  def stringLiteral(): Unit = {
     assertParsed("\"foo\"",
       """
         |program
@@ -108,7 +108,7 @@ class LispParserTest {
   }
 
   @Test
-  def predefinedSymbol() {
+  def predefinedSymbol(): Unit = {
     assertParsed("let",
       """
         |program
@@ -125,7 +125,7 @@ class LispParserTest {
   }
 
   @Test
-  def customSymbol() {
+  def customSymbol(): Unit = {
     assertParsed("name",
       """
         |program
@@ -142,7 +142,7 @@ class LispParserTest {
   }
 
   @Test
-  def prefixes() {
+  def prefixes(): Unit = {
     assertParsed("'1",
       """
         |program
@@ -181,7 +181,7 @@ class LispParserTest {
   }
 
   @Test
-  def program() {
+  def program(): Unit = {
     assertParsed("1 2 3",
       """
         |program
@@ -195,7 +195,7 @@ class LispParserTest {
   }
 
   @Test
-  def list() {
+  def list(): Unit = {
     assertParsed("()",
       """
         |program
@@ -230,7 +230,7 @@ class LispParserTest {
   }
 
   @Test
-  def listPrefix() {
+  def listPrefix(): Unit = {
     assertParsed("'()",
       """
         |program
@@ -242,7 +242,7 @@ class LispParserTest {
   }
 
   @Test
-  def commasInList() {
+  def commasInList(): Unit = {
     assertParsed("(1, 2, 3)",
       """
         |program
@@ -261,7 +261,7 @@ class LispParserTest {
   }
 
   @Test
-  def listAsVector() {
+  def listAsVector(): Unit = {
     assertParsed("[1]",
       """
         |program
@@ -274,7 +274,7 @@ class LispParserTest {
   }
 
   @Test
-  def unclosedList() {
+  def unclosedList(): Unit = {
     assertParsed("(",
       """
         |program
@@ -293,7 +293,7 @@ class LispParserTest {
   }
 
   @Test
-  def listBoundMismatch() {
+  def listBoundMismatch(): Unit = {
     assertParsed("(]",
       """
         |program
@@ -311,7 +311,7 @@ class LispParserTest {
       """)
   }
 
-  private def assertParsed(code: String, expectation: String) {
+  private def assertParsed(code: String, expectation: String): Unit = {
     assertEquals(format(expectation), parsed(code))
   }
 

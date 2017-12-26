@@ -22,7 +22,7 @@ import org.junit.Test
 
 class ExpressionFormatTest extends FormatTestBase {
   @Test
-  def group() {
+  def group(): Unit = {
     assertFormatted("(1)", ExpressionParser, "(1)")
     assertFormatted("( 1)", ExpressionParser, "(1)")
     assertFormatted("(1 )", ExpressionParser, "(1)")
@@ -30,7 +30,7 @@ class ExpressionFormatTest extends FormatTestBase {
   }
 
   @Test
-  def logicalOr() {
+  def logicalOr(): Unit = {
     assertFormatted("1||2", ExpressionParser, "1 || 2")
     assertFormatted("1 || 2", ExpressionParser, "1 || 2")
     assertFormatted("1  ||  2", ExpressionParser, "1 || 2")
@@ -38,7 +38,7 @@ class ExpressionFormatTest extends FormatTestBase {
   }
 
   @Test
-  def logicalAnd() {
+  def logicalAnd(): Unit = {
     assertFormatted("1&&2", ExpressionParser, "1 && 2")
     assertFormatted("1 && 2", ExpressionParser, "1 && 2")
     assertFormatted("1  &&  2", ExpressionParser, "1 && 2")
@@ -46,7 +46,7 @@ class ExpressionFormatTest extends FormatTestBase {
   }
 
   @Test
-  def equality() {
+  def equality(): Unit = {
     assertFormatted("1==2", ExpressionParser, "1 == 2")
     assertFormatted("1 == 2", ExpressionParser, "1 == 2")
     assertFormatted("1  ==  2", ExpressionParser, "1 == 2")
@@ -58,7 +58,7 @@ class ExpressionFormatTest extends FormatTestBase {
   }
 
   @Test
-  def relation() {
+  def relation(): Unit = {
     assertFormatted("1>2", ExpressionParser, "1 > 2")
     assertFormatted("1 > 2", ExpressionParser, "1 > 2")
     assertFormatted("1  >  2", ExpressionParser, "1 > 2")
@@ -73,7 +73,7 @@ class ExpressionFormatTest extends FormatTestBase {
   }
 
   @Test
-  def addition() {
+  def addition(): Unit = {
     assertFormatted("1+2", ExpressionParser, "1 + 2")
     assertFormatted("1 + 2", ExpressionParser, "1 + 2")
     assertFormatted("1  +  2", ExpressionParser, "1 + 2")
@@ -85,7 +85,7 @@ class ExpressionFormatTest extends FormatTestBase {
   }
 
   @Test
-  def multiplication() {
+  def multiplication(): Unit = {
     assertFormatted("1*2", ExpressionParser, "1 * 2")
     assertFormatted("1 * 2", ExpressionParser, "1 * 2")
     assertFormatted("1  *  2", ExpressionParser, "1 * 2")
@@ -97,7 +97,7 @@ class ExpressionFormatTest extends FormatTestBase {
   }
 
   @Test
-  def modulus() {
+  def modulus(): Unit = {
     assertFormatted("1%2", ExpressionParser, "1 % 2")
     assertFormatted("1 % 2", ExpressionParser, "1 % 2")
     assertFormatted("1  %  2", ExpressionParser, "1 % 2")
@@ -117,7 +117,7 @@ class ExpressionFormatTest extends FormatTestBase {
 //  }
 
   @Test
-  def expression() {
+  def expression(): Unit = {
     assertFormatted("1+2*((3/4-2)>=5)<0||true&&6!=7", ExpressionParser,
       "1 + 2 * ((3 / 4 - 2) >= 5) < 0 || true && 6 != 7")
 

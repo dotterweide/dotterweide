@@ -33,26 +33,26 @@ case class EnvironmentImpl private (locals: Map[String, Expression],
     this(Map.empty)
   }
 
-  def lookup(name: String) = locals.get(name).orElse(globals.get(name))
+  def lookup(name: String): Option[Expression] = locals.get(name).orElse(globals.get(name))
 
-  def addLocals(values: Map[String, Expression]) = copy(locals = locals ++ values)
+  def addLocals(values: Map[String, Expression]): EnvironmentImpl = copy(locals = locals ++ values)
 
-  def clearLocals = copy(locals = Map.empty)
+  def clearLocals: EnvironmentImpl = copy(locals = Map.empty)
 
-  def setGlobal(name: String, value: Expression) {
+  def setGlobal(name: String, value: Expression): Unit = {
     globals(name) = value
   }
 
-  def nextId() = ids.next()
+  def nextId(): Int = ids.next()
 
-  def inFrame(place: Option[Place]) = if (trace.size < EnvironmentImpl.MaxFrames) {
+  def inFrame(place: Option[Place]): EnvironmentImpl = if (trace.size < EnvironmentImpl.MaxFrames) {
     copy(trace = place.getOrElse(Place(Some("Unknown"), -1)) :: trace)
   } else {
-    throw new EvaluationException("Stack overflow", trace)
+    throw EvaluationException("Stack overflow", trace)
   }
 
   def interrupt(message: String, place: Option[Place] = None) =
-    throw new EvaluationException(message, place.toSeq ++ trace)
+    throw EvaluationException(message, place.toSeq ++ trace)
 }
 
 object EnvironmentImpl {

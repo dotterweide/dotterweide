@@ -21,7 +21,7 @@ import org.junit.Test
 
 class ParameterParserTest extends ParserTest(ParameterParser) {
   @Test
-  def normal() {
+  def normal(): Unit = {
     assertParsed("foo: integer",
       """
       parameter

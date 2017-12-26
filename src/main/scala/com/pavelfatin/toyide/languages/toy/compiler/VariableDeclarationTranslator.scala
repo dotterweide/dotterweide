@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.languages.toy.node.VariableDeclaration
 import com.pavelfatin.toyide.compiler.{Labels, Code}
 
 trait VariableDeclarationTranslator extends ToyTranslatable { self: VariableDeclaration =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val variableType = nodeType.getOrElse(
       interrupt("Unknown variable type: %s", span.text))
 
@@ -30,12 +30,12 @@ trait VariableDeclarationTranslator extends ToyTranslatable { self: VariableDecl
 
     val expCode = exp.translate(name, labels).instructions
 
-    if (self.global) {
+    if ((self: VariableDeclaration).global) {
       val field = ".field private %s %s\n".format(identifier, variableType.descriptor)
       val initializer = "aload_0\n%sputfield %s/%s %s\n".format(expCode, name, identifier, variableType.descriptor)
       Code(withLine(initializer), field)
     } else {
-      Code(withLine("%s%cstore %d\n".format(expCode, variableType.prefix, self.ordinal + 1)))
+      Code(withLine("%s%cstore %d\n".format(expCode, variableType.prefix, (self: VariableDeclaration).ordinal + 1)))
     }
   }
 }

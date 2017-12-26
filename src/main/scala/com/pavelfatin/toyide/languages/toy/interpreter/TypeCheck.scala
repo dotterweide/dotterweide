@@ -24,13 +24,13 @@ import com.pavelfatin.toyide.languages.toy.interpreter.ToyValue._
 import com.pavelfatin.toyide.node.{Expression, NodeType}
 
 trait TypeCheck extends ToyEvaluable with Expression {
-  abstract override def evaluate(context: Context, output: Output) = {
+  abstract override def evaluate(context: Context, output: Output): Option[Value] = {
     val result = super.evaluate(context, output)
     check(context, nodeType, result)
     result
   }
 
-  private def check(context: Context, nodeType: Option[NodeType], value: Option[Value]) {
+  private def check(context: Context, nodeType: Option[NodeType], value: Option[Value]): Unit = {
     nodeType match {
       case Some(t) =>
         (t, value) match {

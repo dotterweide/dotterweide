@@ -27,7 +27,7 @@ private class NodeInvoker(console: Console) extends Runner {
 
   private val Name = "Main"
 
-  def run(root: Node) {
+  def run(root: Node): Unit = {
     console.clear()
     try {
       val bytecode = Assembler.assemble(root, Name)

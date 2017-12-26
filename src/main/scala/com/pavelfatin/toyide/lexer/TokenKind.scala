@@ -20,7 +20,7 @@ package com.pavelfatin.toyide.lexer
 case class TokenKind(name: String, data: Boolean = false)
 
 object Tokens {
-  val WS = TokenKind("WS", true)
+  val WS = TokenKind("WS", data = true)
 
-  val UNKNOWN = TokenKind("UNKNOWN", true)
+  val UNKNOWN = TokenKind("UNKNOWN", data = true)
 }

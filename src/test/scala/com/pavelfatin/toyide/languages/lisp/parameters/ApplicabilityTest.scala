@@ -22,17 +22,17 @@ import org.junit.Test
 
 class ApplicabilityTest extends InterpreterTesting {
    @Test
-   def fnForm() {
+   def fnForm(): Unit = {
      assertValue("((fn [a [b & c]] (list a b c)) 1 '(2 3 4))", "(1 2 (3 4))")
    }
 
    @Test
-   def macroForm() {
+   def macroForm(): Unit = {
      assertValue("((macro [a [b & c]] `(list ~a ~b (quote ~c))) 1 (2 3 4))", "(1 2 (3 4))")
    }
 
   @Test
-  def letForm() {
+  def letForm(): Unit = {
     assertValue("(let [a 1 [b & c] '(2 3 4)] (list a b c))", "(1 2 (3 4))")
 
     assertValue("(let [& 1] &)", "1")

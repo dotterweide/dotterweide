@@ -20,5 +20,5 @@ package com.pavelfatin.toyide.languages.toy.optimizer
 import com.pavelfatin.toyide.Output
 
 private object NullOutput extends Output {
-  def print(s: String) {}
+  def print(s: String): Unit = ()
 }

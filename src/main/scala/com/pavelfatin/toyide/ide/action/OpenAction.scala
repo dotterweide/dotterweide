@@ -28,7 +28,7 @@ class OpenAction(title0: String, mnemonic0: Char, shortcut: String,
 
   accelerator = Some(KeyStroke.getKeyStroke(shortcut))
 
-  def apply() {
+  def apply(): Unit = {
     val chooser = new FileChooser()
     chooser.title = "Open"
     chooser.fileFilter = new FileNameExtensionFilter(tab.fileType.name, tab.fileType.extension)

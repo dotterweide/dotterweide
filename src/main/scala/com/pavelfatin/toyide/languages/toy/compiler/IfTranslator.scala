@@ -21,7 +21,7 @@ import com.pavelfatin.toyide.languages.toy.node.If
 import com.pavelfatin.toyide.compiler.{Code, Labels}
 
 trait IfTranslator extends ToyTranslatable { self: If =>
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val exp = expression.getOrElse(
       interrupt("Expression not found %s", span.text))
 

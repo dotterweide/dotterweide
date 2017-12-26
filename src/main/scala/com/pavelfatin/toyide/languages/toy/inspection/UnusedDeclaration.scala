@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.inspection.{Decoration, Mark, Inspection}
 import com.pavelfatin.toyide.node.{IdentifiedNode, Node}
 
 object UnusedDeclaration extends Inspection {
-  val Message = (entity: String, name: String) =>
+  val Message: (String, String) => String = (entity, name) =>
     "%s '%s' is never used".format(entity.capitalize, name)
 
   def inspect(node: Node): Seq[Mark] = node match {

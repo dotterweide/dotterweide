@@ -23,7 +23,7 @@ import ToyTokens._
 import com.pavelfatin.toyide.editor._
 
 class ToyColoring(colors: Map[String, Color]) extends AbstractColoring(colors) {
-  def attributesFor(kind: TokenKind) = {
+  def attributesFor(kind: TokenKind): Attributes = {
     val foreground = apply(colorId(kind))
     val weight = weightFor(kind)
     val style = styleFor(kind)

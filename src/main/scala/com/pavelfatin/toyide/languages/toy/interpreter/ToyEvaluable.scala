@@ -24,7 +24,7 @@ import com.pavelfatin.toyide.Extensions._
 
 trait ToyEvaluable { self: Node =>
   protected def interrupt(context: Context, message: String, values: Any*) =
-    throw new EvaluationException(message.format(values: _*), place :: context.trace.toList)
+    throw EvaluationException(message.format(values: _*), place :: context.trace.toList)
 
   protected def wrap[T](context: => Context)(action: => T): T = {
     try {
@@ -34,7 +34,7 @@ trait ToyEvaluable { self: Node =>
     }
   }
 
-  protected def place = {
+  protected def place: Place = {
     val enclosure = self.parents.findBy[FunctionDeclaration].map(_.identifier)
     val line = self.span.source.take(self.span.begin).count(_ == '\n')
     Place(enclosure, line)

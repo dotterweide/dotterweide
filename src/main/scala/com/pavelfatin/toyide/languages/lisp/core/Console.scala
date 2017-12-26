@@ -21,28 +21,28 @@ import com.pavelfatin.toyide.Output
 import com.pavelfatin.toyide.languages.lisp.value._
 
 object Print extends CoreFunction("print") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): ListValue = {
     output.print(Expression.format(arguments))
     ListValue.Empty
   }
 }
 
 object PrintLn extends CoreFunction("println") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): ListValue = {
     output.print(Expression.format(arguments) + "\n")
     ListValue.Empty
   }
 }
 
 object Trace extends CoreFunction("trace") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = arguments match {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): Expression = arguments match {
     case Seq(v) => output.print(v.presentation); v
     case _ => expected("value", arguments, environment)
   }
 }
 
 object Format extends CoreFunction("format") {
-  def apply(arguments: Seq[Expression], environment: Environment, output: Output) = {
+  def apply(arguments: Seq[Expression], environment: Environment, output: Output): ListValue = {
     ListValue(Expression.format(arguments).map(CharacterValue))
   }
 }

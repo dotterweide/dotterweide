@@ -21,7 +21,7 @@ import org.junit.Test
 
 class IfParserTest extends ParserTest(IfParser) {
   @Test
-  def simple() {
+  def simple(): Unit = {
     assertParsed("if (i > 0) { a = a + 1; }",
       """
       if
@@ -52,7 +52,7 @@ class IfParserTest extends ParserTest(IfParser) {
   }
 
   @Test
-  def withElse() {
+  def withElse(): Unit = {
     assertParsed("if (i > 0) { a = a + 1; } else { b = b + 2; }",
       """
       if

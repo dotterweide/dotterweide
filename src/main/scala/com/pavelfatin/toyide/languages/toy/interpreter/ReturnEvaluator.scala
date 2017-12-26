@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.interpreter._
 import com.pavelfatin.toyide.Output
 
 trait ReturnEvaluator extends ToyEvaluable { self: Return =>
-  override def evaluate(context: Context, output: Output) = {
+  override def evaluate(context: Context, output: Output): Option[Value] = {
     val value = expression.map { exp =>
       exp.evaluate(context, output).getOrElse(
         interrupt(context, "Expression return no value: %s", exp.span.text))

@@ -25,7 +25,7 @@ import com.pavelfatin.toyide.Helpers._
 
 class ReferenceTest {
   @Test
-  def noDeclarations() {
+  def noDeclarations(): Unit = {
     assertMatches(targetIn("v = 1;")) {
       case None =>
     }
@@ -38,7 +38,7 @@ class ReferenceTest {
   }
 
   @Test
-  def nameDiffers() {
+  def nameDiffers(): Unit = {
     assertMatches(targetIn("var x: integer = 1; v = 1;")) {
       case None =>
     }
@@ -51,7 +51,7 @@ class ReferenceTest {
   }
 
   @Test
-  def declared() {
+  def declared(): Unit = {
     assertMatches(targetIn("var v: integer = 1; v = 1;")) {
       case Some(Offset(0)) =>
     }
@@ -64,7 +64,7 @@ class ReferenceTest {
   }
 
   @Test
-  def severalDeclarations() {
+  def severalDeclarations(): Unit = {
     assertMatches(targetIn("var v: integer = 1; var x: integer = 1; v = 1;")) {
       case Some(Offset(0)) =>
     }
@@ -77,7 +77,7 @@ class ReferenceTest {
   }
 
   @Test
-  def severalDeclarationsReversed() {
+  def severalDeclarationsReversed(): Unit = {
     assertMatches(targetIn("var x: integer = 1; var v: integer = 1; v = 1;")) {
       case Some(Offset(20)) =>
     }
@@ -90,7 +90,7 @@ class ReferenceTest {
   }
 
   @Test
-  def incorrectOrder() {
+  def incorrectOrder(): Unit = {
     assertMatches(targetIn("v = 1; var v: integer = 1;")) {
       case None =>
     }
@@ -103,7 +103,7 @@ class ReferenceTest {
   }
 
   @Test
-  def incorrectKind() {
+  def incorrectKind(): Unit = {
     assertMatches(targetIn("var v: integer = 1; v();")) {
       case None =>
     }
@@ -116,7 +116,7 @@ class ReferenceTest {
   }
 
   @Test
-  def outerScope() {
+  def outerScope(): Unit = {
     assertMatches(targetIn("var v: integer = 1; while (true) { v = 1; }")) {
       case Some(Offset(0)) =>
     }
@@ -129,7 +129,7 @@ class ReferenceTest {
   }
 
   @Test
-  def innerScope() {
+  def innerScope(): Unit = {
     assertMatches(targetIn("while (true) { var a: integer = 1; }; a = 1;")) {
       case None =>
     }
@@ -139,7 +139,7 @@ class ReferenceTest {
   }
 
   @Test
-  def scopePreference() {
+  def scopePreference(): Unit = {
     assertMatches(targetIn("var v: integer = 1; while (true) { var v: integer = 1; v = 1; }")) {
       case Some(Offset(35)) =>
     }
@@ -149,7 +149,7 @@ class ReferenceTest {
   }
 
   @Test
-  def selfScope() {
+  def selfScope(): Unit = {
     assertMatches(targetIn("def f(): integer = { f(); }")) {
       case Some(Offset(0)) =>
     }

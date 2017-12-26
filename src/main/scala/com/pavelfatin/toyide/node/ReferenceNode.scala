@@ -20,20 +20,20 @@ package com.pavelfatin.toyide.node
 trait ReferenceNode extends Node {
   def source: Option[Node]
 
-  def identifier = source.map(_.span.text).mkString
+  def identifier: String = source.map(_.span.text).mkString
 
   def target: Option[Node]
 
-  def isReferenceTo(node: Node) = target match {
+  def isReferenceTo(node: Node): Boolean = target match {
     case Some(it) => it == node
     case None => false
   }
 
   def predefined: Boolean
 
-  def unresolved = !predefined && target.isEmpty
+  def unresolved: Boolean = !predefined && target.isEmpty
 
-  override def toString = "%s(%s)".format(kind, identifier)
+  override def toString: String = "%s(%s)".format(kind, identifier)
 }
 
 object ReferenceNode {
@@ -42,5 +42,5 @@ object ReferenceNode {
 }
 
 object ReferenceNodeTarget {
-  def unapply(reference: ReferenceNode) = reference.target
+  def unapply(reference: ReferenceNode): Option[Node] = reference.target
 }

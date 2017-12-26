@@ -21,7 +21,7 @@ import org.junit.Test
 
 class TypeSpecParserTest extends ParserTest(TypeSpecParser) {
   @Test
-  def typeInteger() {
+  def typeInteger(): Unit = {
     assertParsed(": integer",
       """
       typeSpec
@@ -31,7 +31,7 @@ class TypeSpecParserTest extends ParserTest(TypeSpecParser) {
   }
 
   @Test
-  def typeString() {
+  def typeString(): Unit = {
     assertParsed(": string",
       """
       typeSpec
@@ -41,7 +41,7 @@ class TypeSpecParserTest extends ParserTest(TypeSpecParser) {
   }
 
   @Test
-  def typeBoolean() {
+  def typeBoolean(): Unit = {
     assertParsed(": boolean",
       """
       typeSpec
@@ -51,7 +51,7 @@ class TypeSpecParserTest extends ParserTest(TypeSpecParser) {
   }
 
   @Test
-  def typeVoid() {
+  def typeVoid(): Unit = {
     assertParsed(": void",
       """
       typeSpec

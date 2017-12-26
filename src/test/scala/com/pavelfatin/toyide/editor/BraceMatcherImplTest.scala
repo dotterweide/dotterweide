@@ -30,7 +30,7 @@ class BraceMatcherImplTest {
   private val matcher = new BraceMatcherImpl(Seq((LPAREN, RPAREN)))
 
   @Test
-  def unavailable() {
+  def unavailable(): Unit = {
     assertEmphasized("|")
     assertEmphasized("|Foo")
     assertEmphasized("Foo|")
@@ -38,7 +38,7 @@ class BraceMatcherImplTest {
   }
 
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertEmphasized("|X()")
     assertEmphasized("|()", 0, 1)
     assertEmphasized("(|)")
@@ -47,7 +47,7 @@ class BraceMatcherImplTest {
   }
 
   @Test
-  def oneToken() {
+  def oneToken(): Unit = {
     assertEmphasized("|X(Foo)")
 
     assertEmphasized("|(Foo)", 0, 4)
@@ -62,14 +62,14 @@ class BraceMatcherImplTest {
     assertEmphasized("(Foo)X|")
   }
 
-  def joined() {
+  def joined(): Unit = {
     assertEmphasized("()|()", 0, 1, 2, 3)
     assertEmphasized("(Foo)|(Bar)", 0, 4, 5, 9)
     assertEmphasized("(FooBar)|(FooMoo)", 0, 7, 8, 15)
   }
 
   @Test
-  def unbalanced() {
+  def unbalanced(): Unit = {
     assertEmphasized("|(Foo", -1)
     assertEmphasized("(|Foo")
     assertEmphasized("|(FooBar", -1)
@@ -79,7 +79,7 @@ class BraceMatcherImplTest {
   }
 
   @Test
-  def nested() {
+  def nested(): Unit = {
     assertEmphasized("|((Foo)Bar)", 0, 9)
     assertEmphasized("(|(Foo)Bar)", 1, 5)
     assertEmphasized("((|Foo)Bar)")
@@ -89,7 +89,7 @@ class BraceMatcherImplTest {
   }
 
   @Test
-  def nestedUnbalanced() {
+  def nestedUnbalanced(): Unit = {
     assertEmphasized("|((FooBar)", -1)
     assertEmphasized("(|(FooBar)", 1, 8)
     assertEmphasized("((|FooBar)")
@@ -101,7 +101,7 @@ class BraceMatcherImplTest {
     assertEmphasized("(Foo)Bar)|", -9)
   }
 
-  private def assertEmphasized(code: String, indices: Int*) {
+  private def assertEmphasized(code: String, indices: Int*): Unit = {
     val offset = code.indexOf("|")
 
     val mapped = MockLexer.analyze(code.replace("|", "")).map { it =>
@@ -113,7 +113,7 @@ class BraceMatcherImplTest {
     }.toList
 
     def indexOf(token: Token): Option[Int] = {
-      matcher.braceTypeOf(token, mapped.toSeq, offset) match {
+      matcher.braceTypeOf(token, mapped, offset) match {
         case Inapplicable => None
         case Paired => Some(token.span.begin)
         case Unbalanced => Some(-token.span.begin - 1)
@@ -122,6 +122,6 @@ class BraceMatcherImplTest {
 
     val actual = mapped.flatMap(indexOf(_).toSeq)
 
-    assertEquals(indices.toList, actual.toList)
+    assertEquals(indices.toList, actual)
   }
 }

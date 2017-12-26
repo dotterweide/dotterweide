@@ -31,7 +31,7 @@ private class HighlightPainter(context: PainterContext) extends AbstractPainter(
 
   def id = "highlight"
 
-  def paint(g: Graphics, bounds: Rectangle) {
+  def paint(g: Graphics, bounds: Rectangle): Unit = {
     val rectangles = terminal.highlights.flatMap(rectanglesOf)
       .map(_.intersection(bounds)).filterNot(_.isEmpty)
 

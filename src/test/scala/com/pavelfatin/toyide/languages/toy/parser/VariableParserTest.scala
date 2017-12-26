@@ -21,7 +21,7 @@ import org.junit.Test
 
 class VariableParserTest extends ParserTest(VariableParser) {
   @Test
-  def normal() {
+  def normal(): Unit = {
     assertParsed("var a: integer = 1;",
       """
       variable

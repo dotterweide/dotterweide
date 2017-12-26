@@ -25,7 +25,7 @@ import com.pavelfatin.toyide.languages.toy.ToyLexer
 import com.pavelfatin.toyide.MockConsole
 
 trait InterpreterTesting {
-  protected def assertOutput(code: String, expected: String) {
+  protected def assertOutput(code: String, expected: String): Unit = {
     assertEquals(expected, run(code))
   }
 

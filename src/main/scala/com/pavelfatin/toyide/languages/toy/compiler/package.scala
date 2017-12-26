@@ -34,7 +34,7 @@ package object compiler {
     def prefix: Char = nodeType match {
       case ToyType.StringType => 'a'
       case ToyType.IntegerType |  ToyType.BooleanType => 'i'
-      case ToyType.VoidType =>throw new TranslationException("No prefix for void type")
+      case ToyType.VoidType => throw TranslationException("No prefix for void type")
     }
   }
 

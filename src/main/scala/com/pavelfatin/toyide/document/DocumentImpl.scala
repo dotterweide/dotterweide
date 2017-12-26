@@ -22,24 +22,24 @@ class DocumentImpl(s: String = "") extends Document {
 
   private var anchors = List[AnchorImpl]()
 
-  def length = ls.length
+  def length: Int = ls.length
 
-  def text = ls.toString
+  def text: String = ls.toString
 
-  def text_=(s: String) {
+  def text_=(s: String): Unit = {
     replace(0, length, s)
   }
 
   def characters: CharSequence = ls
 
-  def insert(offset: Int, s: String) {
+  def insert(offset: Int, s: String): Unit = {
     check(offset)
     ls = ls.replace(offset, offset, s)
     updateAnchors(offset, offset, offset + s.length)
     notifyObservers(Insertion(offset, s))
   }
 
-  def remove(begin: Int, end: Int) {
+  def remove(begin: Int, end: Int): Unit = {
     check(begin, end)
     val previous = ls.subSequence(begin, end)
     ls = ls.replace(begin, end, "")
@@ -47,7 +47,7 @@ class DocumentImpl(s: String = "") extends Document {
     notifyObservers(Removal(begin, end, previous))
   }
 
-  def replace(begin: Int, end: Int, s: String) {
+  def replace(begin: Int, end: Int, s: String): Unit = {
     check(begin, end)
     val previous = ls.subSequence(begin, end)
     ls = ls.replace(begin, end, s)
@@ -55,16 +55,16 @@ class DocumentImpl(s: String = "") extends Document {
     notifyObservers(Replacement(begin, end, previous, s))
   }
 
-  private def updateAnchors(begin: Int, end: Int, end2: Int) {
+  private def updateAnchors(begin: Int, end: Int, end2: Int): Unit = {
     anchors.foreach(_.update(begin, end, end2))
   }
 
-  private def check(offset: Int, parameter: String = "Offset") {
+  private def check(offset: Int, parameter: String = "Offset"): Unit = {
     if(offset < 0 || offset > length)
       throw new IndexOutOfBoundsException("%s (%d) must be withing [%d; %d]".format(parameter, offset, 0, length))
   }
 
-  private def check(begin: Int, end: Int) {
+  private def check(begin: Int, end: Int): Unit = {
     check(begin, "Begin")
     check(end, "End")
     if(begin > end)
@@ -77,14 +77,14 @@ class DocumentImpl(s: String = "") extends Document {
     anchor
   }
 
-  protected def wraps = ls.wraps
+  protected def wraps: Seq[Int] = ls.wraps
 
   private class AnchorImpl(var offset: Int, bias: Bias) extends Anchor {
-    def dispose() {
+    def dispose(): Unit = {
       anchors = anchors.diff(Seq(this))
     }
 
-    def update(begin: Int, end: Int, end2: Int) {
+    def update(begin: Int, end: Int, end2: Int): Unit = {
       if (begin < offset && end <= offset) {
         offset += end2 - end
       } else if ((begin < offset && offset < end && end2 < offset) ||

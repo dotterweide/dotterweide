@@ -21,18 +21,19 @@ import com.pavelfatin.toyide.languages.toy.node.FunctionDeclaration
 import com.pavelfatin.toyide.compiler.{Labels, Code}
 
 trait FunctionDeclarationTranslator extends ToyTranslatable { self: FunctionDeclaration =>
-  private val Template = """
-.method private %s(%s)%s
-   .limit stack 10
-   .limit locals 10
+  private val Template =
+    """
+      |.method private %s(%s)%s
+      |   .limit stack 10
+      |   .limit locals 10
+      |
+      |   %s
+      |
+      |   return
+      |.end method
+      |""".stripMargin
 
-   %s
-
-   return
-.end method
-"""
-
-  override def translate(name: String, labels: Labels) = {
+  override def translate(name: String, labels: Labels): Code = {
     val b = block.getOrElse(
       interrupt("Function block not found: %s", span.text))
 

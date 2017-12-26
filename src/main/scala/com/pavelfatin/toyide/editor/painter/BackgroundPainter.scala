@@ -24,7 +24,7 @@ import com.pavelfatin.toyide.editor.Coloring
 private class BackgroundPainter(context: PainterContext) extends AbstractPainter(context) {
   def id = "background"
 
-  def paint(g: Graphics, bounds: Rectangle) {
+  def paint(g: Graphics, bounds: Rectangle): Unit = {
     g.setColor(coloring(Coloring.TextBackground))
     fill(g, bounds)
   }

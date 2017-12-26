@@ -18,5 +18,5 @@
 package com.pavelfatin.toyide
 
 trait Output {
-  def print(s: String)
+  def print(s: String): Unit
 }

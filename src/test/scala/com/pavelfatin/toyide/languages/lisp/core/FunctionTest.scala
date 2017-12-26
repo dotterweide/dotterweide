@@ -22,7 +22,7 @@ import org.junit.Test
 
 class FunctionTest extends InterpreterTesting {
   @Test
-  def fn() {
+  def fn(): Unit = {
     assertValue("(fn [])", "fn0")
     assertValue("(fn [x])", "fn1")
     assertValue("(fn [x y])", "fn2")
@@ -42,7 +42,7 @@ class FunctionTest extends InterpreterTesting {
   }
 
   @Test
-  def apply() {
+  def apply(): Unit = {
     assertValue("(apply + '())", "0")
     assertValue("(apply + '(1))", "1")
     assertValue("(apply + '(1 2))", "3")

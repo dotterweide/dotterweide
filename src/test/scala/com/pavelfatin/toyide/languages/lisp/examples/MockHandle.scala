@@ -26,28 +26,28 @@ class MockHandle extends HandleValue {
 
   private var _closed = false
 
-  def read(terminator: Option[Char]) = {
+  def read(terminator: Option[Char]): Seq[Char] = {
     val count = terminator.map(_input.indexOf(_) + 1).filter(_ > 0).getOrElse(_input.length)
     val (prefix, suffix) = _input.splitAt(count)
     _input = suffix
     prefix
   }
 
-  def write(chars: Seq[Char]) {
+  def write(chars: Seq[Char]): Unit = {
     _builder ++= chars
   }
 
-  def flush() {}
+  def flush(): Unit = ()
 
-  def close() {
+  def close(): Unit = {
     _closed = true
   }
 
   def presentation = "MockHandle"
 
-  def input = _input
+  def input: Seq[Char] = _input
 
-  def input_=(s: String) {
+  def input_=(s: String): Unit = {
     _input = s.toSeq
   }
 
@@ -55,7 +55,7 @@ class MockHandle extends HandleValue {
 
   def closed: Boolean = _closed
 
-  def reset() {
+  def reset(): Unit = {
     _input = Seq.empty
     _builder = new StringBuilder()
     _closed = false

@@ -22,44 +22,44 @@ import org.junit.Assert._
 
 class MockLexerTest {
   @Test
-  def empty() {
+  def empty(): Unit = {
     assertTokens("", "")
   }
 
   @Test
-  def letter() {
+  def letter(): Unit = {
     assertTokens("A", "token(A)")
   }
 
   @Test
-  def letters() {
+  def letters(): Unit = {
     assertTokens("AB", "token(A), token(B)")
   }
 
   @Test
-  def braces() {
+  def braces(): Unit = {
     assertTokens("()", "token((), token())")
     assertTokens("(Foo)", "token((), token(Foo), token())")
     assertTokens("{}", "token({), token(})")
   }
 
   @Test
-  def single() {
+  def single(): Unit = {
     assertTokens("Foo", "token(Foo)")
   }
 
   @Test
-  def several() {
+  def several(): Unit = {
     assertTokens("FooBar", "token(Foo), token(Bar)")
   }
 
   @Test
-  def gap() {
+  def gap(): Unit = {
     assertTokens("Foo Bar", "token(Foo), token(Bar)")
   }
 
   @Test
-  def span() {
+  def span(): Unit = {
     val s = "FooBar"
     val tokens = MockLexer.analyze(s)
     assertEquals(Span(s, 0, 3), tokens.next().span)
@@ -67,14 +67,14 @@ class MockLexerTest {
   }
 
   @Test
-  def gapSpan() {
+  def gapSpan(): Unit = {
     val s = "Foo Bar"
     val tokens = MockLexer.analyze(s)
     assertEquals(Span(s, 0, 3), tokens.next().span)
     assertEquals(Span(s, 4, 7), tokens.next().span)
   }
 
-  def assertTokens(input: String, expectation: String) {
+  def assertTokens(input: String, expectation: String): Unit = {
     assertEquals(expectation, MockLexer.analyze(input).map(_.toCompleteString).mkString(", "))
   }
 }

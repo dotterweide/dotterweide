@@ -22,7 +22,7 @@ import com.pavelfatin.toyide.inspection.{Mark, Inspection}
 import com.pavelfatin.toyide.node.{Expression, Node}
 
 object PrefixApplication extends Inspection {
-  val Message = "Operator '%s' cannot be applied to '%s'".format(_: String, _: String)
+  val Message: (String, String) => String = "Operator '%s' cannot be applied to '%s'".format(_: String, _: String)
 
   def inspect(node: Node): Seq[Mark] = node match {
     case prefix @ PrefixExpression(Some(token), Some(Expression(expType))) if prefix.nodeType.isEmpty =>

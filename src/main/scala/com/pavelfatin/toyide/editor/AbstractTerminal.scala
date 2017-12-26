@@ -28,9 +28,9 @@ trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
 
   private var _highlights: Seq[Interval] = Seq.empty
 
-  def offset = _offset
+  def offset: Int = _offset
 
-  def offset_=(i: Int) {
+  def offset_=(i: Int): Unit = {
     if (_offset != i) {
       val previous = _offset
     _offset = i
@@ -38,9 +38,9 @@ trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
     }
   }
 
-  def selection = _selection
+  def selection: Option[Interval] = _selection
 
-  def selection_=(s: Option[Interval]) {
+  def selection_=(s: Option[Interval]): Unit = {
     if (_selection != s) {
       val previous = _selection
       _selection = s
@@ -48,9 +48,9 @@ trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
     }
   }
 
-  def hover = _hover
+  def hover: Option[Int] = _hover
 
-  def hover_=(i: Option[Int]) {
+  def hover_=(i: Option[Int]): Unit = {
     if (_hover != i) {
       val previous = _hover
       _hover = i
@@ -58,9 +58,9 @@ trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
     }
   }
 
-  def highlights = _highlights
+  def highlights: Seq[Interval] = _highlights
 
-  def highlights_=(hs: Seq[Interval]) {
+  def highlights_=(hs: Seq[Interval]): Unit = {
     if (_highlights != hs) {
       val previous = _highlights
       _highlights = hs

@@ -33,7 +33,7 @@ class InterpretAction(title0: String, mnemonic0: Char, shortcut: String, data: D
     enabled = !launcher.active
   }
 
-  def apply() {
+  def apply(): Unit = {
     data.compute()
     if (!data.hasFatalErrors) {
       data.structure.foreach { root =>

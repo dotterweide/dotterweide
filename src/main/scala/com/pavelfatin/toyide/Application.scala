@@ -32,13 +32,13 @@ object Application extends SwingApplication {
 
   private val Languages = Seq(ToyLanguage, LispLanguage)
 
-  override def startup(args: Array[String]) {
+  override def startup(args: Array[String]): Unit = {
     UIManager.setLookAndFeel(LookAndFeel)
 
     // Workaround for https://bugs.openjdk.java.net/browse/JDK-8134828
     UIManager.put("ScrollBar.minimumThumbSize", new Dimension(32, 32))
 
-    selectLanguage().foreach(openMainFrame(_))
+    selectLanguage().foreach(openMainFrame)
   }
 
   private def selectLanguage(): Option[Language] = {
@@ -47,14 +47,14 @@ object Application extends SwingApplication {
     dialog.selection
   }
 
-  private def openMainFrame(language: Language) {
+  private def openMainFrame(language: Language): Unit = {
     val code = language.examples.headOption.fold("")(_.code)
     val frame = new MainFrame(language, code)
     frame.preferredSize = new Dimension(874, 696)
     open(frame)
   }
 
-  private def open(window: Window) {
+  private def open(window: Window): Unit = {
     window.pack()
     window.centerOnScreen()
     window.open()

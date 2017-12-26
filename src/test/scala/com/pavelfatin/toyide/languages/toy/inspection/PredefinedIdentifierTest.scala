@@ -23,7 +23,7 @@ import com.pavelfatin.toyide.Helpers._
 
 class PredefinedIdentifierTest extends InspectionTestBase(PredefinedIdentifier) {
   @Test
-  def variable() {
+  def variable(): Unit = {
     assertMatches(marksIn("var v: integer = 1;")) {
       case Nil =>
     }
@@ -36,7 +36,7 @@ class PredefinedIdentifierTest extends InspectionTestBase(PredefinedIdentifier) 
   }
 
   @Test
-  def parameter() {
+  def parameter(): Unit = {
     assertMatches(marksIn("def f(p: integer): integer = {}")) {
       case Nil =>
     }
@@ -49,7 +49,7 @@ class PredefinedIdentifierTest extends InspectionTestBase(PredefinedIdentifier) 
   }
 
   @Test
-  def function() {
+  def function(): Unit = {
     assertMatches(marksIn("def f(): integer = {}")) {
       case Nil =>
     }
