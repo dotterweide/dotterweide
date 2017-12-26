@@ -17,16 +17,16 @@
 
 package com.pavelfatin.toyide.languages.toy.inspection
 
-import com.pavelfatin.toyide.node._
-import com.pavelfatin.toyide.languages.toy.node._
-import com.pavelfatin.toyide.inspection.{Mark, Inspection}
+import com.pavelfatin.toyide.inspection.{Inspection, Mark}
 import com.pavelfatin.toyide.languages.toy.ToyType._
+import com.pavelfatin.toyide.languages.toy.node._
+import com.pavelfatin.toyide.node._
 
 object Applicability extends Inspection {
-  val Mismatch: (String, String) => String = "Type mismatch, expected: %s, actual: %s".format(_: String, _: String)
-  val Missed: (String, String) => String = "Function %s: unspecified parameters: %s".format(_: String, _: String)
-  val Excessive: String => String = "Function %s: excessive argument".format(_: String)
-  val Void = "Void argument"
+  val Mismatch  : (String, String) => String  = "Type mismatch, expected: %s, actual: %s".format(_: String, _: String)
+  val Missed    : (String, String) => String  = "Function %s: unspecified parameters: %s".format(_: String, _: String)
+  val Excessive : String => String            = "Function %s: excessive argument".format(_: String)
+  val Void                                    = "Void argument"
 
   def inspect(node: Node): Seq[Mark] = node match {
     case call: CallExpression =>
@@ -57,8 +57,8 @@ object Applicability extends Inspection {
         Some(Mark(brace, Missed(function.name, missed.flatMap(_.id).map(_.span.text).mkString(", "))))
     }
 
-    val excessives = excessive.map(Mark(_, Excessive(function.name)))
+    val excessiveMarks = excessive.map(Mark(_, Excessive(function.name)))
 
-    mismatches ++ excessives ++ missedMark.toSeq
+    mismatches ++ excessiveMarks ++ missedMark.toSeq
   }
 }

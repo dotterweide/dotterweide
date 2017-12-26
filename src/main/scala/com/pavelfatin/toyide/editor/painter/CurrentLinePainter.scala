@@ -17,9 +17,9 @@
 
 package com.pavelfatin.toyide.editor.painter
 
-import java.awt._
+import java.awt.{Graphics, Rectangle}
 
-import com.pavelfatin.toyide.editor._
+import com.pavelfatin.toyide.editor.{CaretMovement, Coloring}
 
 private class CurrentLinePainter(context: PainterContext) extends AbstractPainter(context) {
   def id = "current line"

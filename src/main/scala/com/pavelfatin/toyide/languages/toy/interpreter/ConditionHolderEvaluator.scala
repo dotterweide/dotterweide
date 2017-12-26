@@ -17,17 +17,16 @@
 
 package com.pavelfatin.toyide.languages.toy.interpreter
 
-import com.pavelfatin.toyide.languages.toy.node.ConditionHolder
-import com.pavelfatin.toyide.languages.toy.interpreter.ToyValue._
-import com.pavelfatin.toyide.interpreter._
-import com.pavelfatin.toyide.node.Node
 import com.pavelfatin.toyide.Output
+import com.pavelfatin.toyide.interpreter.{Context, ValueType}
+import com.pavelfatin.toyide.languages.toy.interpreter.ToyValue._
+import com.pavelfatin.toyide.languages.toy.node.ConditionHolder
+import com.pavelfatin.toyide.node.Node
 
 trait ConditionHolderEvaluator extends ExpressionHolderEvaluator { self: ConditionHolder with Node =>
-  protected def evaluateCondition(context: Context, output: Output): Boolean = {
+  protected def evaluateCondition(context: Context, output: Output): Boolean =
     evaluateExpression(context, output) match {
       case BooleanValue(b) => b
       case ValueType(t) => interrupt(context, "Wrong type (%s) for condition: %s", t.presentation, span.text)
     }
-  }
 }

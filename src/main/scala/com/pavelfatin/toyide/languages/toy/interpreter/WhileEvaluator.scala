@@ -17,9 +17,9 @@
 
 package com.pavelfatin.toyide.languages.toy.interpreter
 
-import com.pavelfatin.toyide.languages.toy.node.While
-import com.pavelfatin.toyide.interpreter._
 import com.pavelfatin.toyide.Output
+import com.pavelfatin.toyide.interpreter.{Context, Value}
+import com.pavelfatin.toyide.languages.toy.node.While
 
 trait WhileEvaluator extends ConditionHolderEvaluator { self: While =>
   override def evaluate(context: Context, output: Output): Option[Value] = {

@@ -22,7 +22,7 @@ import java.awt.event.{KeyEvent, MouseEvent}
 
 import com.pavelfatin.toyide.Interval
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor._
+import com.pavelfatin.toyide.editor.{ActionFinished, ActionStarted, Adviser, Data, EditorActions, Grid, History, Terminal}
 import com.pavelfatin.toyide.formatter.Formatter
 import com.pavelfatin.toyide.node.{IdentifiedNode, Node}
 

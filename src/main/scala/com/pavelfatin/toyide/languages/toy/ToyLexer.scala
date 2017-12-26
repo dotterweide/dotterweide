@@ -17,9 +17,9 @@
 
 package com.pavelfatin.toyide.languages.toy
 
-import com.pavelfatin.toyide.lexer.{AbstractTokenIterator, Token, Lexer}
+import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.lexer.Tokens._
-import ToyTokens._
+import com.pavelfatin.toyide.lexer.{AbstractTokenIterator, Lexer, Token}
 
 object ToyLexer extends Lexer {
   def analyze(input: CharSequence): Iterator[Token] = new TokenIterator(input)
@@ -37,12 +37,12 @@ private class TokenIterator(input: CharSequence) extends AbstractTokenIterator(i
     if (char == '!' && isAhead('=')) return Token(BANG_EQ, captureChars(2))
 
     if (char == ':') return Token(COLON, captureChar)
-    if (char == ';') return Token(SEMI, captureChar)
+    if (char == ';') return Token(SEMI , captureChar)
     if (char == ',') return Token(COMMA, captureChar)
 
-    if (char == '+') return Token(PLUS, captureChar)
+    if (char == '+') return Token(PLUS , captureChar)
     if (char == '-') return Token(MINUS, captureChar)
-    if (char == '*') return Token(STAR, captureChar)
+    if (char == '*') return Token(STAR , captureChar)
     if (char == '/') {
       if (isAhead('/')) {
         mark()

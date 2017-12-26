@@ -33,7 +33,7 @@ private class LinedString private (val lines: List[CharSequence]) extends CharSe
   def concat(other: LinedString): LinedString = new LinedString(join(lines, other.lines))
 
   def replace(start: Int, end: Int, s: String): LinedString =
-    new LinedString(replace(start, end, LinedString.parseLines(s)))
+    new LinedString(replace(start, end, parseLines(s)))
 
   lazy val wraps: Seq[Int] = wrapsIn(lines, 0)
 

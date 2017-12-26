@@ -19,7 +19,7 @@ package com.pavelfatin.toyide.languages.lisp.parameters
 
 import com.pavelfatin.toyide.languages.lisp.value.{Expression, ListValue}
 
-import scala.Function._
+import scala.Function.const
 
 private class ParameterList(singularParameters: Seq[Parameters], pluralParameter: Option[Parameters]) extends AbstractParameters {
   protected def bind0(argument: Expression): Map[String, Expression] = {

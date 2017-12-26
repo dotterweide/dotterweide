@@ -1,7 +1,7 @@
 package com.pavelfatin.toyide.editor.painter
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor._
+import com.pavelfatin.toyide.editor.{ActionProcessor, BraceMatcher, Canvas, Coloring, Data, ErrorHolder, Grid, Terminal}
 import com.pavelfatin.toyide.lexer.Lexer
 
 object PainterFactory {

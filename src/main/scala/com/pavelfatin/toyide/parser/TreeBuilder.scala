@@ -17,8 +17,8 @@
 
 package com.pavelfatin.toyide.parser
 
-import com.pavelfatin.toyide.lexer._
 import com.pavelfatin.toyide.Span
+import com.pavelfatin.toyide.lexer.{Token, TokenKind, Tokens}
 import com.pavelfatin.toyide.node.NodeImpl
 
 class TreeBuilder(input: Iterator[Token]) {

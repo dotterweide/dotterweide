@@ -17,11 +17,11 @@
 
 package com.pavelfatin.toyide.languages.toy.interpreter
 
+import com.pavelfatin.toyide.Output
+import com.pavelfatin.toyide.interpreter.{Context, Value}
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.languages.toy.interpreter.ToyValue._
 import com.pavelfatin.toyide.languages.toy.node.Literal
-import com.pavelfatin.toyide.interpreter._
-import com.pavelfatin.toyide.Output
 
 trait LiteralEvaluator extends ToyEvaluable { self: Literal =>
   override def evaluate(context: Context, output: Output): Option[Value] = {
@@ -31,9 +31,9 @@ trait LiteralEvaluator extends ToyEvaluable { self: Literal =>
       interrupt(context, "Unable to determine token kind for literal", span.text))
 
     val value = kind match {
-      case STRING_LITERAL => parseStringValue(s)
-      case NUMBER_LITERAL => parseIntegerValue(s, context)
-      case BOOLEAN_LITERAL => parseBooleanValue(s, context)
+      case STRING_LITERAL   => parseStringValue(s)
+      case NUMBER_LITERAL   => parseIntegerValue(s, context)
+      case BOOLEAN_LITERAL  => parseBooleanValue(s, context)
       case it => interrupt(context, "Unknown literal token: %s", it)
     }
 
@@ -56,9 +56,9 @@ trait LiteralEvaluator extends ToyEvaluable { self: Literal =>
 
   private def parseBooleanValue(s: String, context: Context) = {
     val b = s match {
-      case "true" => true
-      case "false" => false
-      case _ => interrupt(context, "Wrong boolean literal: %s", s)
+      case "true"   => true
+      case "false"  => false
+      case _        => interrupt(context, "Wrong boolean literal: %s", s)
     }
     BooleanValue(b)
   }

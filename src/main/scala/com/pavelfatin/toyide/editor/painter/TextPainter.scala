@@ -23,8 +23,8 @@ import java.text.AttributedString
 
 import com.pavelfatin.toyide.Interval
 import com.pavelfatin.toyide.document.Location
-import com.pavelfatin.toyide.editor._
 import com.pavelfatin.toyide.editor.painter.TextPainter._
+import com.pavelfatin.toyide.editor.{Area, Coloring, Pass}
 import com.pavelfatin.toyide.lexer.{Lexer, Token}
 
 private class TextPainter(context: PainterContext, lexer: Lexer,

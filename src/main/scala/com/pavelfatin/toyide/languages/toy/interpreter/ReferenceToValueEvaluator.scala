@@ -18,7 +18,7 @@
 package com.pavelfatin.toyide.languages.toy.interpreter
 
 import com.pavelfatin.toyide.Output
-import com.pavelfatin.toyide.interpreter._
+import com.pavelfatin.toyide.interpreter.{Context, Value}
 import com.pavelfatin.toyide.languages.toy.node._
 
 trait ReferenceToValueEvaluator extends ToyEvaluable { self: ReferenceToValue =>
@@ -28,7 +28,7 @@ trait ReferenceToValueEvaluator extends ToyEvaluable { self: ReferenceToValue =>
 
     def local = node match {
       case v: VariableDeclaration => v.local
-      case _: Parameter => true
+      case _: Parameter           => true
       case _ => interrupt(context, "Non-value target for reference %s: %s", identifier, node.span.text)
     }
 

@@ -17,10 +17,10 @@
 
 package com.pavelfatin.toyide.languages.toy.node
 
-import com.pavelfatin.toyide.node._
 import com.pavelfatin.toyide.Extensions._
-import com.pavelfatin.toyide.languages.toy.interpreter._
-import com.pavelfatin.toyide.languages.toy.compiler._
+import com.pavelfatin.toyide.languages.toy.compiler.ScopeTranslator
+import com.pavelfatin.toyide.languages.toy.interpreter.ScopeEvaluator
+import com.pavelfatin.toyide.node._
 
 trait Scope extends Node with ScopeEvaluator with ScopeTranslator {
   def canRedefineOuterDeclarations: Boolean = parent match {

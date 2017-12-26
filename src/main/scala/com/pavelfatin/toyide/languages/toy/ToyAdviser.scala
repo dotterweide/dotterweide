@@ -17,27 +17,20 @@
 
 package com.pavelfatin.toyide.languages.toy
 
-import com.pavelfatin.toyide.editor.{Variant, Adviser}
 import com.pavelfatin.toyide.Extensions._
-import node._
+import com.pavelfatin.toyide.editor.{Adviser, Variant}
+import com.pavelfatin.toyide.languages.toy.node._
 import com.pavelfatin.toyide.node.{Expression, Node}
 
 object ToyAdviser extends Adviser {
-  private val PredefinedFunctions = List("print", "println").map(asFunction)
-
-  private val DefinitionKeywords = List("def", "var").map(asKeyword)
-
-  private val ControlKeywords = List("if", "while").map(asControl)
-
-  private val ElseKeyword = List("else").map(asKeyword)
-
-  private val ReturnKeyword = List("return").map(asLiteral)
-
-  private val TypeKeywords = List("string", "integer", "boolean").map(asLiteral)
-
-  private val FunctionTypeKeywords = List("void", "string", "integer", "boolean").map(asKeyword)
-
-  private val BooleanLiterals = List("true", "false").map(asLiteral)
+  private val PredefinedFunctions   = List("print", "println").map(asFunction)
+  private val DefinitionKeywords    = List("def", "var").map(asKeyword)
+  private val ControlKeywords       = List("if", "while").map(asControl)
+  private val ElseKeyword           = List("else").map(asKeyword)
+  private val ReturnKeyword         = List("return").map(asLiteral)
+  private val TypeKeywords          = List("string", "integer", "boolean").map(asLiteral)
+  private val FunctionTypeKeywords  = List("void", "string", "integer", "boolean").map(asKeyword)
+  private val BooleanLiterals       = List("true", "false").map(asLiteral)
 
   def variants(root: Node, anchor: Node): Seq[Variant] = {
     val holders = anchor.parents.filterNot(_.isLeaf)
@@ -78,12 +71,8 @@ object ToyAdviser extends Adviser {
   }
 
   private def asFunction(name: String) = Variant(name, name.formatted("%s()"), -1)
-
-  private def asValue(name: String) = Variant(name, name, 0)
-
-  private def asLiteral(name: String) = Variant(name, name, 0)
-
-  private def asKeyword(name: String) = Variant(name, name.formatted("%s "), 0)
-
-  private def asControl(name: String) = Variant(name, name.formatted("%s ()"), -1)
+  private def asValue   (name: String) = Variant(name, name, 0)
+  private def asLiteral (name: String) = Variant(name, name, 0)
+  private def asKeyword (name: String) = Variant(name, name.formatted("%s "), 0)
+  private def asControl (name: String) = Variant(name, name.formatted("%s ()"), -1)
 }

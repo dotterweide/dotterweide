@@ -17,12 +17,12 @@
 
 package com.pavelfatin.toyide.languages.toy.node
 
-import com.pavelfatin.toyide.node._
-import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.Extensions._
+import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.languages.toy.ToyType
-import com.pavelfatin.toyide.languages.toy.interpreter._
-import com.pavelfatin.toyide.languages.toy.compiler._
+import com.pavelfatin.toyide.languages.toy.compiler.{AssignmentTranslator, CallTranslator, IfTranslator, ReturnTranslator, WhileTranslator}
+import com.pavelfatin.toyide.languages.toy.interpreter.{AssignmentEvaluator, CallEvaluator, IfEvaluator, ReturnEvaluator, WhileEvaluator}
+import com.pavelfatin.toyide.node._
 
 class Assignment extends NodeImpl("assignment")
 with ExpressionHolder with AssignmentEvaluator with AssignmentTranslator {

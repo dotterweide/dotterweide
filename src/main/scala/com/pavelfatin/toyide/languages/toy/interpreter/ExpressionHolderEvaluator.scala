@@ -17,10 +17,10 @@
 
 package com.pavelfatin.toyide.languages.toy.interpreter
 
-import com.pavelfatin.toyide.interpreter._
+import com.pavelfatin.toyide.Output
+import com.pavelfatin.toyide.interpreter.{Context, Value}
 import com.pavelfatin.toyide.languages.toy.node.ExpressionHolder
 import com.pavelfatin.toyide.node.Node
-import com.pavelfatin.toyide.Output
 
 trait ExpressionHolderEvaluator extends ToyEvaluable { self: ExpressionHolder with Node =>
   protected def evaluateExpression(context: Context, output: Output): Value = {

@@ -22,7 +22,7 @@ import java.awt.{Color, Graphics, Rectangle}
 import java.io
 
 import com.pavelfatin.toyide.Interval
-import com.pavelfatin.toyide.editor._
+import com.pavelfatin.toyide.editor.HoverChange
 import com.pavelfatin.toyide.node.ReferenceNode
 
 private class HoverPainter(context: PainterContext) extends AbstractPainter(context) with Decorator {

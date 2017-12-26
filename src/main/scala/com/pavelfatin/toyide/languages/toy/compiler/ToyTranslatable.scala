@@ -18,8 +18,8 @@
 package com.pavelfatin.toyide.languages.toy.compiler
 
 import com.pavelfatin.toyide.Extensions._
-import com.pavelfatin.toyide.compiler._
-import com.pavelfatin.toyide.node._
+import com.pavelfatin.toyide.compiler.{Translatable, TranslationException}
+import com.pavelfatin.toyide.node.Node
 
 trait ToyTranslatable extends Translatable { self: Node =>
   protected def interrupt(message: String, values: Any*): Nothing =

@@ -17,10 +17,10 @@
 
 package com.pavelfatin.toyide.languages.toy.interpreter
 
-import com.pavelfatin.toyide.node.Node
-import com.pavelfatin.toyide.languages.toy.node.FunctionDeclaration
-import com.pavelfatin.toyide.interpreter.{Place, Context, EvaluationException}
 import com.pavelfatin.toyide.Extensions._
+import com.pavelfatin.toyide.interpreter.{Context, EvaluationException, Place}
+import com.pavelfatin.toyide.languages.toy.node.FunctionDeclaration
+import com.pavelfatin.toyide.node.Node
 
 trait ToyEvaluable { self: Node =>
   protected def interrupt(context: Context, message: String, values: Any*) =

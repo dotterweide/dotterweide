@@ -28,7 +28,7 @@ trait AbstractParameters extends Parameters {
 
   protected def bind0(argument: Expression): Map[String, Expression]
 
-  protected def error(message: String) = throw new BindingException(message)
+  protected def error(message: String): Nothing = throw new BindingException(message)
 
   private class BindingException(message: String) extends Exception(message)
 }

@@ -21,7 +21,7 @@ import java.awt.{Graphics, Rectangle}
 
 import com.pavelfatin.toyide.Interval
 import com.pavelfatin.toyide.document.AnchoredInterval
-import com.pavelfatin.toyide.editor._
+import com.pavelfatin.toyide.editor.{ActionProcessor, Area, BraceMatcher, BraceType, CaretMovement, Coloring, DataEvent, FocusChanged, Inapplicable, Paired, Pass, SelectionChange, Unbalanced, VisibleRectangleChanged}
 import com.pavelfatin.toyide.lexer.Token
 
 private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
@@ -69,8 +69,8 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
 
   private def matchIntervalsIn(tokens: Seq[Token], offset: Int) = tokens.flatMap { token =>
     matcher.braceTypeOf(token, data.tokens, offset) match {
-      case Paired => Seq((token.span, Paired))
-      case Unbalanced => Seq((token.span, Unbalanced))
+      case Paired       => Seq((token.span, Paired))
+      case Unbalanced   => Seq((token.span, Unbalanced))
       case Inapplicable => Seq.empty
     }
   }

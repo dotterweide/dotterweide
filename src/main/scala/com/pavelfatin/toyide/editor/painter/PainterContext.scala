@@ -18,7 +18,7 @@
 package com.pavelfatin.toyide.editor.painter
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor._
+import com.pavelfatin.toyide.editor.{Canvas, Coloring, Data, Grid, Terminal}
 
 private case class PainterContext(document: Document, terminal: Terminal, data: Data,
                                   canvas: Canvas, grid: Grid, coloring: Coloring)

@@ -19,7 +19,7 @@ package com.pavelfatin.toyide.editor
 
 import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.inspection.{Inspection, Mark}
-import com.pavelfatin.toyide.lexer._
+import com.pavelfatin.toyide.lexer.{Lexer, Token}
 import com.pavelfatin.toyide.node.Node
 import com.pavelfatin.toyide.parser.Parser
 

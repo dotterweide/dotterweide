@@ -17,12 +17,12 @@
 
 package com.pavelfatin.toyide.languages.lisp.value
 
-import java.io._
+import java.io.{BufferedInputStream, BufferedOutputStream, File, FileInputStream, FileOutputStream, InputStream, OutputStream}
 import java.net.Socket
 
 import com.pavelfatin.toyide.interpreter.Value
 import com.pavelfatin.toyide.languages.lisp.LispType
-import com.pavelfatin.toyide.languages.lisp.value.AbstractHandleValue._
+import com.pavelfatin.toyide.languages.lisp.value.AbstractHandleValue.readAll
 import com.pavelfatin.toyide.node.NodeType
 
 import scala.annotation.tailrec
@@ -40,9 +40,8 @@ trait HandleValue extends Value with EvaluableToSelf {
 }
 
 abstract class AbstractHandleValue(name: String, input: InputStream, output: OutputStream) extends HandleValue {
-  private val bufferedInput = new BufferedInputStream(input)
-
-  private val bufferedOutput = new BufferedOutputStream(output)
+  private val bufferedInput   = new BufferedInputStream (input )
+  private val bufferedOutput  = new BufferedOutputStream(output)
 
   def presentation: String = name
 

@@ -19,7 +19,7 @@ package com.pavelfatin.toyide.editor.painter
 
 import java.awt.{Graphics, Rectangle}
 
-import com.pavelfatin.toyide.editor._
+import com.pavelfatin.toyide.editor.{CaretMovement, CaretVisibilityChanged, Coloring}
 
 private class CaretPainter(context: PainterContext) extends AbstractPainter(context) {
   def id = "caret"

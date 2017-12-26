@@ -21,8 +21,8 @@ import java.awt.event.{KeyEvent, MouseAdapter, MouseEvent}
 import javax.swing.table.AbstractTableModel
 import javax.swing.{JComponent, JTable, KeyStroke, ListSelectionModel}
 
-import scala.swing._
 import scala.swing.event.WindowClosing
+import scala.swing.{Action, BorderPanel, Button, Component, Dialog, Dimension, FlowPanel, ScrollPane, Swing}
 
 class LanguageDialog(languages: Seq[Language]) extends Dialog {
   private val table         = new JTable(LanguageTableModel)

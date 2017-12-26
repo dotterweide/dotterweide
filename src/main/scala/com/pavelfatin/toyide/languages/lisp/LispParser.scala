@@ -23,13 +23,12 @@ import com.pavelfatin.toyide.lexer.TokenKind
 import com.pavelfatin.toyide.parser.{Parser, TreeBuilder}
 
 object LispParser extends Parser {
-  def parse(in: TreeBuilder): Unit = {
+  def parse(in: TreeBuilder): Unit =
     in.capturing(new ProgramNode()) {
       while(!in.isEOF) expression(in)
     }
-  }
 
-  def expression(in: TreeBuilder): Unit = {
+  def expression(in: TreeBuilder): Unit =
     if (in.matches(COMMENT)) {
       comment(in)
     } else if (matches(in, LPAREN)) {
@@ -50,15 +49,13 @@ object LispParser extends Parser {
       in.error("Expression expected")
       if (!in.isEOF) in.advance()
     }
-  }
 
-  def comment(in: TreeBuilder): Unit = {
+  def comment(in: TreeBuilder): Unit =
     in.capturing(new CommentNode()) {
       in.consume(COMMENT)
     }
-  }
 
-  def list(in: TreeBuilder, leftBound: TokenKind, rightBound: TokenKind): Unit = {
+  def list(in: TreeBuilder, leftBound: TokenKind, rightBound: TokenKind): Unit =
     in.capturing(new ListNode()) {
       in.grasp(Prefixes: _*)
       in.consume(leftBound)
@@ -68,42 +65,36 @@ object LispParser extends Parser {
       }
       in.consume(rightBound)
     }
-  }
 
-  def integer(in: TreeBuilder): Unit = {
+  def integer(in: TreeBuilder): Unit =
     in.capturing(new IntegerLiteralNode()) {
       in.grasp(Prefixes: _*)
       in.consume(INTEGER_LITERAL)
     }
-  }
 
-  def boolean(in: TreeBuilder): Unit = {
+  def boolean(in: TreeBuilder): Unit =
     in.capturing(new BooleanLiteralNode()) {
       in.grasp(Prefixes: _*)
       in.consume(BOOLEAN_LITERAL)
     }
-  }
 
-  def character(in: TreeBuilder): Unit = {
+  def character(in: TreeBuilder): Unit =
     in.capturing(new CharacterLiteralNode()) {
       in.grasp(Prefixes: _*)
       in.consume(CHARACTER_LITERAL)
     }
-  }
 
-  def string(in: TreeBuilder): Unit = {
+  def string(in: TreeBuilder): Unit =
     in.capturing(new StringLiteralNode()) {
       in.grasp(Prefixes: _*)
       in.consume(STRING_LITERAL)
     }
-  }
 
-  def symbol(in: TreeBuilder): Unit = {
+  def symbol(in: TreeBuilder): Unit =
     in.capturing(new SymbolNode()) {
       in.grasp(Prefixes: _*)
       in.consume(CUSTOM_SYMBOL, PREDEFINED_SYMBOL)
     }
-  }
 
   private def matches(in: TreeBuilder, kinds: TokenKind*): Boolean =
     in.matches(Prefixes: _*) && in.ahead(kinds: _*) || in.matches(kinds: _*)

@@ -17,14 +17,14 @@
 
 package com.pavelfatin.toyide.languages.toy.node
 
-import com.pavelfatin.toyide.node._
-import com.pavelfatin.toyide.lexer.TokenKind
-import com.pavelfatin.toyide.languages.toy.ToyType._
-import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.Extensions._
+import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.languages.toy.ToyType
-import com.pavelfatin.toyide.languages.toy.interpreter._
-import com.pavelfatin.toyide.languages.toy.compiler._
+import com.pavelfatin.toyide.languages.toy.ToyType._
+import com.pavelfatin.toyide.languages.toy.compiler.{FunctionDeclarationTranslator, VariableDeclarationTranslator}
+import com.pavelfatin.toyide.languages.toy.interpreter.VariableDeclarationEvaluator
+import com.pavelfatin.toyide.lexer.TokenKind
+import com.pavelfatin.toyide.node._
 
 class Block extends NodeImpl("block") with Scope
 

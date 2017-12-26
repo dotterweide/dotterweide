@@ -21,8 +21,8 @@ import java.awt.font.TextAttribute
 import java.awt.{Color, Graphics, Rectangle}
 
 import com.pavelfatin.toyide.Interval
-import com.pavelfatin.toyide.editor._
 import com.pavelfatin.toyide.editor.painter.ErrorPainter._
+import com.pavelfatin.toyide.editor.{Coloring, Error, ErrorHolder, ErrorsChanged}
 import com.pavelfatin.toyide.inspection.Decoration
 
 private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends AbstractPainter(context) with Decorator {

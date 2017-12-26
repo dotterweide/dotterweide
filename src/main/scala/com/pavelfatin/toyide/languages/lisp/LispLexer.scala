@@ -36,10 +36,8 @@ private class TokenIterator(input: CharSequence) extends AbstractTokenIterator(i
         return Token(COMMENT, marked)
     }
 
-    if (char == ',') return Token(COMMA, captureChar)
-
-    if (char == '#') return Token(HASH, captureChar)
-    
+    if (char == ',' ) return Token(COMMA, captureChar)
+    if (char == '#' ) return Token(HASH , captureChar)
     if (char == '\'') return Token(QUOTE, captureChar)
 
     if (char == '~') {

@@ -20,11 +20,11 @@ package com.pavelfatin.toyide.ide
 import javax.swing.KeyStroke
 
 import com.pavelfatin.toyide.Example
-import com.pavelfatin.toyide.editor._
-import com.pavelfatin.toyide.ide.action._
+import com.pavelfatin.toyide.editor.{AnAction, Data, EditorActions, Runner}
+import com.pavelfatin.toyide.ide.action.{ColoringAction, ExampleAction, ExportToClassAction, InterpretAction, InvokeAction, NewAction, OpenAction, SaveAction, SaveAsAction, StopAction}
 
-import scala.swing.{Action, CheckMenuItem, Component, Dimension, Frame, Menu, MenuBar, MenuItem, RadioMenuItem, Separator}
 import scala.swing.event.Key
+import scala.swing.{Action, CheckMenuItem, Component, Dimension, Frame, Menu, MenuBar, MenuItem, RadioMenuItem, Separator}
 
 private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Runner, invoker: Runner, launcher: Launcher,
                        console: Console, coloring: DynamicColoring, examples: Seq[Example]) extends MenuBar {

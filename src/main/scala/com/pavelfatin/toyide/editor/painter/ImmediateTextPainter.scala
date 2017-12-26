@@ -19,11 +19,10 @@ package com.pavelfatin.toyide.editor.painter
 
 import java.awt.font.TextAttribute
 import java.awt.{Color, Graphics, Rectangle}
-import java.lang.Math._
 import java.text.AttributedString
 
 import com.pavelfatin.toyide.document.Replacement
-import com.pavelfatin.toyide.editor._
+import com.pavelfatin.toyide.editor.{ActionFinished, ActionProcessor, ActionStarted, Adviser, Area, Coloring}
 import com.pavelfatin.toyide.lexer.Lexer
 
 private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, processor: ActionProcessor) extends AbstractPainter(context) {
@@ -55,7 +54,8 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
         val lengthAfter   = replacement.after .length
         val endAfter      = replacement.begin + lengthAfter
 
-        val rectangle = rectangleFrom(replacement.begin, max(lengthBefore, lengthAfter) + tailLengthFrom(endAfter) + 1)
+        val rectangle = rectangleFrom(replacement.begin,
+          math.max(lengthBefore, lengthAfter) + tailLengthFrom(endAfter) + 1)
         notifyObservers(rectangle)
       }
     }
@@ -131,7 +131,7 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
     }
 
     g.setColor(coloring(Coloring.CaretForeground))
-    fill(g, caretRectangleAt(terminal.offset + max(0, delta)))
+    fill(g, caretRectangleAt(terminal.offset + math.max(0, delta)))
   }
 
   private def backgroundColorAt(offset: Int): Color = {

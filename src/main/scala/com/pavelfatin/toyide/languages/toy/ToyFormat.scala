@@ -19,8 +19,8 @@ package com.pavelfatin.toyide.languages.toy
 
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.lexer.TokenKind
-import com.pavelfatin.toyide.formatter._
 import com.pavelfatin.toyide.formatter.Distance._
+import com.pavelfatin.toyide.formatter.{Distance, Format}
 
 object ToyFormat extends Format {
   def distanceFor(a: TokenKind, b: TokenKind): Distance = (a, b) match {

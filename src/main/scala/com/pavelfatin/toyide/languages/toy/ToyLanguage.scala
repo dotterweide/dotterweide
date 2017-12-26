@@ -17,12 +17,13 @@
 
 package com.pavelfatin.toyide.languages.toy
 
-import com.pavelfatin.toyide.editor.{Adviser, ColorScheme}
+import com.pavelfatin.toyide.editor.{Adviser, ColorScheme, Coloring}
 import com.pavelfatin.toyide.formatter.Format
+import com.pavelfatin.toyide.inspection.Inspection
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.languages.toy.inspection._
 import com.pavelfatin.toyide.languages.toy.parser.ProgramParser
-import com.pavelfatin.toyide.lexer.Lexer
+import com.pavelfatin.toyide.lexer.{Lexer, TokenKind}
 import com.pavelfatin.toyide.parser.Parser
 import com.pavelfatin.toyide.{Example, FileType, Language}
 
@@ -35,17 +36,17 @@ object ToyLanguage extends Language {
 
   def parser: Parser = ProgramParser
 
-  def colorings = Map(
+  def colorings: Map[String, Coloring] = Map(
     "Light" -> new ToyColoring(ColorScheme.LightColors),
     "Dark"  -> new ToyColoring(ColorScheme.DarkColors))
 
-  def complements = Seq((LBRACE, RBRACE), (LPAREN, RPAREN))
+  def complements: Seq[(TokenKind, TokenKind)] = Seq((LBRACE, RBRACE), (LPAREN, RPAREN))
 
   def format: Format = ToyFormat
 
   def comment = "//"
 
-  def inspections = Seq(ReturnOutsideFunction, DuplicateIdentifier, UnresolvedReference,
+  def inspections: Seq[Inspection] = Seq(ReturnOutsideFunction, DuplicateIdentifier, UnresolvedReference,
     VoidValue, Applicability, TypeMismatch, OperatorApplication, IntegerRange, PrefixApplication,
     MissingReturn, UnreachableStatement, UnusedDeclaration, PredefinedIdentifier, Optimization, DivisionByZero)
 

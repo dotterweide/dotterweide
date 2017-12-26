@@ -18,7 +18,7 @@
 package com.pavelfatin.toyide.languages.lisp.value
 
 import com.pavelfatin.toyide.Output
-import com.pavelfatin.toyide.interpreter._
+import com.pavelfatin.toyide.interpreter.Value
 
 trait Expression extends Value {
   def eval(environment: Environment, output: Output): Expression

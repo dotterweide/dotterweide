@@ -18,18 +18,18 @@
 package com.pavelfatin.toyide.languages.lisp
 
 import com.pavelfatin.toyide.formatter.Distance._
-import com.pavelfatin.toyide.formatter._
+import com.pavelfatin.toyide.formatter.{Distance, Format}
 import com.pavelfatin.toyide.languages.lisp.LispTokens._
 import com.pavelfatin.toyide.lexer.TokenKind
 
 object LispFormat extends Format {
   def distanceFor(a: TokenKind, b: TokenKind): Distance = (a, b) match {
-    case (LPAREN | LBRACKET, _) => Joint
-    case (_, RPAREN | RBRACKET) => Joint
-    case (RPAREN | RBRACKET, LPAREN | LBRACKET) => Lines
+    case (LPAREN | LBRACKET, _)                           => Joint
+    case (_, RPAREN | RBRACKET)                           => Joint
+    case (RPAREN | RBRACKET, LPAREN | LBRACKET)           => Lines
     case (QUOTE | TILDE | TILDE_AT | BACKQUOTE | HASH, _) => Joint
-    case (COMMENT, _) => Lines
-    case _ => Space
+    case (COMMENT, _)                                     => Lines
+    case _                                                => Space
   }
 
   def indentDeltaFor(a: TokenKind, b: TokenKind) = 0

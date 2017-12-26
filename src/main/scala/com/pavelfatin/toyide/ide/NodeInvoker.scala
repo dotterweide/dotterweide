@@ -19,7 +19,7 @@ package com.pavelfatin.toyide.ide
 
 import java.awt.Color
 
-import com.pavelfatin.toyide.compiler._
+import com.pavelfatin.toyide.compiler.{Assembler, BytecodeInvoker, InvocationException, TranslationException}
 import com.pavelfatin.toyide.editor.Runner
 import com.pavelfatin.toyide.node.Node
 

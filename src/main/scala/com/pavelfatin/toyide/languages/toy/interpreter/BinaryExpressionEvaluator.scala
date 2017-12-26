@@ -17,13 +17,13 @@
 
 package com.pavelfatin.toyide.languages.toy.interpreter
 
+import com.pavelfatin.toyide.Output
+import com.pavelfatin.toyide.interpreter.{Context, Value}
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
+import com.pavelfatin.toyide.languages.toy.ToyType._
 import com.pavelfatin.toyide.languages.toy.interpreter.ToyValue._
 import com.pavelfatin.toyide.languages.toy.node.BinaryExpression
-import com.pavelfatin.toyide.interpreter._
 import com.pavelfatin.toyide.lexer.TokenKind
-import com.pavelfatin.toyide.languages.toy.ToyType._
-import com.pavelfatin.toyide.Output
 
 trait BinaryExpressionEvaluator extends ToyEvaluable { self: BinaryExpression =>
   override def evaluate(context: Context, output: Output): Option[Value] = {
@@ -55,16 +55,16 @@ trait BinaryExpressionEvaluator extends ToyEvaluable { self: BinaryExpression =>
 
   private def evaluateValues(context: Context, leftValue: Value, kind: TokenKind, rightValue: Value) = {
     (leftValue, kind, rightValue) match {
-      case (IntegerValue(l), GT, IntegerValue(r)) => BooleanValue(l > r)
+      case (IntegerValue(l), GT   , IntegerValue(r)) => BooleanValue(l > r)
       case (IntegerValue(l), GT_EQ, IntegerValue(r)) => BooleanValue(l >= r)
-      case (IntegerValue(l), LT, IntegerValue(r)) => BooleanValue(l < r)
+      case (IntegerValue(l), LT   , IntegerValue(r)) => BooleanValue(l < r)
       case (IntegerValue(l), LT_EQ, IntegerValue(r)) => BooleanValue(l <= r)
 
-      case (StringValue(l), EQ_EQ, StringValue(r)) => BooleanValue(l == r)
+      case (StringValue (l), EQ_EQ, StringValue (r)) => BooleanValue(l == r)
       case (IntegerValue(l), EQ_EQ, IntegerValue(r)) => BooleanValue(l == r)
       case (BooleanValue(l), EQ_EQ, BooleanValue(r)) => BooleanValue(l == r)
 
-      case (StringValue(l), BANG_EQ, StringValue(r)) => BooleanValue(l != r)
+      case (StringValue (l), BANG_EQ, StringValue (r)) => BooleanValue(l != r)
       case (IntegerValue(l), BANG_EQ, IntegerValue(r)) => BooleanValue(l != r)
       case (BooleanValue(l), BANG_EQ, BooleanValue(r)) => BooleanValue(l != r)
 
@@ -74,9 +74,9 @@ trait BinaryExpressionEvaluator extends ToyEvaluable { self: BinaryExpression =>
       case (IntegerValue(l), PERCENT, IntegerValue(r)) =>
         if (r == 0) interrupt(context, "Division by zero") else IntegerValue(l % r)
 
-      case (IntegerValue(l), PLUS, IntegerValue(r)) => IntegerValue(l + r)
-      case (IntegerValue(l), MINUS, IntegerValue(r)) => IntegerValue(l - r)
-      case (StringValue(l), PLUS, r) => StringValue(l + r.presentation)
+      case (IntegerValue(l), PLUS , IntegerValue(r))  => IntegerValue(l + r)
+      case (IntegerValue(l), MINUS, IntegerValue(r))  => IntegerValue(l - r)
+      case (StringValue (l), PLUS, r)                 => StringValue(l + r.presentation)
 
       case _ => interrupt(context, "Incorrect expression: %s", span.text)
     }

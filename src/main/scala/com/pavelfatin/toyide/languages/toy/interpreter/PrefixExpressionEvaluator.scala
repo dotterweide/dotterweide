@@ -17,11 +17,11 @@
 
 package com.pavelfatin.toyide.languages.toy.interpreter
 
+import com.pavelfatin.toyide.Output
+import com.pavelfatin.toyide.interpreter.{Context, Value}
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.languages.toy.interpreter.ToyValue._
-import com.pavelfatin.toyide.interpreter._
 import com.pavelfatin.toyide.languages.toy.node.PrefixExpression
-import com.pavelfatin.toyide.Output
 
 trait PrefixExpressionEvaluator extends ToyEvaluable { self: PrefixExpression =>
   override def evaluate(context: Context, output: Output): Option[Value] = {

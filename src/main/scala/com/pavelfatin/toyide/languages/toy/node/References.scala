@@ -17,10 +17,10 @@
 
 package com.pavelfatin.toyide.languages.toy.node
 
-import com.pavelfatin.toyide.node._
 import com.pavelfatin.toyide.Extensions._
-import com.pavelfatin.toyide.languages.toy.interpreter._
-import com.pavelfatin.toyide.languages.toy.compiler._
+import com.pavelfatin.toyide.languages.toy.compiler.ReferenceToValueTranslator
+import com.pavelfatin.toyide.languages.toy.interpreter.{ReferenceToValueEvaluator, TypeCheck}
+import com.pavelfatin.toyide.node._
 
 trait ToyReference extends ReferenceNode {
   def source: Option[Node] = children.headOption
