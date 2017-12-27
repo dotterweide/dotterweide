@@ -22,11 +22,12 @@ import java.awt.Dimension
 import com.pavelfatin.toyide.ide.MainFrame
 import com.pavelfatin.toyide.languages.lisp.LispLanguage
 import com.pavelfatin.toyide.languages.toy.ToyLanguage
+import de.sciss.scalalang.ScalaLanguage
 
 import scala.swing.{SwingApplication, Window}
 
 object Application extends SwingApplication {
-  private val Languages = Seq(ToyLanguage, LispLanguage)
+  private val Languages = Seq(ScalaLanguage, ToyLanguage, LispLanguage)
 
   override def startup(args: Array[String]): Unit =
     selectLanguage().foreach(openMainFrame)

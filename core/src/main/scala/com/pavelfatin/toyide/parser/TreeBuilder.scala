@@ -158,9 +158,8 @@ class TreeBuilder(input: Iterator[Token]) {
 }
 
 trait Region {
-  def close(node: NodeImpl, collapseHolderNode: Boolean = false): Unit
-
-  def fold(node: => NodeImpl, collapseHolderNode: Boolean = false, length: Int = 3): Unit
+  def close(node:    NodeImpl, collapseHolderNode: Boolean = false): Unit
+  def fold (node: => NodeImpl, collapseHolderNode: Boolean = false, length: Int = 3): Unit
 }
 
 class NoRootNodeException             extends RuntimeException

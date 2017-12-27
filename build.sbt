@@ -20,7 +20,7 @@ lazy val testSettings = Seq(
 )
 
 lazy val root = project.in(file("."))
-  .aggregate(core, lisp, toy, ui, app)
+  .aggregate(core, lisp, toy, scalalang, ui, app)
 
 lazy val core = project.in(file("core"))
   .settings(commonSettings)
@@ -49,6 +49,14 @@ lazy val toy = project.in(file("toy"))
     name := s"$baseName - C-like imperative language"
   )
 
+lazy val scalalang = project.in(file("scalalang"))
+  .dependsOn(core % "compile->compile;test->test")
+  .settings(commonSettings)
+  .settings(testSettings)
+  .settings(
+    name := s"$baseName - Scala language"
+  )
+
 lazy val ui = project.in(file("ui"))
   .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings)
@@ -61,7 +69,7 @@ lazy val ui = project.in(file("ui"))
   )
 
 lazy val app = project.in(file("app"))
-  .dependsOn(ui, lisp, toy)
+  .dependsOn(ui, lisp, toy, scalalang)
   .settings(commonSettings)
   .settings(
     name := s"$baseName - demo application",
