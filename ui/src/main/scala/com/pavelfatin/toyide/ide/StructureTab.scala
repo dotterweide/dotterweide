@@ -54,7 +54,7 @@ private class StructureTab(data: Data, terminal: Terminal) extends BorderPanel {
     }
 
     override def focusLost(e: FocusEvent): Unit = {
-      terminal.highlights = Seq.empty
+      terminal.highlights = Nil
       tree.clearSelection()
     }
   })
@@ -62,7 +62,7 @@ private class StructureTab(data: Data, terminal: Terminal) extends BorderPanel {
   private def updateTreeHighlight(): Unit = {
     val selection = Option(tree.getSelectionPath).map(_.getLastPathComponent.asInstanceOf[TreeNodeAdapter])
     selection.map(_.delegate).foreach { node =>
-      terminal.highlights = Seq(node.span.interval)
+      terminal.highlights = node.span.interval :: Nil
     }
   }
 }

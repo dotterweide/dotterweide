@@ -42,7 +42,8 @@ class Return extends NodeImpl("return") with ExpressionHolder with ReturnEvaluat
 }
 
 object Return {
-  def unapply(r: Return) = Some((r.expression, r.expectedType))
+  def unapply(r: Return): Option[(Option[Expression], Option[ToyType])] =
+    Some((r.expression, r.expectedType))
 }
 
 class While extends NodeImpl("while") with BlockHolder with ConditionHolder with WhileEvaluator with WhileTranslator {
@@ -56,7 +57,8 @@ class If extends NodeImpl("if") with BlockHolder with ConditionHolder with IfEva
 }
 
 object If {
-  def unapply(node: If) = Some((node.expression, node.block, node.elseBlock))
+  def unapply(node: If): Option[(Option[Expression], Option[Block], Option[Block])] =
+    Some((node.expression, node.block, node.elseBlock))
 }
 
 class Call extends NodeImpl("call") with CallEvaluator with CallTranslator {

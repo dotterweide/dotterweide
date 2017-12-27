@@ -23,7 +23,7 @@ trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
   private var _offset     : Int               = 0
   private var _selection  : Option[Interval]  = None
   private var _hover      : Option[Int]       = None
-  private var _highlights : Seq[Interval]     = Seq.empty
+  private var _highlights : Seq[Interval]     = Nil
 
   def offset: Int = _offset
 

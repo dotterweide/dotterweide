@@ -33,9 +33,9 @@ object FunctionLiteral {
   }
 
   private def indicesIn(nodes: Seq[ExpressionNode]): Seq[Int] = nodes.flatMap {
-    case SymbolNode(symbol) => indexFor(symbol).toSeq
-    case ListNode(children @ _*) => indicesIn(children)
-    case _ => Seq.empty
+    case SymbolNode(symbol)       => indexFor(symbol).toSeq
+    case ListNode(children @ _*)  => indicesIn(children)
+    case _                        => Nil
   }
 
   private def indexFor(symbol: String): Option[Int] = Some(symbol) collect {
@@ -45,9 +45,9 @@ object FunctionLiteral {
   }
 
   private def parametersFor(indices: Seq[Int]): Seq[Expression] = {
-    if (indices.isEmpty) Seq.empty else
+    if (indices.isEmpty) Nil else
       Range(1, indices.max + 1).map(parameterFor) ++
-        (if (indices.contains(-1)) Seq(SymbolValue("&"), parameterFor(-1)) else Seq.empty)
+        (if (indices.contains(-1)) Seq(SymbolValue("&"), parameterFor(-1)) else Nil)
   }
 
   private def parameterFor(index: Int): Expression = {

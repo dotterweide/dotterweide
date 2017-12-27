@@ -27,7 +27,7 @@ object MissingReturn extends Inspection {
 
   def inspect(node: Node): Seq[Mark] = node match {
     case function @ FunctionBlock(block) if !function.nodeType.contains(VoidType) && block.exit.isEmpty =>
-      Seq(Mark(block.children.last, Message))
-    case _ => Seq.empty
+      Mark(block.children.last, Message) :: Nil
+    case _ => Nil
   }
 }

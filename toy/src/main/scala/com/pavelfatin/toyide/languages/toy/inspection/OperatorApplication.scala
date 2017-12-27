@@ -27,7 +27,7 @@ object OperatorApplication extends Inspection {
 
   def inspect(node: Node): Seq[Mark] = node match {
     case exp @ BinaryExpression(Expression(leftType), token, Expression(rightType)) if exp.nodeType.isEmpty =>
-      Seq(Mark(exp, Message(token.span.text, leftType.presentation, rightType.presentation)))
-    case _ => Seq.empty
+      Mark(exp, Message(token.span.text, leftType.presentation, rightType.presentation)) :: Nil
+    case _ => Nil
   }
 }

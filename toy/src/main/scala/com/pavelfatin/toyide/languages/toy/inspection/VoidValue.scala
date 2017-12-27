@@ -31,6 +31,6 @@ object VoidValue extends Inspection {
       p.typeId.map(Mark(_, Message)).toSeq
     case v: VariableDeclaration if v.nodeType.contains(ToyType.VoidType) =>
       v.typeId.map(Mark(_, Message)).toSeq
-    case _ => Seq.empty
+    case _ => Nil
   }
 }

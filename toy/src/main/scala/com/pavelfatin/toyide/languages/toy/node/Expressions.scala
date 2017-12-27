@@ -127,10 +127,10 @@ with ToyExpression with CallExpEvaluator with TypeCheck with CallExpTranslator {
 
   def arguments: Option[Arguments] = children.findBy[Arguments]
 
-  def expressions: Seq[Expression] = arguments.map(_.expressions).getOrElse(Seq.empty)
+  def expressions: Seq[Expression] = arguments.map(_.expressions).getOrElse(Nil)
 
   def bindings: (Seq[(Expression, Parameter)], Seq[Expression], Seq[Parameter]) = {
-    val parameters = function.map(_.parameters).getOrElse(Seq.empty)
+    val parameters = function.map(_.parameters).getOrElse(Nil)
     val es = expressions.iterator
     val ps = parameters.iterator
     (es.zip(ps).toList, es.toSeq, ps.toSeq)

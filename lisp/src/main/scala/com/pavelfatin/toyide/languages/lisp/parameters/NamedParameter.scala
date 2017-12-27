@@ -25,7 +25,7 @@ private class NamedParameter(name: String) extends AbstractParameters {
 
   private def isPlaceholder: Boolean = name == NamedParameter.Placeholder
 
-  def symbols: Seq[String] = if (isPlaceholder) Seq.empty else Seq(name)
+  def symbols: Seq[String] = if (isPlaceholder) Nil else name :: Nil
 
   def presentation = throw new UnsupportedOperationException()
 }

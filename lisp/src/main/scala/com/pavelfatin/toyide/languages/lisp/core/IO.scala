@@ -41,7 +41,7 @@ abstract class IOFunction(name: String) extends CoreFunction(name) {
 object Dir extends IOFunction("dir") {
   def apply0(arguments: Seq[Expression], environment: Environment, output: Output): ListValue = arguments match {
     case Seq(StringValue(path)) =>
-      val files = Option(new File(path).listFiles).map(_.toSeq).getOrElse(Seq.empty)
+      val files = Option(new File(path).listFiles).map(_.toSeq).getOrElse(Nil)
       ListValue(files.map(file => StringValue(file.getName)))
     case _ => expected("path", arguments, environment)
   }

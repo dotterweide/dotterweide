@@ -27,7 +27,7 @@ import com.pavelfatin.toyide.lexer.Token
 private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
                            processor: ActionProcessor) extends AbstractPainter(context) {
 
-  private var anchoredMatches = Seq.empty[AnchoredMatch]
+  private var anchoredMatches: Seq[AnchoredMatch] = Nil
 
   private var completeData = true
 
@@ -53,7 +53,7 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
 
     val previousMatches = anchoredMatches
 
-    anchoredMatches = if (!canvas.hasFocus || terminal.selection.isDefined) Seq.empty else {
+    anchoredMatches = if (!canvas.hasFocus || terminal.selection.isDefined) Nil else {
       val tokens = if (complete) data.tokens else {
         val visibleInterval = intervalOf(grid.toArea(canvas.visibleRectangle))
         data.tokens.filter(_.span.intersectsWith(visibleInterval))
@@ -69,9 +69,9 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
 
   private def matchIntervalsIn(tokens: Seq[Token], offset: Int) = tokens.flatMap { token =>
     matcher.braceTypeOf(token, data.tokens, offset) match {
-      case Paired       => Seq((token.span, Paired))
-      case Unbalanced   => Seq((token.span, Unbalanced))
-      case Inapplicable => Seq.empty
+      case Paired       => (token.span, Paired)     :: Nil
+      case Unbalanced   => (token.span, Unbalanced) :: Nil
+      case Inapplicable => Nil
     }
   }
 

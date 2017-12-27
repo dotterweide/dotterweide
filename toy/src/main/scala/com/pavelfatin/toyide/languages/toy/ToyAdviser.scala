@@ -37,7 +37,7 @@ object ToyAdviser extends Adviser {
 
     lazy val elseKeyword = anchor.previousSibling match {
       case Some(statement: If) if statement.elseBlock.isEmpty => ElseKeyword
-      case _ => Seq.empty
+      case _ => Nil
     }
 
     holders.headOption match {
@@ -53,7 +53,7 @@ object ToyAdviser extends Adviser {
       case Some(_: Block) =>
         val returnKeyword = holders.findBy[FunctionDeclaration].toSeq.flatMap(_ => ReturnKeyword)
         referencesFor(anchor) ++ PredefinedFunctions ++ elseKeyword ++ returnKeyword ++ ControlKeywords
-      case _ => Seq.empty
+      case _ => Nil
     }
   }
 

@@ -51,7 +51,7 @@ object DuplicateIdentifier extends Inspection {
         }
 
       functionClashes ++ parameterClashes ++ parameterAndVariableClashes ++ variableClashes
-    case _ => Seq.empty
+    case _ => Nil
   }
 
   private def clashableIn(scope: Scope, extractor: Scope => Seq[IdentifiedNode]): Seq[IdentifiedNode] = {
@@ -60,7 +60,7 @@ object DuplicateIdentifier extends Inspection {
       inner
     } else {
       val outer = scope.parents.findBy[Scope]
-        .map(clashableIn(_, extractor)).getOrElse(Seq.empty)
+        .map(clashableIn(_, extractor)).getOrElse(Nil)
         .filter(_.span.begin < scope.span.begin)
       outer ++ inner
     }

@@ -39,6 +39,6 @@ object UnusedDeclaration extends Inspection {
           }
           Mark(id, Message(entity, identifier), Decoration.Dim, warning = true)
       }
-    case _ => Seq.empty
+    case _ => Nil
   }
 }

@@ -27,9 +27,9 @@ object UnresolvedReference extends Inspection {
   def inspect(node: Node): Seq[Mark] = node match {
     case ref @ ReferenceNode(Some(source), None) if !ref.predefined =>
       node match {
-        case _: ReferenceToFunction => Seq(Mark(node, Message("function", source.span.text), Decoration.Red))
-        case _: ReferenceToValue    => Seq(Mark(node, Message("value"   , source.span.text), Decoration.Red))
+        case _: ReferenceToFunction => Mark(node, Message("function", source.span.text), Decoration.Red) :: Nil
+        case _: ReferenceToValue    => Mark(node, Message("value"   , source.span.text), Decoration.Red) :: Nil
       }
-    case _ => Seq.empty
+    case _ => Nil
   }
 }

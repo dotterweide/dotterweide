@@ -36,7 +36,7 @@ trait UsableNode extends IdentifiedNode {
   def usages: Seq[ReferenceNode] = {
     scope match {
       case Some(it) => it.elements.filterBy[ReferenceNode].filter(_.isReferenceTo(this))
-      case None => Seq.empty
+      case None => Nil
     }
   }
 }
@@ -47,7 +47,7 @@ with UsableNode with NamedNode with TypedNode with FunctionDeclarationTranslator
 
   def parametersNode: Option[Parameters] = children.findBy[Parameters]
 
-  def parameters: Seq[Parameter] = parametersNode.map(_.parameters).getOrElse(Seq.empty)
+  def parameters: Seq[Parameter] = parametersNode.map(_.parameters).getOrElse(Nil)
 
   def name: String = "%s(%s): %s".format(
     identifier, parameters.map(_.name).mkString(", "), nodeType.map(_.presentation).getOrElse("undefined"))

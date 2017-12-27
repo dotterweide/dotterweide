@@ -26,7 +26,7 @@ object PrefixApplication extends Inspection {
 
   def inspect(node: Node): Seq[Mark] = node match {
     case prefix @ PrefixExpression(Some(token), Some(Expression(expType))) if prefix.nodeType.isEmpty =>
-      Seq(Mark(prefix, Message(token.span.text, expType.presentation)))
-    case _ => Seq.empty
+      Mark(prefix, Message(token.span.text, expType.presentation)) :: Nil
+    case _ => Nil
   }
 }

@@ -32,7 +32,7 @@ private class Rename(document: Document, terminal: Terminal, data: Data, history
       val id = leafs.head.span.text
       terminal.edit(id, "Rename") {
         case Some(text) =>
-          terminal.highlights = Seq.empty
+          terminal.highlights = Nil
           history.recording(document, terminal) {
             val anchor = document.createAnchorAt(terminal.offset, Bias.Right)
             leafs.map(_.span.interval).sortBy(_.begin).reverse.foreach(document.replace(_, text))
@@ -40,7 +40,7 @@ private class Rename(document: Document, terminal: Terminal, data: Data, history
             anchor.dispose()
           }
         case None =>
-          terminal.highlights = Seq.empty
+          terminal.highlights = Nil
       }
     }
   }

@@ -14,6 +14,7 @@ object ExplorePC {
     val settings = new Settings(err => Console.err.println(err))
     settings.outputDirs.setSingleOutput(outputDir)
     settings.usejavacp.value = true
+    settings.YpresentationAnyThread.value = true // needed to print typed tree
     settings.source.value = ScalaVersion("2.12.4")
 
     val reporter = new StoreReporter
@@ -35,6 +36,8 @@ object ExplorePC {
     compiler.askParsedEntered(srcFile, keepLoaded = true, respParsed)
     val treeParsed = respParsed.get.left.get
     println(s"---- TREE ----\n$treeParsed\n")
+    println(treeParsed.getClass)
+    println(treeParsed.pos)
 
     val respTypes = new Response[compiler.Tree]
     println("askLoadedTyped")

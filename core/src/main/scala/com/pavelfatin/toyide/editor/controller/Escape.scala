@@ -23,7 +23,7 @@ private class Escape(terminal: Terminal) extends AnAction {
   def keys: Seq[String] = List("pressed ESCAPE")
 
   def apply(): Unit = {
-    terminal.selection = None
-    terminal.highlights = Seq.empty
+    terminal.selection  = None
+    terminal.highlights = Nil
   }
 }

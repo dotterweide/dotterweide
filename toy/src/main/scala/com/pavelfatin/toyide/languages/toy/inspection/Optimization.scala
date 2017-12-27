@@ -25,10 +25,10 @@ object Optimization extends Inspection {
 
   def inspect(node: Node): Seq[Mark] = {
     node.parent match {
-      case Some(p) if p.optimized.isDefined => Seq.empty
+      case Some(p) if p.optimized.isDefined => Nil
       case _ => node.optimized match {
-        case Some(s) if s != node.span.text => Seq(Mark(node, Message(s), Decoration.Fill, warning = true))
-        case _ => Seq.empty
+        case Some(s) if s != node.span.text => Mark(node, Message(s), Decoration.Fill, warning = true) :: Nil
+        case _ => Nil
       }
     }
   }

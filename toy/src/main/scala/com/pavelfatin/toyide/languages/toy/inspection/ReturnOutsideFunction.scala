@@ -26,8 +26,8 @@ object ReturnOutsideFunction extends Inspection {
 
   def inspect(node: Node): Seq[Mark] = node match {
     case _: Return =>
-      if (node.parents.exists(_.isInstanceOf[FunctionDeclaration])) Seq.empty else
-        Seq(Mark(node, Message))
-    case _ => Seq.empty
+      if (node.parents.exists(_.isInstanceOf[FunctionDeclaration])) Nil else
+        Mark(node, Message) :: Nil
+    case _ => Nil
   }
 }

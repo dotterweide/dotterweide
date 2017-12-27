@@ -33,7 +33,7 @@ class NodeImpl(val kind: String) extends Node {
 
   var nextSibling: Option[Node] = None
 
-  private var _children: Seq[NodeImpl] = Seq.empty
+  private var _children: Seq[NodeImpl] = Nil
 
   def children: Seq[NodeImpl] = _children
 

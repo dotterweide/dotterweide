@@ -26,11 +26,9 @@ import com.pavelfatin.toyide.parser.Parser
 private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspections: Seq[Inspection]) extends Data {
   def text: String = document.text
 
-  var tokens = Seq.empty[Token]
-
-  var structure: Option[Node] = None
-
-  var errors = Seq.empty[Error]
+  var tokens    : Seq[Token]    = Nil
+  var structure : Option[Node]  = None
+  var errors    : Seq[Error]    = Nil
 
   var hasFatalErrors: Boolean = errors.exists(_.fatal)
 
@@ -71,12 +69,12 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
   }
 
   private def runTextPass(): Seq[Error] = {
-    tokens          = Seq.empty
+    tokens          = Nil
     structure       = None
-    errors          = Seq.empty
+    errors          = Nil
     hasFatalErrors  = false
 
-    Seq.empty
+    Nil
   }
 
   private def runLexerPass(): Seq[Error] = {
@@ -88,7 +86,7 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
   }
 
   private def runParserPass(): Seq[Error] = {
-    val root = parser.parse(tokens.toIterator)
+    val root = parser.parse(tokens.iterator)
 
     structure = Some(root)
 

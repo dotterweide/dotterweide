@@ -36,9 +36,9 @@ object Applicability extends Inspection {
         else
           call.function.map(inspect(call, _))
       } getOrElse {
-        Seq.empty
+        Nil
       }
-    case _ => Seq.empty
+    case _ => Nil
  }
 
   private def inspectPredefined(call: CallExpression): Seq[Mark] =

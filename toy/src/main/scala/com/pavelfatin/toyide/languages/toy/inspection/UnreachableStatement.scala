@@ -27,9 +27,9 @@ object UnreachableStatement extends Inspection {
   def inspect(node: Node): Seq[Mark] = node match {
     case FunctionBlock(ScopeExit(exit)) =>
       exit.nextSiblings.filterNot(_.isInstanceOf[Comment]).find(!_.isLeaf) match {
-        case Some(sibling) => Seq(Mark(sibling, Message))
-        case _ => Seq.empty
+        case Some(sibling) => Mark(sibling, Message) :: Nil
+        case _ => Nil
       }
-    case _ => Seq.empty
+    case _ => Nil
   }
 }

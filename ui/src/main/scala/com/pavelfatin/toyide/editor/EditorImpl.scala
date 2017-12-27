@@ -78,10 +78,10 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   def text_=(s: String): Unit =
     history.recording(document, terminal) {
-      terminal.offset = 0
-      terminal.selection = None
-      terminal.highlights = Seq.empty
-      document.text = s
+      terminal.offset     = 0
+      terminal.selection  = None
+      terminal.highlights = Nil
+      document.text       = s
     }
 
   private var _message: Option[String] = None
@@ -164,10 +164,10 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   // handle external changes
   document.onChange { _ =>
-    terminal.offset = terminal.offset.min(document.length)
-    val selection = terminal.selection.map(it => Interval(it.begin.min(document.length), it.end.min(document.length)))
-    terminal.selection = selection.filterNot(_.empty)
-    terminal.highlights = Seq.empty
+    terminal.offset     = terminal.offset.min(document.length)
+    val selection       = terminal.selection.map(it => Interval(it.begin.min(document.length), it.end.min(document.length)))
+    terminal.selection  = selection.filterNot(_.empty)
+    terminal.highlights = Nil
   }
 
   private def scrollToOffsetVisible(offset: Int): Unit = {

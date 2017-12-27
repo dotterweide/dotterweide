@@ -36,7 +36,7 @@ trait Scope extends Node with ScopeEvaluator with ScopeTranslator {
 
   def parameters: Seq[Parameter] = parent match {
     case Some(function: FunctionDeclaration) => function.parameters
-    case _ => Seq.empty
+    case _ => Nil
   }
 
   def values: Seq[UsableNode] = parameters ++ variables

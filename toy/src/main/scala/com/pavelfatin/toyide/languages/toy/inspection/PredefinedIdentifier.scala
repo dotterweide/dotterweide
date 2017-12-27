@@ -27,6 +27,6 @@ object PredefinedIdentifier extends Inspection {
   def inspect(node: Node): Seq[Mark] = node match {
     case f: FunctionDeclaration if List("print", "println").contains(f.identifier) =>
       f.id.map(Mark(_, Message(f.identifier))).toSeq
-    case _ => Seq.empty
+    case _ => Nil
   }
 }

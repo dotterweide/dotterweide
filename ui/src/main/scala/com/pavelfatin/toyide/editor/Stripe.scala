@@ -32,7 +32,8 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
   private val Led             = new Rectangle(2, 2, MarkSize.width - 4, MarkSize.width - 4)
 
   private var status: Status  = Status.Normal
-  private var descriptors     = Seq.empty[Descriptor]
+
+  private var descriptors: Seq[Descriptor] = Nil
 
   setMinimumSize  (new Dimension(MarkSize.width, 0))
   setMaximumSize  (new Dimension(MarkSize.width, Int.MaxValue))

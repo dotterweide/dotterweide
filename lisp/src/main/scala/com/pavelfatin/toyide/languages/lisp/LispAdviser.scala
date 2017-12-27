@@ -30,7 +30,7 @@ object LispAdviser extends Adviser {
         val localSymbols = symbol.accessibleSymbols.map(_.identifier).filter(!_.endsWith(Adviser.Anchor))
         val symbols = localSymbols ++ CoreFunction.Names ++ Library.instance.symbols
         symbols.map(name => Variant(name, name, 0))
-      case _ => Seq.empty
+      case _ => Nil
     }
   }
 }

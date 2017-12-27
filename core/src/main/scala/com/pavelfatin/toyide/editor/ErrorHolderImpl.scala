@@ -24,7 +24,7 @@ private class ErrorHolderImpl(document: Document, data: Data) extends ErrorHolde
 
   data.onChange {
     case DataEvent(pass, passErrors) =>
-      val passAnchoredErrors = passToAnchoredErrors.getOrElse(pass, Seq.empty)
+      val passAnchoredErrors = passToAnchoredErrors.getOrElse(pass, Nil)
 
       val previousPassErrors = passAnchoredErrors.map(_.toError)
 

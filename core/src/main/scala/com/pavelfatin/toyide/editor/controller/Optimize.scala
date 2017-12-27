@@ -27,8 +27,8 @@ private class Optimize(document: Document, terminal: Terminal, data: Data) exten
   def apply(): Unit = {
     data.compute()
     data.structure.foreach { root =>
-      terminal.highlights = Seq.empty
-      terminal.selection = None
+      terminal.highlights = Nil
+      terminal.selection  = None
 
       val anchor = document.createAnchorAt(terminal.offset, Bias.Left)
       terminal.offset = 0

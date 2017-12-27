@@ -51,8 +51,8 @@ private class TokenIterator(input: CharSequence) extends AbstractTokenIterator(i
       }
       return Token(SLASH, captureChar)
     }
-    if (char == '%') return Token(PERCENT, captureChar)
-    if (char == '!') return Token(BANG, captureChar)
+    if (char == '%') return Token(PERCENT , captureChar)
+    if (char == '!') return Token(BANG    , captureChar)
     if (char == '<') {
       if (isAhead('=')) {
         return Token(LT_EQ, captureChars(2))
@@ -75,9 +75,8 @@ private class TokenIterator(input: CharSequence) extends AbstractTokenIterator(i
     if (char == '{') return Token(LBRACE, captureChar)
     if (char == '}') return Token(RBRACE, captureChar)
 
-    if (char.isWhitespace) return Token(WS, capture(_.isWhitespace))
-
-    if (char.isDigit) return Token(NUMBER_LITERAL, capture(_.isDigit))
+    if (char.isWhitespace)  return Token(WS             , capture(_.isWhitespace))
+    if (char.isDigit)       return Token(NUMBER_LITERAL , capture(_.isDigit))
 
     if (char == '"') {
       mark()
@@ -93,17 +92,17 @@ private class TokenIterator(input: CharSequence) extends AbstractTokenIterator(i
       val span = capture(_.isLetterOrDigit)
       val text = span.text
 
-      if (text == "var") return Token(VAR, span)
-      if (text == "def") return Token(DEF, span)
-      if (text == "while") return Token(WHILE, span)
-      if (text == "if") return Token(IF, span)
-      if (text == "else") return Token(ELSE, span)
-      if (text == "return") return Token(RETURN, span)
+      if (text == "var")      return Token(VAR, span)
+      if (text == "def")      return Token(DEF, span)
+      if (text == "while")    return Token(WHILE, span)
+      if (text == "if")       return Token(IF, span)
+      if (text == "else")     return Token(ELSE, span)
+      if (text == "return")   return Token(RETURN, span)
 
-      if (text == "boolean") return Token(BOOLEAN, span)
-      if (text == "string") return Token(STRING, span)
-      if (text == "integer") return Token(INTEGER, span)
-      if (text == "void") return Token(VOID, span)
+      if (text == "boolean")  return Token(BOOLEAN, span)
+      if (text == "string")   return Token(STRING, span)
+      if (text == "integer")  return Token(INTEGER, span)
+      if (text == "void")     return Token(VOID, span)
 
       if (text == "true" || text == "false") return Token(BOOLEAN_LITERAL, span)
 

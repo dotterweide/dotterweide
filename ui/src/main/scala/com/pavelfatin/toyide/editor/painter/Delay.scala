@@ -23,21 +23,21 @@ import com.pavelfatin.toyide.editor.{ActionFinished, ActionProcessor, ActionStar
 private class Delay[A](delegate: ObservableEvents[A], processor: ActionProcessor) extends ObservableEvents[A] {
   private var delay = false
   
-  private var events = Seq.empty[A]
+  private var events = List.empty[A]
 
   processor.onChange {
     case ActionStarted(_) =>
       delay = true
     case ActionFinished =>
-      events.foreach(notifyObservers)
-      events = Seq.empty
+      events.reverseIterator.foreach(notifyObservers)
+      events = Nil
       
       delay = false
   }
   
   delegate.onChange { event =>
     if (delay) {
-      events = events :+ event
+      events ::= event
     } else {
       notifyObservers(event)
     }

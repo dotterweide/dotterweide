@@ -33,13 +33,13 @@ object TypeMismatch extends Inspection {
   // for some reason compiler complains when the following is written in a single "match"
   def inspect(node: Node): Seq[Mark] = node match {
     case r @ Return(None, Some(expected)) if expected != VoidType =>
-      Seq(Mark(r, MissingReturnValueMessage))
+      Mark(r, MissingReturnValueMessage) :: Nil
     case r @ Return(Some(_), Some(expected)) if expected == ToyType.VoidType =>
-      Seq(Mark(r, ReturnFromVoidFunctionMessage))
+      Mark(r, ReturnFromVoidFunctionMessage) :: Nil
     case _ => node match {
       case ExpressionHolder(Some(exp @ Expression(actual)), Some(expected)) if expected != actual =>
-        Seq(Mark(exp, Message(expected.presentation, actual.presentation)))
-      case _ => Seq.empty
+        Mark(exp, Message(expected.presentation, actual.presentation)) :: Nil
+      case _ => Nil
     }
   }
 }

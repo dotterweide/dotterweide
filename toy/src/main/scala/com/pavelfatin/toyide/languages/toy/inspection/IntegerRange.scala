@@ -29,11 +29,11 @@ object IntegerRange extends Inspection {
     case l: Literal if l.nodeType.contains(ToyType.IntegerType) =>
       try {
         Integer.parseInt(l.span.text)
-        Seq.empty
+        Nil
       } catch {
         case _: NumberFormatException =>
-          Seq(Mark(l, Message))
+          Mark(l, Message) :: Nil
       }
-    case _ => Seq.empty
+    case _ => Nil
   }
 }
