@@ -35,5 +35,5 @@ class SymbolValue private (val content: String, val place: Option[Place]) extend
 object SymbolValue {
   def apply(name: String, place: Option[Place] = None): SymbolValue = new SymbolValue(name, place)
 
-  def unapply(value: SymbolValue): Some[String] = Some(value.content)
+  def unapply(value: SymbolValue): Option[String] = Some(value.content)
 }

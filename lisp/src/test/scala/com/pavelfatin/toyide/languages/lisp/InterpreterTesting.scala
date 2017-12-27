@@ -27,19 +27,16 @@ import org.junit.Assert._
 trait InterpreterTesting {
   protected def createEnvironment(): Environment = new EnvironmentImpl()
 
-  protected def assertOutput(code: String, expected: String): Unit = {
+  protected def assertOutput(code: String, expected: String): Unit =
     assertEquals(expected, run(code)._2)
-  }
 
-  protected def assertValue(code: String, expected: String): Unit = {
+  protected def assertValue(code: String, expected: String): Unit =
     assertEquals(expected, run(code)._1.presentation)
-  }
 
-  protected def assertOK(code: String): Unit = {
+  protected def assertOK(code: String): Unit =
     run(code)
-  }
 
-  protected def assertError(code: String, expected: String = ""): Unit = {
+  protected def assertError(code: String, expected: String = ""): Unit =
     try {
       run(code)
       fail("Error expected: " + expected)
@@ -47,7 +44,6 @@ trait InterpreterTesting {
       case EvaluationException(message, _) =>
         assertTrue("Expected: " + expected + ", actual: " + message, message.contains(expected))
     }
-  }
 
   protected def run(code: String, environment: Environment = createEnvironment()): (Value, String) =
     InterpreterTesting.run(code.stripMargin, environment)

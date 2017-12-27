@@ -32,7 +32,7 @@ trait ReferenceToValueEvaluator extends ToyEvaluable { self: ReferenceToValue =>
       case _ => interrupt(context, "Non-value target for reference %s: %s", identifier, node.span.text)
     }
 
-    wrap[Some[Value]](context) { // [T] bug in Scalac ?
+    wrap(context) {
       Some(context.get(local, identifier))
     }
   }

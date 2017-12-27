@@ -30,10 +30,10 @@ class Library private (globals: Map[String, Expression]) {
 }
 
 object Library {
-  val CoreCode: String = load("/library/Core.lisp")
-  val FunctionCode: String = load("/library/Function.lisp")
+  val CoreCode      : String = load("/library/Core.lisp")
+  val FunctionCode  : String = load("/library/Function.lisp")
   val ArithmeticCode: String = load("/library/Arithmetic.lisp")
-  val ListCode: String = load("/library/List.lisp")
+  val ListCode      : String = load("/library/List.lisp")
 
   private var cachedInstance: Option[Library] = None
 

@@ -24,41 +24,35 @@ import com.pavelfatin.toyide.Extensions._
 import com.pavelfatin.toyide.node.{ReferenceNode, Node}
 
 object Helpers {
-  def assertMatches[T](actual: T)(pattern: PartialFunction[T, Unit]): Unit = {
+  def assertMatches[T](actual: T)(pattern: PartialFunction[T, Unit]): Unit =
     assertTrue("actual: " + actual.toString, pattern.isDefinedAt(actual))
-  }
 
   def assertNoProblemsIn(elements: Seq[Node]): Unit = {
     assertEquals(List.empty, elements.flatMap(_.token).filter(_.problem.isDefined).toList)
     assertEquals(List.empty, elements.filter(_.problem.isDefined).toList)
   }
 
-  def assertNoUnresolvedIn(elements: Seq[Node]): Unit = {
+  def assertNoUnresolvedIn(elements: Seq[Node]): Unit =
     assertEquals(List.empty, elements.filterBy[ReferenceNode].filter(_.unresolved))
-  }
 
   object Target {
-    def unapply(node: Node): Some[(String, Int)] = {
+    def unapply(node: Node): Option[(String, Int)] =
       Some((node.span.text, node.span.begin))
-    }
   }
 
   object Text {
-    def unapply(node: Node): Some[String] = {
+    def unapply(node: Node): Option[String] =
       Some(node.span.text)
-    }
   }
 
   object Offset {
-    def unapply(node: Node): Some[Int] = {
+    def unapply(node: Node): Option[Int] =
       Some(node.span.begin)
-    }
   }
 
   object Line {
-    def unapply(node: Node): Int = {
+    def unapply(node: Node): Int =
       node.span.source.take(node.span.begin).count(_ == '\n')
-    }
   }
 
   def parseDocument(code: String): (Document, Terminal) = {
@@ -106,9 +100,8 @@ object Helpers {
     assertTrue(it.begin <= it.end)
   }
 
-  private def assertWithin(interval: Interval, i: Int): Unit = {
+  private def assertWithin(interval: Interval, i: Int): Unit =
     assertTrue("%d must be within %s".format(i, interval.toString), interval.touches(i))
-  }
 
   def formatDocument(document: Document, view: Terminal): String = {
     val selection = view.selection.toSeq

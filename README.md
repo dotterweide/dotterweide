@@ -1,5 +1,23 @@
 # ![ToyIDE logo](doc/images/toyide-logo.png?raw=true "ToyIDE")
 
+__Note:__ This is a fork from [here](https://github.com/pavelfatin/toyide). All changes
+by Hanns Holger Rutz, released under the same license (GPL v3+). This fork refactors the
+project into sbt sub-modules, cross-building against Scala 2.11 and 2.12,
+applies some code style changes, and investigates the possibility
+of adding Scala as a supported language (in progress). To run the demo application,
+use `sbt app/run`.
+
+Known issues:
+
+- `sbt test` fails with several cases, also different between Scala 2.11 and 2.12.
+  This must be either a race condition or dirty global state, because running, for
+  example, `sbt 'testOnly com.pavelfatin.toyide.languages.lisp.library.CoreTest'`
+  works without problem, although that spec fails when running all tests.
+
+Below is the original README:
+
+----------
+
 ToyIDE is an imitation of a full-featured IDE plus
 [toy languages](https://en.wikipedia.org/wiki/Toy_language "Toy language - Wikipedia")
 (imperative, functional) with complete IDE support, interpreters and compilers.

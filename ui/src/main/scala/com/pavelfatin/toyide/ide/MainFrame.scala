@@ -24,8 +24,8 @@ import com.pavelfatin.toyide.Language
 import com.pavelfatin.toyide.document.Location
 import com.pavelfatin.toyide.editor.{Editor, EditorFactory, HistoryImpl, Pass}
 
-import scala.swing.{BorderPanel, Component, Frame, Orientation, ScrollPane, SplitPane}
 import scala.swing.event.{WindowClosed, WindowOpened}
+import scala.swing.{BorderPanel, Component, Frame, Orientation, ScrollPane, SplitPane}
 
 class MainFrame(language: Language, text: String) extends Frame {
   reactions += {

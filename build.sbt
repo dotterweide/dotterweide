@@ -26,25 +26,23 @@ lazy val core = project.in(file("core"))
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
-    name := baseName,
-    libraryDependencies ++= Seq(
-      "org.scala-lang.modules" %% "scala-swing" % "2.0.1",
-      // "net.sourceforge.jasmin" % "jasmin" % "1.1",
-    ),
-    mainClass in Compile := Some("com.pavelfatin.toyide.Application"),
-    unmanagedResourceDirectories in Compile += baseDirectory.value / "src" / "main" / "lisp"
+    name := baseName
+//    libraryDependencies ++= Seq(
+//      "net.sourceforge.jasmin" % "jasmin" % "1.1",
+//    ),
   )
 
 lazy val lisp = project.in(file("lisp"))
-  .dependsOn(core)
+  .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
-    name := s"$baseName - Clojure-like functional language"
+    name := s"$baseName - Clojure-like functional language",
+    unmanagedResourceDirectories in Compile += baseDirectory.value / "src" / "main" / "lisp"
   )
 
 lazy val toy = project.in(file("toy"))
-  .dependsOn(core)
+  .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
@@ -52,13 +50,20 @@ lazy val toy = project.in(file("toy"))
   )
 
 lazy val ui = project.in(file("ui"))
-  .dependsOn(core)
+  .dependsOn(core % "compile->compile;test->test")
+  .settings(commonSettings)
+  .settings(testSettings)
   .settings(
-    name := s"$baseName - graphical user interface"
+    name := s"$baseName - graphical user interface",
+    libraryDependencies ++= Seq(
+      "org.scala-lang.modules" %% "scala-swing" % "2.0.1"
+    )
   )
 
 lazy val app = project.in(file("app"))
   .dependsOn(ui, lisp, toy)
+  .settings(commonSettings)
   .settings(
-    name := s"$baseName - demo application"
+    name := s"$baseName - demo application",
+    mainClass in Compile := Some("com.pavelfatin.toyide.Application")
   )
