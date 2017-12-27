@@ -21,15 +21,17 @@ import java.awt.{Dimension, Insets, Point, Rectangle}
 
 import com.pavelfatin.toyide.document.Location
 
+import scala.math.{ceil, floor, max}
+
 class Grid(val cellSize: Dimension, val insets: Insets) {
   def toPoint(location: Location): Point =
     new Point(insets.left + cellSize.width * location.indent,
       insets.top + cellSize.height * location.line)
 
   def toLocation(point: Point): Location = {
-    val line    = math.floor((point.y - insets.top ).toDouble / cellSize.height.toDouble).toInt
-    val indent  = math.floor((point.x - insets.left).toDouble / cellSize.width .toDouble).toInt
-    Location(0.max(line), 0.max(indent))
+    val line    = floor((point.y - insets.top ).toDouble / cellSize.height.toDouble).toInt
+    val indent  = floor((point.x - insets.left).toDouble / cellSize.width .toDouble).toInt
+    Location(max(0, line), max(0, indent))
   }
 
   def toSize(lines: Int, maximumIndent: Int): Dimension = {
@@ -38,11 +40,11 @@ class Grid(val cellSize: Dimension, val insets: Insets) {
   }
 
   def toArea(rectangle: Rectangle): Area = {
-    val beginLine   = 0.max(math.floor((rectangle.y - insets.top ).toDouble / cellSize.height.toDouble).toInt)
-    val beginIndent = 0.max(math.floor((rectangle.x - insets.left).toDouble / cellSize.width .toDouble).toInt)
+    val beginLine   = max(0, floor((rectangle.y - insets.top ).toDouble / cellSize.height.toDouble).toInt)
+    val beginIndent = max(0, floor((rectangle.x - insets.left).toDouble / cellSize.width .toDouble).toInt)
 
-    val endLine   = math.ceil((rectangle.y - insets.top  + rectangle.height).toDouble / cellSize.height.toDouble).toInt
-    val endIndent = math.ceil((rectangle.x - insets.left + rectangle.width ).toDouble / cellSize.width .toDouble).toInt
+    val endLine   = ceil((rectangle.y - insets.top  + rectangle.height).toDouble / cellSize.height.toDouble).toInt
+    val endIndent = ceil((rectangle.x - insets.left + rectangle.width ).toDouble / cellSize.width .toDouble).toInt
 
     Area(beginLine, beginIndent, endIndent - beginIndent, endLine - beginLine)
   }

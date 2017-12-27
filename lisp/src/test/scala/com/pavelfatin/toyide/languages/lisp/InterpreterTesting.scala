@@ -33,8 +33,7 @@ trait InterpreterTesting {
   protected def assertValue(code: String, expected: String): Unit =
     assertEquals(expected, run(code)._1.presentation)
 
-  protected def assertOK(code: String): Unit =
-    run(code)
+  protected def assertOK(code: String): Unit = run(code)
 
   protected def assertError(code: String, expected: String = ""): Unit =
     try {

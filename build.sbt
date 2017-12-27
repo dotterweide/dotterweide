@@ -54,7 +54,10 @@ lazy val scalalang = project.in(file("scalalang"))
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
-    name := s"$baseName - Scala language"
+    name := s"$baseName - Scala language",
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-compiler" % scalaVersion.value
+    )
   )
 
 lazy val ui = project.in(file("ui"))
