@@ -1,20 +1,64 @@
-name               := "ToyIDE"
-version            := "1.2.4-SNAPSHOT"
-organization       := "com.pavelfatin"
-homepage           := Some(url("https://pavelfatin.com/toyide"))
-scalaVersion       := "2.12.4"
-crossScalaVersions := Seq("2.12.4", "2.11.12")
-scalacOptions     ++= Seq("-deprecation")
+lazy val baseName   = "ToyIDE"
+lazy val baseNameL  = baseName.toLowerCase
 
-fork in Test := false
-
-libraryDependencies ++= Seq(
-  "org.scala-lang.modules" %% "scala-swing"     % "2.0.1",
-  // "net.sourceforge.jasmin" %  "jasmin"          % "1.1",
-  "junit"                  %  "junit"           % "4.12" % "test",
-  "com.novocode"           %  "junit-interface" % "0.11" % "test"
+lazy val commonSettings = Seq(
+  version            := "1.3.0-SNAPSHOT",
+  organization       := "com.pavelfatin",
+  homepage           := Some(url("https://pavelfatin.com/toyide")),
+  licenses           := Seq("GNU General Public License v3+" -> url("http://www.gnu.org/licenses/gpl-3.0.txt")),
+  scalaVersion       := "2.12.4",
+  crossScalaVersions := Seq("2.12.4", "2.11.12"),
+  scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xfuture"),
+  fork in Test       := false
 )
 
-mainClass in Compile := Some("com.pavelfatin.toyide.Application")
+lazy val testSettings = Seq(
+  libraryDependencies ++= Seq(
+    "junit"        % "junit"           % "4.12" % "test",
+    "com.novocode" % "junit-interface" % "0.11" % "test"
+  ),
+)
 
-unmanagedResourceDirectories in Compile += baseDirectory.value / "src" / "main" / "lisp"
+lazy val root = project.in(file("."))
+  .aggregate(core, lisp, toy, ui, app)
+
+lazy val core = project.in(file("core"))
+  .settings(commonSettings)
+  .settings(testSettings)
+  .settings(
+    name := baseName,
+    libraryDependencies ++= Seq(
+      "org.scala-lang.modules" %% "scala-swing" % "2.0.1",
+      // "net.sourceforge.jasmin" % "jasmin" % "1.1",
+    ),
+    mainClass in Compile := Some("com.pavelfatin.toyide.Application"),
+    unmanagedResourceDirectories in Compile += baseDirectory.value / "src" / "main" / "lisp"
+  )
+
+lazy val lisp = project.in(file("lisp"))
+  .dependsOn(core)
+  .settings(commonSettings)
+  .settings(testSettings)
+  .settings(
+    name := s"$baseName - Clojure-like functional language"
+  )
+
+lazy val toy = project.in(file("toy"))
+  .dependsOn(core)
+  .settings(commonSettings)
+  .settings(testSettings)
+  .settings(
+    name := s"$baseName - C-like imperative language"
+  )
+
+lazy val ui = project.in(file("ui"))
+  .dependsOn(core)
+  .settings(
+    name := s"$baseName - graphical user interface"
+  )
+
+lazy val app = project.in(file("app"))
+  .dependsOn(ui, lisp, toy)
+  .settings(
+    name := s"$baseName - demo application"
+  )
