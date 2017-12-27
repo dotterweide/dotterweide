@@ -17,15 +17,14 @@
 
 package com.pavelfatin.toyide.languages.toy.parser
 
-import com.pavelfatin.toyide.parser.{TreeBuilder, Parser}
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.languages.toy.node._
+import com.pavelfatin.toyide.parser.{Parser, TreeBuilder}
 
 object CallParser extends Parser {
-  def parse(in: TreeBuilder): Unit = {
+  def parse(in: TreeBuilder): Unit =
     in.capturing(new Call()) {
       CallExpressionParser.parse(in)
       in.consume(SEMI)
     }
-  }
 }

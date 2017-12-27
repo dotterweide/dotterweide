@@ -17,15 +17,14 @@
 
 package com.pavelfatin.toyide.languages.toy.parser
 
-import com.pavelfatin.toyide.parser.{TreeBuilder, Parser}
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
+import com.pavelfatin.toyide.parser.{Parser, TreeBuilder}
 
 object StatementParser extends Parser {
-  def parse(in: TreeBuilder): Unit = {
+  def parse(in: TreeBuilder): Unit =
     if (in.matches(DEF)) {
       FunctionParser.parse(in)
     } else {
       BlockStatementParser.parse(in)
     }
-  }
 }

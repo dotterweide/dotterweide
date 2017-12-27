@@ -17,10 +17,16 @@
 
 package com.pavelfatin.toyide
 
+/** A text span combines a text substring with its interval within a parent text.
+  *
+  * @param source     the (entire) parent text
+  * @param interval   the interval to select a substring
+  */
 case class Span(source: CharSequence, interval: Interval) extends IntervalLike {
   def begin : Int = interval.begin
   def end   : Int = interval.end
 
+  /** The text denoted by `source.subSequence(begin, end)`. */
   def text: String = source.subSequence(begin, end).toString
 
   def leftEdge: Span = Span(source, begin, begin)

@@ -17,6 +17,11 @@
 
 package com.pavelfatin.toyide
 
+/** An integer range (in a text).
+  *
+  * @param begin  start offset, zero based, inclusive
+  * @param end    end offset, _exclusive_ (the interval length is `end - begin`).
+  */
 case class Interval(begin: Int, end: Int) extends IntervalLike {
   if (begin  < 0) throw new IllegalArgumentException("Begin must be positive: "  + begin )
   if (end    < 0) throw new IllegalArgumentException("End must be positive: "    + end   )

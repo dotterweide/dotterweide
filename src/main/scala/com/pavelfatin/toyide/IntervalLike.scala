@@ -18,9 +18,12 @@
 package com.pavelfatin.toyide
 
 trait IntervalLike {
+  /** Start offset, zero based, inclusive */
   def begin : Int
+  /** End offset, _exclusive_ */
   def end   : Int
 
+  /** The interval length is `end - begin` */
   def length: Int = end - begin
 
   def empty: Boolean = length == 0

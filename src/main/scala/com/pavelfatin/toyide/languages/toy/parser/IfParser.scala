@@ -17,12 +17,12 @@
 
 package com.pavelfatin.toyide.languages.toy.parser
 
-import com.pavelfatin.toyide.parser.{TreeBuilder, Parser}
 import com.pavelfatin.toyide.languages.toy.ToyTokens._
 import com.pavelfatin.toyide.languages.toy.node._
+import com.pavelfatin.toyide.parser.{Parser, TreeBuilder}
 
 object IfParser extends Parser {
-  def parse(in: TreeBuilder): Unit = {
+  def parse(in: TreeBuilder): Unit =
     in.capturing(new If()) {
       in.consume(IF)
       in.consume(LPAREN)
@@ -31,5 +31,4 @@ object IfParser extends Parser {
       BlockParser.parse(in)
       if (in.grasp(ELSE)) BlockParser.parse(in)
     }
-  }
 }

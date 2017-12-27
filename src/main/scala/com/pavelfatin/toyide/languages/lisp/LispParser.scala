@@ -25,7 +25,7 @@ import com.pavelfatin.toyide.parser.{Parser, TreeBuilder}
 object LispParser extends Parser {
   def parse(in: TreeBuilder): Unit =
     in.capturing(new ProgramNode()) {
-      while(!in.isEOF) expression(in)
+      while (!in.isEOF) expression(in)
     }
 
   def expression(in: TreeBuilder): Unit =

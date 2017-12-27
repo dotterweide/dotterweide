@@ -63,9 +63,9 @@ object ToyAdviser extends Adviser {
       .flatMap(_.declarations)
       .filter(_.span.begin < node.span.begin)
     
-    val parameters = declarations.filterBy[Parameter].map(p => asValue(p.identifier))
-    val functions = declarations.filterBy[FunctionDeclaration].map(f => asFunction(f.identifier))
-    val variables = declarations.filterBy[VariableDeclaration].filterNot(node.parents.contains).map(v => asValue(v.identifier))
+    val parameters = declarations.filterBy[Parameter          ].map(p => asValue    (p.identifier))
+    val functions  = declarations.filterBy[FunctionDeclaration].map(f => asFunction (f.identifier))
+    val variables  = declarations.filterBy[VariableDeclaration].filterNot(node.parents.contains).map(v => asValue(v.identifier))
 
     (parameters.sortBy(_.title) ++ functions.sortBy(_.title) ++ variables.sortBy(_.title)).distinct
   }
