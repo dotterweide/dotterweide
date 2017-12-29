@@ -21,7 +21,11 @@ object ExplorePC {
     val compiler = new Global(settings, reporter)
     import compiler._
 
-    val src = "class Test { val x = 0 }"
+    val src =
+      """class Test {
+        |  val x = // missing RHS
+        |}""".stripMargin
+
     val srcFile = newSourceFile(src)
 //    val run = new compiler.Run
     import compiler._

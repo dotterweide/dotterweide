@@ -116,13 +116,13 @@ class TreeBuilder(input: Iterator[Token]) {
     private var closed  = false
 
     def close(node: NodeImpl, collapseHolderNode: Boolean): Unit =
-      capture(node, collapseHolderNode)(children => children)
+      capture(node, collapseHolderNode)(identity)
 
     def fold(node: => NodeImpl, collapseHolderNode: Boolean, length: Int): Unit =
       capture(node, collapseHolderNode) {
-        case Nil => Nil
-        case _head :: Nil => Seq(_head)
-        case _head :: tail =>
+        case Nil            => Nil
+        case _head :: Nil   => _head :: Nil
+        case _head :: tail  =>
           val root = tail.grouped(length - 1).foldLeft(_head) { (left, part) =>
             val parent = node // call-by-name for factory method
             parent.children = Seq(left) ++ part

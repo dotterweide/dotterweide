@@ -25,6 +25,7 @@ import com.pavelfatin.toyide.lexer.Token
 import com.pavelfatin.toyide.optimizer.Optimizable
 
 trait Node extends Evaluable with Translatable with Optimizable {
+  /** Used in `toString` representation. Does not have any other use. */
   def kind: String
 
   def token: Option[Token]

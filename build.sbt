@@ -56,7 +56,8 @@ lazy val scalalang = project.in(file("scalalang"))
   .settings(
     name := s"$baseName - Scala language",
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-compiler" % scalaVersion.value
+      "org.scala-lang" % "scala-compiler" % scalaVersion.value,
+      "org.scalameta" %% "scalameta" % "2.1.2"
     )
   )
 

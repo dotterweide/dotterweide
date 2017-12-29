@@ -17,6 +17,10 @@
 
 package com.pavelfatin.toyide.lexer
 
+/** @param name   the token name or identifier
+  * @param data   if `true`, the token's source text should be used in
+  *               `toString` representations, if `false`, the token name should be used
+  */
 case class TokenKind(name: String, data: Boolean = false)
 
 object Tokens {
