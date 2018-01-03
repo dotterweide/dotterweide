@@ -21,6 +21,9 @@ lazy val testSettings = Seq(
 
 lazy val root = project.in(file("."))
   .aggregate(core, lisp, toy, scalalang, ui, app)
+  .settings(
+    name := baseName
+  )
 
 lazy val core = project.in(file("core"))
   .settings(commonSettings)
@@ -56,8 +59,9 @@ lazy val scalalang = project.in(file("scalalang"))
   .settings(
     name := s"$baseName - Scala language",
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-compiler" % scalaVersion.value,
-      "org.scalameta" %% "scalameta" % "2.1.2"
+      "org.scala-lang"  %  "scala-compiler" % scalaVersion.value,
+      "org.scalameta"   %% "scalameta"      % "2.1.2",
+      "org.scalariform" %% "scalariform"    % "0.2.6"
     )
   )
 

@@ -6,6 +6,7 @@ import com.pavelfatin.toyide.inspection.Inspection
 import com.pavelfatin.toyide.lexer.{Lexer, TokenKind}
 import com.pavelfatin.toyide.parser.Parser
 import com.pavelfatin.toyide.{Example, FileType, Language}
+import de.sciss.scalalang.node.ScalaTokens._
 
 object ScalaLanguage extends Language {
   def name: String = "Scala"
@@ -23,7 +24,8 @@ object ScalaLanguage extends Language {
   /** Pairs of tokens which are symmetric and can be highlighted together,
     * such as matching braces.
     */
-  def complements: Seq[(TokenKind, TokenKind)] = Nil
+  def complements: Seq[(TokenKind, TokenKind)] =
+    Seq((LBRACE, RBRACE), (LPAREN, RPAREN), (LBRACKET, RBRACKET))
 
   /** Default style for formatting the language with white space. */
   def format: Format = ScalaFormat

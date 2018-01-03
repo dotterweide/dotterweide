@@ -78,7 +78,7 @@ class MainFrame(language: Language, text: String) extends Frame {
 
   private def updateTitle(): Unit = {
     val name = tab.file.map(_.getName.replaceAll("\\.%s".format(language.fileType.extension), ""))
-    title = "%s - ToyIDE 1.2.3".format(name.getOrElse("Untitled"))
+    title = "%s - ToyIDE 1.3.0".format(name.getOrElse("Untitled"))
   }
 
   private def updateMessageFor(editor: Editor): Unit = {
