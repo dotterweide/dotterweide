@@ -19,7 +19,7 @@ object ScalaLexerNSC extends Lexer {
     settings.outputDirs.setSingleOutput(outputDir)
     settings.usejavacp              .value = true
     settings.YpresentationAnyThread .value = true // needed to print typed tree
-    settings.source                 .value = ScalaVersion("2.12.4")
+    settings.source                 .value = ScalaVersion("2.12.8")
 
     val reporter = new StoreReporter
     new Global(settings, reporter)
@@ -36,14 +36,14 @@ object ScalaLexerNSC extends Lexer {
 //    println(s"analyze: ${treeParsed.getClass}")
 //
 //    Iterator.single(Token(TokenKind("foo"), Span(input, 0, input.length()), problem = Some("not yet parsed")))
-    mkIter(input, treeParsed)
+    mkIterator(input, treeParsed)
   }
 
-  private def mkIter(input: CharSequence, t: Global#Tree): Iterator[Token] = t match {
+  private def mkIterator(input: CharSequence, t: Global#Tree): Iterator[Token] = t match {
     case global.PackageDef(_, stats) =>
       val posH = stats.headOption.fold(t.pos)(stat0 => t.pos.withEnd(stat0.pos.start))
       val span = Span(input, posH.start, posH.end)
-      Iterator.single(Token(ScalaTokens.PACKAGE, span)) ++ stats.iterator.flatMap(mkIter(input, _))
+      Iterator.single(Token(ScalaTokens.PACKAGE, span)) ++ stats.iterator.flatMap(mkIterator(input, _))
     case other => println(s"UNSUPPORTED: ${other.getClass}"); ???
   }
 

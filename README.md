@@ -1,7 +1,7 @@
 # ![ToyIDE logo](doc/images/toyide-logo.png?raw=true "ToyIDE")
 
 __Note:__ This is a fork from [here](https://github.com/pavelfatin/toyide). All changes
-by Hanns Holger Rutz, released under the same license (GPL v3+). This fork refactors the
+by Hanns Holger Rutz, released under the same license (Apache). This fork refactors the
 project into sbt sub-modules, cross-building against Scala 2.11 and 2.12,
 applies some code style changes, and investigates the possibility
 of adding Scala as a supported language (in progress). To run the demo application,

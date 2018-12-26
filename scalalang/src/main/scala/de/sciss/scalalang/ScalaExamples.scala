@@ -177,7 +177,7 @@ object ScalaExamples {
       |foo()
       |""".stripMargin
 
-  val Values = Seq(
+  val Values: Seq[Example] = Seq(
     Example("Project Euler 1", '1', Euler1),
     Example("Project Euler 2", '2', Euler2),
     Example("Project Euler 6", '6', Euler6),

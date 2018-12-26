@@ -6,16 +6,16 @@ lazy val commonSettings = Seq(
   organization       := "com.pavelfatin",
   homepage           := Some(url("https://pavelfatin.com/toyide")),
   licenses           := Seq("Apache License v2" -> url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
-  scalaVersion       := "2.12.4",
-  crossScalaVersions := Seq("2.12.4", "2.11.12"),
+  scalaVersion       := "2.12.8",
+  crossScalaVersions := Seq("2.12.8", "2.11.12"),
   scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xfuture"),
   fork in Test       := false
 )
 
 lazy val testSettings = Seq(
   libraryDependencies ++= Seq(
-    "junit"        % "junit"           % "4.12" % "test",
-    "com.novocode" % "junit-interface" % "0.11" % "test"
+    "junit"        % "junit"           % "4.12" % Test,
+    "com.novocode" % "junit-interface" % "0.11" % Test
   ),
 )
 
@@ -60,7 +60,7 @@ lazy val scalalang = project.in(file("scalalang"))
     name := s"$baseName - Scala language",
     libraryDependencies ++= Seq(
       "org.scala-lang"  %  "scala-compiler" % scalaVersion.value,
-      "org.scalameta"   %% "scalameta"      % "2.1.2",
+      "org.scalameta"   %% "scalameta"      % "4.1.0",
       "org.scalariform" %% "scalariform"    % "0.2.6"
     )
   )
@@ -72,7 +72,7 @@ lazy val ui = project.in(file("ui"))
   .settings(
     name := s"$baseName - graphical user interface",
     libraryDependencies ++= Seq(
-      "org.scala-lang.modules" %% "scala-swing" % "2.0.1"
+      "org.scala-lang.modules" %% "scala-swing" % "2.0.3"
     )
   )
 
