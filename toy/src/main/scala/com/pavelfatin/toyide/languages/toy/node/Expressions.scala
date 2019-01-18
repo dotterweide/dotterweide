@@ -1,17 +1,18 @@
 /*
- * Copyright 2018 Pavel Fatin, https://pavelfatin.com
+ *  Expressions.scala
+ *  (Dotterweide)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *  This software is published under the GNU Lesser General Public License v2.1+
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  For further information, please contact Hanns Holger Rutz at
+ *  contact@sciss.de
+ */
+
+/*
+ * Original code copyright 2018 Pavel Fatin, https://pavelfatin.com
+ * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
 package com.pavelfatin.toyide.languages.toy.node
@@ -60,19 +61,19 @@ with ToyExpression with PrefixExpressionEvaluator with TypeCheck with PrefixExpr
 }
 
 object PrefixExpression {
-  def unapply(node: PrefixExpression) = Some(node.prefix, node.expression)
+  def unapply(node: PrefixExpression) = Some((node.prefix, node.expression))
 }
 
 class BinaryExpression extends NodeImpl("binaryExpression")
 with ToyExpression with BinaryExpressionEvaluator with TypeCheck with BinaryExpressionTranslator {
   def parts: Option[(Expression, Token, Expression)] = children match {
-    case (left: Expression) :: NodeToken(_token) :: (right: Expression) :: Nil => Some(left, _token, right)
+    case (left: Expression) :: NodeToken(_token) :: (right: Expression) :: Nil => Some((left, _token, right))
     case _ => None
   }
 
   override def constant: Boolean = children match {
     case (l: Expression) :: _ ::  (r: Expression) :: Nil if l.constant && r.constant => true
-    case (l @ Expression(BooleanType)) :: NodeToken(Token(_kind, _, _)) ::  (Expression(BooleanType)) :: Nil =>
+    case (l @ Expression(BooleanType)) :: NodeToken(Token(_kind, _, _)) ::  Expression(BooleanType) :: Nil =>
       _kind match {
         case AMP_AMP => l.optimized.contains("false")
         case BAR_BAR => l.optimized.contains("true")

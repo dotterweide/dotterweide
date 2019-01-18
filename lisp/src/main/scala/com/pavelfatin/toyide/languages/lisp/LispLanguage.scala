@@ -1,24 +1,26 @@
 /*
- * Copyright 2018 Pavel Fatin, https://pavelfatin.com
+ *  LispLanguage.scala
+ *  (Dotterweide)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *  This software is published under the GNU Lesser General Public License v2.1+
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  For further information, please contact Hanns Holger Rutz at
+ *  contact@sciss.de
+ */
+
+/*
+ * Original code copyright 2018 Pavel Fatin, https://pavelfatin.com
+ * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
 package com.pavelfatin.toyide.languages.lisp
 
-import com.pavelfatin.toyide.editor.{Adviser, ColorScheme}
+import com.pavelfatin.toyide.editor.{Adviser, ColorScheme, Coloring}
 import com.pavelfatin.toyide.formatter.Format
-import com.pavelfatin.toyide.lexer.Lexer
+import com.pavelfatin.toyide.inspection.Inspection
+import com.pavelfatin.toyide.lexer.{Lexer, TokenKind}
 import com.pavelfatin.toyide.parser.Parser
 import com.pavelfatin.toyide.{Example, FileType, Language}
 
@@ -31,17 +33,17 @@ object LispLanguage extends Language {
 
   def parser: Parser = LispParser
 
-  def colorings = Map(
+  def colorings: Map[String, Coloring] = Map(
     "Light" -> new LispColoring(ColorScheme.LightColors),
-    "Dark" -> new LispColoring(ColorScheme.DarkColors))
+    "Dark"  -> new LispColoring(ColorScheme.DarkColors))
 
-  def complements = Seq(LispTokens.Parens, LispTokens.Brackets)
+  def complements: Seq[(TokenKind, TokenKind)] = Seq(LispTokens.Parens, LispTokens.Brackets)
 
   def format: Format = LispFormat
 
   def comment = ";"
 
-  def inspections = Seq()
+  def inspections: Seq[Inspection] = Seq()
 
   def adviser: Adviser = LispAdviser
 

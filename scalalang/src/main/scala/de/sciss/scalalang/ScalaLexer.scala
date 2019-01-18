@@ -1,9 +1,8 @@
 package de.sciss.scalalang
 
 import com.pavelfatin.toyide.Span
-import com.pavelfatin.toyide.lexer.{Lexer, Token, TokenKind, Tokens}
+import com.pavelfatin.toyide.lexer.{Lexer, Token, TokenKind}
 import de.sciss.scalalang.node.{ScalaTokens => STk}
-
 import scalariform.ScalaVersions
 import scalariform.lexer.{TokenType, Tokens => Tk}
 
@@ -99,7 +98,7 @@ object ScalaLexer extends Lexer {
     val tokens0 = scalariform.lexer.ScalaLexer.rawTokenise(src, forgiveErrors = true,
       scalaVersion = ScalaVersions.Scala_2_11.toString)
     tokens0.iterator.map { tk =>
-      val kind = mapTypeKinds.getOrElse(tk.tokenType, Tokens.UNKNOWN)
+      val kind = mapTypeKinds.getOrElse(tk.tokenType, TokenKind.UNKNOWN)
       val span = Span(src, begin = tk.offset, end = tk.offset + tk.length)
       // require(!span.empty, tk)
       Token(kind, span)

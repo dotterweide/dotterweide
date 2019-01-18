@@ -1,21 +1,35 @@
-lazy val baseName   = "ToyIDE"
+lazy val baseName   = "Dotterweide"
 lazy val baseNameL  = baseName.toLowerCase
 
 lazy val commonSettings = Seq(
-  version            := "1.3.0-SNAPSHOT",
-  organization       := "com.pavelfatin",
-  homepage           := Some(url("https://pavelfatin.com/toyide")),
-  licenses           := Seq("Apache License v2" -> url("https://www.apache.org/licenses/LICENSE-2.0.txt")),
+  version            := "0.1.0-SNAPSHOT",
+//  organization       := "de.sciss",
+  homepage           := Some(url(s"https://github.com/dotterweide/dotterweide")),
+  licenses           := Seq(lgpl2),
   scalaVersion       := "2.12.8",
   crossScalaVersions := Seq("2.12.8", "2.11.12"),
-  scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xfuture"),
+  scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
   fork in Test       := false
 )
 
+lazy val lgpl2 = "LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")
+
+lazy val deps = new {
+  val main = new {
+    val scalaMeta       = "4.1.0"
+    val scalariform     = "0.2.6"
+    val scalaSwing      = "2.0.3"
+  }
+  val test = new {
+    val junit           = "4.12"
+    val junitInterface  = "0.11"
+  }
+}
+
 lazy val testSettings = Seq(
   libraryDependencies ++= Seq(
-    "junit"        % "junit"           % "4.12" % Test,
-    "com.novocode" % "junit-interface" % "0.11" % Test
+    "junit"        % "junit"           % deps.test.junit          % Test,
+    "com.novocode" % "junit-interface" % deps.test.junitInterface % Test
   ),
 )
 
@@ -60,8 +74,8 @@ lazy val scalalang = project.in(file("scalalang"))
     name := s"$baseName - Scala language",
     libraryDependencies ++= Seq(
       "org.scala-lang"  %  "scala-compiler" % scalaVersion.value,
-      "org.scalameta"   %% "scalameta"      % "4.1.0",
-      "org.scalariform" %% "scalariform"    % "0.2.6"
+      "org.scalameta"   %% "scalameta"      % deps.main.scalaMeta,
+      "org.scalariform" %% "scalariform"    % deps.main.scalariform,
     )
   )
 
@@ -72,7 +86,7 @@ lazy val ui = project.in(file("ui"))
   .settings(
     name := s"$baseName - graphical user interface",
     libraryDependencies ++= Seq(
-      "org.scala-lang.modules" %% "scala-swing" % "2.0.3"
+      "org.scala-lang.modules" %% "scala-swing" % deps.main.scalaSwing
     )
   )
 

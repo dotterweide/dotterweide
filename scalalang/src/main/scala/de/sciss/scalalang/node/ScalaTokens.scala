@@ -1,6 +1,6 @@
 package de.sciss.scalalang.node
 
-import com.pavelfatin.toyide.lexer.{TokenKind, Tokens}
+import com.pavelfatin.toyide.lexer.TokenKind
 
 object ScalaTokens {
 //  val COMMENT = TokenKind("COMMENT", data = true)
@@ -38,7 +38,7 @@ object ScalaTokens {
   val CHARACTER_LITERAL       = TokenKind("CHARACTER_LITERAL")
   val MATCH                   = TokenKind("MATCH")
   val TRY                     = TokenKind("TRY")
-  val WS: TokenKind           = Tokens.WS // TokenKind("WS")
+  val WS: TokenKind           = TokenKind.WS // TokenKind("WS")
   val SUPERTYPE               = TokenKind("SUPERTYPE")
   val INTEGER_LITERAL         = TokenKind("INTEGER_LITERAL")
   val OP                      = TokenKind("OP")
