@@ -27,7 +27,7 @@ class WebServerTest extends InterpreterTesting {
   private val RequestTemplate = load("/RequestTemplate.txt")
 
   private val Code = LispExamples.WebServerCode
-    .replace("./doc", "./license")
+    .replace("./doc/toy-ide", "./licenses")
     .replace("(listen port handle-connection)", "(handle-connection mock-socket)")
 
   private val handle = new MockHandle()
@@ -42,7 +42,7 @@ class WebServerTest extends InterpreterTesting {
 
   @Test
   def normal(): Unit = {
-    assertResponse("/scala-license.txt", load("/NormalResponse.txt"))
+    assertResponse("/Scala-License.txt", load("/NormalResponse.txt"))
   }
 
   @Test

@@ -2,7 +2,7 @@
 ; Select Run / Interpret (Shift + F10),
 ; then open http://localhost/ in a browser.
 
-(def base-directory "./doc")
+(def base-directory "./doc/toy-ide")
 
 (def port 80)
 
