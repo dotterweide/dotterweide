@@ -19,7 +19,7 @@ lazy val deps = new {
   val main = new {
     val scalaMeta       = "4.1.0"
     val scalariform     = "0.2.6"
-    val scalaSwing      = "2.0.3"
+    val scalaSwing      = "2.1.0"
   }
   val test = new {
     val junit           = "4.12"
@@ -34,46 +34,51 @@ lazy val testSettings = Seq(
   ),
 )
 
-lazy val root = project.in(file("."))
-  .aggregate(core, lisp, toy, scalalang, ui, app)
+lazy val root = project.withId(baseNameL).in(file("."))
+  .aggregate(core, lispLang, toyLang, scalaLang, ui, demo)
   .settings(commonSettings)
   .settings(
-    name := baseName
+    name        := baseName,
+    description := s"$baseName - Embeddable mini-IDE"
   )
 
-lazy val core = project.in(file("core"))
+lazy val core = project.withId(s"$baseNameL-core").in(file("core"))
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
-    name := baseName
+    name        := s"$baseName-Core",
+    description := s"$baseName - Core API"
 //    libraryDependencies ++= Seq(
 //      "net.sourceforge.jasmin" % "jasmin" % "1.1",
 //    ),
   )
 
-lazy val lisp = project.in(file("lisp"))
+lazy val lispLang = project.withId(s"$baseNameL-lisp").in(file("lisp"))
   .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
-    name := s"$baseName - Clojure-like functional language",
+    name        := s"$baseName-Lisp",
+    description := s"$baseName - Clojure-like functional language",
     unmanagedResourceDirectories in Compile += baseDirectory.value / "src" / "main" / "lisp"
   )
 
-lazy val toy = project.in(file("toy"))
+lazy val toyLang = project.withId(s"$baseNameL-toy").in(file("toy"))
   .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
-    name := s"$baseName - C-like imperative language"
+    name        := s"$baseName-Toy",
+    description := s"$baseName - C-like imperative language"
   )
 
-lazy val scalalang = project.in(file("scalalang"))
+lazy val scalaLang = project.withId(s"$baseNameL-scala").in(file("scala"))
   .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
-    name := s"$baseName - Scala language",
+    name        := s"$baseName-Scala",
+    description := s"$baseName - Scala language",
     libraryDependencies ++= Seq(
       "org.scala-lang"  %  "scala-compiler" % scalaVersion.value,
       "org.scalameta"   %% "scalameta"      % deps.main.scalaMeta,
@@ -81,21 +86,23 @@ lazy val scalalang = project.in(file("scalalang"))
     )
   )
 
-lazy val ui = project.in(file("ui"))
+lazy val ui = project.withId(s"$baseNameL-ui").in(file("ui"))
   .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
-    name := s"$baseName - graphical user interface",
+    name        := s"$baseName-UI",
+    description := s"$baseName - graphical user interface",
     libraryDependencies ++= Seq(
       "org.scala-lang.modules" %% "scala-swing" % deps.main.scalaSwing
     )
   )
 
-lazy val app = project.in(file("app"))
-  .dependsOn(ui, lisp, toy, scalalang)
+lazy val demo = project.withId(s"$baseNameL-demo").in(file("demo"))
+  .dependsOn(ui, lispLang, toyLang, scalaLang)
   .settings(commonSettings)
   .settings(
-    name := s"$baseName - demo application",
-    mainClass in Compile := Some("com.pavelfatin.toyide.Application")
+    name        := s"$baseName-Demo",
+    description := s"$baseName - demo application",
+    mainClass in Compile := Some("dotterweide.Demo")
   )

@@ -17,9 +17,8 @@
 
 package dotterweide.ide.action
 
-import javax.swing.KeyStroke
-
 import dotterweide.ide.EditorTab
+import javax.swing.KeyStroke
 
 import scala.swing.{Action, Component}
 

@@ -18,12 +18,12 @@
 package dotterweide.ide.action
 
 import java.io.{File, FileOutputStream}
-import javax.swing.JOptionPane
-import javax.swing.filechooser.FileNameExtensionFilter
 
 import dotterweide.compiler.Assembler
 import dotterweide.editor.Data
 import dotterweide.node.Node
+import javax.swing.JOptionPane
+import javax.swing.filechooser.FileNameExtensionFilter
 
 import scala.swing.{Action, Component, FileChooser}
 

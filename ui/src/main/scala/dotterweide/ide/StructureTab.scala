@@ -18,11 +18,11 @@
 package dotterweide.ide
 
 import java.awt.event.{FocusAdapter, FocusEvent}
+
+import dotterweide.editor.{Data, DataEvent, Pass, Terminal}
 import javax.swing.JTree
 import javax.swing.event.{TreeSelectionEvent, TreeSelectionListener}
 import javax.swing.tree.DefaultTreeModel
-
-import dotterweide.editor.{Data, DataEvent, Pass, Terminal}
 
 import scala.swing.{BorderPanel, Component}
 

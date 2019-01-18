@@ -19,6 +19,7 @@ package dotterweide.editor
 
 import java.awt.event.{AdjustmentEvent, AdjustmentListener, ComponentAdapter, ComponentEvent, FocusEvent, FocusListener, HierarchyEvent, HierarchyListener}
 import java.awt.{Dimension, Rectangle}
+
 import javax.swing.{JComponent, JScrollPane}
 
 private class CanvasImpl(component: JComponent, scrollPane: JScrollPane) extends Canvas {

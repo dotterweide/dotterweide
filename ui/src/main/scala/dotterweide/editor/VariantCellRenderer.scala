@@ -18,10 +18,10 @@
 package dotterweide.editor
 
 import java.awt.{Component, Font}
-import javax.swing.border.EmptyBorder
-import javax.swing.{DefaultListCellRenderer, JComponent, JList, ListCellRenderer}
 
 import dotterweide.lexer.Lexer
+import javax.swing.border.EmptyBorder
+import javax.swing.{DefaultListCellRenderer, JComponent, JList, ListCellRenderer}
 
 private class VariantCellRenderer(lexer: Lexer, coloring: Coloring) extends ListCellRenderer[AnyRef] {
   private val delegate = new DefaultListCellRenderer().asInstanceOf[ListCellRenderer[AnyRef]]

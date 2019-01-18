@@ -19,8 +19,6 @@ package dotterweide.editor
 
 import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseMotionAdapter}
 import java.awt.{BorderLayout, Cursor, Dimension, Font, Graphics, Graphics2D, Point, Rectangle, Toolkit}
-import javax.swing.border.EmptyBorder
-import javax.swing.{JComponent, JPanel, JScrollPane, JViewport, KeyStroke, ListCellRenderer, Scrollable, SwingConstants, Timer}
 
 import dotterweide.Interval
 import dotterweide.document.Document
@@ -28,6 +26,8 @@ import dotterweide.editor.controller.{Controller, ControllerImpl}
 import dotterweide.editor.painter.{Painter, PainterFactory}
 import dotterweide.formatter.{Format, FormatterImpl}
 import dotterweide.lexer.Lexer
+import javax.swing.border.EmptyBorder
+import javax.swing.{JComponent, JPanel, JScrollPane, JViewport, KeyStroke, ListCellRenderer, Scrollable, SwingConstants, Timer}
 
 private class EditorImpl(val document: Document, val data: Data, val holder: ErrorHolder,
                          lexer: Lexer, coloring: Coloring, matcher: BraceMatcher,

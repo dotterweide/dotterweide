@@ -18,10 +18,10 @@
 package dotterweide.ide.action
 
 import java.io.File
-import javax.swing.KeyStroke
-import javax.swing.filechooser.FileNameExtensionFilter
 
 import dotterweide.ide.EditorTab
+import javax.swing.KeyStroke
+import javax.swing.filechooser.FileNameExtensionFilter
 
 import scala.swing.{Action, Component, Dialog, FileChooser}
 

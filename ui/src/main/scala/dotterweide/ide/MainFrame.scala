@@ -18,11 +18,11 @@
 package dotterweide.ide
 
 import java.awt.event.{ActionEvent, ActionListener, FocusAdapter, FocusEvent}
-import javax.swing.Timer
 
 import dotterweide.Language
 import dotterweide.document.Location
 import dotterweide.editor.{Editor, EditorFactory, HistoryImpl, Pass}
+import javax.swing.Timer
 
 import scala.swing.event.{WindowClosed, WindowOpened}
 import scala.swing.{BorderPanel, Component, Frame, Orientation, ScrollPane, SplitPane}

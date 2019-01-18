@@ -17,10 +17,9 @@
 
 package dotterweide.ide.action
 
-import javax.swing.KeyStroke
-
 import dotterweide.Output
 import dotterweide.ide.Launcher
+import javax.swing.KeyStroke
 
 import scala.swing.Action
 

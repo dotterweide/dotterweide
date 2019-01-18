@@ -26,7 +26,7 @@ import dotterweide.languages.toy.ToyLanguage
 
 import scala.swing.{SwingApplication, Window}
 
-object Application extends SwingApplication {
+object Demo extends SwingApplication {
   private val Languages = Seq(ScalaLanguage, ToyLanguage, LispLanguage)
 
   override def startup(args: Array[String]): Unit =

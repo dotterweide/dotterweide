@@ -18,6 +18,7 @@
 package dotterweide.ide
 
 import java.awt.{Desktop, Graphics}
+
 import javax.swing.border.{CompoundBorder, EmptyBorder, EtchedBorder}
 import javax.swing.event.{HyperlinkEvent, HyperlinkListener}
 import javax.swing.text.html.{HTMLEditorKit, ImageView}

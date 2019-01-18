@@ -18,9 +18,9 @@
 package dotterweide.ide
 
 import java.util
-import javax.swing.tree.TreeNode
 
 import dotterweide.node.Node
+import javax.swing.tree.TreeNode
 
 import scala.collection.JavaConverters._
 

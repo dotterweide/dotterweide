@@ -17,11 +17,10 @@
 
 package dotterweide.ide
 
-import dotterweide.Observable
 import dotterweide.editor.{Attributes, Color, Coloring}
 import dotterweide.lexer.TokenKind
 
-private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring with Observable {
+private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring {
   require (delegates.nonEmpty)
 
   private var _name     : String    = delegates.head._1

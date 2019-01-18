@@ -18,10 +18,10 @@
 package dotterweide.ide
 
 import java.awt.{Color, Font}
-import javax.swing.text.{AttributeSet, SimpleAttributeSet, StyleConstants}
-import javax.swing.{JTextPane, SwingUtilities}
 
 import dotterweide.editor.Coloring
+import javax.swing.text.{AttributeSet, SimpleAttributeSet, StyleConstants}
+import javax.swing.{JTextPane, SwingUtilities}
 
 private class ConsoleImpl(coloring: Coloring) extends JTextPane with Console {
   private val LinkColor = new Color(125, 121, 111)

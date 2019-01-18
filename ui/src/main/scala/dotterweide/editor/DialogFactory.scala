@@ -19,6 +19,7 @@ package dotterweide.editor
 
 import java.awt.event.{ActionEvent, KeyEvent, WindowAdapter, WindowEvent}
 import java.awt.{BorderLayout, FlowLayout, Frame}
+
 import javax.swing.border.EmptyBorder
 import javax.swing.{AbstractAction, Box, JButton, JComponent, JDialog, JPanel, JTextField, KeyStroke, WindowConstants}
 

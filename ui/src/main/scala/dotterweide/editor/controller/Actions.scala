@@ -18,7 +18,7 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.Document
-import dotterweide.editor.{Adviser, Action, Data, EditorActions, History, Terminal}
+import dotterweide.editor.{Action, Adviser, Data, EditorActions, History, Terminal}
 import dotterweide.formatter.Formatter
 
 private class Actions(document: Document, terminal: Terminal, data: Data, adviser: Adviser,
