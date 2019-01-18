@@ -1,7 +1,7 @@
 package de.sciss.scalalang
 
-import com.pavelfatin.toyide.Span
-import com.pavelfatin.toyide.lexer.{Lexer, Token, TokenKind}
+import dotterweide.Span
+import dotterweide.lexer.{Lexer, Token, TokenKind}
 import de.sciss.scalalang.node.{ScalaTokens => STk}
 import scalariform.ScalaVersions
 import scalariform.lexer.{TokenType, Tokens => Tk}
@@ -90,7 +90,7 @@ object ScalaLexer extends Lexer {
     Tk.OVERRIDE               -> STk.OVERRIDE,
     Tk.ARROW                  -> STk.ARROW,
     Tk.EXTENDS                -> STk.EXTENDS,
-    Tk.INTERPOLATION_ID       -> STk.INTERPOLATION_ID,
+    Tk.INTERPOLATION_ID       -> STk.INTERPOLATION_ID
   )
 
   def analyze(input: CharSequence): Iterator[Token] = {

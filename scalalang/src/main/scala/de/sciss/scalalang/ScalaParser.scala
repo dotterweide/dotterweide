@@ -1,6 +1,6 @@
 package de.sciss.scalalang
 
-import com.pavelfatin.toyide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{Parser, TreeBuilder}
 import de.sciss.scalalang.node.PackageNode
 
 // XXX TODO

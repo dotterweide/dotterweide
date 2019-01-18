@@ -1,6 +1,6 @@
 package de.sciss.scalalang.node
 
-import com.pavelfatin.toyide.node.NodeImpl
+import dotterweide.node.NodeImpl
 
 class PackageNode extends NodeImpl("package") // with Scope
 

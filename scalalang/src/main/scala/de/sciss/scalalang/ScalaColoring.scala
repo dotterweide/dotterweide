@@ -2,8 +2,8 @@ package de.sciss.scalalang
 
 import java.awt.Color
 
-import com.pavelfatin.toyide.editor.{AbstractColoring, Attributes, Coloring, Style, Weight}
-import com.pavelfatin.toyide.lexer.TokenKind
+import dotterweide.editor.{AbstractColoring, Attributes, Coloring, Style, Weight}
+import dotterweide.lexer.TokenKind
 import de.sciss.scalalang.node.ScalaTokens._
 
 class ScalaColoring(colors: Map[String, Color]) extends AbstractColoring(colors) {

@@ -35,6 +35,7 @@ lazy val testSettings = Seq(
 
 lazy val root = project.in(file("."))
   .aggregate(core, lisp, toy, scalalang, ui, app)
+  .settings(commonSettings)
   .settings(
     name := baseName
   )

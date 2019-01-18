@@ -1,8 +1,8 @@
 package de.sciss.scalalang
 
-import com.pavelfatin.toyide.formatter.Distance.Joint
-import com.pavelfatin.toyide.formatter.{Distance, Format}
-import com.pavelfatin.toyide.lexer.TokenKind
+import dotterweide.formatter.Distance.Joint
+import dotterweide.formatter.{Distance, Format}
+import dotterweide.lexer.TokenKind
 
 object ScalaFormat extends Format {
   def distanceFor(a: TokenKind, b: TokenKind): Distance = Joint

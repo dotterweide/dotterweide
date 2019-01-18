@@ -1,7 +1,7 @@
 package de.sciss.scalalang
 
-import com.pavelfatin.toyide.Span
-import com.pavelfatin.toyide.lexer.{Lexer, Token}
+import dotterweide.Span
+import dotterweide.lexer.{Lexer, Token}
 import de.sciss.scalalang.node.ScalaTokens
 
 import scala.tools.nsc.Settings

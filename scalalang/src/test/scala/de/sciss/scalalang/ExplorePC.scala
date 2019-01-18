@@ -58,7 +58,7 @@ object ExplorePC {
     println(s"cd.pos            = ${cd.pos}")
     println(s"cdMods.positions  = ${cdMods.positions}")
 //    println(s"cdName.start      = ${cdName.start}")
-    println(s"cdName.length     = ${cdName.length()}")
+    println(s"cdName.length     = ${cdName.length}")
     println(s"cdName.decoded    = ${cdName.decoded}")
     println(s"cdTemp.pos        = ${cdTemp.pos}")
     val Template(cdParents, _ /* cdSelf */, cdBody) = cdTemp

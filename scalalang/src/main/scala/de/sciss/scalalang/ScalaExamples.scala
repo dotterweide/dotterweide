@@ -1,6 +1,6 @@
 package de.sciss.scalalang
 
-import com.pavelfatin.toyide.Example
+import dotterweide.Example
 
 object ScalaExamples {
   val Euler1: String =

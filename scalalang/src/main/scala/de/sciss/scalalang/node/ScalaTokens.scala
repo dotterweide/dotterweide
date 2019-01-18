@@ -1,6 +1,6 @@
 package de.sciss.scalalang.node
 
-import com.pavelfatin.toyide.lexer.TokenKind
+import dotterweide.lexer.TokenKind
 
 object ScalaTokens {
 //  val COMMENT = TokenKind("COMMENT", data = true)
