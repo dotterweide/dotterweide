@@ -26,5 +26,5 @@ trait Parser {
     builder.tree
   }
 
-  def parse(in: TreeBuilder): Unit
+  protected def parse(in: TreeBuilder): Unit
 }
