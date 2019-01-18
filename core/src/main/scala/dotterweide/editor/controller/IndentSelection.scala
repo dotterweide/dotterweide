@@ -17,16 +17,18 @@
 
 package dotterweide.editor.controller
 
-import dotterweide.document.Document
-import dotterweide.editor.{Action, Terminal}
 import dotterweide.Interval
+import dotterweide.document.Document
+import dotterweide.editor.Terminal
 
-private class IndentSelection(document: Document, terminal: Terminal, tabSize: Int) extends Action with Repeater {
-  repeat(document, terminal)
+private class IndentSelection(document: Document, terminal: Terminal, tabSize: Int)
+  extends DocumentAction(document, terminal) {
 
-  def keys: Seq[String] = List("pressed TAB")
+  def name: String        = "Indent Selection"
+  def mnemonic: Char      = 'I'
+  def keys: List[String]  = "pressed TAB" :: Nil
 
-  override def enabled: Boolean = terminal.selection.isDefined
+  protected def calcEnabled(): Boolean = terminal.selection.isDefined
 
   def apply(): Unit =
     terminal.selection.foreach { it =>

@@ -18,16 +18,18 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.Document
-import dotterweide.editor.{Action, Terminal, History}
+import dotterweide.editor.{Action, History, Terminal}
 
 private class HistoricalAction(delegate: Action, document: Document, terminal: Terminal, history: History)
   extends Action {
 
-  def keys: Seq[String] = delegate.keys
+  def keys: List[String]  = delegate.keys
 
-  override def enabled: Boolean = delegate.enabled
+  override def name     : String  = delegate.name
+  override def mnemonic : Char    = delegate.mnemonic
+  override def enabled  : Boolean = delegate.enabled
 
-  delegate.onChange(notifyObservers())
+  delegate.onChange(evt => notifyObservers(evt))
 
   def apply(): Unit =
     history.recording(document, terminal) {

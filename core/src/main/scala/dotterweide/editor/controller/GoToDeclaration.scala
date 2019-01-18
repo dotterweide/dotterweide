@@ -1,5 +1,5 @@
 /*
- *  GotoDeclaration.scala
+ *  GoToDeclaration.scala
  *  (Dotterweide)
  *
  *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
@@ -17,11 +17,13 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.editor.{Action, Data, Terminal}
 import dotterweide.node.{IdentifiedNode, Node}
-import dotterweide.editor.{Action, Terminal, Data}
 
-private class GotoDeclaration(terminal: Terminal, data: Data) extends Action {
-  def keys: Seq[String] = List("ctrl pressed B")
+private class GoToDeclaration(terminal: Terminal, data: Data) extends Action {
+  def name: String        = "Go to Declaration"
+  def mnemonic: Char      = 'G'
+  def keys: List[String]  = "ctrl pressed B" :: Nil
 
   def apply(): Unit = {
     data.compute()

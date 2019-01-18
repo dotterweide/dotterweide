@@ -18,14 +18,14 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.Document
-import dotterweide.editor.{Action, Terminal}
+import dotterweide.editor.Terminal
 
-private class MoveLineDown(document: Document, terminal: Terminal) extends Action with Repeater {
-  repeat(document, terminal)
+private class MoveLineDown(document: Document, terminal: Terminal) extends DocumentAction(document, terminal) {
+  def name: String        = "Move Line Down"
+  def mnemonic: Char      = 'D'
+  def keys: List[String]  = "shift ctrl pressed DOWN" :: Nil
 
-  def keys: Seq[String] = List("shift ctrl pressed DOWN")
-
-  override def enabled: Boolean = document.lineNumberOf(terminal.offset) < document.linesCount - 1
+  protected def calcEnabled(): Boolean = document.lineNumberOf(terminal.offset) < document.linesCount - 1
 
   def apply(): Unit = {
     val location = document.toLocation(terminal.offset)

@@ -24,7 +24,9 @@ import dotterweide.document.Document
 import dotterweide.editor.{Action, Terminal}
 
 private class Cut(document: Document, terminal: Terminal) extends Action {
-  def keys: Seq[String] = List("ctrl pressed X", "shift pressed DELETE")
+  def name: String        = "Cut"
+  def mnemonic: Char      = 'T'
+  def keys: List[String]  = List("ctrl pressed X", "shift pressed DELETE")
 
   def apply(): Unit = {
     if (terminal.selection.isEmpty)

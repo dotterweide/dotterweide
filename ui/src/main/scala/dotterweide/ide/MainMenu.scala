@@ -17,11 +17,10 @@
 
 package dotterweide.ide
 
-import javax.swing.KeyStroke
-
 import dotterweide.Example
-import dotterweide.editor.{Action => _Action, Data, EditorActions, Runner}
+import dotterweide.editor.{Data, EditorActions, Runner, Action => _Action}
 import dotterweide.ide.action.{ColoringAction, ExampleAction, ExportToClassAction, InterpretAction, InvokeAction, NewAction, OpenAction, SaveAction, SaveAsAction, StopAction}
+import javax.swing.KeyStroke
 
 import scala.swing.event.Key
 import scala.swing.{Action, CheckMenuItem, Component, Dimension, Frame, Menu, MenuBar, MenuItem, RadioMenuItem, Separator}
@@ -37,9 +36,9 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
   private val duplicateLine     = new MenuItem("")
   private val indentSelection   = new MenuItem("")
   private val unindentSelection = new MenuItem("")
-  private val escape            = new MenuItem("")
+  private val clearSelection    = new MenuItem("")
   private val format            = new MenuItem("")
-  private val gotoDeclaration   = new MenuItem("")
+  private val goToDeclaration   = new MenuItem("")
   private val moveLineDown      = new MenuItem("")
   private val moveLineUp        = new MenuItem("")
   private val optimize          = new MenuItem("")
@@ -51,31 +50,30 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
   private val toggleLineComment = new MenuItem("")
 
   def bindTo(actions: EditorActions): Unit = {
-    bind(complete         , "Complete"            , 'P', actions.complete)
-    bind(copy             , "Copy"                , 'C', actions.copy)
-    bind(cut              , "Cut"                 , 'T', actions.cut)
-    bind(duplicateLine    , "Duplicate Line"      , 'D', actions.duplicateLine)
-    bind(indentSelection  , "Indent Selection"    , 'I', actions.indentSelection)
-    bind(unindentSelection, "Unindent Selection"  , 'N', actions.unindentSelection)
-    bind(escape           , "Clear Selection"     , 'L', actions.escape)
-    bind(format           , "Reformat"            , 'F', actions.format)
-    bind(gotoDeclaration  , "Goto Declaration"    , 'G', actions.gotoDeclaration)
-    bind(moveLineDown     , "Move Line Down"      , 'D', actions.moveLineDown)
-    bind(moveLineUp       , "Move Line Up"        , 'U', actions.moveLineUp)
-    bind(optimize         , "Optimize"            , 'O', actions.optimize)
-    bind(paste            , "Paste"               , 'P', actions.paste)
-    bind(removeLine       , "Remove Line"         , 'R', actions.removeLine)
-    bind(rename           , "Rename"              , 'R', actions.rename)
-    bind(selectAll        , "Select All"          , 'A', actions.selectAll)
-    bind(showUsages       , "Show Usages"         , 'S', actions.showUsages)
-    bind(toggleLineComment, "Toggle Line Comment" , 'T', actions.toggleLineComment)
-    bind(undo             , "Undo"                , 'U', actions.undo)
-    bind(redo             , "Redo"                , 'R', actions.redo)
+    bind(complete         , actions.complete          )
+    bind(copy             , actions.copy              )
+    bind(cut              , actions.cut               )
+    bind(duplicateLine    , actions.duplicateLine     )
+    bind(indentSelection  , actions.indentSelection   )
+    bind(unindentSelection, actions.unindentSelection )
+    bind(clearSelection   , actions.clearSelection    )
+    bind(format           , actions.format            )
+    bind(goToDeclaration  , actions.goToDeclaration   )
+    bind(moveLineDown     , actions.moveLineDown      )
+    bind(moveLineUp       , actions.moveLineUp        )
+    bind(optimize         , actions.optimize          )
+    bind(paste            , actions.paste             )
+    bind(removeLine       , actions.removeLine        )
+    bind(rename           , actions.rename            )
+    bind(selectAll        , actions.selectAll         )
+    bind(showUsages       , actions.showUsages        )
+    bind(toggleLineComment, actions.toggleLineComment )
+    bind(undo             , actions.undo              )
+    bind(redo             , actions.redo              )
   }
 
-  private def bind(item: MenuItem, title: String, mnemonic: Char, anAction: _Action): Unit = {
-    item.action = new ActionAdapter(title, mnemonic, anAction)
-  }
+  private def bind(item: MenuItem, action: _Action): Unit =
+    item.action = new ActionAdapter(action)
 
   contents += new Menu("File") {
     private val parent = Component.wrap(frame.peer.getRootPane)
@@ -106,7 +104,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
     contents += paste
     contents += new Separator()
     contents += selectAll
-    contents += escape
+    contents += clearSelection
     contents += new Separator()
     contents += duplicateLine
     contents += removeLine
@@ -117,7 +115,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
   contents += new Menu("Code") {
     mnemonic = Key.D
 
-    contents += gotoDeclaration
+    contents += goToDeclaration
     contents += showUsages
     contents += new Separator()
     contents += complete

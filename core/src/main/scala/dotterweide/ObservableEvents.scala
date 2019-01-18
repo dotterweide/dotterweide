@@ -24,7 +24,7 @@ trait ObservableEvents[A] {
     observers ::= action
 
   def notifyObservers(event: A): Unit =
-    observers.foreach(_(event))
+    observers.foreach(_.apply(event))
 
   def disconnect(action: A => Unit): Unit =
     observers = observers.filterNot(_ == action)

@@ -17,12 +17,14 @@
 
 package dotterweide.editor.controller
 
-import dotterweide.document.Document
 import dotterweide.Interval
+import dotterweide.document.Document
 import dotterweide.editor.{Action, Terminal}
 
 private class SelectAll(document: Document, terminal: Terminal) extends Action {
-  def keys: Seq[String] = List("ctrl pressed A")
+  def name: String        = "Select All"
+  def mnemonic: Char      = 'A'
+  def keys: List[String]  = "ctrl pressed A" :: Nil
 
   def apply(): Unit =
     terminal.selection = Some(Interval(0, document.length))

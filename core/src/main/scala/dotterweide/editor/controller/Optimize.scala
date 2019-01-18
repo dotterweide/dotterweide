@@ -22,7 +22,9 @@ import dotterweide.editor.{Action, Data, Terminal}
 import dotterweide.optimizer.Optimizer
 
 private class Optimize(document: Document, terminal: Terminal, data: Data) extends Action {
-  def keys: Seq[String] = List("ctrl alt pressed O")
+  def name: String        = "Optimize"
+  def mnemonic: Char      = 'O'
+  def keys: List[String]  = "ctrl alt pressed O" :: Nil
 
   def apply(): Unit = {
     data.compute()

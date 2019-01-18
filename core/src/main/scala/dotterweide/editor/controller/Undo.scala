@@ -18,14 +18,17 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.Document
-import dotterweide.editor.{Action, History, Terminal}
+import dotterweide.editor.{History, Terminal}
 
-private class Undo(document: Document, terminal: Terminal, history: History) extends Action with Repeater {
-  repeat(document, terminal)
+// XXX TODO --- should observe `history` instead
+private class Undo(document: Document, terminal: Terminal, history: History)
+  extends DocumentAction(document, terminal) {
 
-  def keys: Seq[String] = List("ctrl pressed Z")
+  def name: String        = "Undo"
+  def mnemonic: Char      = 'U'
+  def keys: List[String]  = "ctrl pressed Z" :: Nil
 
-  override def enabled: Boolean = history.canUndo
+  protected def calcEnabled(): Boolean = history.canUndo
 
   def apply(): Unit =
     history.undo()

@@ -17,10 +17,23 @@
 
 package dotterweide.editor
 
-import dotterweide.Observable
+import dotterweide.ObservableEvents
 
-trait Action extends Function0[Unit] with Observable {
-  def keys: Seq[String]
+object Action {
+  sealed trait Update
+  final case class EnabledChanged (enabled: Boolean ) extends Update
+  final case class NameChanged    (name   : String  ) extends Update
+}
+trait Action extends Function0[Unit] with ObservableEvents[Action.Update] {
+  /** A list of keyboard shortcuts. */
+  def keys: List[String]
 
+  /** Name or title of the action. */
+  def name: String
+
+  /** Mnemonic character for menu display, or `'\0'` */
+  def mnemonic: Char
+
+  /** Whether the action is currently available or not. */
   def enabled: Boolean = true
 }

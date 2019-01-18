@@ -18,14 +18,15 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.Document
-import dotterweide.editor.{Action, Terminal}
+import dotterweide.editor.Terminal
 
-private class MoveLineUp(document: Document, terminal: Terminal) extends Action with Repeater {
-  repeat(document, terminal)
+private class MoveLineUp(document: Document, terminal: Terminal) extends DocumentAction(document, terminal) {
+  def name: String        = "Move Line Up"
+  def mnemonic: Char      = 'U'
+  def keys: List[String]  = "shift ctrl pressed UP" :: Nil
 
-  def keys: Seq[String] = List("shift ctrl pressed UP")
+  protected def calcEnabled(): Boolean = document.lineNumberOf(terminal.offset) > 0
 
-  override def enabled: Boolean = document.lineNumberOf(terminal.offset) > 0
 
   def apply(): Unit = {
     val location = document.toLocation(terminal.offset)

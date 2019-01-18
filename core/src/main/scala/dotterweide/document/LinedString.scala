@@ -92,9 +92,9 @@ private object LinedString {
     }
 
   private def wrapsIn(lines: List[CharSequence], offset: Int): List[Int] = lines match {
-    case Nil => throw new IllegalArgumentException()
+    case Nil      => throw new IllegalArgumentException()
     case _ :: Nil => Nil
-    case (h :: t) => (offset + h.length - 1) :: wrapsIn(t, offset + h.length )
+    case h :: t   => (offset + h.length - 1) :: wrapsIn(t, offset + h.length )
   }
 
   private def endsWith(chars: CharSequence, c: Char) =

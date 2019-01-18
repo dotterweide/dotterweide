@@ -21,7 +21,9 @@ import dotterweide.document.Document
 import dotterweide.editor.{Action, Terminal}
 
 private class RemoveLine(document: Document, terminal: Terminal) extends Action {
-  def keys: Seq[String] = List("ctrl pressed Y")
+  def name: String        = "Remove Line"
+  def mnemonic: Char      = 'R'
+  def keys: List[String]  = "ctrl pressed Y" :: Nil
 
   def apply(): Unit = {
     val range = terminal.currentLineIntervalIn(document)

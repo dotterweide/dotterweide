@@ -17,21 +17,23 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.Interval
 import dotterweide.document.Document
 import dotterweide.editor.{Action, Terminal}
-import dotterweide.Interval
 
 private class DuplicateLine(document: Document, terminal: Terminal) extends Action {
-  def keys: Seq[String] = List("ctrl pressed D")
+  def name: String        = "Duplicate Line"
+  def mnemonic: Char      = 'D'
+  def keys: List[String]  = "ctrl pressed D" :: Nil
 
   def apply(): Unit = {
     val selection = terminal.selection
-    val interval = selection.getOrElse {
+    val interval  = selection.getOrElse {
       val line = document.toLocation(terminal.offset).line
       Interval(document.startOffsetOf(line), document.endOffsetOf(line))
     }
-    val snippet = document.text(interval)
-    val addition = if (selection.isDefined) snippet else "\n%s".format(snippet)
+    val snippet   = document.text(interval)
+    val addition  = if (selection.isDefined) snippet else "\n%s".format(snippet)
 
     document.insert(interval.end, addition)
 

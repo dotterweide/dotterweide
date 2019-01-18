@@ -1,5 +1,5 @@
 /*
- *  Repeater.scala
+ *  ClearSelection.scala
  *  (Dotterweide)
  *
  *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
@@ -17,17 +17,15 @@
 
 package dotterweide.editor.controller
 
-import dotterweide.Observable
-import dotterweide.document.Document
-import dotterweide.editor.Terminal
+import dotterweide.editor.{Action, Terminal}
 
-private trait Repeater { self: Observable =>
-  def repeat(document: Document, terminal: Terminal): Unit = {
-    document.onChange { _ =>
-      notifyObservers()
-    }
-    terminal.onChange { _ =>
-      notifyObservers()
-    }
+private class ClearSelection(terminal: Terminal) extends Action {
+  def name: String        = "Clear Selection"
+  def mnemonic: Char      = 'L'
+  def keys: List[String]  = "pressed ESCAPE" :: Nil
+
+  def apply(): Unit = {
+    terminal.selection  = None
+    terminal.highlights = Nil
   }
 }

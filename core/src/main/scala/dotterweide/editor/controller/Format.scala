@@ -17,19 +17,21 @@
 
 package dotterweide.editor.controller
 
-import dotterweide.formatter.Formatter
 import dotterweide.document.Document
-import dotterweide.editor.{Action, Terminal, Data}
+import dotterweide.editor.{Action, Data, Terminal}
+import dotterweide.formatter.Formatter
 
 private class Format(document: Document, terminal: Terminal, data: Data, formatter: Formatter, tabSize: Int) extends Action {
-  def keys: Seq[String] = List("ctrl alt pressed L")
+  def name: String        = "Reformat"
+  def mnemonic: Char      = 'F'
+  def keys: List[String]  = "ctrl alt pressed L" :: Nil
 
   def apply(): Unit = {
     data.compute()
     data.structure.foreach { root =>
-      val text = formatter.format(root, terminal.selection, tabSize)
+      val text        = formatter.format(root, terminal.selection, tabSize)
       terminal.offset = terminal.offset.min(text.length)
-      document.text = text
+      document.text   = text
     }
   }
 }

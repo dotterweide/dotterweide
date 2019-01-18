@@ -17,10 +17,12 @@
 
 package dotterweide.editor.controller
 
-import dotterweide.editor.{Action, Terminal, Data}
+import dotterweide.editor.{Action, Data, Terminal}
 
 private class ShowUsages(terminal: Terminal, data: Data) extends Action {
-  def keys: Seq[String] = List("shift ctrl pressed F7")
+  def name: String        = "Show Usages"
+  def mnemonic: Char      = 'S'
+  def keys: List[String]  = "shift ctrl pressed F7" :: Nil
 
   def apply(): Unit = {
     data.compute()

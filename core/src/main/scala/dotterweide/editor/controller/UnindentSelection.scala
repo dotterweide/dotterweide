@@ -19,14 +19,16 @@ package dotterweide.editor.controller
 
 import dotterweide.Interval
 import dotterweide.document.Document
-import dotterweide.editor.{Action, Terminal}
+import dotterweide.editor.Terminal
 
-private class UnindentSelection(document: Document, terminal: Terminal, tabSize: Int) extends Action with Repeater {
-  repeat(document, terminal)
+private class UnindentSelection(document: Document, terminal: Terminal, tabSize: Int)
+  extends DocumentAction(document, terminal) {
 
-  def keys: Seq[String] = List("shift pressed TAB")
+  def name: String        = "Unindent Selection"
+  def mnemonic: Char      = 'N'
+  def keys: List[String]  = "shift pressed TAB" :: Nil
 
-  override def enabled: Boolean = terminal.selection.isDefined
+  protected def calcEnabled(): Boolean = terminal.selection.isDefined
 
   def apply(): Unit =
     terminal.selection.foreach { it =>

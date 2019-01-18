@@ -17,24 +17,27 @@
 
 package dotterweide.ide
 
-import javax.swing.{KeyStroke, SwingUtilities}
-
 import dotterweide.editor.{Action => _Action}
+import javax.swing.KeyStroke
 
-import scala.swing.Action
+import scala.swing.{Action, Swing}
 
-private class ActionAdapter(title: String, key: Char, anAction: _Action) extends Action(title) {
-  mnemonic    = key
-  accelerator = Some(KeyStroke.getKeyStroke(anAction.keys.head))
-  enabled     = anAction.enabled
+/** Wraps an `editor.Action` inside a `scala.swing.Action`. */
+private class ActionAdapter(peer: _Action) extends Action(peer.name) {
+  mnemonic    = peer.mnemonic
+  accelerator = Option(KeyStroke.getKeyStroke(peer.keys.headOption.orNull))
+  enabled     = peer.enabled
 
-  anAction.onChange {
-    SwingUtilities.invokeLater(new Runnable {
-      def run(): Unit = {
-        enabled = anAction.enabled
+  peer.onChange {
+    case _Action.EnabledChanged(value) =>
+      Swing.onEDT {
+        enabled = value
       }
-    })
+    case _Action.NameChanged(value) =>
+      Swing.onEDT {
+        title = value
+      }
   }
 
-  def apply(): Unit = anAction()
+  def apply(): Unit = peer()
 }

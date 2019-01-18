@@ -18,10 +18,12 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.{Bias, Document}
-import dotterweide.editor.{Action, History, Data, Terminal}
+import dotterweide.editor.{Action, Data, History, Terminal}
 
 private class Rename(document: Document, terminal: Terminal, data: Data, history: History) extends Action {
-  def keys: Seq[String] = List("shift pressed F6")
+  def name: String        = "Rename"
+  def mnemonic: Char      = 'R'
+  def keys: List[String]  = "shift pressed F6" :: Nil
 
   def apply(): Unit = {
     data.compute()

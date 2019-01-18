@@ -18,14 +18,17 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.Document
-import dotterweide.editor.{Action, History, Terminal}
+import dotterweide.editor.{History, Terminal}
 
-private class Redo(document: Document, terminal: Terminal, history: History) extends Action with Repeater {
-  repeat(document, terminal)
+// XXX TODO --- should observe `history` instead
+private class Redo(document: Document, terminal: Terminal, history: History)
+  extends DocumentAction(document, terminal) {
 
-  def keys: Seq[String] = List("shift ctrl pressed Z")
+  def name: String        = "Redo"
+  def mnemonic: Char      = 'R'
+  def keys: List[String]  = "shift ctrl pressed Z" :: Nil
 
-  override def enabled: Boolean = history.canRedo
+  protected def calcEnabled(): Boolean = history.canRedo
 
   def apply(): Unit =
     history.redo()

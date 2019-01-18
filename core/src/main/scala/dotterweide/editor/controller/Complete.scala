@@ -18,11 +18,14 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.Document
-import dotterweide.editor.{Adviser, Action, Data, History, Terminal, Variant}
+import dotterweide.editor.{Action, Adviser, Data, History, Terminal, Variant}
 
 private class Complete(document: Document, terminal: Terminal, data: Data,
                        adviser: Adviser, history: History) extends Action {
-  def keys: Seq[String] = List("ctrl pressed SPACE")
+
+  def name: String        = "Complete"
+  def mnemonic: Char      = 'P'
+  def keys: List[String]  = "ctrl pressed SPACE" :: Nil
 
   def apply(): Unit = {
     terminal.selection = None

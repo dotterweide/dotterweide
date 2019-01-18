@@ -18,12 +18,15 @@
 package dotterweide.editor.controller
 
 import java.awt.Toolkit
-import dotterweide.document.Document
 import java.awt.datatransfer.DataFlavor
+
+import dotterweide.document.Document
 import dotterweide.editor.{Action, Terminal}
 
 private class Paste(document: Document, terminal: Terminal) extends Action {
-  def keys: Seq[String] = List("ctrl pressed V", "shift pressed INSERT")
+  def name: String        = "Paste"
+  def mnemonic: Char      = 'P'
+  def keys: List[String]  = List("ctrl pressed V", "shift pressed INSERT")
 
   def apply(): Unit = {
     val contents = Toolkit.getDefaultToolkit.getSystemClipboard.getContents(null)

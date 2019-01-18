@@ -22,9 +22,9 @@ trait EditorActions {
   def copy              : Action
   def cut               : Action
   def duplicateLine     : Action
-  def escape            : Action
+  def clearSelection    : Action
   def format            : Action
-  def gotoDeclaration   : Action
+  def goToDeclaration   : Action
   def indentSelection   : Action
   def moveLineDown      : Action
   def moveLineUp        : Action
@@ -44,9 +44,9 @@ trait EditorActions {
     copy,
     cut,
     duplicateLine,
-    escape,
+    clearSelection,
     format,
-    gotoDeclaration,
+    goToDeclaration,
     indentSelection,
     moveLineDown,
     moveLineUp,
