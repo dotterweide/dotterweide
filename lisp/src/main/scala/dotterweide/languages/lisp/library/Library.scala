@@ -37,32 +37,22 @@ object Library {
 
   private var cachedInstance: Option[Library] = None
 
-  private var busy = false
+  private val sync = new AnyRef
 
   def instance: Library = cachedInstance.getOrElse {
-    val library = exclusively(new Library(Map.empty))(createLibrary())
-    cachedInstance = Some(library)
-    library
-  }
-
-  private def exclusively[A](default: => A)(create: => A): A = {
-    if (busy) default else {
-      busy = true
-      val result = create
-      busy = false
-      result
+    sync.synchronized {
+      val environment = new EnvironmentImpl()
+      def replace(): Library = {
+        val res = new Library(environment.globals.toMap)
+        cachedInstance = Some(res)
+        res
+      }
+      replace(); initialize(environment, "Core"      , CoreCode)
+      replace(); initialize(environment, "Function"  , FunctionCode)
+      replace(); initialize(environment, "Arithmetic", ArithmeticCode)
+      replace(); initialize(environment, "List"      , ListCode)
+      replace()
     }
-  }
-
-  private def createLibrary(): Library = {
-    val environment = new EnvironmentImpl()
-
-    initialize(environment, "Core"      , CoreCode)
-    initialize(environment, "Function"  , FunctionCode)
-    initialize(environment, "Arithmetic", ArithmeticCode)
-    initialize(environment, "List"      , ListCode)
-
-    new Library(environment.globals.toMap)
   }
 
   private def load(file: String): String = {

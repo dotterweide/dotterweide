@@ -2,14 +2,15 @@ lazy val baseName   = "Dotterweide"
 lazy val baseNameL  = baseName.toLowerCase
 
 lazy val commonSettings = Seq(
-  version            := "0.1.0-SNAPSHOT",
-//  organization       := "de.sciss",
-  homepage           := Some(url(s"https://github.com/dotterweide/dotterweide")),
-  licenses           := Seq(lgpl2),
-  scalaVersion       := "2.12.8",
-  crossScalaVersions := Seq("2.12.8", "2.11.12"),
-  scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
-  fork in Test       := false
+  version                   := "0.1.0-SNAPSHOT",
+//  organization              := "de.sciss",
+  homepage                  := Some(url(s"https://github.com/dotterweide/dotterweide")),
+  licenses                  := Seq(lgpl2),
+  scalaVersion              := "2.12.8",
+  crossScalaVersions        := Seq("2.12.8", "2.11.12"),
+  scalacOptions            ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
+  fork in Test              := false,
+  parallelExecution in Test := false
 )
 
 lazy val lgpl2 = "LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")
