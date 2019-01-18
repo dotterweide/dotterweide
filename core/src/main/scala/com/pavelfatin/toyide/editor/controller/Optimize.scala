@@ -17,10 +17,10 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.{Bias, Document}
-import com.pavelfatin.toyide.editor.{AnAction, Data, Terminal}
+import com.pavelfatin.toyide.editor.{Action, Data, Terminal}
 import com.pavelfatin.toyide.optimizer.Optimizer
 
-private class Optimize(document: Document, terminal: Terminal, data: Data) extends AnAction {
+private class Optimize(document: Document, terminal: Terminal, data: Data) extends Action {
   def keys: Seq[String] = List("ctrl alt pressed O")
 
   def apply(): Unit = {

@@ -19,9 +19,9 @@ package com.pavelfatin.toyide.editor.controller
 import java.awt.Toolkit
 import com.pavelfatin.toyide.document.Document
 import java.awt.datatransfer.DataFlavor
-import com.pavelfatin.toyide.editor.{AnAction, Terminal}
+import com.pavelfatin.toyide.editor.{Action, Terminal}
 
-private class Paste(document: Document, terminal: Terminal) extends AnAction {
+private class Paste(document: Document, terminal: Terminal) extends Action {
   def keys: Seq[String] = List("ctrl pressed V", "shift pressed INSERT")
 
   def apply(): Unit = {

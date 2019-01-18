@@ -18,11 +18,11 @@ package com.pavelfatin.toyide.ide
 
 import javax.swing.{KeyStroke, SwingUtilities}
 
-import com.pavelfatin.toyide.editor.AnAction
+import com.pavelfatin.toyide.editor.{Action => _Action}
 
 import scala.swing.Action
 
-private class AnActionAdapter(title: String, key: Char, anAction: AnAction) extends Action(title) {
+private class AnActionAdapter(title: String, key: Char, anAction: _Action) extends Action(title) {
   mnemonic    = key
   accelerator = Some(KeyStroke.getKeyStroke(anAction.keys.head))
   enabled     = anAction.enabled

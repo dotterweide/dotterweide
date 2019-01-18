@@ -17,9 +17,9 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.{Bias, Document}
-import com.pavelfatin.toyide.editor.{AnAction, History, Data, Terminal}
+import com.pavelfatin.toyide.editor.{Action, History, Data, Terminal}
 
-private class Rename(document: Document, terminal: Terminal, data: Data, history: History) extends AnAction {
+private class Rename(document: Document, terminal: Terminal, data: Data, history: History) extends Action {
   def keys: Seq[String] = List("shift pressed F6")
 
   def apply(): Unit = {

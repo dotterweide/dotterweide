@@ -17,10 +17,10 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor.{AnAction, Terminal}
+import com.pavelfatin.toyide.editor.{Action, Terminal}
 import com.pavelfatin.toyide.Interval
 
-private class IndentSelection(document: Document, terminal: Terminal, tabSize: Int) extends AnAction with Repeater {
+private class IndentSelection(document: Document, terminal: Terminal, tabSize: Int) extends Action with Repeater {
   repeat(document, terminal)
 
   def keys: Seq[String] = List("pressed TAB")

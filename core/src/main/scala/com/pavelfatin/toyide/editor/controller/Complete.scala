@@ -17,10 +17,10 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor.{Adviser, AnAction, Data, History, Terminal, Variant}
+import com.pavelfatin.toyide.editor.{Adviser, Action, Data, History, Terminal, Variant}
 
 private class Complete(document: Document, terminal: Terminal, data: Data,
-                       adviser: Adviser, history: History) extends AnAction {
+                       adviser: Adviser, history: History) extends Action {
   def keys: Seq[String] = List("ctrl pressed SPACE")
 
   def apply(): Unit = {

@@ -17,9 +17,9 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor.{AnAction, History, Terminal}
+import com.pavelfatin.toyide.editor.{Action, History, Terminal}
 
-private class Undo(document: Document, terminal: Terminal, history: History) extends AnAction with Repeater {
+private class Undo(document: Document, terminal: Terminal, history: History) extends Action with Repeater {
   repeat(document, terminal)
 
   def keys: Seq[String] = List("ctrl pressed Z")

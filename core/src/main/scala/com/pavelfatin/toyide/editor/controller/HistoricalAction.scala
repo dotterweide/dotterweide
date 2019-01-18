@@ -17,10 +17,10 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor.{AnAction, Terminal, History}
+import com.pavelfatin.toyide.editor.{Action, Terminal, History}
 
-private class HistoricalAction(delegate: AnAction, document: Document, terminal: Terminal, history: History)
-  extends AnAction {
+private class HistoricalAction(delegate: Action, document: Document, terminal: Terminal, history: History)
+  extends Action {
 
   def keys: Seq[String] = delegate.keys
 

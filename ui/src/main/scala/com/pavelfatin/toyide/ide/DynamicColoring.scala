@@ -16,6 +16,8 @@
 
 package com.pavelfatin.toyide.ide
 
+import java.awt.Color
+
 import com.pavelfatin.toyide.Observable
 import com.pavelfatin.toyide.editor.{Attributes, Coloring}
 import com.pavelfatin.toyide.lexer.TokenKind
@@ -36,7 +38,7 @@ private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring
       notifyObservers()
     }
 
-  def apply(id: String) = _coloring(id)
+  def apply(id: String): Color = _coloring(id)
 
   def fontFamily: String = _coloring.fontFamily
 

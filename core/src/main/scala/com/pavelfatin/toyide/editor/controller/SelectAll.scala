@@ -18,9 +18,9 @@ package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.Document
 import com.pavelfatin.toyide.Interval
-import com.pavelfatin.toyide.editor.{AnAction, Terminal}
+import com.pavelfatin.toyide.editor.{Action, Terminal}
 
-private class SelectAll(document: Document, terminal: Terminal) extends AnAction {
+private class SelectAll(document: Document, terminal: Terminal) extends Action {
   def keys: Seq[String] = List("ctrl pressed A")
 
   def apply(): Unit =

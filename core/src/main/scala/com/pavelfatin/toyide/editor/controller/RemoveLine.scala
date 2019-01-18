@@ -17,9 +17,9 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor.{AnAction, Terminal}
+import com.pavelfatin.toyide.editor.{Action, Terminal}
 
-private class RemoveLine(document: Document, terminal: Terminal) extends AnAction {
+private class RemoveLine(document: Document, terminal: Terminal) extends Action {
   def keys: Seq[String] = List("ctrl pressed Y")
 
   def apply(): Unit = {

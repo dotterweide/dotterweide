@@ -16,9 +16,9 @@
 
 package com.pavelfatin.toyide.editor.controller
 
-import com.pavelfatin.toyide.editor.{AnAction, Terminal}
+import com.pavelfatin.toyide.editor.{Action, Terminal}
 
-private class Escape(terminal: Terminal) extends AnAction {
+private class Escape(terminal: Terminal) extends Action {
   def keys: Seq[String] = List("pressed ESCAPE")
 
   def apply(): Unit = {

@@ -18,7 +18,7 @@ package com.pavelfatin.toyide.editor
 
 import com.pavelfatin.toyide.Observable
 
-trait AnAction extends Function0[Unit] with Observable {
+trait Action extends Function0[Unit] with Observable {
   def keys: Seq[String]
 
   def enabled: Boolean = true

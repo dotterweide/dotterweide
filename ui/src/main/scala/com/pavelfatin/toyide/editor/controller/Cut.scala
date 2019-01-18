@@ -20,9 +20,9 @@ import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor.{AnAction, Terminal}
+import com.pavelfatin.toyide.editor.{Action, Terminal}
 
-private class Cut(document: Document, terminal: Terminal) extends AnAction {
+private class Cut(document: Document, terminal: Terminal) extends Action {
   def keys: Seq[String] = List("ctrl pressed X", "shift pressed DELETE")
 
   def apply(): Unit = {

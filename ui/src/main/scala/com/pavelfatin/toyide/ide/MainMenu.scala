@@ -19,7 +19,7 @@ package com.pavelfatin.toyide.ide
 import javax.swing.KeyStroke
 
 import com.pavelfatin.toyide.Example
-import com.pavelfatin.toyide.editor.{AnAction, Data, EditorActions, Runner}
+import com.pavelfatin.toyide.editor.{Action => _Action, Data, EditorActions, Runner}
 import com.pavelfatin.toyide.ide.action.{ColoringAction, ExampleAction, ExportToClassAction, InterpretAction, InvokeAction, NewAction, OpenAction, SaveAction, SaveAsAction, StopAction}
 
 import scala.swing.event.Key
@@ -72,7 +72,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
     bind(redo             , "Redo"                , 'R', actions.redo)
   }
 
-  private def bind(item: MenuItem, title: String, mnemonic: Char, anAction: AnAction): Unit = {
+  private def bind(item: MenuItem, title: String, mnemonic: Char, anAction: _Action): Unit = {
     item.action = new AnActionAdapter(title, mnemonic, anAction)
   }
 

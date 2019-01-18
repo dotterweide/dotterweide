@@ -17,9 +17,9 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor.{AnAction, Terminal}
+import com.pavelfatin.toyide.editor.{Action, Terminal}
 
-private class MoveLineUp(document: Document, terminal: Terminal) extends AnAction with Repeater {
+private class MoveLineUp(document: Document, terminal: Terminal) extends Action with Repeater {
   repeat(document, terminal)
 
   def keys: Seq[String] = List("shift ctrl pressed UP")

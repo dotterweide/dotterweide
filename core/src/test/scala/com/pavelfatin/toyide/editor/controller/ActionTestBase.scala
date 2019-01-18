@@ -17,11 +17,11 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor.{AnAction, Terminal}
+import com.pavelfatin.toyide.editor.{Action, Terminal}
 import org.junit.Assert._
 import com.pavelfatin.toyide.Helpers._
 
-abstract class ActionTestBase(factory: (Document, Terminal) => AnAction) {
+abstract class ActionTestBase(factory: (Document, Terminal) => Action) {
   protected def assertEffectIs(before: String, after: String): Unit = {
     val (document, terminal) = parseDocument(before)
     val action = factory(document, terminal)

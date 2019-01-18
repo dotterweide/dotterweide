@@ -17,10 +17,10 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor.{AnAction, Terminal}
+import com.pavelfatin.toyide.editor.{Action, Terminal}
 import com.pavelfatin.toyide.Interval
 
-private class ToggleLineComment(document: Document, terminal: Terminal, comment: String) extends AnAction {
+private class ToggleLineComment(document: Document, terminal: Terminal, comment: String) extends Action {
   def keys: Seq[String] = List("ctrl pressed SLASH")
 
   def apply(): Unit = {

@@ -17,10 +17,10 @@
 package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor.{AnAction, Terminal}
+import com.pavelfatin.toyide.editor.{Action, Terminal}
 import com.pavelfatin.toyide.Interval
 
-private class DuplicateLine(document: Document, terminal: Terminal) extends AnAction {
+private class DuplicateLine(document: Document, terminal: Terminal) extends Action {
   def keys: Seq[String] = List("ctrl pressed D")
 
   def apply(): Unit = {

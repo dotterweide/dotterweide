@@ -18,9 +18,9 @@ package com.pavelfatin.toyide.editor.controller
 
 import com.pavelfatin.toyide.formatter.Formatter
 import com.pavelfatin.toyide.document.Document
-import com.pavelfatin.toyide.editor.{AnAction, Terminal, Data}
+import com.pavelfatin.toyide.editor.{Action, Terminal, Data}
 
-private class Format(document: Document, terminal: Terminal, data: Data, formatter: Formatter, tabSize: Int) extends AnAction {
+private class Format(document: Document, terminal: Terminal, data: Data, formatter: Formatter, tabSize: Int) extends Action {
   def keys: Seq[String] = List("ctrl alt pressed L")
 
   def apply(): Unit = {
