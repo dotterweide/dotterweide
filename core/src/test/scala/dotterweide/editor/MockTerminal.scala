@@ -24,7 +24,7 @@ class MockTerminal(offset0: Int, selection0: Option[Interval]) extends AbstractT
 
   selection = selection0
 
-  def choose[T <: AnyRef](variants: Seq[T], query: String)(callback: T => Unit): Unit = ()
+  def choose[A](variants: Seq[A], query: String)(callback: A => Unit): Unit = ()
 
   def edit(s: String, title: String)(callback: Option[String] => Unit): Unit = ()
 }

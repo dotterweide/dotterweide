@@ -20,19 +20,19 @@ package dotterweide.editor
 import dotterweide.document.{Document, DocumentEvent}
 
 class HistoryImpl extends History {
-  private var toUndo = List[Action]()
-  private var toRedo = List[Action]()
+  private var toUndo: List[Action] = Nil
+  private var toRedo: List[Action] = Nil
 
-  private var record = false
+  private var busy = false
 
-  def recording(document: Document, terminal: Terminal)(block: => Unit): Unit = {
-    if (record)
-      throw new IllegalStateException("Nested recording")
+  def capture(document: Document, terminal: Terminal)(block: => Unit): Unit = {
+    if (busy)
+      throw new IllegalStateException("Nested capture")
 
-    record = true
-    var events = List.empty[AnyRef]
+    busy = true
+    var events = List.empty[Any]
 
-    val recorder = events ::= (_: AnyRef)
+    val recorder = events ::= (_: Any)
 
     document.onChange(recorder)
     terminal.onChange(recorder)
@@ -47,7 +47,7 @@ class HistoryImpl extends History {
       toRedo = List.empty
     }
 
-    record = false
+    busy = false
   }
 
   def canUndo: Boolean = toUndo.nonEmpty
@@ -77,11 +77,11 @@ class HistoryImpl extends History {
   }
 
   def clear(): Unit = {
-    toUndo = List.empty
-    toRedo = List.empty
+    toUndo = Nil
+    toRedo = Nil
   }
 
-  private case class Action(document: Document, terminal: Terminal, events: List[AnyRef]) {
+  private case class Action(document: Document, terminal: Terminal, events: List[Any]) {
     def undo(): Unit =
       events.foreach {
         case it: DocumentEvent => it.undo(document)

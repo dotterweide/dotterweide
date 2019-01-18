@@ -24,8 +24,8 @@ import javax.swing.border.LineBorder
 import javax.swing.{AbstractAction, JComponent, JList, JScrollPane, ListCellRenderer, Popup, PopupFactory}
 
 object ChooserFactory {
-  def createPopup[A <: AnyRef](parent: JComponent, point: Point, font: Font, variants: Seq[A], renderer: ListCellRenderer[AnyRef])
-                              (callback: Option[A] => Unit): (Popup, JList[AnyRef]) = {
+  def createPopup[A](parent: JComponent, point: Point, font: Font, variants: Seq[A], renderer: ListCellRenderer[AnyRef])
+                    (callback: Option[A] => Unit): (Popup, JList[AnyRef]) = {
     val list = createList(variants, font)
 
     list.setCellRenderer(renderer)
@@ -34,8 +34,8 @@ object ChooserFactory {
     pane.setBorder(new LineBorder(AWTColor.LIGHT_GRAY))
 
     val factory = PopupFactory.getSharedInstance
-    val shift = parent.getLocationOnScreen
-    val popup = factory.getPopup(parent, pane, shift.x + point.x, shift.y + point.y)
+    val shift   = parent.getLocationOnScreen
+    val popup   = factory.getPopup(parent, pane, shift.x + point.x, shift.y + point.y)
 
     list.addFocusListener(new FocusAdapter() {
       override def focusLost(e: FocusEvent): Unit = {
@@ -46,11 +46,12 @@ object ChooserFactory {
 
     list.addKeyListener(new KeyAdapter() {
       override def keyTyped(e: KeyEvent): Unit = {
-        if (e.getKeyChar == KeyEvent.VK_ESCAPE) {
+        val kc = e.getKeyChar
+        if (kc == KeyEvent.VK_ESCAPE) {
           callback(None)
           popup.hide()
-        }
-        if (e.getKeyChar == KeyEvent.VK_ENTER) {
+
+        } else if (kc == KeyEvent.VK_ENTER) {
           callback(Some(list.getSelectedValue.asInstanceOf[A]))
           popup.hide()
         }
@@ -60,27 +61,28 @@ object ChooserFactory {
     (popup, list)
   }
 
-  private def createList(variants: Seq[AnyRef], font: Font) = {
-    val list = new JList(variants.toArray[AnyRef])
+  private def createList(variants: Seq[Any], font: Font) = {
+    val list = new JList(variants.iterator.map(_.asInstanceOf[AnyRef]).toArray)
     list.setBackground(new AWTColor(235, 244, 254))
     list.setSelectionBackground(new AWTColor(0, 82, 164))
     list.setFont(font)
     list.setSelectedIndex(0)
     list.setVisibleRowCount(variants.size min 10)
 
-    val next = list.getActionMap.get("selectNextRow")
-    val previous = list.getActionMap.get("selectPreviousRow")
-    val first = list.getActionMap.get("selectFirstRow")
-    val last = list.getActionMap.get("selectLastRow")
+    val am        = list.getActionMap
+    val next      = am.get("selectNextRow")
+    val previous  = am.get("selectPreviousRow")
+    val first     = am.get("selectFirstRow")
+    val last      = am.get("selectLastRow")
 
-    list.getActionMap.put("selectPreviousRow", new AbstractAction() {
+    am.put("selectPreviousRow", new AbstractAction() {
       def actionPerformed(e: ActionEvent): Unit = {
         val action = if (list.getSelectedIndex == 0) last else previous
         action.actionPerformed(e)
       }
     })
 
-    list.getActionMap.put("selectNextRow", new AbstractAction() {
+    am.put("selectNextRow", new AbstractAction() {
       def actionPerformed(e: ActionEvent): Unit = {
         val action = if (list.getSelectedIndex == list.getModel.getSize - 1) first else next
         action.actionPerformed(e)

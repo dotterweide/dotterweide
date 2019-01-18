@@ -49,7 +49,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
 
     notifyObservers(ActionStarted(isImmediate(e)))
 
-    history.recording(document, terminal) {
+    history.capture(document, terminal) {
       doProcessKeyPressed(e)
     }
 
@@ -61,7 +61,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   def processKeyTyped(e: KeyEvent): Unit = {
     notifyObservers(ActionStarted(immediate = true))
 
-    history.recording(document, terminal) {
+    history.capture(document, terminal) {
       doProcessKeyTyped(e)
     }
 

@@ -77,7 +77,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   def text: String = document.text
 
   def text_=(s: String): Unit =
-    history.recording(document, terminal) {
+    history.capture(document, terminal) {
       terminal.offset     = 0
       terminal.selection  = None
       terminal.highlights = Nil
@@ -232,7 +232,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   })
 
   private object MyTerminal extends AbstractTerminal {
-    def choose[A <: AnyRef](variants: Seq[A], query: String)(callback: A => Unit): Unit = {
+    def choose[A](variants: Seq[A], query: String)(callback: A => Unit): Unit = {
       val point = toPoint(offset)
       val shifted = new Point(point.x - grid.cellSize.width * query.length - 3, point.y + 20)
       val (popup, list) = ChooserFactory.createPopup(Pane, shifted, NormalFont, variants, listRenderer) { it =>

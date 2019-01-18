@@ -1,8 +1,20 @@
-package de.sciss.scalalang
+/*
+ *  ScalaLexerNSC.scala
+ *  (Dotterweide)
+ *
+ *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
+ *
+ *  This software is published under the GNU Lesser General Public License v2.1+
+ *
+ *  For further information, please contact Hanns Holger Rutz at
+ *  contact@sciss.de
+ */
+
+package dotterweide.languages.scala
 
 import dotterweide.Span
+import dotterweide.languages.scala.node.ScalaTokens
 import dotterweide.lexer.{Lexer, Token}
-import de.sciss.scalalang.node.ScalaTokens
 
 import scala.tools.nsc.Settings
 import scala.tools.nsc.interactive.{Global, Response}

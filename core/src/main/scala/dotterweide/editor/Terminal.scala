@@ -28,7 +28,7 @@ trait Terminal extends ObservableEvents[TerminalEvent] {
 
   var highlights: Seq[Interval]
 
-  def choose[A <: AnyRef](variants: Seq[A], query: String)(callback: A => Unit): Unit
+  def choose[A](variants: Seq[A], query: String)(callback: A => Unit): Unit
 
   def edit(s: String, title: String)(callback: Option[String] => Unit): Unit
 }

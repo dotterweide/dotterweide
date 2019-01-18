@@ -32,7 +32,7 @@ private class HistoricalAction(delegate: Action, document: Document, terminal: T
   delegate.onChange(evt => notifyObservers(evt))
 
   def apply(): Unit =
-    history.recording(document, terminal) {
+    history.capture(document, terminal) {
       delegate()
     }
 }

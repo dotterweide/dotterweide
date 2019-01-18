@@ -20,7 +20,7 @@ package dotterweide.editor
 import dotterweide.document.Document
 
 trait History {
-  def recording(document: Document, terminal: Terminal)(block: => Unit): Unit
+  def capture(document: Document, terminal: Terminal)(block: => Unit): Unit
 
   def canUndo: Boolean
 

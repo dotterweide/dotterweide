@@ -1,12 +1,24 @@
-package de.sciss.scalalang
+/*
+ *  ScalaLanguage.scala
+ *  (Dotterweide)
+ *
+ *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
+ *
+ *  This software is published under the GNU Lesser General Public License v2.1+
+ *
+ *  For further information, please contact Hanns Holger Rutz at
+ *  contact@sciss.de
+ */
+
+package dotterweide.languages.scala
 
 import dotterweide.editor.{Adviser, ColorScheme, Coloring}
 import dotterweide.formatter.Format
 import dotterweide.inspection.Inspection
+import dotterweide.languages.scala.node.ScalaTokens._
 import dotterweide.lexer.{Lexer, TokenKind}
 import dotterweide.parser.Parser
 import dotterweide.{Example, FileType, Language}
-import de.sciss.scalalang.node.ScalaTokens._
 
 object ScalaLanguage extends Language {
   def name: String = "Scala"

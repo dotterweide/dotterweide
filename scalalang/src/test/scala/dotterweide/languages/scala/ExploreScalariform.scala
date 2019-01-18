@@ -1,4 +1,4 @@
-package de.sciss.scalalang
+package dotterweide.languages.scala
 
 import scalariform.ScalaVersions
 

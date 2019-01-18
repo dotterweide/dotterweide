@@ -1,4 +1,4 @@
-package de.sciss.scalalang
+package dotterweide.languages.scala
 
 object ExploreMeta {
   def main(args: Array[String]): Unit = run()

@@ -21,8 +21,8 @@ import java.awt.Dimension
 
 import dotterweide.ide.MainFrame
 import dotterweide.languages.lisp.LispLanguage
+import dotterweide.languages.scala.ScalaLanguage
 import dotterweide.languages.toy.ToyLanguage
-import de.sciss.scalalang.ScalaLanguage
 
 import scala.swing.{SwingApplication, Window}
 
