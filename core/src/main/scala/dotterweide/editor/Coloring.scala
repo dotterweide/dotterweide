@@ -17,8 +17,6 @@
 
 package dotterweide.editor
 
-import java.awt.Color
-
 import dotterweide.Observable
 import dotterweide.lexer.TokenKind
 

@@ -17,10 +17,8 @@
 
 package dotterweide.ide
 
-import java.awt.Color
-
 import dotterweide.compiler.{Assembler, BytecodeInvoker, InvocationException, TranslationException}
-import dotterweide.editor.Runner
+import dotterweide.editor.{Color, Runner}
 import dotterweide.node.Node
 
 private class NodeInvoker(console: Console) extends Runner {

@@ -17,9 +17,7 @@
 
 package dotterweide.ide
 
-import java.awt.Color
-
-import dotterweide.editor.Runner
+import dotterweide.editor.{Color, Runner}
 import dotterweide.interpreter.{ContextImpl, EvaluationException}
 import dotterweide.node.Node
 

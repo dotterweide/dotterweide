@@ -17,8 +17,7 @@
 
 package dotterweide
 
-import java.awt.Color
-
+import dotterweide.editor.Color
 import dotterweide.ide.Console
 
 class MockConsole extends Console {

@@ -18,17 +18,18 @@
 package dotterweide.editor
 
 import java.awt.event.{ActionEvent, ActionListener, MouseAdapter, MouseEvent}
-import java.awt.{Color, Dimension, Graphics, Point}
+import java.awt.{Dimension, Graphics, Point, Color => AWTColor}
+
 import javax.swing.border.{CompoundBorder, EmptyBorder, LineBorder}
 import javax.swing.{JComponent, JLabel, Popup, PopupFactory, Timer}
 
 private class TooltipHandler(component: JComponent, lookup: Point => Option[Error]) {
   private val Timeout           = 500
   private val TooltipShift      = new Dimension(5, 5)
-  private val TooltipBackground = new Color(0xFDFEE2)
+  private val TooltipBackground = new AWTColor(0xFDFEE2)
 
   private val TooltipBorder = new CompoundBorder(
-    new LineBorder(Color.BLACK, 1, true),
+    new LineBorder(AWTColor.BLACK, 1, true),
     new EmptyBorder(3, 3, 3, 3))
 
   private var pointer : Option[Point] = None

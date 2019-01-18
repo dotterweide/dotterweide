@@ -17,10 +17,8 @@
 
 package dotterweide.ide
 
-import java.awt.Color
-
 import dotterweide.Observable
-import dotterweide.editor.{Attributes, Coloring}
+import dotterweide.editor.{Attributes, Color, Coloring}
 import dotterweide.lexer.TokenKind
 
 private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring with Observable {

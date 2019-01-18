@@ -17,9 +17,8 @@
 
 package dotterweide.ide
 
-import java.awt.Color
-
 import dotterweide.Output
+import dotterweide.editor.Color
 
 trait Console extends Output {
   def print(s: String, color: Color): Unit

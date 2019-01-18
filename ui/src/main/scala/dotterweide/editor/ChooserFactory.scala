@@ -18,7 +18,8 @@
 package dotterweide.editor
 
 import java.awt.event.{ActionEvent, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent}
-import java.awt.{Color, Font, Point}
+import java.awt.{Font, Point, Color => AWTColor}
+
 import javax.swing.border.LineBorder
 import javax.swing.{AbstractAction, JComponent, JList, JScrollPane, ListCellRenderer, Popup, PopupFactory}
 
@@ -30,7 +31,7 @@ object ChooserFactory {
     list.setCellRenderer(renderer)
 
     val pane = new JScrollPane(list)
-    pane.setBorder(new LineBorder(Color.LIGHT_GRAY))
+    pane.setBorder(new LineBorder(AWTColor.LIGHT_GRAY))
 
     val factory = PopupFactory.getSharedInstance
     val shift = parent.getLocationOnScreen
@@ -61,8 +62,8 @@ object ChooserFactory {
 
   private def createList(variants: Seq[AnyRef], font: Font) = {
     val list = new JList(variants.toArray[AnyRef])
-    list.setBackground(new Color(235, 244, 254))
-    list.setSelectionBackground(new Color(0, 82, 164))
+    list.setBackground(new AWTColor(235, 244, 254))
+    list.setSelectionBackground(new AWTColor(0, 82, 164))
     list.setFont(font)
     list.setSelectedIndex(0)
     list.setVisibleRowCount(variants.size min 10)

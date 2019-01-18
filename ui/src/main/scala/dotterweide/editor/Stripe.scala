@@ -18,11 +18,11 @@
 package dotterweide.editor
 
 import java.awt.event.{ComponentAdapter, ComponentEvent, MouseAdapter, MouseEvent, MouseMotionAdapter}
-import java.awt.{Color, Cursor, Dimension, Graphics, Rectangle}
-import javax.swing.{JComponent, ToolTipManager}
+import java.awt.{Cursor, Dimension, Graphics, Rectangle, Color => AWTColor}
 
 import dotterweide.document.{Document, Location}
 import dotterweide.{Interval, ObservableEvents}
+import javax.swing.{JComponent, ToolTipManager}
 
 private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: Grid, canvas: Canvas)
   extends JComponent with ObservableEvents[Int] {
@@ -146,10 +146,10 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
 
   private def paint(g: Graphics, status: Status): Unit = {
     val led = status match {
-      case Status.Waiting   => Color.LIGHT_GRAY
-      case Status.Normal    => Color.GREEN
-      case Status.Warnings  => Color.YELLOW
-      case Status.Errors    => Color.RED
+      case Status.Waiting   => AWTColor.LIGHT_GRAY
+      case Status.Normal    => AWTColor.GREEN
+      case Status.Warnings  => AWTColor.YELLOW
+      case Status.Errors    => AWTColor.RED
     }
 
     g.setColor(led)
@@ -158,7 +158,7 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
 
   private def paint(g: Graphics, descriptors: Seq[Descriptor]): Unit = {
     descriptors.sortBy(_.error.fatal).foreach { it =>
-      val color = if (it.error.fatal) Color.RED else Color.YELLOW
+      val color = if (it.error.fatal) AWTColor.RED else AWTColor.YELLOW
       g.setColor(color)
       val r = it.rectangle
       g.fill3DRect(r.x, r.y, r.width, r.height, true)

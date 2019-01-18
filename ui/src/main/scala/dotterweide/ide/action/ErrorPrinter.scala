@@ -17,9 +17,7 @@
 
 package dotterweide.ide.action
 
-import java.awt.Color
-
-import dotterweide.editor.Data
+import dotterweide.editor.{Color, Data}
 import dotterweide.ide.Console
 
 object ErrorPrinter {

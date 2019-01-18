@@ -17,7 +17,6 @@
 
 package dotterweide.editor
 
-import java.awt.Color
 import java.awt.font.TextAttribute
 import java.text.AttributedString
 
