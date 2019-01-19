@@ -34,6 +34,7 @@ private class Optimize(document: Document, terminal: Terminal, data: Data) exten
       terminal.highlights = Nil
       terminal.selection  = None
 
+      // the anchor allows us to adjust the cursor position
       val anchor = document.createAnchorAt(terminal.offset, Bias.Left)
       terminal.offset = 0
 

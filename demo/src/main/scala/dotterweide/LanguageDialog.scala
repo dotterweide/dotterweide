@@ -22,12 +22,13 @@ import java.awt.event.{KeyEvent, MouseAdapter, MouseEvent}
 import javax.swing.table.AbstractTableModel
 import javax.swing.{JComponent, JTable, KeyStroke, ListSelectionModel}
 
+import scala.collection.immutable.{Seq => ISeq}
 import scala.swing.event.WindowClosing
 import scala.swing.{Action, BorderPanel, Button, Component, Dialog, Dimension, FlowPanel, ScrollPane, Swing}
 
-class LanguageDialog(languages: Seq[Language]) extends Dialog {
+class LanguageDialog(languages: ISeq[Language]) extends Dialog {
   private val table         = new JTable(LanguageTableModel)
-  private val okButton      = new Button(Action("OK")(onOk()))
+  private val okButton      = new Button(Action("OK"    )(onOk    ()))
   private val cancelButton  = new Button(Action("Cancel")(onCancel()))
 
   private var itemSelected  = false

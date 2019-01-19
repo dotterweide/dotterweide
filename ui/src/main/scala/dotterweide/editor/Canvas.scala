@@ -21,11 +21,14 @@ import java.awt.{Dimension, Rectangle}
 
 import dotterweide.ObservableEvents
 
+/** An interface representing the visual bounds of the editor. */
 trait Canvas extends ObservableEvents[CanvasEvent] {
+  /** The editor surface's total bounds. */
   def size: Dimension
 
   def visible: Boolean
 
+  /** The editor surface's currently visible bounds (e.g. the view inside the scroll pane). */
   def visibleRectangle: Rectangle
 
   def hasFocus: Boolean

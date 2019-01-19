@@ -24,35 +24,49 @@ import dotterweide.{Interval, ObservableEvents}
 
 import scala.collection.immutable.{Seq => ISeq}
 
+// XXX TODO --- the model currently assumes synchronous operation
+// of `nextPass` and `compute`. This is at odds with a language server
+// approach, and also blocks the EDT if any of these take time, such
+// as invoking the Scala presentation compiler.
+
+/** Holds the current state of the editor raw data and analyses. */
 trait Data extends ObservableEvents[DataEvent] {
+  /** The entire document's text */
   def text: String
 
+  /** The result of the `Lexer`, or empty if in a pass before lexer. */
   def tokens: ISeq[Token]
 
+  /** The result of the `parser`, or empty if in a pass before parser. */
   def structure: Option[Node]
 
   def errors: ISeq[Error]
 
   def hasFatalErrors: Boolean
 
+  /** The current pass. */
   def pass: Pass
 
+  /** If there is a follow-up pass. */
   def hasNextPass: Boolean
 
+  /** Runs the next pass. Throws an exception if `!hasNextPass` */
   def nextPass(): Unit
 
+  /** Iterates through all passes (until `!hasNextPass`). */
   def compute(): Unit
 }
 
 case class DataEvent(pass: Pass, errors: ISeq[Error])
 
-case class Error(interval: Interval, message: String, decoration: Decoration = Decoration.Underline, fatal: Boolean = true)
+case class Error(interval: Interval, message: String, decoration: Decoration = Decoration.Underline,
+                 fatal: Boolean = true)
 
 sealed abstract class Pass(val next: Option[Pass])
 
 object Pass {
-  case object Text        extends Pass(Some(Lexer))
-  case object Lexer       extends Pass(Some(Parser))
-  case object Parser      extends Pass(Some(Inspections))
-  case object Inspections extends Pass(None)
+  case object Text        extends Pass(next = Some(Lexer))
+  case object Lexer       extends Pass(next = Some(Parser))
+  case object Parser      extends Pass(next = Some(Inspections))
+  case object Inspections extends Pass(next = None)
 }

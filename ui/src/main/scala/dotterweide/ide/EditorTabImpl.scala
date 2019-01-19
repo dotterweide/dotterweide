@@ -44,26 +44,27 @@ private class EditorTabImpl(val fileType: FileType, val history: History,
 
   def file: Option[File] = _file
 
-  def file_=(file: Option[File]): Unit = {
+  def file_=(file: Option[File]): Unit = if (_file != file) {
     _file = file
-    notifyObservers()
+    notifyObservers(EditorTab.FileChanged(file))
   }
 
   def changed: Boolean = text != _original
 
   def split: Boolean = _split
 
-  def split_=(b: Boolean): Unit = {
+  def split_=(b: Boolean): Unit = if (_split != b) {
     _split = b
     updateLayout()
     val editor = if (split) secondaryEditor else primaryEditor
     editor.pane.requestFocusInWindow()
+    notifyObservers(EditorTab.SplitChanged(b))
   }
 
   private def updateLayout(): Unit = {
     val editors = if (split) {
       val pane = new SplitPane(Orientation.Horizontal, primaryEditor.component, secondaryEditor.component)
-      pane.resizeWeight = 0.5D
+      pane.resizeWeight = 0.5d
       pane.border = null
       pane
     } else {
@@ -71,7 +72,7 @@ private class EditorTabImpl(val fileType: FileType, val history: History,
     }
 
     val pane = new SplitPane(Orientation.Vertical, editors, new ScrollPane(structure))
-    pane.resizeWeight = 0.7D
+    pane.resizeWeight = 0.7d
 
     peer.removeAll()
     add(pane, BorderPanel.Position.Center)

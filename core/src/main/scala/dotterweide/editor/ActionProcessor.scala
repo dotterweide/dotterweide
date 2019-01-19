@@ -19,6 +19,7 @@ package dotterweide.editor
 
 import dotterweide.ObservableEvents
 
+/** Implemented in the `ui` module as `Controller`. */
 class ActionProcessor extends ObservableEvents[ActionProcessorEvent]
 
 sealed trait ActionProcessorEvent

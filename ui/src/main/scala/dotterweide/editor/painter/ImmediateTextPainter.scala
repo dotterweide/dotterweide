@@ -25,7 +25,17 @@ import dotterweide.document.Replacement
 import dotterweide.editor.{ActionFinished, ActionProcessor, ActionStarted, Adviser, Area, Coloring}
 import dotterweide.lexer.Lexer
 
-private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, processor: ActionProcessor) extends AbstractPainter(context) {
+/** A text painter which becomes active, whenever the `processor`
+  * is in an `ActionStarted(immediate = true)` window. This happens
+  * when the controller processes key events which result in deletions or insertions.
+  *
+  * It's quite a hack, using funky stuff like `g.copyArea` to move pixels around, and
+  * being the only painter with `immediate = true` causing special behaviour in the editor implementation.
+  * TODO: This needs major reworking to be well integrated.
+  */
+private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, processor: ActionProcessor)
+  extends AbstractPainter(context) {
+
   private val Pairs = Set("()", "[]", "{}", "\"\"")
 
   def id = "immediate text"
@@ -61,6 +71,10 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
     }
   }
 
+  /** A replacement is only considered relevant (to this painter) if it
+    * does not contain newlines or insertion of matching braces, or
+    * temporary insertion of completion `Anchor`.
+    */
   private def isRelevant(replacement: Replacement): Boolean =
     !contains(replacement.before, '\n') && !contains(replacement.after, '\n') &&
       !(replacement.after.length == 2 && Pairs.contains(replacement.after.toString)) &&
@@ -72,8 +86,8 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
   }
 
   private def rectangleFrom(offset: Int, length: Int): Rectangle = {
-    val location = document.toLocation(offset)
-    val area = Area(location.line, location.indent, length, 1)
+    val location  = document.toLocation(offset)
+    val area      = Area(location.line, location.indent, length, 1)
     grid.toRectangle(area)
   }
 
@@ -86,14 +100,14 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
   }
 
   private def paintReplacement(g: Graphics, begin: Int, before: CharSequence, after: CharSequence): Unit = {
-    val endAfter  = begin + after.length
+    val endAfter  = begin        + after .length
     val delta     = after.length - before.length
 
     if (delta != 0) {
       val tailLength = tailLengthFrom(endAfter)
 
       if (tailLength > 0) {
-        val shift = grid.cellSize.width * delta
+        val shift     = grid.cellWidth * delta
         val tailAfter = rectangleFrom(endAfter, tailLength)
 
         g.copyArea(tailAfter.x - shift, tailAfter.y, tailAfter.width, tailAfter.height, shift, 0)
@@ -113,7 +127,7 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
       val prefix = document.text(document.startOffsetOf(location.line), endAfter)
 
       lexer.analyze(prefix).toSeq.lastOption.foreach { token =>
-        val area = Area(location.line, location.indent, after.length, 1)
+        val area      = Area(location.line, location.indent, after.length, 1)
         val rectangle = grid.toRectangle(area)
 
         g.setColor(backgroundColorAt(begin))
@@ -126,7 +140,7 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
         val attributes = coloring.attributesFor(token.kind)
         attributes.decorate(string, 0, after.length)
 
-        g.drawString(string.getIterator, rectangle.x, rectangle.y + 15)
+        g.drawString(string.getIterator, rectangle.x, rectangle.y + TextPainter.Ascent)
       }
     }
 

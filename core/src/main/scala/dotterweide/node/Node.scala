@@ -40,9 +40,8 @@ trait Node extends Evaluable with Translatable with Optimizable {
 
   def parent: Option[Node]
 
-  def previousSibling: Option[Node]
-
-  def nextSibling: Option[Node]
+  def previousSibling : Option[Node]
+  def nextSibling     : Option[Node]
 
   def parents: ISeq[Node] = {
     def of(node: Node): Stream[Node] = {

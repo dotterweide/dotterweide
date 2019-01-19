@@ -26,7 +26,8 @@ trait Adviser {
 }
 
 object Adviser {
-  val Anchor = "ANCHOR"
+  /** An intermediate label inserted into the text to mark completion point. */
+  val Anchor = "ANCHOR" // XXX TODO --- surely this does no work for every parser?
 }
 
 case class Variant(title: String, content: String, shift: Int) {

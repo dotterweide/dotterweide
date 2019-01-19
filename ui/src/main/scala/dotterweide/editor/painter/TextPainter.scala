@@ -29,6 +29,12 @@ import dotterweide.lexer.{Lexer, Token}
 
 import scala.collection.immutable.{Seq => ISeq}
 
+/** The main painter, responsible for painting the document's text along with previously
+  * collected decorations
+  *
+  * @param lexer    the lexer is merely used for optimized painting, when the current line
+  *                 is being edited. it is run ad-hoc on the current text line.
+  */
 private class TextPainter(context: PainterContext, lexer: Lexer,
                           decorators: ISeq[Decorator]) extends AbstractPainter(context) {
 
@@ -76,10 +82,11 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
   }
 
   private def updateString(): Unit = {
+    // ensure we have run at least the lexer, as we use `data.tokens`
     if (data.pass == Pass.Text) {
       data.nextPass()
     }
-    string = render(document.text, data.tokens, coloring)
+    string      = render(document.text, data.tokens, coloring)
     stringValid = true
   }
 
@@ -89,17 +96,18 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
     val lineText      = document.text(lineInterval)
 
     if (lineText.length > 0) {
-      val tokens = lexer.analyze(lineText).toList
-      val string = render(lineText, tokens, coloring)
+      val tokens    = lexer.analyze(lineText).toList
+      val string    = render(lineText, tokens, coloring)
 
       val decorated = decorate(string, decorators, lineInterval, - lineInterval.begin)
+      val iterator  = decorated.getIterator
 
-      g.drawString(decorated.getIterator, rectangle.x, rectangle.y + 15)
+      g.drawString(iterator, rectangle.x, rectangle.y + Ascent)
     }
   }
 
   private def paintArea(g: Graphics, area: Area): Unit = {
-    val decorated = decorate(string, decorators, intervalOf(area), 0)
+    val decorated: AttributedString = decorate(string, decorators, intervalOf(area), 0)
 
     Range(area.line, (area.line + area.height).min(document.linesCount)).foreach { line =>
       val interval = {
@@ -109,15 +117,17 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
       }
 
       if (!interval.empty) {
-        val iterator = decorated.getIterator(null, interval.begin, interval.end)
-        val p = grid.toPoint(Location(line, area.indent))
-        g.drawString(iterator, p.x, p.y + 15)
+        val iterator  = decorated.getIterator(null /* attributes -- all! */, interval.begin, interval.end)
+        val p         = grid.toPoint(Location(line, area.indent))
+        g.drawString(iterator, p.x, p.y + Ascent)
       }
     }
   }
 }
 
 private object TextPainter {
+  final val Ascent = 15  // XXX TODO --- hard coded for one particular font size
+
   private val EmptyString = new AttributedString("")
 
   private def render(text: String, tokens: ISeq[Token], coloring: Coloring): AttributedString = {
@@ -128,8 +138,8 @@ private object TextPainter {
       result.addAttribute(TextAttribute.SIZE  , coloring.fontSize   )
 
       tokens.foreach { token =>
-        val attributes = coloring.attributesFor(token.kind)
-        val span = token.span
+        val attributes  = coloring.attributesFor(token.kind)
+        val span        = token.span
         attributes.decorate(result, span.begin, span.end)
       }
     }

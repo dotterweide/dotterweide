@@ -22,6 +22,9 @@ import dotterweide.lexer.TokenKind
 
 import scala.collection.immutable.{Seq => ISeq}
 
+/** A mutable color scheme, taking a map from scheme names to schemes
+  * and notifying observers when the scheme is switched.
+  */
 private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring {
   require (delegates.nonEmpty)
 
@@ -42,9 +45,8 @@ private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring
 
   def apply(id: String): Color = _coloring(id)
 
-  def fontFamily: String = _coloring.fontFamily
-
-  def fontSize: Int = _coloring.fontSize
+  def fontFamily: String  = _coloring.fontFamily
+  def fontSize  : Int     = _coloring.fontSize
 
   def attributesFor(kind: TokenKind): Attributes = _coloring.attributesFor(kind)
 }

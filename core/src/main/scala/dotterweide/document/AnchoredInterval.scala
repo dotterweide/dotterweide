@@ -19,6 +19,10 @@ package dotterweide.document
 
 import dotterweide.Interval
 
+/** A pair of anchors tracking the movement of an interval (span) in a text.
+  *
+  * @param origin     the initial interval
+  */
 class AnchoredInterval(document: Document, origin: Interval, beginBias: Bias = Bias.Right, endBias: Bias = Bias.Left) {
   private val beginAnchor = document.createAnchorAt(origin.begin, beginBias )
   private val endAnchor   = document.createAnchorAt(origin.end  , endBias   )

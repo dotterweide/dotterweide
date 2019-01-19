@@ -51,6 +51,8 @@ class MainFrame(language: Language, text: String) extends Frame {
 
   private val data = primaryEditor.data
 
+  // a non-repeating timer to invoke the next data pass with a delay
+  // (the delay is adjusted in the data observer)
   private val timer = new Timer(10, new ActionListener() {
     def actionPerformed(e: ActionEvent): Unit =
       if (data.hasNextPass) {
@@ -118,7 +120,7 @@ class MainFrame(language: Language, text: String) extends Frame {
   contents = new BorderPanel() {
     val split = new SplitPane(Orientation.Horizontal, tab, new ScrollPane(Component.wrap(console)))
     split.dividerLocation = 507
-    split.resizeWeight    = 1.0D
+    split.resizeWeight    = 1.0d
     split.border          = null
     add(split , BorderPanel.Position.Center)
     add(status, BorderPanel.Position.South )
@@ -127,7 +129,8 @@ class MainFrame(language: Language, text: String) extends Frame {
   menuBar = menu
 
   tab.onChange {
-    updateTitle()
+    case EditorTab.FileChanged(_) => updateTitle()
+    case _ =>
   }
 
   updateTitle()

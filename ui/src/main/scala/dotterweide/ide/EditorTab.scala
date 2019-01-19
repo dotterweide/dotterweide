@@ -19,13 +19,21 @@ package dotterweide.ide
 
 import java.io.File
 
-import dotterweide.{FileType, Observable}
+import dotterweide.{FileType, ObservableEvents}
 
-trait EditorTab extends Observable {
+object EditorTab {
+  sealed trait Update
+  case class FileChanged (newFile: Option[File] ) extends Update
+  case class SplitChanged(isSplit: Boolean      ) extends Update
+}
+trait EditorTab extends ObservableEvents[EditorTab.Update] {
   def fileType: FileType
 
   var file: Option[File]
 
+  /** The editor's content. When changed,
+    * the undo history is erased.
+    */
   var text: String
 
   def changed: Boolean

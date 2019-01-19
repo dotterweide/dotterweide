@@ -21,6 +21,7 @@ import java.awt.event.{KeyEvent, MouseEvent}
 
 import dotterweide.editor.{ActionProcessor, EditorActions}
 
+/** The instance that processes key and mouse events. */
 trait Controller extends ActionProcessor {
   def processKeyPressed   (e: KeyEvent  ): Unit
   def processKeyTyped     (e: KeyEvent  ): Unit

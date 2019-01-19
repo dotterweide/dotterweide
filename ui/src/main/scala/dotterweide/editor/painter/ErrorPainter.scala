@@ -27,6 +27,11 @@ import dotterweide.inspection.Decoration
 
 import scala.collection.immutable.{Seq => ISeq}
 
+/** Paints and decorates errors.
+  *
+  * It directly paints `Decoration.Fill` (background) and `Decoration.Underline` (wavy),
+  * while collecting `Decoration.Red` and `Decoration.Red` as foreground `decorations`.
+  */
 private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends AbstractPainter(context) with Decorator {
   def id = "errors"
 
@@ -55,27 +60,36 @@ private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends
     }
   }
 
-  override def decorations: Map[Interval, Map[TextAttribute, Color]] =
-    (intervalsOf(_ == Decoration.Red)
-      .map(it => (it, Map(TextAttribute.FOREGROUND -> coloring(Coloring.RedForeground)))) ++
-      intervalsOf(_ == Decoration.Dim)
-        .map(it => (it, Map(TextAttribute.FOREGROUND -> coloring(Coloring.DimForeground))))).toMap
+  override def decorations: Map[Interval, Map[TextAttribute, Color]] = {
+    val red = intervalsOf(_ == Decoration.Red)
+      .map(it => (it, Map(TextAttribute.FOREGROUND -> coloring(Coloring.RedForeground))))
+    val dim = intervalsOf(_ == Decoration.Dim)
+      .map(it => (it, Map(TextAttribute.FOREGROUND -> coloring(Coloring.DimForeground))))
+    (red ++ dim).toMap
+  }
 
+  /** Filters the errors according to predicate `p`, returning their corresponding visual rectangles */
   private def rectanglesOf(p: Decoration => Boolean): ISeq[Rectangle] =
     intervalsOf(p).flatMap(rectanglesOf)
 
+  /** Filters the errors according to predicate `p`, returning their corresponding intervals */
   private def intervalsOf(p: Decoration => Boolean): ISeq[Interval] =
     errors.errors.iterator.filter(error => p(error.decoration)).map(_.interval).toList
 }
 
 private object ErrorPainter {
+  /** Calculates the sequence of intervals for errors that appeared or disappeared. */
   private def difference(before: ISeq[Error], after: ISeq[Error]): ISeq[Interval] = {
-    val removedErrors = before.filterNot(mark => after  .contains(mark))
-    val addedErrors   = after .filterNot(mark => before .contains(mark))
+    val removedErrors = before.filterNot(after  .contains)
+    val addedErrors   = after .filterNot(before .contains)
     (removedErrors ++ addedErrors).map(_.interval)
   }
 
+  /** Draws a wavy line in the current color, horizontally from `x` to `x + length`
+    * and vertically around `y` (plus, minus one pixel)
+    */
   private def drawWavyLine(g: Graphics, x: Int, y: Int, length: Int): Unit = {
+    // XXX TODO -- optimize
     val xs      = Range(x, x + length, 2)
     val points  = xs.size
     val ys      = Stream.continually(()).flatMap(_ => Seq(y + 1, y - 1)).take(points)

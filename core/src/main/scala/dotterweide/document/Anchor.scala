@@ -17,8 +17,13 @@
 
 package dotterweide.document
 
+/** A position pointer into the document that may
+  * dynamically move along as the text is edited.
+  */
 trait Anchor {
+  /** Current position in characters. */
   def offset: Int
 
+  /** Discards the anchor, so it is no longer updated. */
   def dispose(): Unit
 }

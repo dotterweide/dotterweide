@@ -1,5 +1,10 @@
 # To-do
 
+## Architecture
+
+ - the `Data` model must be changed to operate asynchronously,
+   allowing time to pass for the parser, for example.
+
 ## Editor
 
 ### basic

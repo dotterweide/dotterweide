@@ -36,7 +36,12 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
                          format: Format, adviser: Adviser, listRenderer: ListCellRenderer[AnyRef],
                          comment: String, history: History) extends Editor {
 
-  private val grid = new Grid(new Dimension(8, 20), Pane.getInsets)
+  private val grid = {
+    val pIn = Pane.getInsets
+    // XXX TODO --- how do we know this grid size works for mono-spaced 14 font?
+    new Grid(cellWidth = 8, cellHeight = 20,
+      insetLeft = pIn.left, insetTop = pIn.top, insetRight = pIn.right, insetBottom = pIn.bottom)
+  }
 
   private val NormalFont = new Font(coloring.fontFamily, Font.PLAIN, coloring.fontSize)
 
@@ -173,8 +178,8 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   }
 
   private def scrollToOffsetVisible(offset: Int): Unit = {
-    val h = grid.cellSize.height
-    val w = grid.cellSize.width
+    val w = grid.cellWidth
+    val h = grid.cellHeight
     val p = toPoint(offset)
 
     val spot = {
@@ -236,7 +241,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   private object MyTerminal extends AbstractTerminal {
     def choose[A](variants: ISeq[A], query: String)(callback: A => Unit): Unit = {
       val point = toPoint(offset)
-      val shifted = new Point(point.x - grid.cellSize.width * query.length - 3, point.y + 20)
+      val shifted = new Point(point.x - grid.cellWidth * query.length - 3, point.y + 20)
       val (popup, list) = ChooserFactory.createPopup(Pane, shifted, NormalFont, variants, listRenderer) { it =>
         Pane.requestFocusInWindow() // to draw cursor immediately
         popupVisible = false
@@ -268,8 +273,8 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     def getPreferredScrollableViewportSize: Dimension = getPreferredSize
 
     def getScrollableUnitIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int = orientation match {
-      case SwingConstants.VERTICAL    => grid.cellSize.height
-      case SwingConstants.HORIZONTAL  => grid.cellSize.width
+      case SwingConstants.VERTICAL    => grid.cellHeight
+      case SwingConstants.HORIZONTAL  => grid.cellWidth
     }
 
     def getScrollableBlockIncrement(visibleRect: Rectangle, orientation: Int, direction: Int): Int = orientation match {

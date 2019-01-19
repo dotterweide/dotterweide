@@ -19,14 +19,12 @@ package dotterweide.document
 
 import scala.collection.immutable.{Seq => ISeq}
 
-class DocumentImpl(s: String = "") extends Document {
-  private var ls = new LinedString(s)
+class DocumentImpl(text0: String = "") extends Document {
+  private var ls      = new LinedString(text0)
+  private var anchors = List.empty[AnchorImpl]
 
-  private var anchors = List[AnchorImpl]()
-
-  def length: Int = ls.length
-
-  def text: String = ls.toString
+  def length: Int     = ls.length
+  def text  : String  = ls.toString
 
   def text_=(s: String): Unit =
     replace(0, length, s)
@@ -56,17 +54,17 @@ class DocumentImpl(s: String = "") extends Document {
     notifyObservers(Replacement(begin, end, previous, s))
   }
 
-  private def updateAnchors(begin: Int, end: Int, end2: Int): Unit = {
+  private def updateAnchors(begin: Int, end: Int, end2: Int): Unit =
     anchors.foreach(_.update(begin, end, end2))
-  }
 
   private def check(offset: Int, parameter: String = "Offset"): Unit =
     if (offset < 0 || offset > length)
-      throw new IndexOutOfBoundsException("%s (%d) must be withing [%d; %d]".format(parameter, offset, 0, length))
+      throw new IndexOutOfBoundsException("%s (%d) must be within [%d; %d]".format(parameter, offset, 0, length))
 
   private def check(begin: Int, end: Int): Unit = {
-    check(begin, "Begin")
-    check(end, "End")
+    check(begin , "Begin" )
+    check(end   , "End"   )
+
     if (begin > end)
       throw new IllegalArgumentException("Begin (%d) must be not greater than end (%d)".format(begin, end))
   }
@@ -81,13 +79,19 @@ class DocumentImpl(s: String = "") extends Document {
 
   private class AnchorImpl(var offset: Int, bias: Bias) extends Anchor {
     def dispose(): Unit =
-      anchors = anchors.diff(Seq(this))
+      anchors = anchors.diff(this :: Nil)
 
+    /** Adjusts the offset based on the document edit.
+      *
+      * @param begin  begin of edited span
+      * @param end    former end of edited span (exclusive)
+      * @param end2   new    end of edited span (exclusive)
+      */
     def update(begin: Int, end: Int, end2: Int): Unit =
-      if (begin < offset && end <= offset) {
-        offset += end2 - end
-      } else if ((begin < offset && offset < end && end2 < offset) ||
-        (begin == end && begin == offset && bias == Bias.Right)) {
+      if (begin < offset && end <= offset /* offset was at or after the old end */) {
+        offset += end2 - end  // just add the difference
+      } else if ((begin < offset && offset < end && end2 < offset /* offset was inside the erased bit */) ||
+        (begin == end && begin == offset && bias == Bias.Right) /* right-biased anchor was at empty span */ ) {
         offset = end2
       }
   }

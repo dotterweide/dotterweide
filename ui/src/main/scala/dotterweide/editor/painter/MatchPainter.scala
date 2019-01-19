@@ -19,13 +19,16 @@ package dotterweide.editor.painter
 
 import java.awt.{Graphics, Rectangle}
 
-import dotterweide.Interval
+import dotterweide.{Interval, Span}
 import dotterweide.document.AnchoredInterval
-import dotterweide.editor.{ActionProcessor, Area, BraceMatcher, BraceType, CaretMovement, Coloring, DataEvent, FocusChanged, Inapplicable, Paired, Pass, SelectionChange, Unbalanced, VisibleRectangleChanged}
+import dotterweide.editor.{ActionProcessor, Area, BraceMatcher, BraceType, CaretMovement, Color, Coloring, DataEvent, FocusChanged, Inapplicable, Paired, Pass, SelectionChange, Unbalanced, VisibleRectangleChanged}
 import dotterweide.lexer.Token
 
 import scala.collection.immutable.{Seq => ISeq}
 
+// XXX TODO --- understand what the `Delay` thing is needed
+
+/** A painter for matching (or unbalanced) braces. */
 private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
                            processor: ActionProcessor) extends AbstractPainter(context) {
 
@@ -45,8 +48,8 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
   }
   
   canvas.onChange {
-    case VisibleRectangleChanged(_) if !completeData && anchoredMatches.nonEmpty => update(complete = true)
-    case FocusChanged(_) => update(complete = true)
+    case VisibleRectangleChanged(_) if !completeData && anchoredMatches.nonEmpty  => update(complete = true)
+    case FocusChanged(_)                                                          => update(complete = true)
     case _ =>
   }
 
@@ -69,13 +72,14 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
     completeData = complete
   }
 
-  private def matchIntervalsIn(tokens: ISeq[Token], offset: Int) = tokens.flatMap { token =>
-    matcher.braceTypeOf(token, data.tokens, offset) match {
-      case Paired       => (token.span, Paired)     :: Nil
-      case Unbalanced   => (token.span, Unbalanced) :: Nil
-      case Inapplicable => Nil
+  private def matchIntervalsIn(tokens: ISeq[Token], offset: Int): ISeq[(Span, BraceType)] =
+    tokens.flatMap { token =>
+      matcher.braceTypeOf(token, data.tokens, offset) match {
+        case Paired       => (token.span, Paired)     :: Nil
+        case Unbalanced   => (token.span, Unbalanced) :: Nil
+        case Inapplicable => Nil
+      }
     }
-  }
 
   def id = "match"
 
@@ -91,7 +95,7 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
     }
   }
 
-  private def colorFor(braceType: BraceType) = braceType match {
+  private def colorFor(braceType: BraceType): Color = braceType match {
     case Paired       => coloring(Coloring.PairedBraceBackground    )
     case Unbalanced   => coloring(Coloring.UnbalancedBraceBackground)
     case Inapplicable => coloring(Coloring.TextBackground           )

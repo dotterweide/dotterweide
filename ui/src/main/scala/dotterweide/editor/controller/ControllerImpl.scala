@@ -26,6 +26,10 @@ import dotterweide.editor.{ActionFinished, ActionStarted, Adviser, Data, EditorA
 import dotterweide.formatter.Formatter
 import dotterweide.node.{IdentifiedNode, Node}
 
+/** Implements `Controller`
+  *
+  * - control and mouse hover set terminal's `hover`
+  */
 class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: Grid, adviser: Adviser,
                      formatter: Formatter, tabSize: Int, comment: String, history: History) extends Controller {
   //TODO extract to some extension (maybe using brace matcher)
@@ -79,11 +83,13 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     }
   }
 
+  /** `true` if pressing back-space or delete */
   private def isImmediate(e: KeyEvent): Boolean = e.getKeyCode match {
     case KeyEvent.VK_BACK_SPACE | KeyEvent.VK_DELETE => true
     case _ => false
   }
 
+  /** Handles cursor movement and back-space/delete */
   def doProcessKeyPressed(e: KeyEvent): Unit = {
     if (e.isShiftDown && terminal.selection.isEmpty) origin = terminal.offset
 

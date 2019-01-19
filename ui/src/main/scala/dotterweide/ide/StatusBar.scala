@@ -29,7 +29,6 @@ private class StatusBar extends FlowPanel(FlowPanel.Alignment.Left)() {
   }
 
   contents += _position
-
   contents += _message
 
   def message: String = _message.text

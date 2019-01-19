@@ -19,6 +19,7 @@ package dotterweide.editor.controller
 
 import dotterweide.document.{Bias, Document}
 import dotterweide.editor.{Action, Data, History, Terminal}
+import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
 
@@ -29,11 +30,11 @@ private class Rename(document: Document, terminal: Terminal, data: Data, history
 
   def apply(): Unit = {
     data.compute()
-    val leafs = data.connectedLeafsFor(terminal.offset)
+    val leafs: ISeq[Node] = data.connectedLeafsFor(terminal.offset)
     if (leafs.nonEmpty) {
       terminal.selection  = None
       terminal.highlights = leafs.map(_.span.interval)
-      val id = leafs.head.span.text
+      val id: String = leafs.head.span.text
       terminal.edit(id, "Rename") {
         case Some(text) =>
           terminal.highlights = Nil

@@ -21,6 +21,7 @@ import dotterweide.ide.EditorTab
 
 import scala.swing.Action
 
+/** An action to replace the editor contents with a code example. */
 class ExampleAction(title0: String, mnemonic0: Char, tab: EditorTab, code: String) extends Action(title0) {
   mnemonic = mnemonic0
 

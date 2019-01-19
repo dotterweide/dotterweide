@@ -21,6 +21,9 @@ import java.awt.{Graphics, Rectangle}
 
 import dotterweide.editor.{CaretMovement, CaretVisibilityChanged, Coloring}
 
+// XXX TODO --- support overwrite mode (block cursor)
+
+/** Paints the cursor position as a vertical line. */
 private class CaretPainter(context: PainterContext) extends AbstractPainter(context) {
   def id = "caret"
 

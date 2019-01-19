@@ -20,7 +20,7 @@ package dotterweide
 /** An integer range (in a text).
   *
   * @param begin  start offset, zero based, inclusive
-  * @param end    end offset, _exclusive_ (the interval length is `end - begin`).
+  * @param end    end offset, ''exclusive'' (the interval length is `end - begin`).
   */
 case class Interval(begin: Int, end: Int) extends IntervalLike {
   if (begin  < 0) throw new IllegalArgumentException("Begin must be positive: "  + begin )
@@ -28,15 +28,23 @@ case class Interval(begin: Int, end: Int) extends IntervalLike {
   if (length < 0) throw new IllegalArgumentException("Length must be positive: " + length)
 
   def intersection(interval: Interval): Interval = {
-    val from = begin.max(interval.begin)
-    Interval(from, from.max(end.min(interval.end)))
+    val newBegin = math.max(begin, interval.begin)
+    val newEnd   = math.max(newBegin, math.min(end, interval.end))
+    Interval(newBegin, newEnd)
   }
 
+  /** Adds a delta `n` to the `begin` */
   def withBeginShift(n: Int): Interval = copy(begin = begin + n)
+
+  /** Adds a delta `n` to the `end` */
   def withEndShift  (n: Int): Interval = copy(end   = end   + n)
 
-  def +(n: Int) = Interval(begin + n, end + n)
-  def -(n: Int) = Interval(begin - n, end - n)
+  /** Shifts the interval forward */
+  def + (n: Int) = Interval(begin + n, end + n)
 
+  /** Shifts the interval backward */
+  def - (n: Int) = Interval(begin - n, end - n)
+
+  /** Applies function `f` to both `begin` and `end` */
   def transformWith(f: Int => Int): Interval = copy(begin = f(begin), end = f(end))
 }

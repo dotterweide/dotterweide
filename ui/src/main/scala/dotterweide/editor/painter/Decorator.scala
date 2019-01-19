@@ -21,6 +21,7 @@ import java.awt.font.TextAttribute
 
 import dotterweide.Interval
 
+/** Cases include [[ErrorPainter]], [[HoverPainter]], [[SelectionPainter]] */
 private trait Decorator {
   def decorations: Map[Interval, Map[TextAttribute, Any]]
 }

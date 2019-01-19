@@ -20,6 +20,9 @@ package dotterweide.editor.painter
 import dotterweide.ObservableEvents
 import dotterweide.editor.{ActionFinished, ActionProcessor, ActionStarted}
 
+/** A collector of `delegate` events, buffering them during the `ActionStarted`/`ActionFinished` window
+  * of a `processor`. It is used by [[MatchPainter]].
+  */
 private class Delay[A](delegate: ObservableEvents[A], processor: ActionProcessor) extends ObservableEvents[A] {
   private var delay = false
   

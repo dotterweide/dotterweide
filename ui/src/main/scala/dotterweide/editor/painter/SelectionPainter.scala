@@ -23,17 +23,19 @@ import java.awt.{Color, Graphics, Rectangle}
 import dotterweide.Interval
 import dotterweide.editor.{Coloring, SelectionChange}
 
+/** Paints the terminal's `selection` and collects them as decorations. */
 private class SelectionPainter(context: PainterContext) extends AbstractPainter(context) with Decorator {
   def id = "selection"
 
   terminal.onChange {
     case SelectionChange(from, to) =>
       from.foreach(notifyObservers)
-      to.foreach(notifyObservers)
+      to  .foreach(notifyObservers)
     case _ =>
   }
 
   override def paint(g: Graphics, bounds: Rectangle): Unit = {
+    // XXX TODO inefficient
     val rectangles = terminal.selection.toSeq.flatMap(rectanglesOf)
       .map(_.intersection(bounds)).filterNot(_.isEmpty)
 
@@ -43,6 +45,7 @@ private class SelectionPainter(context: PainterContext) extends AbstractPainter(
     }
   }
 
+  // XXX TODO cache and smart update
   override def decorations: Map[Interval, Map[TextAttribute, Color]] = terminal.selection
     .map(interval => (interval, Map(TextAttribute.FOREGROUND -> coloring(Coloring.SelectionForeground)))).toMap
 }

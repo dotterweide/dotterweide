@@ -17,14 +17,12 @@
 
 package dotterweide.editor.controller
 
-import java.awt.{Insets, Dimension}
-
-import org.junit.Test
-import org.junit.Assert._
 import dotterweide.Helpers._
 import dotterweide.document.Document
 import dotterweide.editor._
 import dotterweide.formatter.FormatterImpl
+import org.junit.Assert._
+import org.junit.Test
 
 class ControllerImplTest {
   @Test
@@ -156,8 +154,8 @@ class ControllerImplTest {
 
   protected def assertEffectIs(before: String, after: String)(f: ControllerImpl => Unit): Unit = {
     doAssertEffectIs(before, after) { (document, terminal) =>
-      val GridMock = new Grid(new Dimension(8, 8), new Insets(0, 0, 0, 0))
-      val controller = new ControllerImpl(document, new MockData(), terminal, GridMock, new MockAdviser(),
+      val GridMock    = new Grid(cellWidth = 8, cellHeight = 8)
+      val controller  = new ControllerImpl(document, new MockData(), terminal, GridMock, new MockAdviser(),
         new FormatterImpl(new MockFormat()), 2, "//", new HistoryImpl())
       f(controller)
     }

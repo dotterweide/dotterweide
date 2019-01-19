@@ -21,6 +21,7 @@ import dotterweide.ide.DynamicColoring
 
 import scala.swing.Action
 
+/** An action to switch color schemes. */
 class ColoringAction(coloring: DynamicColoring, name: String) extends Action(name) {
   mnemonic = name.charAt(0)
 

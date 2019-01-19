@@ -21,7 +21,11 @@ import java.awt.{Graphics, Rectangle}
 
 import dotterweide.ObservableEvents
 
+/** An object that participates in painting the editor component.
+  * If fires "dirty" rectangles that need repainting.
+  */
 trait Painter extends ObservableEvents[Rectangle] {
+  /** Purely informal / informational */
   def id: String
 
   def immediate: Boolean = false

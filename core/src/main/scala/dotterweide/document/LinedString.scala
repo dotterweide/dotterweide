@@ -21,16 +21,23 @@ import dotterweide.document.LinedString._
 
 import scala.collection.immutable.{Seq => ISeq}
 
+// XXX TODO --- very inefficient to traverse a list of lines to find a char index
 private class LinedString private (val lines: List[CharSequence]) extends CharSequence {
   def this(s: String) {
     this(parseLines(s))
   }
+
+  // ---- CharSequence interface ----
 
   lazy val length: Int = lines.foldLeft(0)(_ + _.length)
 
   def charAt(index: Int): Char = charAt(index, lines)
 
   def subSequence(start: Int, end: Int) = new LinedString(subLines(start, end))
+
+  override lazy val toString: String = lines.foldLeft(new StringBuilder())(_ append _).toString()
+
+  // ----
 
   def concat(other: LinedString): LinedString = new LinedString(join(lines, other.lines))
 
@@ -39,10 +46,8 @@ private class LinedString private (val lines: List[CharSequence]) extends CharSe
 
   lazy val wraps: ISeq[Int] = wrapsIn(lines, 0)
 
-  override lazy val toString: String = lines.foldLeft(new StringBuilder())(_ append _).toString()
-
   private def charAt(index: Int, list: List[CharSequence]): Char = list match {
-    case Nil => throw new IndexOutOfBoundsException()
+    case Nil          => throw new IndexOutOfBoundsException()
     case head :: tail => if (index < head.length) head.charAt(index) else charAt(index - head.length, tail)
   }
 
@@ -93,6 +98,7 @@ private object LinedString {
       case _ => prefix ::: suffix
     }
 
+  // XXX TODO --- not tail recursive, may have huge stack costs
   private def wrapsIn(lines: List[CharSequence], offset: Int): List[Int] = lines match {
     case Nil      => throw new IllegalArgumentException()
     case _ :: Nil => Nil

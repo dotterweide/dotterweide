@@ -21,6 +21,7 @@ import java.awt.{Graphics, Rectangle}
 
 import dotterweide.editor.Coloring
 
+/** Simply fills the bounds with `Coloring.TextBackground` */
 private class BackgroundPainter(context: PainterContext) extends AbstractPainter(context) {
   def id = "background"
 

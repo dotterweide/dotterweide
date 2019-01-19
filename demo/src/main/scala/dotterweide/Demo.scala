@@ -27,7 +27,7 @@ import dotterweide.languages.toy.ToyLanguage
 import scala.swing.{SwingApplication, Window}
 
 object Demo extends SwingApplication {
-  private val Languages = Seq(ScalaLanguage, ToyLanguage, LispLanguage)
+  private val Languages = List(ScalaLanguage, ToyLanguage, LispLanguage)
 
   override def startup(args: Array[String]): Unit =
     selectLanguage().foreach(openMainFrame)
@@ -39,7 +39,7 @@ object Demo extends SwingApplication {
   }
 
   private def openMainFrame(language: Language): Unit = {
-    val code = language.examples.headOption.fold("")(_.code)
+    val code  = language.examples.headOption.fold("")(_.code)
     val frame = new MainFrame(language, code)
     frame.preferredSize = new Dimension(874, 696)
     open(frame)

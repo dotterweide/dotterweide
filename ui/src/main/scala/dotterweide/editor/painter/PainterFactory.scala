@@ -24,26 +24,40 @@ import dotterweide.lexer.Lexer
 import scala.collection.immutable.{Seq => ISeq}
 
 object PainterFactory {
+  /** Creates a standard stack of painters. The order of the stack:
+    *
+    * - `ImmediateTextPainter`  : quite a hack to perform fast character insertions and deletions
+    * - `BackgroundPainter`     : fill entire background
+    * - `CurrentLinePainter`    : fill background of cursor's line
+    * - `ErrorPainter`          : paint some error highlights, collect others as decorations
+    * - `MatchPainter`          : paired or unbalanced braces (background)
+    * - `HighlightPainter`      : `terminal.highlights` background
+    * - `HoverPainter`          : collects decorations for `terminal.hover` (blue underlined text)
+    * - `SelectionPainter`      : fill selection backgrounds, collect as decorations
+    * - `TextPainter`           : text foreground painting, including error, hover, and selection decorations
+    * - `CaretPainter`          : cursor position
+    */
   def createPainters(document: Document, terminal: Terminal, data: Data, canvas: Canvas, grid: Grid, lexer: Lexer,
                      matcher: BraceMatcher, errors: ErrorHolder, coloring: Coloring,
                      processor: ActionProcessor): ISeq[Painter] = {
 
     val context           = PainterContext(document, terminal, data, canvas, grid, coloring)
-    val errorPainter      = new ErrorPainter(context, errors)
+    val errorPainter      = new ErrorPainter    (context, errors)
+    val hoverPainter      = new HoverPainter    (context)
     val selectionPainter  = new SelectionPainter(context)
-    val hoverPainter      = new HoverPainter(context)
 
     val painters = List(
       new ImmediateTextPainter(context, lexer, processor),
-      new BackgroundPainter(context),
-      new CurrentLinePainter(context),
+      new BackgroundPainter   (context),
+      new CurrentLinePainter  (context),
       errorPainter,
-      new MatchPainter(context, matcher, processor),
-      new HighlightPainter(context),
+      new MatchPainter        (context, matcher, processor),
+      new HighlightPainter    (context),
       hoverPainter,
       selectionPainter,
-      new TextPainter(context, lexer, List(errorPainter, hoverPainter, selectionPainter)),
-      new CaretPainter(context))
+      new TextPainter         (context, lexer, List(errorPainter, hoverPainter, selectionPainter)),
+      new CaretPainter        (context)
+    )
 
     painters
   }

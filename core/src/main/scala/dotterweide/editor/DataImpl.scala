@@ -25,6 +25,7 @@ import dotterweide.parser.Parser
 
 import scala.collection.immutable.{Seq => ISeq}
 
+/** An implementation of `Data` that re-runs the initial text pass whenever the `document` changes. */
 private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspections: ISeq[Inspection]) extends Data {
   def text: String = document.text
 
@@ -54,6 +55,7 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
       nextPass()
     }
 
+  /** Runs a given pass and adds new errors to previous errors. */
   private def run(p: Pass): Unit = {
     pass = p
 
@@ -65,11 +67,12 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
     }
 
     errors ++= passErrors
-    hasFatalErrors = hasFatalErrors || passErrors.exists(_.fatal)
+    hasFatalErrors ||= passErrors.exists(_.fatal)
 
     notifyObservers(DataEvent(pass, passErrors))
   }
 
+  /** Resets all analysis data. Clears all errors. */
   private def runTextPass(): ISeq[Error] = {
     tokens          = Nil
     structure       = None
@@ -79,6 +82,7 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
     Nil
   }
 
+  /** Generates `tokens`. Returns the resulting errors. */
   private def runLexerPass(): ISeq[Error] = {
     tokens = lexer.analyze(document.characters).toStream
 
@@ -87,8 +91,9 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
     }
   }
 
+  /** Generates `structure`. Returns the resulting errors. */
   private def runParserPass(): ISeq[Error] = {
-    val root = parser.parse(tokens.iterator)
+    val root: Node = parser.parse(tokens.iterator)
 
     structure = Some(root)
 
@@ -97,6 +102,7 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
     }
   }
 
+  /** Generates and returns more errors and warnings through inspection. */
   private def runInspectionPass(): ISeq[Error] = {
     val root = structure.getOrElse(
       throw new IllegalStateException("Running inspections prior to parser"))

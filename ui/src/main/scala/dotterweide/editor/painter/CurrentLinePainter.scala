@@ -21,6 +21,7 @@ import java.awt.{Graphics, Rectangle}
 
 import dotterweide.editor.{CaretMovement, Coloring}
 
+/** Simply paints the line in which is the cursor is located using `Coloring.CurrentLineBackground` */
 private class CurrentLinePainter(context: PainterContext) extends AbstractPainter(context) {
   def id = "current line"
 
@@ -30,6 +31,7 @@ private class CurrentLinePainter(context: PainterContext) extends AbstractPainte
       val toRectangle   = lineRectangleAt(to)
 
       if (fromRectangle != toRectangle) {
+        // XXX TODO --- if rectangles are adjacent, could fire one union rectangle
         notifyObservers(fromRectangle)
         notifyObservers(toRectangle)
       }
