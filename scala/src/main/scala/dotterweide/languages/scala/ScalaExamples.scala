@@ -14,6 +14,8 @@ package dotterweide.languages.scala
 
 import dotterweide.Example
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object ScalaExamples {
   val Euler1: String =
     """
@@ -189,7 +191,7 @@ object ScalaExamples {
       |foo()
       |""".stripMargin
 
-  val Values: Seq[Example] = Seq(
+  val Values: ISeq[Example] = List(
     Example("Project Euler 1", '1', Euler1),
     Example("Project Euler 2", '2', Euler2),
     Example("Project Euler 6", '6', Euler6),

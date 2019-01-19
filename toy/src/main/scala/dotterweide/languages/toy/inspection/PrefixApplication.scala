@@ -21,10 +21,12 @@ import dotterweide.inspection.{Inspection, Mark}
 import dotterweide.languages.toy.node.PrefixExpression
 import dotterweide.node.{Expression, Node}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object PrefixApplication extends Inspection {
   val Message: (String, String) => String = "Operator '%s' cannot be applied to '%s'".format(_: String, _: String)
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case prefix @ PrefixExpression(Some(token), Some(Expression(expType))) if prefix.nodeType.isEmpty =>
       Mark(prefix, Message(token.span.text, expType.presentation)) :: Nil
     case _ => Nil

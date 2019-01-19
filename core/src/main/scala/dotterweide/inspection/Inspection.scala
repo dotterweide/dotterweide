@@ -19,6 +19,8 @@ package dotterweide.inspection
 
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 trait Inspection {
-  def inspect(node: Node): Seq[Mark]
+  def inspect(node: Node): ISeq[Mark]
 }

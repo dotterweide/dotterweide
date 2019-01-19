@@ -19,6 +19,9 @@ package dotterweide.editor
 
 import dotterweide.ObservableEvents
 
+import scala.collection.immutable.{Seq => ISeq}
+
+
 object Action {
   sealed trait Update
   final case class EnabledChanged (enabled: Boolean ) extends Update
@@ -26,7 +29,7 @@ object Action {
 }
 trait Action extends Function0[Unit] with ObservableEvents[Action.Update] {
   /** A list of keyboard shortcuts. */
-  def keys: List[String]
+  def keys: ISeq[String]
 
   /** Name or title of the action. */
   def name: String

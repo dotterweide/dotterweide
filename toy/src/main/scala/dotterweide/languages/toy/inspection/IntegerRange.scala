@@ -22,10 +22,12 @@ import dotterweide.languages.toy.ToyType
 import dotterweide.languages.toy.node.Literal
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object IntegerRange extends Inspection {
   val Message = "Integer number too large"
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case l: Literal if l.nodeType.contains(ToyType.IntegerType) =>
       try {
         Integer.parseInt(l.span.text)

@@ -22,6 +22,8 @@ import dotterweide.inspection.{Inspection, Mark}
 import dotterweide.languages.toy.node.Scope
 import dotterweide.node._
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object DuplicateIdentifier extends Inspection {
   val FunctionRedefinition: String => String = "Function %s is already defined in the scope".format(_: String)
 
@@ -29,19 +31,19 @@ object DuplicateIdentifier extends Inspection {
 
   val ParameterRedefinition: String => String = "Parameter %s is already defined".format(_: String)
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case scope: Scope =>
-      val functions = clashableIn(scope, _.functions)
-      val variables = clashableIn(scope, _.variables)
-      val parameters = clashableIn(scope, _.parameters)
+      val functions   = clashableIn(scope, _.functions  )
+      val variables   = clashableIn(scope, _.variables  )
+      val parameters  = clashableIn(scope, _.parameters )
 
-      val functionClashes = clashesIn(functions).collect {
+      val functionClashes: ISeq[Mark] = clashesIn(functions).collect {
         case IdentifiedNode(id, identifier) => Mark(id, FunctionRedefinition(identifier))
       }
-      val variableClashes = clashesIn(variables).collect {
+      val variableClashes: ISeq[Mark] = clashesIn(variables).collect {
         case IdentifiedNode(id, identifier) => Mark(id, VariableRedefinition(identifier))
       }
-      val parameterClashes = clashesIn(parameters).collect {
+      val parameterClashes: ISeq[Mark] = clashesIn(parameters).collect {
         case IdentifiedNode(id, identifier) => Mark(id, ParameterRedefinition(identifier))
       }
 
@@ -54,7 +56,7 @@ object DuplicateIdentifier extends Inspection {
     case _ => Nil
   }
 
-  private def clashableIn(scope: Scope, extractor: Scope => Seq[IdentifiedNode]): Seq[IdentifiedNode] = {
+  private def clashableIn(scope: Scope, extractor: Scope => ISeq[IdentifiedNode]): ISeq[IdentifiedNode] = {
     val inner = extractor(scope)
     if (scope.canRedefineOuterDeclarations) {
       inner
@@ -66,7 +68,7 @@ object DuplicateIdentifier extends Inspection {
     }
   }
 
-  private def clashesIn(nodes: Seq[IdentifiedNode]): Seq[IdentifiedNode] = {
-    nodes.groupBy(_.identifier).filter(_._2.size > 1).toSeq.flatMap(_._2.tail)
+  private def clashesIn(nodes: ISeq[IdentifiedNode]): ISeq[IdentifiedNode] = {
+    nodes.groupBy(_.identifier).filter(_._2.size > 1).toList.flatMap(_._2.tail)
   }
 }

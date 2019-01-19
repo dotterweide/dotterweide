@@ -23,6 +23,8 @@ import dotterweide.languages.toy.ToyType.VoidType
 import dotterweide.languages.toy.node._
 import dotterweide.node._
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object TypeMismatch extends Inspection {
   val Message: (String, String) => String = "Type mismatch, expected: %s, actual: %s".format(_: String, _: String)
 
@@ -31,7 +33,7 @@ object TypeMismatch extends Inspection {
   val MissingReturnValueMessage = "Missing return value"
 
   // for some reason compiler complains when the following is written in a single "match"
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case r @ Return(None, Some(expected)) if expected != VoidType =>
       Mark(r, MissingReturnValueMessage) :: Nil
     case r @ Return(Some(_), Some(expected)) if expected == ToyType.VoidType =>

@@ -19,8 +19,10 @@ package dotterweide.editor
 
 import dotterweide.ObservableEvents
 
+import scala.collection.immutable.{Seq => ISeq}
+
 trait ErrorHolder extends ObservableEvents[ErrorsChanged] {
-  def errors: Seq[Error]
+  def errors: ISeq[Error]
 }
 
-case class ErrorsChanged(before: Seq[Error], after: Seq[Error])
+case class ErrorsChanged(before: ISeq[Error], after: ISeq[Error])

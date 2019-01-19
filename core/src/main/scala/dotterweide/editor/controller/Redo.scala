@@ -20,13 +20,15 @@ package dotterweide.editor.controller
 import dotterweide.document.Document
 import dotterweide.editor.{History, Terminal}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 // XXX TODO --- should observe `history` instead
 private class Redo(document: Document, terminal: Terminal, history: History)
   extends DocumentAction(document, terminal) {
 
   def name: String        = "Redo"
   def mnemonic: Char      = 'R'
-  def keys: List[String]  = "shift ctrl pressed Z" :: Nil
+  def keys: ISeq[String]  = "shift ctrl pressed Z" :: Nil
 
   protected def calcEnabled(): Boolean = history.canRedo
 

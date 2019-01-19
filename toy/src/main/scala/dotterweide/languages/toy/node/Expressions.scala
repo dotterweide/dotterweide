@@ -27,6 +27,8 @@ import dotterweide.languages.toy.optimizer.ToyExpressionOptimizer
 import dotterweide.lexer.{Token, TokenKind}
 import dotterweide.node._
 
+import scala.collection.immutable.{Seq => ISeq}
+
 trait ToyExpression extends Expression with ToyExpressionOptimizer
 
 class Literal extends NodeImpl("literal")
@@ -127,13 +129,13 @@ with ToyExpression with CallExpEvaluator with TypeCheck with CallExpTranslator {
 
   def arguments: Option[Arguments] = children.findBy[Arguments]
 
-  def expressions: Seq[Expression] = arguments.map(_.expressions).getOrElse(Nil)
+  def expressions: ISeq[Expression] = arguments.map(_.expressions).getOrElse(Nil)
 
-  def bindings: (Seq[(Expression, Parameter)], Seq[Expression], Seq[Parameter]) = {
+  def bindings: (ISeq[(Expression, Parameter)], ISeq[Expression], ISeq[Parameter]) = {
     val parameters = function.map(_.parameters).getOrElse(Nil)
     val es = expressions.iterator
     val ps = parameters.iterator
-    (es.zip(ps).toList, es.toSeq, ps.toSeq)
+    (es.zip(ps).toList, es.toList, ps.toList)
   }
 
   def rightBrace: Option[Node] = arguments.flatMap(_.children.lastOption)

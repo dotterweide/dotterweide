@@ -21,12 +21,14 @@ import dotterweide.Interval
 import dotterweide.document.Document
 import dotterweide.editor.Terminal
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class IndentSelection(document: Document, terminal: Terminal, tabSize: Int)
   extends DocumentAction(document, terminal) {
 
   def name: String        = "Indent Selection"
   def mnemonic: Char      = 'I'
-  def keys: List[String]  = "pressed TAB" :: Nil
+  def keys: ISeq[String]  = "pressed TAB" :: Nil
 
   protected def calcEnabled(): Boolean = terminal.selection.isDefined
 

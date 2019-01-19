@@ -15,6 +15,8 @@ package dotterweide.languages.scala
 import dotterweide.editor.{Adviser, Variant}
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object ScalaAdviser extends Adviser {
-  def variants(root: Node, anchor: Node): Seq[Variant] = Nil
+  def variants(root: Node, anchor: Node): ISeq[Variant] = Nil
 }

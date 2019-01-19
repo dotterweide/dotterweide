@@ -19,6 +19,8 @@ package dotterweide.editor
 
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 class MockAdviser extends Adviser {
-  def variants(root: Node, anchor: Node): Seq[Variant] = Seq.empty
+  def variants(root: Node, anchor: Node): ISeq[Variant] = Nil
 }

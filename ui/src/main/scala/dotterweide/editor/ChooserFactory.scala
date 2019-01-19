@@ -23,8 +23,11 @@ import java.awt.{Font, Point, Color => AWTColor}
 import javax.swing.border.LineBorder
 import javax.swing.{AbstractAction, JComponent, JList, JScrollPane, ListCellRenderer, Popup, PopupFactory}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object ChooserFactory {
-  def createPopup[A](parent: JComponent, point: Point, font: Font, variants: Seq[A], renderer: ListCellRenderer[AnyRef])
+  def createPopup[A](parent: JComponent, point: Point, font: Font, variants: ISeq[A],
+                     renderer: ListCellRenderer[AnyRef])
                     (callback: Option[A] => Unit): (Popup, JList[AnyRef]) = {
     val list = createList(variants, font)
 
@@ -61,7 +64,7 @@ object ChooserFactory {
     (popup, list)
   }
 
-  private def createList(variants: Seq[Any], font: Font) = {
+  private def createList(variants: ISeq[Any], font: Font) = {
     val list = new JList(variants.iterator.map(_.asInstanceOf[AnyRef]).toArray)
     list.setBackground(new AWTColor(235, 244, 254))
     list.setSelectionBackground(new AWTColor(0, 82, 164))

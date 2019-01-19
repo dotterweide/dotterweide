@@ -21,10 +21,12 @@ import dotterweide.document.{Bias, Document}
 import dotterweide.editor.{Action, Data, Terminal}
 import dotterweide.optimizer.Optimizer
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class Optimize(document: Document, terminal: Terminal, data: Data) extends Action {
   def name: String        = "Optimize"
   def mnemonic: Char      = 'O'
-  def keys: List[String]  = "ctrl alt pressed O" :: Nil
+  def keys: ISeq[String]  = "ctrl alt pressed O" :: Nil
 
   def apply(): Unit = {
     data.compute()

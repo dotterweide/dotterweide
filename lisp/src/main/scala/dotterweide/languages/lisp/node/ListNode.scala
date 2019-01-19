@@ -22,17 +22,19 @@ import dotterweide.languages.lisp.LispTokens._
 import dotterweide.languages.lisp.value.ListValue
 import dotterweide.node.NodeImpl
 
+import scala.collection.immutable.{Seq => ISeq}
+
 class ListNode extends NodeImpl("list") with ExpressionNode {
   protected def read0(source: String): ListValue = prefixKind match {
     case Some(HASH) => FunctionLiteral.readFrom(this, source)
     case _ => ListValue(expressions.map(_.read(source)), Some(placeIn(source)))
   }
 
-  def expressions: Seq[ExpressionNode] = children.filterBy[ExpressionNode]
+  def expressions: ISeq[ExpressionNode] = children.filterBy[ExpressionNode]
 
   def function: Option[ExpressionNode] = expressions.headOption
 
-  def arguments: Seq[ExpressionNode] = expressions.drop(1)
+  def arguments: ISeq[ExpressionNode] = expressions.drop(1)
 }
 
 object ListNode {

@@ -27,6 +27,8 @@ import dotterweide.lexer.{Lexer, TokenKind}
 import dotterweide.parser.Parser
 import dotterweide.{Example, FileType, Language}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object ToyLanguage extends Language {
   def name = "Toy"
 
@@ -40,13 +42,13 @@ object ToyLanguage extends Language {
     "Light" -> new ToyColoring(ColorScheme.LightColors),
     "Dark"  -> new ToyColoring(ColorScheme.DarkColors))
 
-  def complements: Seq[(TokenKind, TokenKind)] = Seq((LBRACE, RBRACE), (LPAREN, RPAREN))
+  def complements: ISeq[(TokenKind, TokenKind)] = List((LBRACE, RBRACE), (LPAREN, RPAREN))
 
   def format: Format = ToyFormat
 
   def comment = "//"
 
-  def inspections: Seq[Inspection] = Seq(ReturnOutsideFunction, DuplicateIdentifier, UnresolvedReference,
+  def inspections: ISeq[Inspection] = List(ReturnOutsideFunction, DuplicateIdentifier, UnresolvedReference,
     VoidValue, Applicability, TypeMismatch, OperatorApplication, IntegerRange, PrefixApplication,
     MissingReturn, UnreachableStatement, UnusedDeclaration, PredefinedIdentifier, Optimization, DivisionByZero)
 
@@ -54,5 +56,5 @@ object ToyLanguage extends Language {
 
   def fileType = FileType("Toy file", "toy")
 
-  def examples: Seq[Example] = ToyExamples.Values
+  def examples: ISeq[Example] = ToyExamples.Values
 }

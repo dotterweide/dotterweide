@@ -19,6 +19,8 @@ package dotterweide.editor
 
 import dotterweide.Interval
 
+import scala.collection.immutable.{Seq => ISeq}
+
 sealed trait TerminalEvent {
   def undo(terminal: Terminal): Unit
 
@@ -45,7 +47,7 @@ case class SelectionChange(from: Option[Interval], to: Option[Interval]) extends
   }
 }
 
-case class HighlightsChange(from: Seq[Interval], to: Seq[Interval]) extends TerminalEvent {
+case class HighlightsChange(from: ISeq[Interval], to: ISeq[Interval]) extends TerminalEvent {
   def undo(terminal: Terminal): Unit = {
     terminal.highlights = from
   }

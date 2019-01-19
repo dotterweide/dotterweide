@@ -20,10 +20,12 @@ package dotterweide.editor.controller
 import dotterweide.document.Document
 import dotterweide.editor.{Action, Terminal}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class RemoveLine(document: Document, terminal: Terminal) extends Action {
   def name: String        = "Remove Line"
   def mnemonic: Char      = 'R'
-  def keys: List[String]  = "ctrl pressed Y" :: Nil
+  def keys: ISeq[String]  = "ctrl pressed Y" :: Nil
 
   def apply(): Unit = {
     val range = terminal.currentLineIntervalIn(document)

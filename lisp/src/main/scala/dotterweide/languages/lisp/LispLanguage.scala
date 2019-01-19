@@ -24,6 +24,8 @@ import dotterweide.lexer.{Lexer, TokenKind}
 import dotterweide.parser.Parser
 import dotterweide.{Example, FileType, Language}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object LispLanguage extends Language {
   def name = "Lisp"
 
@@ -37,17 +39,17 @@ object LispLanguage extends Language {
     "Light" -> new LispColoring(ColorScheme.LightColors),
     "Dark"  -> new LispColoring(ColorScheme.DarkColors))
 
-  def complements: Seq[(TokenKind, TokenKind)] = Seq(LispTokens.Parens, LispTokens.Brackets)
+  def complements: ISeq[(TokenKind, TokenKind)] = List(LispTokens.Parens, LispTokens.Brackets)
 
   def format: Format = LispFormat
 
   def comment = ";"
 
-  def inspections: Seq[Inspection] = Seq()
+  def inspections: ISeq[Inspection] = Nil
 
   def adviser: Adviser = LispAdviser
 
   def fileType = FileType("Lisp file", "lisp")
 
-  def examples: Seq[Example] = LispExamples.Values
+  def examples: ISeq[Example] = LispExamples.Values
 }

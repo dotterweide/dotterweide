@@ -21,10 +21,12 @@ import dotterweide.Interval
 import dotterweide.document.Document
 import dotterweide.editor.{Action, Terminal}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class SelectAll(document: Document, terminal: Terminal) extends Action {
   def name: String        = "Select All"
   def mnemonic: Char      = 'A'
-  def keys: List[String]  = "ctrl pressed A" :: Nil
+  def keys: ISeq[String]  = "ctrl pressed A" :: Nil
 
   def apply(): Unit =
     terminal.selection = Some(Interval(0, document.length))

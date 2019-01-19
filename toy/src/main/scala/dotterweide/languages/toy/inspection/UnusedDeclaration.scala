@@ -21,11 +21,13 @@ import dotterweide.inspection.{Decoration, Inspection, Mark}
 import dotterweide.languages.toy.node._
 import dotterweide.node.{IdentifiedNode, Node}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object UnusedDeclaration extends Inspection {
   val Message: (String, String) => String = (entity, name) =>
     "%s '%s' is never used".format(entity.capitalize, name)
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case ScopeDeclarations(declarations) =>
       val unused = for (declaration <- declarations;
                         elements = declaration.elements

@@ -22,26 +22,28 @@ import dotterweide.languages.toy.compiler.ScopeTranslator
 import dotterweide.languages.toy.interpreter.ScopeEvaluator
 import dotterweide.node._
 
+import scala.collection.immutable.{Seq => ISeq}
+
 trait Scope extends Node with ScopeEvaluator with ScopeTranslator {
   def canRedefineOuterDeclarations: Boolean = parent match {
     case Some(_: FunctionDeclaration) => true
     case _ => false
   }
 
-  def functions: Seq[FunctionDeclaration] =
+  def functions: ISeq[FunctionDeclaration] =
     children.filterBy[FunctionDeclaration]
 
-  def variables: Seq[VariableDeclaration] =
+  def variables: ISeq[VariableDeclaration] =
     children.filterBy[VariableDeclaration]
 
-  def parameters: Seq[Parameter] = parent match {
+  def parameters: ISeq[Parameter] = parent match {
     case Some(function: FunctionDeclaration) => function.parameters
     case _ => Nil
   }
 
-  def values: Seq[UsableNode] = parameters ++ variables
+  def values: ISeq[UsableNode] = parameters ++ variables
 
-  def declarations: Seq[UsableNode] = functions ++ values
+  def declarations: ISeq[UsableNode] = functions ++ values
 
   def exit: Option[Node] = children.find {
     case _: Return => true

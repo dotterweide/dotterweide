@@ -37,11 +37,11 @@ object BytecodeInvoker {
     } catch {
       case e: InvocationTargetException =>
         val cause   = e.getCause
-        val places  = cause.getStackTrace.filter(it => it.getClassName == name).map { it =>
+        val places  = cause.getStackTrace.iterator.filter(it => it.getClassName == name).map { it =>
           val method  = it.getMethodName
           val line    = it.getLineNumber
           if (method == "run") Place(None, line) else Place(Some(method), line)
-        }
+        } .toList
         throw InvocationException(cause.toString, places)
     }
   }

@@ -19,12 +19,14 @@ package dotterweide.editor
 
 import dotterweide.Interval
 
+import scala.collection.immutable.{Seq => ISeq}
+
 class MockTerminal(offset0: Int, selection0: Option[Interval]) extends AbstractTerminal {
   offset = offset0
 
   selection = selection0
 
-  def choose[A](variants: Seq[A], query: String)(callback: A => Unit): Unit = ()
+  def choose[A](variants: ISeq[A], query: String)(callback: A => Unit): Unit = ()
 
   def edit(s: String, title: String)(callback: Option[String] => Unit): Unit = ()
 }

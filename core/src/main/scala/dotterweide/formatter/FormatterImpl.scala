@@ -23,6 +23,8 @@ import dotterweide.formatter.Distance._
 import dotterweide.lexer.Token
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 class FormatterImpl(format: Format) extends Formatter {
   def format(root: Node, selection: Option[Interval], tabSize: Int): String = {
     val (tokens, interval) = affectedTokens(root, selection)
@@ -67,7 +69,7 @@ class FormatterImpl(format: Format) extends Formatter {
     }
   }
 
-  private def affectedTokens(root: Node, selection: Option[Interval]): (Seq[Token], Interval) = {
+  private def affectedTokens(root: Node, selection: Option[Interval]): (ISeq[Token], Interval) = {
     val interval = selection.getOrElse(root.span.interval)
 
     val selected = root.elements.flatMap(_.token.toSeq).distinct.filter(_.span.interval.intersectsWith(interval))

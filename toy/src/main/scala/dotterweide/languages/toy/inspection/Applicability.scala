@@ -22,42 +22,43 @@ import dotterweide.languages.toy.ToyType.VoidType
 import dotterweide.languages.toy.node._
 import dotterweide.node._
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object Applicability extends Inspection {
   val Mismatch  : (String, String) => String  = "Type mismatch, expected: %s, actual: %s".format(_: String, _: String)
   val Missed    : (String, String) => String  = "Function %s: unspecified parameters: %s".format(_: String, _: String)
   val Excessive : String => String            = "Function %s: excessive argument".format(_: String)
   val Void                                    = "Void argument"
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case call: CallExpression =>
-      call.reference.flatMap { ref =>
+      val opt = call.reference.flatMap { ref =>
         if (ref.predefined)
           Some(inspectPredefined(call))
         else
           call.function.map(inspect(call, _))
-      } getOrElse {
-        Nil
       }
+      opt.getOrElse(Nil)
     case _ => Nil
  }
 
-  private def inspectPredefined(call: CallExpression): Seq[Mark] =
+  private def inspectPredefined(call: CallExpression): ISeq[Mark] =
     call.expressions.filter(_.nodeType.contains(VoidType)).map(Mark(_, Void))
 
-  private def inspect(call: CallExpression, function: FunctionDeclaration): Seq[Mark] = {
+  private def inspect(call: CallExpression, function: FunctionDeclaration): ISeq[Mark] = {
     val (bindings, excessive, missed) = call.bindings
 
-    val mismatches = bindings.collect {
+    val mismatches: ISeq[Mark] = bindings.collect {
       case (exp @ Expression(actual), TypedNode(expected)) if actual != expected =>
         Mark(exp, Mismatch(expected.presentation, actual.presentation))
     }
 
-    val missedMark = call.rightBrace.flatMap { brace =>
+    val missedMark: Option[Mark] = call.rightBrace.flatMap { brace =>
       if (missed.isEmpty) None else
         Some(Mark(brace, Missed(function.name, missed.flatMap(_.id).map(_.span.text).mkString(", "))))
     }
 
-    val excessiveMarks = excessive.map(Mark(_, Excessive(function.name)))
+    val excessiveMarks: ISeq[Mark] = excessive.map(Mark(_, Excessive(function.name)))
 
     mismatches ++ excessiveMarks ++ missedMark.toSeq
   }

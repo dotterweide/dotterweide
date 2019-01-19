@@ -27,7 +27,7 @@ class BraceMatcherImplTest {
 
   private val RPAREN = TokenKind("RPAREN")
 
-  private val matcher = new BraceMatcherImpl(Seq((LPAREN, RPAREN)))
+  private val matcher = new BraceMatcherImpl(List((LPAREN, RPAREN)))
 
   @Test
   def unavailable(): Unit = {

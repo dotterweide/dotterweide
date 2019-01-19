@@ -17,4 +17,6 @@
 
 package dotterweide.interpreter
 
-case class EvaluationException(message: String, trace: Seq[Place]) extends Exception(message)
+import scala.collection.immutable.{Seq => ISeq}
+
+case class EvaluationException(message: String, trace: ISeq[Place]) extends Exception(message)

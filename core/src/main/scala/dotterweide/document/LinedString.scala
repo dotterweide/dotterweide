@@ -17,7 +17,9 @@
 
 package dotterweide.document
 
-import LinedString._
+import dotterweide.document.LinedString._
+
+import scala.collection.immutable.{Seq => ISeq}
 
 private class LinedString private (val lines: List[CharSequence]) extends CharSequence {
   def this(s: String) {
@@ -35,7 +37,7 @@ private class LinedString private (val lines: List[CharSequence]) extends CharSe
   def replace(start: Int, end: Int, s: String): LinedString =
     new LinedString(replace(start, end, parseLines(s)))
 
-  lazy val wraps: Seq[Int] = wrapsIn(lines, 0)
+  lazy val wraps: ISeq[Int] = wrapsIn(lines, 0)
 
   override lazy val toString: String = lines.foldLeft(new StringBuilder())(_ append _).toString()
 

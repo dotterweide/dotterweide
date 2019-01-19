@@ -21,12 +21,14 @@ import dotterweide.inspection.{Inspection, Mark}
 import dotterweide.languages.toy.node.FunctionDeclaration
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object PredefinedIdentifier extends Inspection {
   val Message: String => String = "Function name '%s' is predefined".format(_: String)
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case f: FunctionDeclaration if List("print", "println").contains(f.identifier) =>
-      f.id.map(Mark(_, Message(f.identifier))).toSeq
+      f.id.map(Mark(_, Message(f.identifier))).toList
     case _ => Nil
   }
 }

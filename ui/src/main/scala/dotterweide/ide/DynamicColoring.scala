@@ -20,13 +20,15 @@ package dotterweide.ide
 import dotterweide.editor.{Attributes, Color, Coloring}
 import dotterweide.lexer.TokenKind
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring {
   require (delegates.nonEmpty)
 
   private var _name     : String    = delegates.head._1
   private var _coloring : Coloring  = delegates.head._2
 
-  def names: Seq[String] = delegates.keys.toSeq
+  def names: ISeq[String] = delegates.keys.toList
   
   def name: String = _name 
   

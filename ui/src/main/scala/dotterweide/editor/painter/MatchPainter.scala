@@ -24,10 +24,12 @@ import dotterweide.document.AnchoredInterval
 import dotterweide.editor.{ActionProcessor, Area, BraceMatcher, BraceType, CaretMovement, Coloring, DataEvent, FocusChanged, Inapplicable, Paired, Pass, SelectionChange, Unbalanced, VisibleRectangleChanged}
 import dotterweide.lexer.Token
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
                            processor: ActionProcessor) extends AbstractPainter(context) {
 
-  private var anchoredMatches: Seq[AnchoredMatch] = Nil
+  private var anchoredMatches: ISeq[AnchoredMatch] = Nil
 
   private var completeData = true
 
@@ -67,7 +69,7 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
     completeData = complete
   }
 
-  private def matchIntervalsIn(tokens: Seq[Token], offset: Int) = tokens.flatMap { token =>
+  private def matchIntervalsIn(tokens: ISeq[Token], offset: Int) = tokens.flatMap { token =>
     matcher.braceTypeOf(token, data.tokens, offset) match {
       case Paired       => (token.span, Paired)     :: Nil
       case Unbalanced   => (token.span, Unbalanced) :: Nil

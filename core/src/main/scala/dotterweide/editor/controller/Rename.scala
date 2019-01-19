@@ -20,10 +20,12 @@ package dotterweide.editor.controller
 import dotterweide.document.{Bias, Document}
 import dotterweide.editor.{Action, Data, History, Terminal}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class Rename(document: Document, terminal: Terminal, data: Data, history: History) extends Action {
   def name: String        = "Rename"
   def mnemonic: Char      = 'R'
-  def keys: List[String]  = "shift pressed F6" :: Nil
+  def keys: ISeq[String]  = "shift pressed F6" :: Nil
 
   def apply(): Unit = {
     data.compute()

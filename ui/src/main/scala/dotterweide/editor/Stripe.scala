@@ -24,6 +24,8 @@ import dotterweide.document.{Document, Location}
 import dotterweide.{Interval, ObservableEvents}
 import javax.swing.{JComponent, ToolTipManager}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: Grid, canvas: Canvas)
   extends JComponent with ObservableEvents[Int] {
 
@@ -33,7 +35,7 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
 
   private var status: Status  = Status.Normal
 
-  private var descriptors: Seq[Descriptor] = Nil
+  private var descriptors: ISeq[Descriptor] = Nil
 
   setMinimumSize  (new Dimension(MarkSize.width, 0))
   setMaximumSize  (new Dimension(MarkSize.width, Int.MaxValue))
@@ -156,7 +158,7 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
     g.fill3DRect(Led.x, Led.y, Led.width, Led.height, false)
   }
 
-  private def paint(g: Graphics, descriptors: Seq[Descriptor]): Unit = {
+  private def paint(g: Graphics, descriptors: ISeq[Descriptor]): Unit = {
     descriptors.sortBy(_.error.fatal).foreach { it =>
       val color = if (it.error.fatal) AWTColor.RED else AWTColor.YELLOW
       g.setColor(color)
@@ -174,7 +176,7 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
     else                          Status.Warnings
   }
 
-  private def descriptorsIn(holder: ErrorHolder): Seq[Descriptor] = {
+  private def descriptorsIn(holder: ErrorHolder): ISeq[Descriptor] = {
     val errors = holder.errors
 
     val descriptors = errors.map { error =>

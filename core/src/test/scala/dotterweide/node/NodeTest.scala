@@ -24,7 +24,7 @@ import dotterweide.MockNode
 class NodeTest {
   def node(children: NodeImpl*): NodeImpl = {
     val node = new MockNode()
-    if(children.nonEmpty) node.children = children
+    if(children.nonEmpty) node.children = children.toList
     node
   }
 

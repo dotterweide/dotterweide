@@ -21,10 +21,12 @@ import dotterweide.Interval
 import dotterweide.document.Document
 import dotterweide.editor.{Action, Terminal}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class ToggleLineComment(document: Document, terminal: Terminal, comment: String) extends Action {
   def name: String        = "Toggle Line Comment"
   def mnemonic: Char      = 'T'
-  def keys: List[String]  = "ctrl pressed SLASH" :: Nil
+  def keys: ISeq[String]  = "ctrl pressed SLASH" :: Nil
 
   def apply(): Unit = {
     val interval  = terminal.currentLineIntervalIn(document)

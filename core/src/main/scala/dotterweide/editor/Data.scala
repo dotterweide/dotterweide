@@ -22,14 +22,16 @@ import dotterweide.lexer.Token
 import dotterweide.node.Node
 import dotterweide.{Interval, ObservableEvents}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 trait Data extends ObservableEvents[DataEvent] {
   def text: String
 
-  def tokens: Seq[Token]
+  def tokens: ISeq[Token]
 
   def structure: Option[Node]
 
-  def errors: Seq[Error]
+  def errors: ISeq[Error]
 
   def hasFatalErrors: Boolean
 
@@ -42,7 +44,7 @@ trait Data extends ObservableEvents[DataEvent] {
   def compute(): Unit
 }
 
-case class DataEvent(pass: Pass, errors: Seq[Error])
+case class DataEvent(pass: Pass, errors: ISeq[Error])
 
 case class Error(interval: Interval, message: String, decoration: Decoration = Decoration.Underline, fatal: Boolean = true)
 

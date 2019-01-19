@@ -19,10 +19,12 @@ package dotterweide.editor.controller
 
 import dotterweide.editor.{Action, Data, Terminal}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class ShowUsages(terminal: Terminal, data: Data) extends Action {
   def name: String        = "Show Usages"
   def mnemonic: Char      = 'S'
-  def keys: List[String]  = "shift ctrl pressed F7" :: Nil
+  def keys: ISeq[String]  = "shift ctrl pressed F7" :: Nil
 
   def apply(): Unit = {
     data.compute()

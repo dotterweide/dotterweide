@@ -24,6 +24,8 @@ import dotterweide.interpreter.Evaluable
 import dotterweide.lexer.Token
 import dotterweide.optimizer.Optimizable
 
+import scala.collection.immutable.{Seq => ISeq}
+
 trait Node extends Evaluable with Translatable with Optimizable {
   /** Used in `toString` representation. Does not have any other use. */
   def kind: String
@@ -34,7 +36,7 @@ trait Node extends Evaluable with Translatable with Optimizable {
 
   def problem: Option[String]
 
-  def children: Seq[Node]
+  def children: ISeq[Node]
 
   def parent: Option[Node]
 
@@ -42,7 +44,7 @@ trait Node extends Evaluable with Translatable with Optimizable {
 
   def nextSibling: Option[Node]
 
-  def parents: Seq[Node] = {
+  def parents: ISeq[Node] = {
     def of(node: Node): Stream[Node] = {
       node.parent match {
         case Some(parent) => parent #:: of(parent)
@@ -54,7 +56,7 @@ trait Node extends Evaluable with Translatable with Optimizable {
 
 //  def root: Node = parents.lastOption.getOrElse(this)
 
-  def previousSiblings: Seq[Node] = {
+  def previousSiblings: ISeq[Node] = {
     def of(node: Node): Stream[Node] = {
       node.previousSibling match {
         case Some(sibling) => sibling #:: of(sibling)
@@ -64,7 +66,7 @@ trait Node extends Evaluable with Translatable with Optimizable {
     of(this)
   }
 
-  def nextSiblings: Seq[Node] = {
+  def nextSiblings: ISeq[Node] = {
     def of(node: Node): Stream[Node] = {
       node.nextSibling match {
         case Some(sibling) => sibling #:: of(sibling)
@@ -76,7 +78,7 @@ trait Node extends Evaluable with Translatable with Optimizable {
 
   def isLeaf: Boolean = token.isDefined
 
-  def elements: Seq[Node] = {
+  def elements: ISeq[Node] = {
     def elements(node: Node): Stream[Node] =
       node #:: node.children.toStream.flatMap(elements)
     elements(this)

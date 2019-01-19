@@ -17,6 +17,8 @@
 
 package dotterweide.document
 
+import scala.collection.immutable.{Seq => ISeq}
+
 class DocumentImpl(s: String = "") extends Document {
   private var ls = new LinedString(s)
 
@@ -75,7 +77,7 @@ class DocumentImpl(s: String = "") extends Document {
     anchor
   }
 
-  protected def wraps: Seq[Int] = ls.wraps
+  protected def wraps: ISeq[Int] = ls.wraps
 
   private class AnchorImpl(var offset: Int, bias: Bias) extends Anchor {
     def dispose(): Unit =

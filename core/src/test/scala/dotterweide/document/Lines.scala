@@ -17,4 +17,6 @@
 
 package dotterweide.document
 
-case class Lines(length: Int, wraps: Int*) extends LinesHolder
+import scala.collection.immutable.{Seq => ISeq}
+
+case class Lines(length: Int, wraps: ISeq[Int] = Nil) extends LinesHolder

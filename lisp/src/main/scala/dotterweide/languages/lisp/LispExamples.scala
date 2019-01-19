@@ -20,6 +20,8 @@ package dotterweide.languages.lisp
 import dotterweide.Example
 import dotterweide.languages.lisp.library.Library
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object LispExamples {
   val WebServerCode: String = load("/examples/WebServer.lisp")
 
@@ -30,7 +32,7 @@ object LispExamples {
     code
   }
 
-  val Values: Seq[Example] = Seq(
+  val Values: ISeq[Example] = List(
     Example("Web Server"        , 'W', WebServerCode),
     Example("Core Library"      , 'C', Library.CoreCode),
     Example("Function Library"  , 'F', Library.FunctionCode),

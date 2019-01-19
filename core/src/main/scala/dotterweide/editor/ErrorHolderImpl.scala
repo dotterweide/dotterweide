@@ -19,8 +19,10 @@ package dotterweide.editor
 
 import dotterweide.document.{AnchoredInterval, Document}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class ErrorHolderImpl(document: Document, data: Data) extends ErrorHolder {
-  private var passToAnchoredErrors = Map.empty[Pass, Seq[AnchoredError]]
+  private var passToAnchoredErrors = Map.empty[Pass, ISeq[AnchoredError]]
 
   data.onChange {
     case DataEvent(pass, passErrors) =>
@@ -36,8 +38,7 @@ private class ErrorHolderImpl(document: Document, data: Data) extends ErrorHolde
     case _ =>
   }
 
-  def errors: Seq[Error] = passToAnchoredErrors.flatMap(_._2.map(_.toError)).toVector
-
+  def errors: ISeq[Error] = passToAnchoredErrors.flatMap(_._2.map(_.toError)).toVector
 
   private class AnchoredError(error: Error) extends AnchoredInterval(document, error.interval) {
     def toError = Error(interval, error.message, error.decoration, error.fatal)

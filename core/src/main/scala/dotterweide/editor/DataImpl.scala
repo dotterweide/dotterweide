@@ -23,12 +23,14 @@ import dotterweide.lexer.{Lexer, Token}
 import dotterweide.node.Node
 import dotterweide.parser.Parser
 
-private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspections: Seq[Inspection]) extends Data {
+import scala.collection.immutable.{Seq => ISeq}
+
+private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspections: ISeq[Inspection]) extends Data {
   def text: String = document.text
 
-  var tokens    : Seq[Token]    = Nil
+  var tokens    : ISeq[Token]   = Nil
   var structure : Option[Node]  = None
-  var errors    : Seq[Error]    = Nil
+  var errors    : ISeq[Error]   = Nil
 
   var hasFatalErrors: Boolean = errors.exists(_.fatal)
 
@@ -68,7 +70,7 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
     notifyObservers(DataEvent(pass, passErrors))
   }
 
-  private def runTextPass(): Seq[Error] = {
+  private def runTextPass(): ISeq[Error] = {
     tokens          = Nil
     structure       = None
     errors          = Nil
@@ -77,15 +79,15 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
     Nil
   }
 
-  private def runLexerPass(): Seq[Error] = {
-    tokens = lexer.analyze(document.characters).toSeq
+  private def runLexerPass(): ISeq[Error] = {
+    tokens = lexer.analyze(document.characters).toStream
 
     tokens.collect {
       case Token(_, span, Some(message)) => Error(span.interval, message)
     }
   }
 
-  private def runParserPass(): Seq[Error] = {
+  private def runParserPass(): ISeq[Error] = {
     val root = parser.parse(tokens.iterator)
 
     structure = Some(root)
@@ -95,7 +97,7 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
     }
   }
 
-  private def runInspectionPass(): Seq[Error] = {
+  private def runInspectionPass(): ISeq[Error] = {
     val root = structure.getOrElse(
       throw new IllegalStateException("Running inspections prior to parser"))
 

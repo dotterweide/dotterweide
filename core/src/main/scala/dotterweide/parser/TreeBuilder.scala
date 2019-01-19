@@ -21,6 +21,8 @@ import dotterweide.Span
 import dotterweide.lexer.{Token, TokenKind}
 import dotterweide.node.NodeImpl
 
+import scala.collection.immutable.{Seq => ISeq}
+
 class TreeBuilder(input: Iterator[Token]) {
   private val in = input.filterNot(_.kind == TokenKind.WS).buffered
 
@@ -125,13 +127,13 @@ class TreeBuilder(input: Iterator[Token]) {
         case _head :: tail  =>
           val root = tail.grouped(length - 1).foldLeft(_head) { (left, part) =>
             val parent = node // call-by-name for factory method
-            parent.children = Seq(left) ++ part
+            parent.children = left +: part
             parent
           }
           root.children
       }
 
-    private def capture(node: NodeImpl, collapseHolderNode: Boolean)(f: Seq[NodeImpl] => Seq[NodeImpl]): Unit = {
+    private def capture(node: NodeImpl, collapseHolderNode: Boolean)(f: ISeq[NodeImpl] => ISeq[NodeImpl]): Unit = {
       if (closed) throw new MultipleClosingException
       if (!this.eq(regions.head)) throw new IncorrectRegionsOrderException
       regions = regions.tail

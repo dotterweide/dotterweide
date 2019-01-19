@@ -21,10 +21,12 @@ import dotterweide.inspection.{Decoration, Inspection, Mark}
 import dotterweide.languages.toy.node._
 import dotterweide.node._
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object UnresolvedReference extends Inspection {
   val Message: (String, String) => String = "Cannot resolve %s '%s'".format(_: String, _: String)
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case ref @ ReferenceNode(Some(source), None) if !ref.predefined =>
       node match {
         case _: ReferenceToFunction => Mark(node, Message("function", source.span.text), Decoration.Red) :: Nil

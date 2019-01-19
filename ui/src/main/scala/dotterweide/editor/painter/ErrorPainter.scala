@@ -25,6 +25,8 @@ import dotterweide.editor.painter.ErrorPainter._
 import dotterweide.editor.{Coloring, Error, ErrorHolder, ErrorsChanged}
 import dotterweide.inspection.Decoration
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends AbstractPainter(context) with Decorator {
   def id = "errors"
 
@@ -35,7 +37,7 @@ private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends
   }
 
   override def paint(g: Graphics, bounds: Rectangle): Unit = {
-    def relevant(rectangles: Seq[Rectangle]) =
+    def relevant(rectangles: ISeq[Rectangle]) =
       rectangles.map(_.intersection(bounds)).filterNot(_.isEmpty)
 
     val filledRectangles = relevant(rectanglesOf(_ == Decoration.Fill))
@@ -59,15 +61,15 @@ private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends
       intervalsOf(_ == Decoration.Dim)
         .map(it => (it, Map(TextAttribute.FOREGROUND -> coloring(Coloring.DimForeground))))).toMap
 
-  private def rectanglesOf(p: Decoration => Boolean): Seq[Rectangle] =
+  private def rectanglesOf(p: Decoration => Boolean): ISeq[Rectangle] =
     intervalsOf(p).flatMap(rectanglesOf)
 
-  private def intervalsOf(p: Decoration => Boolean): Seq[Interval] =
-    errors.errors.filter(error => p(error.decoration)).map(_.interval)
+  private def intervalsOf(p: Decoration => Boolean): ISeq[Interval] =
+    errors.errors.iterator.filter(error => p(error.decoration)).map(_.interval).toList
 }
 
 private object ErrorPainter {
-  private def difference(before: Seq[Error], after: Seq[Error]): Seq[Interval] = {
+  private def difference(before: ISeq[Error], after: ISeq[Error]): ISeq[Interval] = {
     val removedErrors = before.filterNot(mark => after  .contains(mark))
     val addedErrors   = after .filterNot(mark => before .contains(mark))
     (removedErrors ++ addedErrors).map(_.interval)

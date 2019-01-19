@@ -21,6 +21,8 @@ import dotterweide.Interval
 import dotterweide.document.Document
 import dotterweide.node.{IdentifiedNode, Node, ReferenceNode, ReferenceNodeTarget}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 package object controller {
   private[controller] implicit class DataExt(val data: Data) extends AnyVal {
     def leafAt(offset: Int): Option[Node] = data.structure.flatMap { root =>
@@ -35,7 +37,7 @@ package object controller {
       root.offsetOf(offset).flatMap(root.identifierAt)
     }
 
-    def connectedLeafsFor(offset: Int): Seq[Node] = {
+    def connectedLeafsFor(offset: Int): ISeq[Node] = {
       val targetNode = referenceAt(offset) collect {
         case ReferenceNodeTarget(node: IdentifiedNode) => node
       } orElse {

@@ -21,10 +21,12 @@ import dotterweide.inspection.{Inspection, Mark}
 import dotterweide.languages.toy.node._
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object ReturnOutsideFunction extends Inspection {
   val Message = "Return statement outside function definition"
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case _: Return =>
       if (node.parents.exists(_.isInstanceOf[FunctionDeclaration])) Nil else
         Mark(node, Message) :: Nil

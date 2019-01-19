@@ -19,10 +19,12 @@ package dotterweide.editor.controller
 
 import dotterweide.editor.{Action, Terminal}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class ClearSelection(terminal: Terminal) extends Action {
   def name: String        = "Clear Selection"
   def mnemonic: Char      = 'L'
-  def keys: List[String]  = "pressed ESCAPE" :: Nil
+  def keys: ISeq[String]  = "pressed ESCAPE" :: Nil
 
   def apply(): Unit = {
     terminal.selection  = None

@@ -20,6 +20,8 @@ import dotterweide.lexer.{Lexer, TokenKind}
 import dotterweide.parser.Parser
 import dotterweide.{Example, FileType, Language}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object ScalaLanguage extends Language {
   def name: String = "Scala"
 
@@ -36,8 +38,8 @@ object ScalaLanguage extends Language {
   /** Pairs of tokens which are symmetric and can be highlighted together,
     * such as matching braces.
     */
-  def complements: Seq[(TokenKind, TokenKind)] =
-    Seq((LBRACE, RBRACE), (LPAREN, RPAREN), (LBRACKET, RBRACKET))
+  def complements: ISeq[(TokenKind, TokenKind)] =
+    List((LBRACE, RBRACE), (LPAREN, RPAREN), (LBRACKET, RBRACKET))
 
   /** Default style for formatting the language with white space. */
   def format: Format = ScalaFormat
@@ -45,11 +47,11 @@ object ScalaLanguage extends Language {
   /** The syntactic prefix for line comments. */
   def comment: String = "//"
 
-  def inspections: Seq[Inspection] = Nil
+  def inspections: ISeq[Inspection] = Nil
 
   def adviser: Adviser = ScalaAdviser
 
   def fileType: FileType = FileType("Scala file", "scala")
 
-  def examples: Seq[Example] = ScalaExamples.Values
+  def examples: ISeq[Example] = ScalaExamples.Values
 }

@@ -20,10 +20,12 @@ package dotterweide.editor.controller
 import dotterweide.document.Document
 import dotterweide.editor.Terminal
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class MoveLineUp(document: Document, terminal: Terminal) extends DocumentAction(document, terminal) {
   def name: String        = "Move Line Up"
   def mnemonic: Char      = 'U'
-  def keys: List[String]  = "shift ctrl pressed UP" :: Nil
+  def keys: ISeq[String]  = "shift ctrl pressed UP" :: Nil
 
   protected def calcEnabled(): Boolean = document.lineNumberOf(terminal.offset) > 0
 

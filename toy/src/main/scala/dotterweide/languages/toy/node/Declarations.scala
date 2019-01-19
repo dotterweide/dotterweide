@@ -26,6 +26,8 @@ import dotterweide.languages.toy.interpreter.VariableDeclarationEvaluator
 import dotterweide.lexer.TokenKind
 import dotterweide.node._
 
+import scala.collection.immutable.{Seq => ISeq}
+
 class Block extends NodeImpl("block") with Scope
 
 class Program extends NodeImpl("program") with Scope
@@ -33,7 +35,7 @@ class Program extends NodeImpl("program") with Scope
 trait UsableNode extends IdentifiedNode {
   def scope: Option[Scope] = parents.findBy[Scope]
 
-  def usages: Seq[ReferenceNode] = {
+  def usages: ISeq[ReferenceNode] = {
     scope match {
       case Some(it) => it.elements.filterBy[ReferenceNode].filter(_.isReferenceTo(this))
       case None => Nil
@@ -47,7 +49,7 @@ with UsableNode with NamedNode with TypedNode with FunctionDeclarationTranslator
 
   def parametersNode: Option[Parameters] = children.findBy[Parameters]
 
-  def parameters: Seq[Parameter] = parametersNode.map(_.parameters).getOrElse(Nil)
+  def parameters: ISeq[Parameter] = parametersNode.map(_.parameters).getOrElse(Nil)
 
   def name: String = "%s(%s): %s".format(
     identifier, parameters.map(_.name).mkString(", "), nodeType.map(_.presentation).getOrElse("undefined"))
@@ -115,9 +117,9 @@ class Parameter extends NodeImpl("parameter") with UsableNode with NamedNode wit
 }
 
 class Parameters extends NodeImpl("parameters") {
-  def parameters: Seq[Parameter] = children.filterBy[Parameter]
+  def parameters: ISeq[Parameter] = children.filterBy[Parameter]
 }
 
 class Arguments extends NodeImpl("arguments") {
-  def expressions: Seq[Expression] = children.filterBy[Expression]
+  def expressions: ISeq[Expression] = children.filterBy[Expression]
 }

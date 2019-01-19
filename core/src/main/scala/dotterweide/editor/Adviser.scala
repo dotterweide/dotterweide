@@ -19,8 +19,10 @@ package dotterweide.editor
 
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 trait Adviser {
-  def variants(root: Node, anchor: Node): Seq[Variant]
+  def variants(root: Node, anchor: Node): ISeq[Variant]
 }
 
 object Adviser {

@@ -23,6 +23,8 @@ import dotterweide.Interval
 import dotterweide.document.Document
 import dotterweide.editor.{Area, Canvas, Coloring, Data, Grid, Terminal}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private abstract class AbstractPainter(context: PainterContext) extends Painter {
   protected def document: Document  = context.document
   protected def terminal: Terminal  = context.terminal
@@ -53,7 +55,7 @@ private abstract class AbstractPainter(context: PainterContext) extends Painter 
     new Rectangle(point.x, point.y, 2, grid.cellSize.height)
   }
 
-  protected def rectanglesOf(interval: Interval): Seq[Rectangle] = {
+  protected def rectanglesOf(interval: Interval): ISeq[Rectangle] = {
     val width   = canvas.size.width
     val height  = grid.cellSize.height
 
@@ -61,9 +63,9 @@ private abstract class AbstractPainter(context: PainterContext) extends Painter 
     val p2      = toPoint(interval.end)
 
     if (p1.y == p2.y) {
-      Seq(new Rectangle(p1.x, p1.y, p2.x - p1.x, height))
+      new Rectangle(p1.x, p1.y, p2.x - p1.x, height) :: Nil
     } else {
-      Seq(
+      List(
         new Rectangle(p1.x, p1.y, width - p1.x, height),
         new Rectangle(grid.insets.left, p1.y + height, width - grid.insets.left, p2.y - p1.y - height),
         new Rectangle(grid.insets.left, p2.y, p2.x - grid.insets.left, height))

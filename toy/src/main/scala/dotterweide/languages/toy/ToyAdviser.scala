@@ -22,6 +22,8 @@ import dotterweide.editor.{Adviser, Variant}
 import dotterweide.languages.toy.node._
 import dotterweide.node.{Expression, Node}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object ToyAdviser extends Adviser {
   private val PredefinedFunctions   = List("print", "println").map(asFunction)
   private val DefinitionKeywords    = List("def", "var").map(asKeyword)
@@ -32,7 +34,7 @@ object ToyAdviser extends Adviser {
   private val FunctionTypeKeywords  = List("void", "string", "integer", "boolean").map(asKeyword)
   private val BooleanLiterals       = List("true", "false").map(asLiteral)
 
-  def variants(root: Node, anchor: Node): Seq[Variant] = {
+  def variants(root: Node, anchor: Node): ISeq[Variant] = {
     val holders = anchor.parents.filterNot(_.isLeaf)
 
     lazy val elseKeyword = anchor.previousSibling match {
@@ -57,7 +59,7 @@ object ToyAdviser extends Adviser {
     }
   }
 
-  private def referencesFor(node: Node): Seq[Variant] = {
+  private def referencesFor(node: Node): ISeq[Variant] = {
     val declarations = node.parents
       .filterBy[Scope]
       .flatMap(_.declarations)

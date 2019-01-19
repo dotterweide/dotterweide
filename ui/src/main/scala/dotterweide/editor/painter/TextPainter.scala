@@ -27,8 +27,10 @@ import dotterweide.editor.painter.TextPainter._
 import dotterweide.editor.{Area, Coloring, Pass}
 import dotterweide.lexer.{Lexer, Token}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class TextPainter(context: PainterContext, lexer: Lexer,
-                          decorators: Seq[Decorator]) extends AbstractPainter(context) {
+                          decorators: ISeq[Decorator]) extends AbstractPainter(context) {
 
   def id = "text"
 
@@ -87,7 +89,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
     val lineText      = document.text(lineInterval)
 
     if (lineText.length > 0) {
-      val tokens = lexer.analyze(lineText).toSeq
+      val tokens = lexer.analyze(lineText).toList
       val string = render(lineText, tokens, coloring)
 
       val decorated = decorate(string, decorators, lineInterval, - lineInterval.begin)
@@ -118,7 +120,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
 private object TextPainter {
   private val EmptyString = new AttributedString("")
 
-  private def render(text: String, tokens: Seq[Token], coloring: Coloring): AttributedString = {
+  private def render(text: String, tokens: ISeq[Token], coloring: Coloring): AttributedString = {
     val result = new AttributedString(text)
 
     if (!text.isEmpty) {
@@ -135,7 +137,8 @@ private object TextPainter {
     result
   }
 
-  private def decorate(string: AttributedString, decorators: Seq[Decorator], visible: Interval, shift: Int): AttributedString = {
+  private def decorate(string: AttributedString, decorators: ISeq[Decorator], visible: Interval,
+                       shift: Int): AttributedString = {
     val decorations = decorators.flatMap(_.decorations.map(p =>
       (p._1.intersection(visible), p._2)).filterKeys(!_.empty)).toMap
 

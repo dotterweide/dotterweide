@@ -17,13 +17,15 @@
 
 package dotterweide.languages.toy.inspection
 
+import dotterweide.inspection.{Decoration, Inspection, Mark}
 import dotterweide.node.Node
-import dotterweide.inspection.{Decoration, Mark, Inspection}
+
+import scala.collection.immutable.{Seq => ISeq}
 
 object Optimization extends Inspection {
   val Message: String => String = "Can be simplified to '%s' (use Code / Optimize)".format(_: String)
 
-  def inspect(node: Node): Seq[Mark] = {
+  def inspect(node: Node): ISeq[Mark] = {
     node.parent match {
       case Some(p) if p.optimized.isDefined => Nil
       case _ => node.optimized match {

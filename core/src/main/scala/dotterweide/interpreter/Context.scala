@@ -17,6 +17,8 @@
 
 package dotterweide.interpreter
 
+import scala.collection.immutable.{Seq => ISeq}
+
 trait Context {
   def get(local: Boolean, name: String): Value
 
@@ -30,5 +32,5 @@ trait Context {
 
   def dropFrame(value: Option[Value]): Unit
 
-  def trace: Seq[Place]
+  def trace: ISeq[Place]
 }

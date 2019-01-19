@@ -20,14 +20,16 @@ package dotterweide.editor
 import dotterweide.lexer.Token
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 class MockData extends Data {
   def text = ""
 
-  def tokens: Seq[Token] = Seq.empty
+  def tokens: ISeq[Token] = Nil
 
   def structure: Option[Node] = None
 
-  def errors: Seq[Error] = Seq.empty
+  def errors: ISeq[Error] = Nil
 
   def pass: Pass = Pass.Text
 

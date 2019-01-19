@@ -52,7 +52,7 @@ case class EnvironmentImpl private (locals: Map[String, Expression],
   }
 
   def interrupt(message: String, place: Option[Place] = None) =
-    throw EvaluationException(message, place.toSeq ++ trace)
+    throw EvaluationException(message, place.toList ::: trace)
 }
 
 object EnvironmentImpl {

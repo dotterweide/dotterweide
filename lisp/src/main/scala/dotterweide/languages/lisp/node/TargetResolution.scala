@@ -19,8 +19,10 @@ package dotterweide.languages.lisp.node
 
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 trait TargetResolution { self: ExpressionNode =>
-  def accessibleSymbols: Seq[SymbolNode] =
+  def accessibleSymbols: ISeq[SymbolNode] =
     parents.flatMap(localSymbolsIn) ++ parents.last.children.flatMap(globalSymbolsIn)
 
   protected def localSymbolsIn(node: Node): Set[SymbolNode] = node match {
@@ -43,7 +45,7 @@ trait TargetResolution { self: ExpressionNode =>
   }
 
   private def symbolsInBindings(bindings: Seq[ExpressionNode]): Set[SymbolNode] = {
-    val patterns = bindings.grouped(2).map(_.head).toSeq
+    val patterns = bindings.grouped(2).map(_.head).toList
     symbolsInPatterns(patterns)
   }
 }

@@ -21,10 +21,12 @@ import dotterweide.document.Document
 import dotterweide.editor.{Action, Data, Terminal}
 import dotterweide.formatter.Formatter
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class Format(document: Document, terminal: Terminal, data: Data, formatter: Formatter, tabSize: Int) extends Action {
   def name: String        = "Reformat"
   def mnemonic: Char      = 'F'
-  def keys: List[String]  = "ctrl alt pressed L" :: Nil
+  def keys: ISeq[String]  = "ctrl alt pressed L" :: Nil
 
   def apply(): Unit = {
     data.compute()

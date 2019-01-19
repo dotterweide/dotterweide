@@ -23,14 +23,16 @@ import dotterweide.languages.toy.ToyType.VoidType
 import dotterweide.languages.toy.node._
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object VoidValue extends Inspection {
   val Message = "Value type cannot be void"
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case p: Parameter if p.nodeType.contains(VoidType) =>
-      p.typeId.map(Mark(_, Message)).toSeq
+      p.typeId.map(Mark(_, Message)).toList
     case v: VariableDeclaration if v.nodeType.contains(ToyType.VoidType) =>
-      v.typeId.map(Mark(_, Message)).toSeq
+      v.typeId.map(Mark(_, Message)).toList
     case _ => Nil
   }
 }

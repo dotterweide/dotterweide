@@ -19,10 +19,12 @@ package dotterweide.document
 
 import dotterweide.Interval
 
+import scala.collection.immutable.{Seq => ISeq}
+
 trait LinesHolder {
   def length: Int
 
-  protected def wraps: Seq[Int]
+  protected def wraps: ISeq[Int]
 
   def linesCount: Int = wraps.size + 1
 

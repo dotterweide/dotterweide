@@ -24,10 +24,12 @@ import dotterweide.languages.toy.node.BinaryExpression
 import dotterweide.lexer.Token
 import dotterweide.node.{Expression, Node, NodeToken}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object DivisionByZero extends Inspection {
   val Message = "Division by zero"
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case e: BinaryExpression => e.children match {
         case Expression(IntegerType) :: NodeToken(Token(SLASH, _, _)) ::  (r @ Expression(IntegerType)) :: Nil
           if r.optimized.contains("0") => Mark(e, Message, Decoration.Fill, warning = true) :: Nil

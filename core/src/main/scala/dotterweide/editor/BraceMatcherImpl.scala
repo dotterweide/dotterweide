@@ -17,10 +17,12 @@
 
 package dotterweide.editor
 
-import dotterweide.lexer.{TokenKind, Token}
+import dotterweide.lexer.{Token, TokenKind}
 
-private class BraceMatcherImpl(complements: Seq[(TokenKind, TokenKind)]) extends BraceMatcher {
-  def braceTypeOf(token: Token, tokens: Seq[Token], offset: Int): BraceType = {
+import scala.collection.immutable.{Seq => ISeq}
+
+private class BraceMatcherImpl(complements: ISeq[(TokenKind, TokenKind)]) extends BraceMatcher {
+  def braceTypeOf(token: Token, tokens: ISeq[Token], offset: Int): BraceType = {
     def right(complement: (TokenKind, TokenKind)): Option[BraceType] = {
       if (token.kind != complement._1) return None
 
@@ -50,7 +52,7 @@ private class BraceMatcherImpl(complements: Seq[(TokenKind, TokenKind)]) extends
     variants.headOption.getOrElse(Inapplicable)
   }
 
-  def complementIn(tail: Seq[Token], opening: TokenKind, closing: TokenKind): Option[Token] = {
+  def complementIn(tail: ISeq[Token], opening: TokenKind, closing: TokenKind): Option[Token] = {
     var level = 0
     tail.foreach { it =>
       if (it.kind == opening) level += 1

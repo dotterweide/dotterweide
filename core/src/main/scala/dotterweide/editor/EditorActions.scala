@@ -17,6 +17,8 @@
 
 package dotterweide.editor
 
+import scala.collection.immutable.{Seq => ISeq}
+
 trait EditorActions {
   def complete          : Action
   def copy              : Action
@@ -39,7 +41,7 @@ trait EditorActions {
   def undo              : Action
   def unindentSelection : Action
 
-  def all: Seq[Action] = List(
+  def all: ISeq[Action] = List(
     complete,
     copy,
     cut,

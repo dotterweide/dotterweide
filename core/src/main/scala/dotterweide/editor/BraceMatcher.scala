@@ -17,12 +17,14 @@
 
 package dotterweide.editor
 
-import dotterweide.lexer.{TokenKind, Token}
+import dotterweide.lexer.{Token, TokenKind}
+
+import scala.collection.immutable.{Seq => ISeq}
 
 private trait BraceMatcher {
-  def braceTypeOf(token: Token, tokens: Seq[Token], offset: Int): BraceType
+  def braceTypeOf(token: Token, tokens: ISeq[Token], offset: Int): BraceType
 
-  def complementIn(tail: Seq[Token], opening: TokenKind, closing: TokenKind): Option[Token]
+  def complementIn(tail: ISeq[Token], opening: TokenKind, closing: TokenKind): Option[Token]
 }
 
 private abstract sealed class BraceType

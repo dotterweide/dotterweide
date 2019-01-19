@@ -17,13 +17,15 @@
 
 package dotterweide.editor
 
-import dotterweide.{ObservableEvents, Interval}
+import dotterweide.{Interval, ObservableEvents}
+
+import scala.collection.immutable.{Seq => ISeq}
 
 trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
   private var _offset     : Int               = 0
   private var _selection  : Option[Interval]  = None
   private var _hover      : Option[Int]       = None
-  private var _highlights : Seq[Interval]     = Nil
+  private var _highlights : ISeq[Interval]    = Nil
 
   def offset: Int = _offset
 
@@ -52,9 +54,9 @@ trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
       notifyObservers(HoverChange(previous, i))
     }
 
-  def highlights: Seq[Interval] = _highlights
+  def highlights: ISeq[Interval] = _highlights
 
-  def highlights_=(hs: Seq[Interval]): Unit =
+  def highlights_=(hs: ISeq[Interval]): Unit =
     if (_highlights != hs) {
       val previous = _highlights
       _highlights = hs

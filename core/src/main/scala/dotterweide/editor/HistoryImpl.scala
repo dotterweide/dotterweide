@@ -44,7 +44,7 @@ class HistoryImpl extends History {
 
     if (events.exists(_.isInstanceOf[DocumentEvent])) {
       toUndo ::= Action(document, terminal, events)
-      toRedo = List.empty
+      toRedo = Nil
     }
 
     busy = false

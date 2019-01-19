@@ -22,10 +22,12 @@ import dotterweide.languages.toy.ToyType.VoidType
 import dotterweide.languages.toy.node._
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object MissingReturn extends Inspection {
   val Message = "Missing return statement"
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case function @ FunctionBlock(block) if !function.nodeType.contains(VoidType) && block.exit.isEmpty =>
       Mark(block.children.last, Message) :: Nil
     case _ => Nil

@@ -17,7 +17,9 @@
 
 package dotterweide.editor
 
-import dotterweide.{ObservableEvents, Interval}
+import dotterweide.{Interval, ObservableEvents}
+
+import scala.collection.immutable.{Seq => ISeq}
 
 trait Terminal extends ObservableEvents[TerminalEvent] {
   var offset: Int
@@ -26,9 +28,9 @@ trait Terminal extends ObservableEvents[TerminalEvent] {
 
   var hover: Option[Int]
 
-  var highlights: Seq[Interval]
+  var highlights: ISeq[Interval]
 
-  def choose[A](variants: Seq[A], query: String)(callback: A => Unit): Unit
+  def choose[A](variants: ISeq[A], query: String)(callback: A => Unit): Unit
 
   def edit(s: String, title: String)(callback: Option[String] => Unit): Unit
 }

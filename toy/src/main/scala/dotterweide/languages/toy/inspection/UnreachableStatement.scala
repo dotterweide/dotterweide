@@ -21,10 +21,12 @@ import dotterweide.inspection.{Inspection, Mark}
 import dotterweide.languages.toy.node._
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object UnreachableStatement extends Inspection {
   val Message = "Unreachable statement"
 
-  def inspect(node: Node): Seq[Mark] = node match {
+  def inspect(node: Node): ISeq[Mark] = node match {
     case FunctionBlock(ScopeExit(exit)) =>
       exit.nextSiblings.filterNot(_.isInstanceOf[Comment]).find(!_.isLeaf) match {
         case Some(sibling) => Mark(sibling, Message) :: Nil

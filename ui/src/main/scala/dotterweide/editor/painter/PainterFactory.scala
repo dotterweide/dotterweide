@@ -21,16 +21,19 @@ import dotterweide.document.Document
 import dotterweide.editor.{ActionProcessor, BraceMatcher, Canvas, Coloring, Data, ErrorHolder, Grid, Terminal}
 import dotterweide.lexer.Lexer
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object PainterFactory {
   def createPainters(document: Document, terminal: Terminal, data: Data, canvas: Canvas, grid: Grid, lexer: Lexer,
-                     matcher: BraceMatcher, errors: ErrorHolder, coloring: Coloring, processor: ActionProcessor): Seq[Painter] = {
+                     matcher: BraceMatcher, errors: ErrorHolder, coloring: Coloring,
+                     processor: ActionProcessor): ISeq[Painter] = {
 
     val context           = PainterContext(document, terminal, data, canvas, grid, coloring)
     val errorPainter      = new ErrorPainter(context, errors)
     val selectionPainter  = new SelectionPainter(context)
     val hoverPainter      = new HoverPainter(context)
 
-    val painters = Seq(
+    val painters = List(
       new ImmediateTextPainter(context, lexer, processor),
       new BackgroundPainter(context),
       new CurrentLinePainter(context),
@@ -39,7 +42,7 @@ object PainterFactory {
       new HighlightPainter(context),
       hoverPainter,
       selectionPainter,
-      new TextPainter(context, lexer, Seq(errorPainter, hoverPainter, selectionPainter)),
+      new TextPainter(context, lexer, List(errorPainter, hoverPainter, selectionPainter)),
       new CaretPainter(context))
 
     painters

@@ -29,6 +29,8 @@ import dotterweide.lexer.Lexer
 import javax.swing.border.EmptyBorder
 import javax.swing.{JComponent, JPanel, JScrollPane, JViewport, KeyStroke, ListCellRenderer, Scrollable, SwingConstants, Timer}
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class EditorImpl(val document: Document, val data: Data, val holder: ErrorHolder,
                          lexer: Lexer, coloring: Coloring, matcher: BraceMatcher,
                          format: Format, adviser: Adviser, listRenderer: ListCellRenderer[AnyRef],
@@ -232,7 +234,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   })
 
   private object MyTerminal extends AbstractTerminal {
-    def choose[A](variants: Seq[A], query: String)(callback: A => Unit): Unit = {
+    def choose[A](variants: ISeq[A], query: String)(callback: A => Unit): Unit = {
       val point = toPoint(offset)
       val shifted = new Point(point.x - grid.cellSize.width * query.length - 3, point.y + 20)
       val (popup, list) = ChooserFactory.createPopup(Pane, shifted, NormalFont, variants, listRenderer) { it =>
@@ -288,13 +290,13 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     override def paintComponent(g: Graphics): Unit =
       paintOn(g, painters.filterNot(_.immediate))
 
-    def paintImmediately(painters: Seq[Painter]): Unit =
+    def paintImmediately(painters: ISeq[Painter]): Unit =
       Option(getGraphics).foreach { graphics =>
         paintOn(graphics, painters)
         Toolkit.getDefaultToolkit.sync()
       }
 
-    private def paintOn(g: Graphics, painters: Seq[Painter]): Unit = {
+    private def paintOn(g: Graphics, painters: ISeq[Painter]): Unit = {
       val g2d = g.asInstanceOf[Graphics2D]
 
       renderingHints.foreach(it => g2d.addRenderingHints(it.asInstanceOf[java.util.Map[_, _]]))

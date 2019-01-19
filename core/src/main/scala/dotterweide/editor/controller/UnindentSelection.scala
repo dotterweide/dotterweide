@@ -21,12 +21,14 @@ import dotterweide.Interval
 import dotterweide.document.Document
 import dotterweide.editor.Terminal
 
+import scala.collection.immutable.{Seq => ISeq}
+
 private class UnindentSelection(document: Document, terminal: Terminal, tabSize: Int)
   extends DocumentAction(document, terminal) {
 
   def name: String        = "Unindent Selection"
   def mnemonic: Char      = 'N'
-  def keys: List[String]  = "shift pressed TAB" :: Nil
+  def keys: ISeq[String]  = "shift pressed TAB" :: Nil
 
   protected def calcEnabled(): Boolean = terminal.selection.isDefined
 

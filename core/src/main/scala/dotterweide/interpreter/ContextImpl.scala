@@ -17,6 +17,7 @@
 
 package dotterweide.interpreter
 
+import scala.collection.immutable.{Seq => ISeq}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
@@ -110,7 +111,7 @@ class ContextImpl extends Context {
     throw ReturnException(value)
   }
 
-  def trace: Seq[Place] = frames.map(_.place)
+  def trace: ISeq[Place] = frames.map(_.place)
 
   private case class Frame(place: Place, values: mutable.Map[String, Value] = mutable.Map())
 

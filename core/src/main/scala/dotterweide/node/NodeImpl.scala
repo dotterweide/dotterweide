@@ -17,8 +17,10 @@
 
 package dotterweide.node
 
-import dotterweide.lexer.Token
 import dotterweide.Span
+import dotterweide.lexer.Token
+
+import scala.collection.immutable.{Seq => ISeq}
 
 class NodeImpl(val kind: String) extends Node {
   var token: Option[Token] = None
@@ -33,16 +35,16 @@ class NodeImpl(val kind: String) extends Node {
 
   var nextSibling: Option[Node] = None
 
-  private var _children: Seq[NodeImpl] = Nil
+  private var _children: ISeq[NodeImpl] = Nil
 
-  def children: Seq[NodeImpl] = _children
+  def children: ISeq[NodeImpl] = _children
 
-  def children_=(children: Seq[NodeImpl]): Unit = {
+  def children_=(children: ISeq[NodeImpl]): Unit = {
     val first = children.head.span
     span = Span(first.source, first.begin, children.last.span.end)
     _children = children
     children.foreach(_.parent = Some(this))
-    for((a, b) <- children.zip(children.tail)) {
+    for ((a, b) <- children.zip(children.tail)) {
       a.nextSibling     = Some(b)
       b.previousSibling = Some(a)
     }

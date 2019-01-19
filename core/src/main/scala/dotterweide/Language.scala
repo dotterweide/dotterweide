@@ -23,6 +23,8 @@ import dotterweide.inspection.Inspection
 import dotterweide.lexer.{Lexer, TokenKind}
 import dotterweide.parser.Parser
 
+import scala.collection.immutable.{Seq => ISeq}
+
 /** Access to a programming language, including description, lexer, parser, etc. */
 trait Language {
   def name: String
@@ -39,7 +41,7 @@ trait Language {
   /** Pairs of tokens which are symmetric and can be highlighted together,
     * such as matching braces.
     */
-  def complements: Seq[(TokenKind, TokenKind)]
+  def complements: ISeq[(TokenKind, TokenKind)]
 
   /** Default style for formatting the language with white space. */
   def format: Format
@@ -47,11 +49,11 @@ trait Language {
   /** The syntactic prefix for line comments. */
   def comment: String
 
-  def inspections: Seq[Inspection]
+  def inspections: ISeq[Inspection]
 
   def adviser: Adviser
 
   def fileType: FileType
 
-  def examples: Seq[Example]
+  def examples: ISeq[Example]
 }

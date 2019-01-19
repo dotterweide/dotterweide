@@ -23,8 +23,10 @@ import dotterweide.languages.lisp.library.Library
 import dotterweide.languages.lisp.node.SymbolNode
 import dotterweide.node.Node
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object LispAdviser extends Adviser {
-  def variants(root: Node, anchor: Node): Seq[Variant] = {
+  def variants(root: Node, anchor: Node): ISeq[Variant] = {
     anchor.parent match {
       case Some(symbol: SymbolNode) =>
         val localSymbols = symbol.accessibleSymbols.map(_.identifier).filter(!_.endsWith(Adviser.Anchor))
