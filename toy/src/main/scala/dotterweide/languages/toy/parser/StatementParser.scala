@@ -18,13 +18,13 @@
 package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.ToyTokens._
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object StatementParser extends Parser {
-  def parse(in: TreeBuilder): Unit =
+object StatementParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit =
     if (in.matches(DEF)) {
-      FunctionParser.parse(in)
+      FunctionParser.parseTo(in)
     } else {
-      BlockStatementParser.parse(in)
+      BlockStatementParser.parseTo(in)
     }
 }

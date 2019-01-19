@@ -22,13 +22,13 @@ import dotterweide.{Example, FileType, Language}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-object ScalaLanguage extends Language {
+class ScalaLanguage extends Language {
   def name: String = "Scala"
 
   def description: String = "The Scala programming language"
 
   def lexer : Lexer   = ScalaLexer
-  def parser: Parser  = ScalaParser
+  val parser: Parser  = new ScalaParser
 
   /** A map from color scheme names to the schemes. */
   def colorings: Map[String, Coloring] = Map(

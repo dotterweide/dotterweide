@@ -31,6 +31,8 @@ trait Editor extends Observable {
 
   def terminal: Terminal
 
+  implicit def async: Async
+
   def component: Component
 
   def pane: Component

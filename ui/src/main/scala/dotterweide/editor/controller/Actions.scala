@@ -18,11 +18,13 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.Document
-import dotterweide.editor.{Action, Adviser, Data, EditorActions, History, Terminal}
+import dotterweide.editor.{Action, Adviser, Async, Data, EditorActions, History, Terminal}
 import dotterweide.formatter.Formatter
 
 private class Actions(document: Document, terminal: Terminal, data: Data, adviser: Adviser,
-                      formatter: Formatter, tabSize: Int, comment: String, history: History) extends EditorActions {
+                      formatter: Formatter, tabSize: Int, comment: String, history: History)(implicit async: Async)
+  extends EditorActions {
+
   private def historical(action: Action) = new HistoricalAction(action, document, terminal, history)
     
   val complete          : Action = new Complete(document, terminal, data, adviser, history)

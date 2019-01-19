@@ -27,7 +27,7 @@ import dotterweide.languages.toy.ToyLanguage
 import scala.swing.{SwingApplication, Window}
 
 object Demo extends SwingApplication {
-  private val Languages = List(ScalaLanguage, ToyLanguage, LispLanguage)
+  private val Languages = List(new ScalaLanguage, ToyLanguage, LispLanguage)
 
   override def startup(args: Array[String]): Unit =
     selectLanguage().foreach(openMainFrame)

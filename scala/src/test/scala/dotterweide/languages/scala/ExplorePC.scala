@@ -68,7 +68,7 @@ object ExplorePC {
     }
 //    println(s"cdSelf.pos        = ${cdSelf.pos}") // "no position"
 //    val ValDef(cdSelfMods, cdSelfName, cdSelfTpt, cdSelfRhs) = cdSelf
-//    println(s"cdSelfTpt.pos     = ${cdSelfTpt.pos}") // "no position"
+//    println(s"cdSelfTpt.pos     = ${cdSelfTpt.pos}") //1.1.2-1 "no position"
     println(s"cdBody.size       = ${cdBody.size}")
     val /* constructor */ DefDef(_, _, _, _, _, _) :: (vd @ ValDef(vdMods, vcName, vdTpt, vdRhs)) :: /* synthetic accessor */ DefDef(_, _, _, _, _, _) :: Nil = cdBody
 

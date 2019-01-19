@@ -29,7 +29,7 @@ private class Optimize(document: Document, terminal: Terminal, data: Data) exten
   def keys: ISeq[String]  = "ctrl alt pressed O" :: Nil
 
   def apply(): Unit = {
-    data.compute()
+    ??? // data.compute()
     data.structure.foreach { root =>
       terminal.highlights = Nil
       terminal.selection  = None

@@ -18,12 +18,14 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.Document
-import dotterweide.editor.{Action, Adviser, Data, History, Terminal, Variant}
+import dotterweide.editor.{Action, Adviser, Async, Data, History, Terminal, Variant}
+import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
 
 private class Complete(document: Document, terminal: Terminal, data: Data,
-                       adviser: Adviser, history: History) extends Action {
+                       adviser: Adviser, history: History)(implicit async: Async)
+  extends Action {
 
   def name: String        = "Complete"
   def mnemonic: Char      = 'P'
@@ -34,12 +36,20 @@ private class Complete(document: Document, terminal: Terminal, data: Data,
     terminal.highlights = Nil
     val label = Adviser.Anchor
     document.insert(terminal.offset, label)
-    data.compute()
-    val structure = data.structure
+    val fut = data.computeStructure()
+    val tr  = async.await(fut)
     document.remove(terminal.offset, terminal.offset + label.length)
-
     for {
-      root    <- structure
+      structure <- tr
+      root      <- structure
+    } {
+      applyWithStructure(root, label)
+    }
+  }
+
+  private def applyWithStructure(root: Node, label: String): Unit =
+    for {
+//      root    <- structure
       anchor  <- root.elements.find(it => it.isLeaf && it.span.text.contains(label))
     } {
       val variants  = adviser.variants(root, anchor)
@@ -57,7 +67,6 @@ private class Complete(document: Document, terminal: Terminal, data: Data,
         }
       }
     }
-  }
 
   private def insert(variant: Variant, query: String): Unit = {
     terminal.insertInto(document, variant.content.stripPrefix(query))

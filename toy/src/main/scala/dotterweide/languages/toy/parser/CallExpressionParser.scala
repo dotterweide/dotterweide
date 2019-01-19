@@ -19,14 +19,14 @@ package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.ToyTokens._
 import dotterweide.languages.toy.node._
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object CallExpressionParser extends Parser {
-  def parse(in: TreeBuilder): Unit =
+object CallExpressionParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit =
     in.capturing(new CallExpression()) {
       in.capturing(new ReferenceToFunction()) {
         in.consume(IDENT)
       }
-      ArgumentsParser.parse(in)
+      ArgumentsParser.parseTo(in)
     }
 }

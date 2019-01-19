@@ -46,8 +46,11 @@ class MainFrame(language: Language, text: String) extends Frame {
   private val coloring      = new DynamicColoring(language.colorings)
   private val primaryEditor = EditorFactory.createEditorFor(language, history, coloring)
 
-  private lazy val secondaryEditor = EditorFactory.createEditorFor(primaryEditor.document,
-    primaryEditor.data, primaryEditor.holder, language, history, coloring)
+  private lazy val secondaryEditor = {
+    import primaryEditor.async
+    EditorFactory.createEditorFor(primaryEditor.document,
+      primaryEditor.data, primaryEditor.holder, language, history, coloring)
+  }
 
   private val data = primaryEditor.data
 

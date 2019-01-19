@@ -19,10 +19,10 @@ package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.ToyLexer
 import dotterweide.lexer.Lexer
-import dotterweide.parser.Parser
+import dotterweide.parser.SyncParser
 import org.junit.Assert._
 
-abstract class ParserTest(parser: Parser, lexer: Lexer = ToyLexer) {
+abstract class ParserTest(parser: SyncParser, lexer: Lexer = ToyLexer) {
   def parsed(s: String): String =
     parser.parse(lexer.analyze(s)).content
 

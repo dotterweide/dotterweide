@@ -18,12 +18,12 @@
 package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.node.Program
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object ProgramParser extends Parser {
-  def parse(in: TreeBuilder): Unit = {
+object ProgramParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit = {
     in.capturing(new Program()) {
-      while (!in.isEOF) StatementParser.parse(in)
+      while (!in.isEOF) StatementParser.parseTo(in)
     }
   }
 }

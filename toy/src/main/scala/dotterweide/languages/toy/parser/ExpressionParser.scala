@@ -19,10 +19,10 @@ package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.ToyTokens._
 import dotterweide.languages.toy.node._
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object ExpressionParser extends Parser {
-  def parse(in: TreeBuilder): Unit = {
+object ExpressionParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit = {
     logicalOr()
 
     def logicalOr(): Unit = {
@@ -88,7 +88,7 @@ object ExpressionParser extends Parser {
       } else {
         if (in.matches(IDENT)) {
           if (in.ahead(LPAREN))
-            CallExpressionParser.parse(in)
+            CallExpressionParser.parseTo(in)
           else in.capturing(new ReferenceToValue()) {
             in.consume(IDENT)
           }

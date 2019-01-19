@@ -21,6 +21,7 @@ import dotterweide.lexer.Token
 import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
+import scala.concurrent.Future
 
 class MockData extends Data {
   def text = ""
@@ -37,7 +38,9 @@ class MockData extends Data {
 
   def nextPass(): Unit = ()
 
-  def compute(): Unit = ()
+//  def compute(): Unit = ()
+
+  def computeStructure(): Future[Option[Node]] = Future.successful(structure)
 
   def hasFatalErrors = false
 }

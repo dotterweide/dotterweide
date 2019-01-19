@@ -39,7 +39,11 @@ class NodeImpl(val kind: String) extends Node {
 
   def children: ISeq[NodeImpl] = _children
 
-  def children_=(children: ISeq[NodeImpl]): Unit = {
+  /** Sets the child nodes. As a side effect,
+    * updates `span`, and for the children, updates their
+    * `nextSibling`, `previousSibling`, and `parent` fields.
+    */
+  def children_=(children: ISeq[NodeImpl]): Unit = if (children.nonEmpty) {
     val first = children.head.span
     span = Span(first.source, first.begin, children.last.span.end)
     _children = children

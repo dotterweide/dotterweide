@@ -20,13 +20,13 @@ package dotterweide.languages.toy.format
 import dotterweide.Helpers._
 import dotterweide.formatter.FormatterImpl
 import dotterweide.languages.toy.{ToyFormat, ToyLexer}
-import dotterweide.parser.Parser
+import dotterweide.parser.SyncParser
 import org.junit.Assert._
 
 class FormatTestBase {
   private val formatter = new FormatterImpl(ToyFormat)
 
-  protected def assertFormatted(code: String, parser: Parser, expectation: String, check: Boolean = true): Unit = {
+  protected def assertFormatted(code: String, parser: SyncParser, expectation: String, check: Boolean = true): Unit = {
     val node = parser.parse(ToyLexer.analyze(code))
     if(check) assertNoProblemsIn(node.elements)
     val actual = formatter.format(node, None, 2)

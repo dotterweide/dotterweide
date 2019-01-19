@@ -28,7 +28,7 @@ private class GoToDeclaration(terminal: Terminal, data: Data) extends Action {
   def keys: ISeq[String]  = "ctrl pressed B" :: Nil
 
   def apply(): Unit = {
-    data.compute()
+    ??? // data.compute()
     for (reference <- data.referenceAt(terminal.offset);
          target <- reference.target) {
       terminal.offset = offsetOf(target)

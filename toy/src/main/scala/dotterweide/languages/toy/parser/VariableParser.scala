@@ -19,16 +19,16 @@ package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.ToyTokens._
 import dotterweide.languages.toy.node.VariableDeclaration
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object VariableParser extends Parser {
-  def parse(in: TreeBuilder): Unit =
+object VariableParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit =
     in.capturing(new VariableDeclaration()) {
       in.consume(VAR)
       in.consume(IDENT)
-      TypeSpecParser.parse(in)
+      TypeSpecParser.parseTo(in)
       in.consume(EQ)
-      ExpressionParser.parse(in)
+      ExpressionParser.parseTo(in)
       in.consume(SEMI)
     }
 }

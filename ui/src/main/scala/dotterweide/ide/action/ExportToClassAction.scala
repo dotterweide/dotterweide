@@ -31,7 +31,7 @@ class ExportToClassAction(title0: String, mnemonic0: Char, data: Data, parent: C
   mnemonic = mnemonic0
 
   def apply(): Unit = {
-    data.compute()
+    ??? // data.compute()
     if (!data.hasFatalErrors) {
       data.structure.foreach { root =>
           val chooser = new FileChooser()

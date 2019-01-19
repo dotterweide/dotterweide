@@ -29,7 +29,7 @@ private class Rename(document: Document, terminal: Terminal, data: Data, history
   def keys: ISeq[String]  = "shift pressed F6" :: Nil
 
   def apply(): Unit = {
-    data.compute()
+    ??? // data.compute()
     val leafs: ISeq[Node] = data.connectedLeafsFor(terminal.offset)
     if (leafs.nonEmpty) {
       terminal.selection  = None

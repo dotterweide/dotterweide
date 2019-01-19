@@ -18,49 +18,49 @@
 package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.ToyTokens._
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object BlockStatementParser extends Parser {
-  def parse(in: TreeBuilder): Unit = {
+object BlockStatementParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit = {
     if (in.matches(VAR)) {
-      VariableParser.parse(in)
+      VariableParser.parseTo(in)
       return
     }
 
     if (in.matches(RETURN)) {
-      ReturnParser.parse(in)
+      ReturnParser.parseTo(in)
       return
     }
 
     if (in.matches(WHILE)) {
-      WhileParser.parse(in)
+      WhileParser.parseTo(in)
       return
     }
 
     if (in.matches(IF)) {
-      IfParser.parse(in)
+      IfParser.parseTo(in)
       return
     }
 
     if (in.matches(IDENT)) {
       if (in.ahead(LPAREN)) {
-        CallParser.parse(in)
+        CallParser.parseTo(in)
         return
       }
 
       if (in.ahead(EQ)) {
-        AssignmentParser.parse(in)
+        AssignmentParser.parseTo(in)
         return
       }
     }
 
     if (in.matches(COMMENT)) {
-      CommentParser.parse(in)
+      CommentParser.parseTo(in)
       return
     }
 
     if (in.matches(SEMI)) {
-      EmptyParser.parse(in)
+      EmptyParser.parseTo(in)
       return
     }
 

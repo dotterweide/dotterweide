@@ -27,7 +27,7 @@ private class ShowUsages(terminal: Terminal, data: Data) extends Action {
   def keys: ISeq[String]  = "shift ctrl pressed F7" :: Nil
 
   def apply(): Unit = {
-    data.compute()
+    ??? // data.compute()
     terminal.highlights = data.connectedLeafsFor(terminal.offset).map(_.span.interval)
   }
 }

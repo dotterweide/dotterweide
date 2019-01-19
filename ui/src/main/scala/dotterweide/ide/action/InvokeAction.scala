@@ -35,7 +35,7 @@ class InvokeAction(title0: String, mnemonic0: Char, shortcut: String, data: Data
   }
 
   def apply(): Unit = {
-    data.compute()
+    ??? // data.compute()
     if (!data.hasFatalErrors) {
       data.structure.foreach { root =>
         launcher.launch(invoker.run(root))

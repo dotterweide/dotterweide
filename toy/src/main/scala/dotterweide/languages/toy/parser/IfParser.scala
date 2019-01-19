@@ -19,16 +19,16 @@ package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.ToyTokens._
 import dotterweide.languages.toy.node.If
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object IfParser extends Parser {
-  def parse(in: TreeBuilder): Unit =
+object IfParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit =
     in.capturing(new If()) {
       in.consume(IF)
       in.consume(LPAREN)
-      ExpressionParser.parse(in)
+      ExpressionParser.parseTo(in)
       in.consume(RPAREN)
-      BlockParser.parse(in)
-      if (in.grasp(ELSE)) BlockParser.parse(in)
+      BlockParser.parseTo(in)
+      if (in.grasp(ELSE)) BlockParser.parseTo(in)
     }
 }

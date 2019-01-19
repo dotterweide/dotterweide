@@ -19,15 +19,15 @@ package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.ToyTokens._
 import dotterweide.languages.toy.node.Parameters
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object ParametersParser extends Parser {
-  def parse(in: TreeBuilder): Unit =
+object ParametersParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit =
     in.capturing(new Parameters()) {
       in.consume(LPAREN)
       if (!in.isEOF && !in.matches(RPAREN)) {
-        ParameterParser.parse(in)
-        while (in.grasp(COMMA)) ParameterParser.parse(in)
+        ParameterParser.parseTo(in)
+        while (in.grasp(COMMA)) ParameterParser.parseTo(in)
       }
       in.consume(RPAREN)
     }

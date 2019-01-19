@@ -21,12 +21,15 @@ import dotterweide.document.Document
 import dotterweide.inspection.{Inspection, Mark}
 import dotterweide.lexer.{Lexer, Token}
 import dotterweide.node.Node
-import dotterweide.parser.Parser
+import dotterweide.parser.{Parser, SyncParser}
 
 import scala.collection.immutable.{Seq => ISeq}
+import scala.concurrent.{Future, Promise}
+import scala.util.{Failure, Success, Try}
 
 /** An implementation of `Data` that re-runs the initial text pass whenever the `document` changes. */
-private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspections: ISeq[Inspection]) extends Data {
+private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspections: ISeq[Inspection])
+                      (implicit async: Async) extends Data {
   def text: String = document.text
 
   var tokens    : ISeq[Token]   = Nil
@@ -38,48 +41,76 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
   var pass: Pass = Pass.Text
 
   document.onChange { _ =>
-    run(Pass.Text)
+    runTextPass()
   }
 
   def hasNextPass: Boolean = pass.next.isDefined
+
+  private var busyCount     = 0
+  private var busyPass      = -1
+
+  private var futStructure: Future[Option[Node]] = Future.successful(None)
 
   def nextPass(): Unit = {
     val next = pass.next.getOrElse(
       throw new IllegalStateException("Next pass is unavailable"))
 
-    run(next)
+    if (busyPass < 0) {
+      pass = next
+      runPass()
+    }
   }
 
-  def compute(): Unit =
-    while (hasNextPass) {
-      nextPass()
+//  def compute(): Unit =
+//    while (hasNextPass) {
+//      nextPass()
+//    }
+
+  def computeStructure(): Future[Option[Node]] = {
+    import Ordering.Implicits._
+
+    while (pass < Pass.Parser) {
+      require (busyPass < 0)
+      pass = pass.next.get
+      runPass()
     }
+    futStructure
+  }
 
-  /** Runs a given pass and adds new errors to previous errors. */
-  private def run(p: Pass): Unit = {
-    pass = p
+  private def runPass(): Unit = {
+    pass match {
+      case Pass.Parser  => runParserPass()
+      case _            => runSync()
+    }
+  }
 
-    val passErrors = p match {
-      case Pass.Text        => runTextPass()
+  /** Runs a given synchronous pass and adds new errors to previous errors. */
+  private def runSync(): Unit = {
+    val passErrors = pass match {
       case Pass.Lexer       => runLexerPass()
-      case Pass.Parser      => runParserPass()
       case Pass.Inspections => runInspectionPass()
+      case _                => throw new IllegalStateException(s"runSync $pass")
     }
+    passCompleted(passErrors)
+  }
 
-    errors ++= passErrors
+  private def passCompleted(passErrors: ISeq[Error]): Unit = {
+    errors         ++= passErrors
     hasFatalErrors ||= passErrors.exists(_.fatal)
 
     notifyObservers(DataEvent(pass, passErrors))
   }
 
   /** Resets all analysis data. Clears all errors. */
-  private def runTextPass(): ISeq[Error] = {
+  private def runTextPass(): Unit = {
+    pass            = Pass.Text
     tokens          = Nil
     structure       = None
     errors          = Nil
     hasFatalErrors  = false
+    busyPass        = -1
 
-    Nil
+    notifyObservers(DataEvent(pass, Nil))
   }
 
   /** Generates `tokens`. Returns the resulting errors. */
@@ -91,15 +122,48 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
     }
   }
 
-  /** Generates `structure`. Returns the resulting errors. */
-  private def runParserPass(): ISeq[Error] = {
-    val root: Node = parser.parse(tokens.iterator)
+  /** Generates `structure`. */
+  private def runParserPass(): Unit = {
+    val it = tokens.iterator
+    parser match {
+      case ps: SyncParser =>
+        val root: Node = ps.parse(it)
+        parserCompleted(root)
+        futStructure = Future.successful(structure)
 
+      case _ =>
+        require (busyPass < 0)
+        busyCount += 1
+        val id     = busyCount
+        val fut: Future[Node] = parser.parseAsync(text, it)
+        busyPass   = id
+
+        import async.executionContext
+        val pr = Promise[Option[Node]]()
+        fut.onComplete { tr =>
+          async.defer {
+            val sTr: Try[Option[Node]] = tr.flatMap { root =>
+              if (busyPass == id) {
+                busyPass = -1
+                parserCompleted(root)
+                Success(structure)
+              } else {
+                Failure(Aborted())
+              }
+            }
+            pr.tryComplete(sTr)
+          }
+        }
+        futStructure = pr.future
+    }
+  }
+
+  private def parserCompleted(root: Node): Unit = {
     structure = Some(root)
-
-    root.elements.map(node => (node, node.problem)).collect {
+    val passErrors = root.elements.map(node => (node, node.problem)).collect {
       case (node, Some(message)) => Error(node.span.interval, message)
     }
+    passCompleted(passErrors)
   }
 
   /** Generates and returns more errors and warnings through inspection. */

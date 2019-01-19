@@ -29,7 +29,7 @@ private class Format(document: Document, terminal: Terminal, data: Data, formatt
   def keys: ISeq[String]  = "ctrl alt pressed L" :: Nil
 
   def apply(): Unit = {
-    data.compute()
+    ??? // data.compute()
     data.structure.foreach { root =>
       val text        = formatter.format(root, terminal.selection, tabSize)
       terminal.offset = terminal.offset.min(text.length)

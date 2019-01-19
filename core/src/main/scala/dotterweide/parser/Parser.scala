@@ -17,15 +17,27 @@
 
 package dotterweide.parser
 
+import dotterweide.editor.Async
 import dotterweide.lexer.Token
 import dotterweide.node.Node
 
+import scala.concurrent.Future
+
 trait Parser {
+  def parseAsync(text: String, tokens: Iterator[Token])(implicit async: Async): Future[Node]
+}
+
+trait SyncParser extends Parser {
+  def parseAsync(text: String, tokens: Iterator[Token])(implicit async: Async): Future[Node] =
+    Future.successful {
+      parse(tokens)
+    }
+
   def parse(tokens: Iterator[Token]): Node = {
     val builder = new TreeBuilder(tokens)
-    parse(builder)
+    parseTo(builder)
     builder.tree
   }
 
-  protected def parse(in: TreeBuilder): Unit
+  protected def parseTo(in: TreeBuilder): Unit
 }

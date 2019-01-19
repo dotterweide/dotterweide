@@ -19,15 +19,15 @@ package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.ToyTokens._
 import dotterweide.languages.toy.node.While
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object WhileParser extends Parser {
-  def parse(in: TreeBuilder): Unit =
+object WhileParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit =
     in.capturing(new While()) {
       in.consume(WHILE)
       in.consume(LPAREN)
-      ExpressionParser.parse(in)
+      ExpressionParser.parseTo(in)
       in.consume(RPAREN)
-      BlockParser.parse(in)
+      BlockParser.parseTo(in)
     }
 }

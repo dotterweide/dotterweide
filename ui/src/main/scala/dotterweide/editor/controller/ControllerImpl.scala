@@ -22,7 +22,7 @@ import java.awt.event.{KeyEvent, MouseEvent}
 
 import dotterweide.Interval
 import dotterweide.document.Document
-import dotterweide.editor.{ActionFinished, ActionStarted, Adviser, Data, EditorActions, Grid, History, Terminal}
+import dotterweide.editor.{ActionFinished, ActionStarted, Adviser, Async, Data, EditorActions, Grid, History, Terminal}
 import dotterweide.formatter.Formatter
 import dotterweide.node.{IdentifiedNode, Node}
 
@@ -31,7 +31,9 @@ import dotterweide.node.{IdentifiedNode, Node}
   * - control and mouse hover set terminal's `hover`
   */
 class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: Grid, adviser: Adviser,
-                     formatter: Formatter, tabSize: Int, comment: String, history: History) extends Controller {
+                     formatter: Formatter, tabSize: Int, comment: String, history: History)(implicit async: Async)
+  extends Controller {
+
   //TODO extract to some extension (maybe using brace matcher)
   private val pairs = List(
     ('(', ')'),

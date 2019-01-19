@@ -23,6 +23,7 @@ import dotterweide.node.Node
 import dotterweide.{Interval, ObservableEvents}
 
 import scala.collection.immutable.{Seq => ISeq}
+import scala.concurrent.Future
 
 // XXX TODO --- the model currently assumes synchronous operation
 // of `nextPass` and `compute`. This is at odds with a language server
@@ -40,6 +41,8 @@ trait Data extends ObservableEvents[DataEvent] {
   /** The result of the `parser`, or empty if in a pass before parser. */
   def structure: Option[Node]
 
+  def computeStructure(): Future[Option[Node]]
+
   def errors: ISeq[Error]
 
   def hasFatalErrors: Boolean
@@ -53,8 +56,8 @@ trait Data extends ObservableEvents[DataEvent] {
   /** Runs the next pass. Throws an exception if `!hasNextPass` */
   def nextPass(): Unit
 
-  /** Iterates through all passes (until `!hasNextPass`). */
-  def compute(): Unit
+//  /** Iterates through all passes (until `!hasNextPass`). */
+//  def compute(): Unit
 }
 
 case class DataEvent(pass: Pass, errors: ISeq[Error])
@@ -62,11 +65,15 @@ case class DataEvent(pass: Pass, errors: ISeq[Error])
 case class Error(interval: Interval, message: String, decoration: Decoration = Decoration.Underline,
                  fatal: Boolean = true)
 
-sealed abstract class Pass(val next: Option[Pass])
+sealed abstract class Pass(val next: Option[Pass], val stage: Int)
 
 object Pass {
-  case object Text        extends Pass(next = Some(Lexer))
-  case object Lexer       extends Pass(next = Some(Parser))
-  case object Parser      extends Pass(next = Some(Inspections))
-  case object Inspections extends Pass(next = None)
+  implicit object ordering extends Ordering[Pass] {
+    def compare(x: Pass, y: Pass): Int = x.stage compareTo y.stage
+  }
+
+  case object Text        extends Pass(next = Some(Lexer    )   , stage = 0)
+  case object Lexer       extends Pass(next = Some(Parser   )   , stage = 1)
+  case object Parser      extends Pass(next = Some(Inspections) , stage = 2)
+  case object Inspections extends Pass(next = None              , stage = 3)
 }

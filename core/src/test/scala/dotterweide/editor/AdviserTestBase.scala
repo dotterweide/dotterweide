@@ -18,10 +18,10 @@
 package dotterweide.editor
 
 import dotterweide.lexer.Lexer
-import dotterweide.parser.Parser
+import dotterweide.parser.SyncParser
 import org.junit.Assert._
 
-abstract class AdviserTestBase(lexer: Lexer, parser: Parser, adviser: Adviser) {
+abstract class AdviserTestBase(lexer: Lexer, parser: SyncParser, adviser: Adviser) {
   protected def assertVariantsAre(code: String)(expected: String*): Unit = {
     assertVariants(code, _.toList == expected.toList)
   }
@@ -36,8 +36,8 @@ abstract class AdviserTestBase(lexer: Lexer, parser: Parser, adviser: Adviser) {
 
   private def assertVariants(code: String, check: Seq[String] => Boolean): Unit = {
     val label = Adviser.Anchor
-    val s = code.replaceFirst("\\|", label)
-    val root = parser.parse(lexer.analyze(s))
+    val s     = code.replaceFirst("\\|", label)
+    val root  = parser.parse(lexer.analyze(s))
     val anchor = root.elements.find(it => it.isLeaf && it.span.text.contains(label))
     anchor match {
       case Some(it) =>

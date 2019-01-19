@@ -19,12 +19,12 @@ package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.ToyTokens._
 import dotterweide.languages.toy.node.Call
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object CallParser extends Parser {
-  def parse(in: TreeBuilder): Unit =
+object CallParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit =
     in.capturing(new Call()) {
-      CallExpressionParser.parse(in)
+      CallExpressionParser.parseTo(in)
       in.consume(SEMI)
     }
 }

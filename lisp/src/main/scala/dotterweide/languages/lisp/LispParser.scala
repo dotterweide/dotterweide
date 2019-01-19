@@ -20,10 +20,10 @@ package dotterweide.languages.lisp
 import dotterweide.languages.lisp.LispTokens._
 import dotterweide.languages.lisp.node._
 import dotterweide.lexer.TokenKind
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object LispParser extends Parser {
-  def parse(in: TreeBuilder): Unit =
+object LispParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit =
     in.capturing(new ProgramNode()) {
       while (!in.isEOF) expression(in)
     }

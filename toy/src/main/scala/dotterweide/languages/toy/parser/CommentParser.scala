@@ -19,10 +19,10 @@ package dotterweide.languages.toy.parser
 
 import dotterweide.languages.toy.ToyTokens._
 import dotterweide.languages.toy.node.Comment
-import dotterweide.parser.{Parser, TreeBuilder}
+import dotterweide.parser.{SyncParser, TreeBuilder}
 
-object CommentParser extends Parser {
-  def parse(in: TreeBuilder): Unit = {
+object CommentParser extends SyncParser {
+  def parseTo(in: TreeBuilder): Unit = {
     in.capturing(new Comment()) {
       while (in.grasp(COMMENT)) {
         // no additional actions

@@ -22,15 +22,16 @@ import dotterweide.document.{Document, DocumentImpl}
 
 object EditorFactory {
   def createEditorFor(language: Language, history: History, coloring: Coloring): Editor = {
-    val document  = new DocumentImpl()
-    val data      = new DataImpl(document, language.lexer, language.parser, language.inspections)
-    val holder    = new ErrorHolderImpl(document, data)
+    implicit val async: Async = new AsyncImpl()
+    val document: Document    = new DocumentImpl()
+    val data    : Data        = new DataImpl(document, language.lexer, language.parser, language.inspections)
+    val holder  : ErrorHolder = new ErrorHolderImpl(document, data)
 
     createEditorFor(document, data, holder, language, history, coloring)
   }
 
   def createEditorFor(document: Document, data: Data, holder: ErrorHolder, language: Language,
-                      history: History, coloring: Coloring): Editor = {
+                      history: History, coloring: Coloring)(implicit async: Async): Editor = {
 
     val listRenderer  = new VariantCellRenderer(language.lexer, coloring)
     val matcher       = new BraceMatcherImpl(language.complements)
