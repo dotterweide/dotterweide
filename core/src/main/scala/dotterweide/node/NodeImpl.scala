@@ -44,10 +44,18 @@ class NodeImpl(val kind: String) extends Node {
     * `nextSibling`, `previousSibling`, and `parent` fields.
     */
   def children_=(children: ISeq[NodeImpl]): Unit = if (children.nonEmpty) {
-    val first = children.head.span
-    span = Span(first.source, first.begin, children.last.span.end)
-    _children = children
-    children.foreach(_.parent = Some(this))
+    val first   = children.head.span
+    _children   = children
+    val par     = Some(this)
+    var cBegin  = first.begin
+    var cEnd    = first.end
+    children.foreach { child =>
+      child.parent  = par
+      val cSpan     = child.span
+      if (cSpan.begin < cBegin) cBegin = cSpan.begin
+      if (cSpan.end   > cEnd  ) cEnd   = cSpan.end
+    }
+    span = Span(first.source, cBegin, cEnd)
     for ((a, b) <- children.zip(children.tail)) {
       a.nextSibling     = Some(b)
       b.previousSibling = Some(a)
