@@ -22,19 +22,20 @@ object ScalaExamples {
       |// Project Euler - Problem 1
       |
       |// The sum of all the multiples of 3 or 5 below 1000.
+      |object Euler1 {
+      |  var sum = 0
       |
-      |var sum = 0
+      |  var i = 0
       |
-      |var i = 0
-      |
-      |while (i < 1000) {
-      |  if (i % 3 == 0 || i % 5 == 0) {
-      |    sum += i
+      |  while (i < 1000) {
+      |    if (i % 3 == 0 || i % 5 == 0) {
+      |      sum += i
+      |    }
+      |    i += 1
       |  }
-      |  i += 1
-      |}
       |
-      |println(sum)
+      |  println(sum)
+      |}
       |""".stripMargin
 
   val Euler2: String =

@@ -18,6 +18,7 @@
 package dotterweide
 
 import java.awt.Dimension
+import java.util.Locale
 
 import dotterweide.ide.MainFrame
 import dotterweide.languages.lisp.LispLanguage
@@ -29,8 +30,14 @@ import scala.swing.{SwingApplication, Window}
 object Demo extends SwingApplication {
   private val Languages = List(new ScalaLanguage, ToyLanguage, LispLanguage)
 
-  override def startup(args: Array[String]): Unit =
-    selectLanguage().foreach(openMainFrame)
+  override def startup(args: Array[String]): Unit = {
+    val lang0 = if (args.length >= 2 && args(0) == "--language") {
+      val langName = args(1).toLowerCase(Locale.US)
+      Languages.find(_.name.toLowerCase(Locale.US) == langName)
+    } else None
+    val lang = lang0.orElse(selectLanguage())
+    lang.foreach(openMainFrame)
+  }
 
   private def selectLanguage(): Option[Language] = {
     val dialog = new LanguageDialog(Languages)

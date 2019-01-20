@@ -33,6 +33,9 @@ import scala.tools.nsc.reporters.StoreReporter
 import scala.tools.nsc.settings.ScalaVersion
 import scala.util.{Failure, Success}
 
+/** The parser for the Scala language runs a compiler instance in an Akka actor
+  * (thus single threaded) which may be queried for nodes.
+  */
 class ScalaParser extends Parser {
   private val system                  = ActorSystem("ScalaParser")
   private val compilerActor: ActorRef = system.actorOf(Props(new CompilerActor), "compiler")
@@ -44,7 +47,7 @@ class ScalaParser extends Parser {
 
     private val reporter = new StoreReporter
 
-    private lazy val compiler: Global = {
+    private lazy val c: Global = {
       val outputDir = new VirtualDirectory("<virtual-dir>", None)
       val settings  = new Settings(err => Console.err.println(err))
 
@@ -56,26 +59,122 @@ class ScalaParser extends Parser {
       new Global(settings, reporter)
     }
 
-    private def compile(text: String): compiler.Tree = {
-      import compiler._
+    private def compile(text: String): c.Tree = {
+      import c._
       val srcFile   = newSourceFile(text)
-      val respTypes = new Response[compiler.Tree]
-      compiler.askReset()
-      compiler.askLoadedTyped(srcFile, keepLoaded = false /* true */, respTypes)
-      val treeTyped: compiler.Tree = respTypes.get.left.get
+      val respTypes = new Response[c.Tree]
+      c.askReset()
+      c.askLoadedTyped(srcFile, keepLoaded = false /* true */, respTypes)
+      val treeTyped: c.Tree = respTypes.get.left.get
       treeTyped
     }
 
     def receive: Receive = {
       case Compile(text) =>
         val reply = try {
-          log.debug("begin compile")
-          /* val tree = */ compile(text)
-          log.debug("done compile")
+          log.info("begin compile")
+          val tree: c.Tree = compile(text)
+          log.info("done compile")
+
+          def loop(p: Global#Tree, indent: Int): Unit = {
+            val indent1 = indent + 1
+            log.info(s"-- ${"  " * indent}${p.productPrefix} | ${p.pos} ${p.pos.getClass.getSimpleName}")
+            p match {
+//              case c.Alternative      (_)     =>
+//              case c.Annotated        (_, _)  =>
+//              case c.AppliedTypeTree  (_, _)  =>
+//              case c.ApplyDynamic     (_, _)  =>
+//              case c.ArrayValue       (_, _)  =>
+//              case c.AssignOrNamedArg (_, _)  =>
+
+              case c.Apply(receiver /* :Tree */, args /* :List[Tree] */) =>
+                loop(receiver, indent1)
+                args.foreach { child =>
+                  loop(child, indent1)
+                }
+
+              case c.Assign(lhs /* :Tree */, rhs /* :Tree */) =>
+                loop(lhs, indent1)
+                loop(rhs, indent1)
+
+              case c.Block(init /* :List[Tree] */, last /* :Tree */) =>
+                init.foreach { child =>
+                  loop(child, indent1)
+                }
+                loop(last, indent1)
+
+              case c.DefDef(_ /* mods: Modifiers */, _ /* name: TermName */, tParams /* :List[TypeDef] */,
+                            vParamsS /* :List[List[ValDef]] */, tpt /* :Tree */, rhs /* :Tree */) =>
+                tParams.foreach { child =>
+                  loop(child, indent1)
+                }
+                vParamsS.foreach { vParams =>
+                  vParams.foreach { child =>
+                    loop(child, indent1)
+                  }
+                }
+                loop(tpt, indent1)
+                loop(rhs, indent1)
+
+              case c.EmptyTree =>
+
+              case c.If(cond /* :Tree */, thenP /* :Tree */, elseP /* :Tree */) =>
+                loop(cond , indent1)
+                loop(thenP, indent1)
+                loop(elseP, indent1)
+
+              case c.Ident(_ /* name: Name */) =>
+
+              case c.LabelDef(_ /* name: TermName */, params /* :List[Ident] */, rhs /* :Tree */) =>
+                params.foreach { child =>
+                  loop(child, indent1)
+                }
+                loop(rhs, indent1)
+
+              case c.Literal(_ /* value: Constant */) =>
+
+              case c.ModuleDef(_ /* mods: Modifiers */, _ /* name: TermName */, child /* :Template */) =>
+                loop(child, indent1)
+
+              case c.PackageDef(pid /* :RefTree */, stats /* :List[Tree] */) =>
+                loop(pid, indent1)
+                stats.foreach { child =>
+                  loop(child, indent1)
+                }
+
+              case c.Select(child /* :Tree */, _ /* name: Name */) =>
+                loop(child, indent1)
+
+              case c.Super(qualifier /* :Tree */, _ /* mix: TypeName */) =>
+                loop(qualifier, indent1)
+
+              case c.Template(parents /* :List[Tree] */, valDef /* :ValDef */, stats /* :List[Tree] */) =>
+                parents.foreach { child =>
+                  loop(child, indent1)
+                }
+                loop(valDef , indent1)
+                stats.foreach { child =>
+                  loop(child, indent1)
+                }
+
+              case c.This(_ /* qualifier: TypeName */) =>
+
+              case c.TypeTree() =>
+
+              case c.ValDef(_ /* mods: Modifiers */, _ /* name: TermName */, tpt /* :Tree */, rhs /* :Tree */) =>
+                loop(tpt, indent1)
+                loop(rhs, indent1)
+
+              case _ =>
+            }
+          }
+          loop(tree, indent = 0)
+
           val n = new PackageNode()
           n.children = reporter.infos.iterator.filter(info => info.pos.isDefined && info.severity.id >= 2).map { info =>
             val child     = new Block()
             import info.pos._
+            log.info(s"info [$start, $end]")
             child.span    = Span("", start, end)
             child.problem = Some(info.msg)
             child

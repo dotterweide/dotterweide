@@ -17,20 +17,23 @@
 
 package dotterweide.editor.controller
 
-import dotterweide.editor.{Action, Data, Terminal}
+import dotterweide.editor.{Action, Async, Data, Terminal}
 import dotterweide.node.{IdentifiedNode, Node}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class GoToDeclaration(terminal: Terminal, data: Data) extends Action {
+private class GoToDeclaration(terminal: Terminal, data: Data)(implicit async: Async) extends Action {
   def name: String        = "Go to Declaration"
   def mnemonic: Char      = 'G'
   def keys: ISeq[String]  = "ctrl pressed B" :: Nil
 
   def apply(): Unit = {
-    ??? // data.compute()
-    for (reference <- data.referenceAt(terminal.offset);
-         target <- reference.target) {
+    import async.executionContext
+    for {
+      _         <- data.computeStructure()
+      reference <- data.referenceAt(terminal.offset)
+      target    <- reference.target
+    } {
       terminal.offset = offsetOf(target)
     }
   }
