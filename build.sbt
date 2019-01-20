@@ -10,6 +10,7 @@ lazy val commonSettings = Seq(
   crossScalaVersions        := Seq("2.12.8", "2.11.12"),
   scalacOptions            ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
   fork in Test              := false,
+  fork in (Compile, run)    := true,
   parallelExecution in Test := false
 )
 
