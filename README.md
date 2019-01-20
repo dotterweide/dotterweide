@@ -15,10 +15,5 @@ under Apache License. This project - Dotterweide - is released under the
 Over time, this project will diverge more and more from the original code base.
 
 The project build with [sbt](http://www.scala-sbt.org/) with the main Scala version being 2.12.x.
-
-Known issues:
-
-- `sbt test` fails with several cases, also different between Scala 2.11 and 2.12.
-  This must be either a race condition or dirty global state, because running, for
-  example, `sbt 'testOnly com.pavelfatin.toyide.languages.lisp.library.CoreTest'`
-  works without problem, although that spec fails when running all tests.
+To run the demo, use `sbt dotterweide-demo/run`. Note that the project in progress, there may still be
+`???` lurking in the code.

@@ -28,7 +28,8 @@ class AsyncImpl(timeOut: Int = 500) extends Async {
   }
 
   def defer(block: => Unit): Unit =
-    if (EventQueue.isDispatchThread) block else EventQueue.invokeLater(() => block)
+    if (EventQueue.isDispatchThread) block
+    else EventQueue.invokeLater(new Runnable { def run(): Unit = block })
 
   implicit def executionContext: ExecutionContext = ExecutionContext.global
 }
