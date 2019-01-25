@@ -26,15 +26,24 @@ import scala.collection.immutable.{Seq => ISeq}
 package object controller {
   private[controller] implicit class DataExt(val data: Data) extends AnyVal {
     def leafAt(offset: Int): Option[Node] = data.structure.flatMap { root =>
-      root.offsetOf(offset).flatMap(root.leafAt)
+      val opt = root.offsetOf(offset)
+      opt.flatMap { i =>
+        root.leafAt(i)
+      }
     }
 
     def referenceAt(offset: Int): Option[ReferenceNode] = data.structure.flatMap { root =>
-      root.offsetOf(offset).flatMap(root.referenceAt)
+      val opt = root.offsetOf(offset)
+      opt.flatMap { i =>
+        root.referenceAt(i)
+      }
     }
 
     def identifierAt(offset: Int): Option[IdentifiedNode] = data.structure.flatMap { root =>
-      root.offsetOf(offset).flatMap(root.identifierAt)
+      val opt = root.offsetOf(offset)
+      opt.flatMap { i =>
+        root.identifierAt(i)
+      }
     }
 
     def connectedLeafsFor(offset: Int): ISeq[Node] = {

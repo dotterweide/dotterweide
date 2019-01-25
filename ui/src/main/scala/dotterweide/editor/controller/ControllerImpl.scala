@@ -258,23 +258,26 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   }
 
   def processMousePressed(e: MouseEvent): Unit = {
-    val navigation = (e.getButton == MouseEvent.BUTTON1 && e.isControlDown) || e.getButton == MouseEvent.BUTTON2
-    val targetOffset = if (navigation) {
-      for(i <- document.toOffset(grid.toLocation(e.getPoint));
-          reference <- data.referenceAt(i);
-          target <- reference.target) yield offsetOf(target)
+    val navigation      = (e.getButton == MouseEvent.BUTTON1 && e.isControlDown) || e.getButton == MouseEvent.BUTTON2
+    val targetOffset    = if (navigation) {
+      for {
+        i         <- document.toOffset(grid.toLocation(e.getPoint))
+        reference <- data.referenceAt(i)
+        target    <- reference.target
+      } yield offsetOf(target)
     } else {
       None
     }
-    val pointOffset = document.toNearestOffset(grid.toLocation(e.getPoint))
-    val leafSpan = if (e.getButton == MouseEvent.BUTTON1 && e.getClickCount == 2) {
-      data.leafAt(pointOffset).map(_.span)
+    val pointOffset     = document.toNearestOffset(grid.toLocation(e.getPoint))
+    val leafSpan        = if (e.getButton == MouseEvent.BUTTON1 && e.getClickCount == 2) {
+      val leafOpt = data.leafAt(pointOffset)
+      leafOpt.map(_.span)
     } else {
       None
     }
-    terminal.offset = targetOffset.orElse(leafSpan.map(_.end)).getOrElse(pointOffset)
-    origin = leafSpan.fold(terminal.offset)(_.begin)
-    terminal.selection = leafSpan.map(_.interval)
+    terminal.offset     = targetOffset.orElse(leafSpan.map(_.end)).getOrElse(pointOffset)
+    origin              = leafSpan.fold(terminal.offset)(_.begin)
+    terminal.selection  = leafSpan.map(_.interval)
   }
 
   def processMouseDragged(e: MouseEvent): Unit = {

@@ -20,12 +20,13 @@ import akka.pattern.ask
 import akka.util.Timeout
 import dotterweide.Span
 import dotterweide.editor.Async
-import dotterweide.languages.scala.node.{Block, PackageNode}
+import dotterweide.languages.scala.node._
 import dotterweide.lexer.Token
-import dotterweide.node.Node
+import dotterweide.node.{Node, NodeImpl}
 import dotterweide.parser.Parser
 
 import scala.concurrent.Future
+import scala.reflect.internal.util.DefinedPosition
 import scala.tools.nsc.Settings
 import scala.tools.nsc.interactive.Global
 import scala.tools.nsc.io.VirtualDirectory
@@ -69,6 +70,10 @@ class ScalaParser extends Parser {
       treeTyped
     }
 
+//    private def parseTo(p: Global#Tree, indent: Int)(implicit b: TreeBuilder): Unit = {
+//
+//    }
+
     def receive: Receive = {
       case Compile(text) =>
         val reply = try {
@@ -76,10 +81,58 @@ class ScalaParser extends Parser {
           val tree: c.Tree = compile(text)
           log.info("done compile")
 
-          def loop(p: Global#Tree, indent: Int): Unit = {
+          def complete(p: Global#Tree, n: NodeImpl): n.type = {
+            p.pos match {
+              case dp: DefinedPosition =>
+                val start     = dp.start
+                val stop      = dp.end
+                val spanText  = text.substring(start, stop)
+                n.span        = Span(spanText, start, stop)
+
+              case _ =>
+            }
+            n
+          }
+
+          def parseTypeDef(p: Global#TypeDef, indent: Int): TypeDefNode = {
             val indent1 = indent + 1
-            log.info(s"-- ${"  " * indent}${p.productPrefix} | ${p.pos} ${p.pos.getClass.getSimpleName}")
-            p match {
+            // c.TypeDef(_ /* mods: Modifiers */, _ /* name: TypeName */, tParams /* : List[TypeDef] */, rhs /* : Tree */)
+            val tParamNodes = p.tparams.map(parseTypeDef(_, indent1))
+            val rhsNode     = parse(p.rhs, indent = indent1)
+            new TypeDefNode(tParamNodes, rhsNode)
+          }
+
+          def parseValDef(p: Global#ValDef, indent: Int): ValDefNode = {
+            val indent1 = indent + 1
+            // c.ValDef(_ /* mods: Modifiers */, _ /* name: TermName */, tpt /* :Tree */, rhs /* :Tree */) =>
+            val tptNode = parse(p.tpt, indent1)
+            val rhsNode = parse(p.rhs, indent1)
+            new ValDefNode(tptNode, rhsNode)
+          }
+
+          def parseIdent(p: Global#Ident, indent: Int): IdentNode = {
+            // c.Ident(_ /* name: Name */)
+            new IdentNode
+          }
+
+          def parseTemplate(p: Global#Template, indent: Int): TemplateNode = {
+            val indent1 = indent + 1
+            // c.Template(parents /* :List[Tree] */, valDef /* :ValDef */, stats /* :List[Tree] */) =>
+            val parentNodes = p.parents.map { child =>
+              parse(child, indent1)
+            }
+            val selfNode  = parseValDef(p.self , indent1)
+            val bodyNodes = p.body.map { child =>
+              parse(child, indent1)
+            }
+            new TemplateNode(parentNodes, selfNode, bodyNodes)
+          }
+
+          def parse(p: Global#Tree, indent: Int): NodeImpl = {
+            val indent1 = indent + 1
+
+//            log.info(s"-- ${"  " * indent}${p.productPrefix} | ${p.pos} ${p.pos.getClass.getSimpleName}")
+            val resNode: NodeImpl = p match {
 //              case c.Alternative      (_)     =>
 //              case c.Annotated        (_, _)  =>
 //              case c.AppliedTypeTree  (_, _)  =>
@@ -88,98 +141,111 @@ class ScalaParser extends Parser {
 //              case c.AssignOrNamedArg (_, _)  =>
 
               case c.Apply(receiver /* :Tree */, args /* :List[Tree] */) =>
-                loop(receiver, indent1)
-                args.foreach { child =>
-                  loop(child, indent1)
+                val rcvNode   = parse(receiver, indent1)
+                val argNodes  = args.map { child =>
+                  parse(child, indent1)
                 }
+                new ApplyNode(rcvNode, argNodes)
 
               case c.Assign(lhs /* :Tree */, rhs /* :Tree */) =>
-                loop(lhs, indent1)
-                loop(rhs, indent1)
+                val lhsNode = parse(lhs, indent1)
+                val rhsNode = parse(rhs, indent1)
+                new AssignNode(lhsNode, rhsNode)
 
               case c.Block(init /* :List[Tree] */, last /* :Tree */) =>
-                init.foreach { child =>
-                  loop(child, indent1)
+                val initNodes = init.map { child =>
+                  parse(child, indent1)
                 }
-                loop(last, indent1)
+                val lastNode  = parse(last, indent1)
+                new BlockNode(initNodes, lastNode)
 
               case c.DefDef(_ /* mods: Modifiers */, _ /* name: TermName */, tParams /* :List[TypeDef] */,
                             vParamsS /* :List[List[ValDef]] */, tpt /* :Tree */, rhs /* :Tree */) =>
-                tParams.foreach { child =>
-                  loop(child, indent1)
+                val tParamNodes = tParams.map { child =>
+                  complete(child, parseTypeDef(child, indent1))
                 }
-                vParamsS.foreach { vParams =>
-                  vParams.foreach { child =>
-                    loop(child, indent1)
+                val vParamNodesS = vParamsS.map { vParams =>
+                  vParams.map { child =>
+                    complete(child, parseValDef(child, indent1))
                   }
                 }
-                loop(tpt, indent1)
-                loop(rhs, indent1)
+                val tptNode = parse(tpt, indent1)
+                val rhsNode = parse(rhs, indent1)
+                new DefDefNode(tParamNodes, vParamNodesS, tptNode, rhsNode)
 
               case c.EmptyTree =>
+                new EmptyNode
+
+              case in: c.Ident => parseIdent(in, indent)
 
               case c.If(cond /* :Tree */, thenP /* :Tree */, elseP /* :Tree */) =>
-                loop(cond , indent1)
-                loop(thenP, indent1)
-                loop(elseP, indent1)
-
-              case c.Ident(_ /* name: Name */) =>
+                val condNode  = parse(cond , indent1)
+                val thenNode  = parse(thenP, indent1)
+                val elseNode  = parse(elseP, indent1)
+                new IfNode(condNode, thenNode, elseNode)
 
               case c.LabelDef(_ /* name: TermName */, params /* :List[Ident] */, rhs /* :Tree */) =>
-                params.foreach { child =>
-                  loop(child, indent1)
+                val paramNodes = params.map { child =>
+                  complete(child, parseIdent(child, indent1))
                 }
-                loop(rhs, indent1)
+                val rhsNode = parse(rhs, indent1)
+                new LabelDefNode(paramNodes, rhsNode)
 
               case c.Literal(_ /* value: Constant */) =>
+                new LiteralNode
 
               case c.ModuleDef(_ /* mods: Modifiers */, _ /* name: TermName */, child /* :Template */) =>
-                loop(child, indent1)
+                val childNode = complete(child, parseTemplate(child, indent1))
+                new ModuleDefNode(childNode)
 
               case c.PackageDef(pid /* :RefTree */, stats /* :List[Tree] */) =>
-                loop(pid, indent1)
-                stats.foreach { child =>
-                  loop(child, indent1)
+                val pidNode     = parse(pid, indent1)
+                val statNodes   = stats.map { child =>
+                  parse(child, indent1)
                 }
+                new PackageDefNode(pidNode, statNodes)
 
               case c.Select(child /* :Tree */, _ /* name: Name */) =>
-                loop(child, indent1)
+                val childNode = parse(child, indent1)
+                new SelectNode(childNode)
 
               case c.Super(qualifier /* :Tree */, _ /* mix: TypeName */) =>
-                loop(qualifier, indent1)
+                val qNode   = parse(qualifier, indent1)
+                new SuperNode(qNode)
 
-              case c.Template(parents /* :List[Tree] */, valDef /* :ValDef */, stats /* :List[Tree] */) =>
-                parents.foreach { child =>
-                  loop(child, indent1)
-                }
-                loop(valDef , indent1)
-                stats.foreach { child =>
-                  loop(child, indent1)
-                }
+              case tn: c.Template => parseTemplate(tn, indent)
 
               case c.This(_ /* qualifier: TypeName */) =>
+                new ThisNode
+
+              case td: c.TypeDef => parseTypeDef(td, indent)
 
               case c.TypeTree() =>
+                new TypeTreeNode
 
-              case c.ValDef(_ /* mods: Modifiers */, _ /* name: TermName */, tpt /* :Tree */, rhs /* :Tree */) =>
-                loop(tpt, indent1)
-                loop(rhs, indent1)
+              case vd: c.ValDef => parseValDef(vd, indent)
 
               case _ =>
+                log.info(s"-- SKIP ${"  " * indent}${p.productPrefix} | ${p.pos} ${p.pos.getClass.getSimpleName}")
+                new NodeImpl("<unknown>")
             }
-          }
-          loop(tree, indent = 0)
 
-          val n = new PackageNode()
-          n.children = reporter.infos.iterator.filter(info => info.pos.isDefined && info.severity.id >= 2).map { info =>
-            val child     = new Block()
-            import info.pos._
-            log.info(s"info [$start, $end]")
-            child.span    = Span("", start, end)
-            child.problem = Some(info.msg)
-            child
-          } .toVector // .sortBy(_.span.begin)
-          n
+            complete(p, resNode)
+          }
+          val programNode = parse(tree, indent = 0)
+
+//          val n = new PackageDefNode()
+//          n.children = reporter.infos.iterator.filter(info => info.pos.isDefined && info.severity.id >= 2).map { info =>
+//            val child     = new BlockNode()
+//            import info.pos._
+//            log.info(s"info [$start, $end]")
+//            child.span    = Span("", start, end)
+//            child.problem = Some(info.msg)
+//            child
+//          } .toVector // .sortBy(_.span.begin)
+
+          programNode
+
         } catch {
           case e: Exception => akka.actor.Status.Failure(e)
         }
