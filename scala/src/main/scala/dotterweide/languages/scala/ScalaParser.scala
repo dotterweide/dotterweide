@@ -25,6 +25,7 @@ import dotterweide.lexer.Token
 import dotterweide.node.{Node, NodeImpl}
 import dotterweide.parser.Parser
 
+import scala.annotation.tailrec
 import scala.concurrent.Future
 import scala.reflect.internal.util.DefinedPosition
 import scala.tools.nsc.Settings
@@ -81,55 +82,80 @@ class ScalaParser extends Parser {
           val tree: c.Tree = compile(text)
           log.info("done compile")
 
-          def complete(p: Global#Tree, n: NodeImpl): n.type = {
+          type Parents = List[Global#Tree]
+
+          @tailrec
+          def offsetOf(parents: Parents): Int = parents match {
+            case head :: tail =>
+              head.pos match {
+                case dp: DefinedPosition  => dp.start
+                case _                    => offsetOf(tail)
+              }
+            case _ => 0
+          }
+
+          def complete(p: Global#Tree, parents: Parents, n: NodeImpl): n.type = {
             p.pos match {
               case dp: DefinedPosition =>
+//                val off0      = offsetOf(parents)
                 val start     = dp.start
+                val off       = 0 // math.min(start, off0)
                 val stop      = dp.end
                 val spanText  = text.substring(start, stop)
-                n.span        = Span(spanText, start, stop)
+//                val bad = if (start < off) "!" else " "
+//                println(s"$bad ${n.kind} - start = $start, off = $off")
+                n.span        = Span(spanText, start - off, stop - off)
+//                n.span        = Span(spanText, start, stop)
 
               case _ =>
             }
             n
           }
 
-          def parseTypeDef(p: Global#TypeDef, indent: Int): TypeDefNode = {
-            val indent1 = indent + 1
+          def parseTypeDef(p: Global#TypeDef, parents: Parents): TypeDefNode = {
+            val parents1 = p :: parents
             // c.TypeDef(_ /* mods: Modifiers */, _ /* name: TypeName */, tParams /* : List[TypeDef] */, rhs /* : Tree */)
-            val tParamNodes = p.tparams.map(parseTypeDef(_, indent1))
-            val rhsNode     = parse(p.rhs, indent = indent1)
-            new TypeDefNode(tParamNodes, rhsNode)
+            val tParamNodes = p.tparams.map(parseTypeDef(_, parents1))
+            val rhsNode     = parseChild(p, p.rhs, parents)
+            complete(p, parents, new TypeDefNode(tParamNodes, rhsNode))
           }
 
-          def parseValDef(p: Global#ValDef, indent: Int): ValDefNode = {
-            val indent1 = indent + 1
+          def parseValDef(p: Global#ValDef, parents: Parents): ValDefNode = {
             // c.ValDef(_ /* mods: Modifiers */, _ /* name: TermName */, tpt /* :Tree */, rhs /* :Tree */) =>
-            val tptNode = parse(p.tpt, indent1)
-            val rhsNode = parse(p.rhs, indent1)
-            new ValDefNode(tptNode, rhsNode)
+            val tptNode = parseChild(p, p.tpt, parents)
+            val rhsNode = parseChild(p, p.rhs, parents)
+            complete(p, parents, new ValDefNode(tptNode, rhsNode))
           }
 
-          def parseIdent(p: Global#Ident, indent: Int): IdentNode = {
+          def parseIdent(p: Global#Ident, parents: Parents): IdentNode = {
             // c.Ident(_ /* name: Name */)
-            new IdentNode
+            complete(p, parents, new IdentNode)
           }
 
-          def parseTemplate(p: Global#Template, indent: Int): TemplateNode = {
-            val indent1 = indent + 1
+          def parseTemplate(p: Global#Template, parents: Parents): TemplateNode = {
+            val parents1 = p :: parents
             // c.Template(parents /* :List[Tree] */, valDef /* :ValDef */, stats /* :List[Tree] */) =>
             val parentNodes = p.parents.map { child =>
-              parse(child, indent1)
+              parseChild(p, child, parents)
             }
-            val selfNode  = parseValDef(p.self , indent1)
+            val selfNode  = parseValDef(p.self , parents1)
             val bodyNodes = p.body.map { child =>
-              parse(child, indent1)
+              parse(child, parents1)
             }
-            new TemplateNode(parentNodes, selfNode, bodyNodes)
+            complete(p, parents, new TemplateNode(parentNodes, selfNode, bodyNodes))
           }
 
-          def parse(p: Global#Tree, indent: Int): NodeImpl = {
-            val indent1 = indent + 1
+          def parseChild(p: Global#Tree, c: Global#Tree, parents: List[Global#Tree]): NodeImpl = {
+            val parents1 = p :: parents
+            complete(c, parents1, parse(c, parents1))
+          }
+
+          def parse(p: Global#Tree, parents: List[Global#Tree]): NodeImpl = {
+            @inline def parents1: Parents = p :: parents
+
+            @inline
+            def parseChild1(c: Global#Tree): NodeImpl =
+              parseChild(p, c, parents)
 
 //            log.info(s"-- ${"  " * indent}${p.productPrefix} | ${p.pos} ${p.pos.getClass.getSimpleName}")
             val resNode: NodeImpl = p match {
@@ -141,98 +167,98 @@ class ScalaParser extends Parser {
 //              case c.AssignOrNamedArg (_, _)  =>
 
               case c.Apply(receiver /* :Tree */, args /* :List[Tree] */) =>
-                val rcvNode   = parse(receiver, indent1)
+                val rcvNode   = parseChild1(receiver)
                 val argNodes  = args.map { child =>
-                  parse(child, indent1)
+                  parseChild1(child)
                 }
                 new ApplyNode(rcvNode, argNodes)
 
               case c.Assign(lhs /* :Tree */, rhs /* :Tree */) =>
-                val lhsNode = parse(lhs, indent1)
-                val rhsNode = parse(rhs, indent1)
+                val lhsNode = parseChild1(lhs)
+                val rhsNode = parseChild1(rhs)
                 new AssignNode(lhsNode, rhsNode)
 
               case c.Block(init /* :List[Tree] */, last /* :Tree */) =>
                 val initNodes = init.map { child =>
-                  parse(child, indent1)
+                  parseChild1(child)
                 }
-                val lastNode  = parse(last, indent1)
+                val lastNode = parseChild1(last)
                 new BlockNode(initNodes, lastNode)
 
               case c.DefDef(_ /* mods: Modifiers */, _ /* name: TermName */, tParams /* :List[TypeDef] */,
                             vParamsS /* :List[List[ValDef]] */, tpt /* :Tree */, rhs /* :Tree */) =>
                 val tParamNodes = tParams.map { child =>
-                  complete(child, parseTypeDef(child, indent1))
+                  parseTypeDef(child, parents1)
                 }
                 val vParamNodesS = vParamsS.map { vParams =>
                   vParams.map { child =>
-                    complete(child, parseValDef(child, indent1))
+                    parseValDef(child, parents1)
                   }
                 }
-                val tptNode = parse(tpt, indent1)
-                val rhsNode = parse(rhs, indent1)
+                val tptNode = parseChild1(tpt)
+                val rhsNode = parseChild1(rhs)
                 new DefDefNode(tParamNodes, vParamNodesS, tptNode, rhsNode)
 
               case c.EmptyTree =>
                 new EmptyNode
 
-              case in: c.Ident => parseIdent(in, indent)
+              case in: c.Ident => parseIdent(in, parents)
 
               case c.If(cond /* :Tree */, thenP /* :Tree */, elseP /* :Tree */) =>
-                val condNode  = parse(cond , indent1)
-                val thenNode  = parse(thenP, indent1)
-                val elseNode  = parse(elseP, indent1)
+                val condNode  = parseChild1(cond )
+                val thenNode  = parseChild1(thenP)
+                val elseNode  = parseChild1(elseP)
                 new IfNode(condNode, thenNode, elseNode)
 
               case c.LabelDef(_ /* name: TermName */, params /* :List[Ident] */, rhs /* :Tree */) =>
                 val paramNodes = params.map { child =>
-                  complete(child, parseIdent(child, indent1))
+                  parseIdent(child, parents1)
                 }
-                val rhsNode = parse(rhs, indent1)
+                val rhsNode = parseChild1(rhs)
                 new LabelDefNode(paramNodes, rhsNode)
 
               case c.Literal(_ /* value: Constant */) =>
                 new LiteralNode
 
               case c.ModuleDef(_ /* mods: Modifiers */, _ /* name: TermName */, child /* :Template */) =>
-                val childNode = complete(child, parseTemplate(child, indent1))
+                val childNode = parseTemplate(child, parents1)
                 new ModuleDefNode(childNode)
 
               case c.PackageDef(pid /* :RefTree */, stats /* :List[Tree] */) =>
-                val pidNode     = parse(pid, indent1)
+                val pidNode     = parseChild1(pid)
                 val statNodes   = stats.map { child =>
-                  parse(child, indent1)
+                  parseChild1(child)
                 }
                 new PackageDefNode(pidNode, statNodes)
 
               case c.Select(child /* :Tree */, _ /* name: Name */) =>
-                val childNode = parse(child, indent1)
+                val childNode = parseChild1(child)
                 new SelectNode(childNode)
 
               case c.Super(qualifier /* :Tree */, _ /* mix: TypeName */) =>
-                val qNode   = parse(qualifier, indent1)
+                val qNode = parseChild1(qualifier)
                 new SuperNode(qNode)
 
-              case tn: c.Template => parseTemplate(tn, indent)
+              case tn: c.Template => parseTemplate(tn, parents)
 
               case c.This(_ /* qualifier: TypeName */) =>
                 new ThisNode
 
-              case td: c.TypeDef => parseTypeDef(td, indent)
+              case td: c.TypeDef => parseTypeDef(td, parents)
 
               case c.TypeTree() =>
                 new TypeTreeNode
 
-              case vd: c.ValDef => parseValDef(vd, indent)
+              case vd: c.ValDef => parseValDef(vd, parents)
 
               case _ =>
-                log.info(s"-- SKIP ${"  " * indent}${p.productPrefix} | ${p.pos} ${p.pos.getClass.getSimpleName}")
+                log.info(s"-- SKIP ${"  " * parents.size}${p.productPrefix} | ${p.pos} ${p.pos.getClass.getSimpleName}")
                 new NodeImpl("<unknown>")
             }
-
-            complete(p, resNode)
+            resNode
           }
-          val programNode = parse(tree, indent = 0)
+          val programNode = parse(tree, Nil)
+          complete(tree, Nil, programNode)
 
 //          val n = new PackageDefNode()
 //          n.children = reporter.infos.iterator.filter(info => info.pos.isDefined && info.severity.id >= 2).map { info =>

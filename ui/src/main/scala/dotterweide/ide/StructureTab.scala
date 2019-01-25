@@ -22,12 +22,12 @@ import java.awt.event.{FocusAdapter, FocusEvent}
 import dotterweide.editor.{Data, DataEvent, Pass, Terminal}
 import javax.swing.JTree
 import javax.swing.event.{TreeSelectionEvent, TreeSelectionListener}
-import javax.swing.tree.DefaultTreeModel
+import javax.swing.tree.{DefaultMutableTreeNode, DefaultTreeModel}
 
 import scala.swing.{BorderPanel, Component}
 
 private class StructureTab(data: Data, terminal: Terminal) extends BorderPanel {
-  private val tree = new JTree()
+  private val tree = new JTree(new DefaultMutableTreeNode("root"))
 
   tree.setEditable(false)
 
