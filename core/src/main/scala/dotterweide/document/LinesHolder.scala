@@ -43,9 +43,22 @@ trait LinesHolder {
     if (line == wraps.size) length else wraps(line)
   }
 
+  /** Like `startOffsetOf`, but if line is too small, clips to zero, if line is too large, returns `length`. */
+  def startOffsetOfClip(line: Int): Int =
+    if      (line <= 0) 0
+    else if (line >= linesCount) length
+    else wraps(line - 1) + 1
+
+  /** Interval of a given line, not including newline. */
   def intervalOf(line: Int): Interval = {
     if (line < 0 || line >= linesCount) throw new IndexOutOfBoundsException()
     Interval(startOffsetOf(line), endOffsetOf(line))
+  }
+
+  /** Line `intervalOf` but including newline if the line is not the last line. */
+  def intervalOfNl(line: Int): Interval = {
+    if (line < 0 || line >= linesCount) throw new IndexOutOfBoundsException()
+    Interval(startOffsetOf(line), startOffsetOfClip(line + 1))
   }
 
   def toLocation(offset: Int): Location = {

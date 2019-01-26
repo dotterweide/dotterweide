@@ -73,25 +73,26 @@ package object controller {
   }
 
   private[controller] implicit class TerminalExt(val terminal: Terminal) extends AnyVal {
+    /** Produces an interval covering the line on which the cursor is currently positioned. */
     def currentLineIntervalIn(document: Document): Interval = {
-      val line    = document.lineNumberOf(terminal.offset)
-      val begin   = document.startOffsetOf(line)
-      val postfix = 1.min(document.linesCount - line - 1)
-      val end     = document.endOffsetOf(line) + postfix
-      Interval(begin, end)
+      val line = document.lineNumberOf(terminal.offset)
+      document.intervalOfNl(line)
     }
 
+    def currentLineNumberIn(document: Document): Int =
+      document.lineNumberOf(terminal.offset)
+
     def insertInto(document: Document, s: String): Unit =
-      if (terminal.selection.isDefined) {
-        val sel = terminal.selection.get
-        terminal.selection = None
-        val shift = sel.begin + s.length - terminal.offset
-        if (shift < 0) terminal.offset += shift
-        document.replace(sel, s)
-        if (shift > 0) terminal.offset += shift
-      } else {
-        document.insert(terminal.offset, s)
-        terminal.offset += s.length
+      terminal.selection match {
+        case Some(sel) =>
+          terminal.selection = None
+          val shift = sel.begin + s.length - terminal.offset
+          if (shift < 0) terminal.offset += shift
+          document.replace(sel, s)
+          if (shift > 0) terminal.offset += shift
+        case None =>
+          document.insert(terminal.offset, s)
+          terminal.offset += s.length
       }
   }
 }

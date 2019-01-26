@@ -6,7 +6,7 @@ of the latter should be available in the former.
 
 The following editor features should be implemented (note: checkmark means that item has been implemented):
 
- - [ ] FIX: toggle-line-comment broken when several lines are selected
+ - [X] FIX: toggle-line-comment broken when several lines are selected
  - [ ] FIX: un-indent does not work when applying to single indented line
  - [ ] the history (undo manager) should be observable, so we can properly track dirty state
  - [ ] Quick Find (ctrl-F)
