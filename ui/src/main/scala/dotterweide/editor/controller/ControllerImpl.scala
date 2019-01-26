@@ -211,19 +211,19 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   }
 
   def processEnterPressed(hold: Boolean = false): Unit = {
-    val oldOffset = terminal.offset
-    val n = document.lineNumberOf(terminal.offset)
-    val prefix = document.text(document.startOffsetOf(n), terminal.offset)
-    val suffix = document.text(terminal.offset, document.endOffsetOf(n))
-    val i1 = indentOf(n)
-    val i2 = if (prefix.trim.endsWith(BlockOpening.toString)) tabSize else 0
-    val i3 = document.charOptionAt(terminal.offset).filter(_ == BlockClosing).fold(0)(_ => tabSize)
-    val shift = suffix.takeWhile(_.isWhitespace).length
-    val indent = 0.max((if (i2 == 0 && i3 > i1) i1 + i2 - i3 else i1 + i2) - shift)
+    val oldOff  = terminal.offset
+    val n       = document.lineNumberOf(terminal.offset)
+    val prefix  = document.text(document.startOffsetOf(n), terminal.offset)
+    val suffix  = document.text(terminal.offset, document.endOffsetOf(n))
+    val i1      = indentOf(n)
+    val i2      = if (prefix.trim.endsWith(BlockOpening.toString)) tabSize else 0
+    val i3      = document.charOptionAt(terminal.offset).filter(_ == BlockClosing).fold(0)(_ => tabSize)
+    val shift   = suffix.takeWhile(_.isWhitespace).length
+    val indent  = 0.max((if (i2 == 0 && i3 > i1) i1 + i2 - i3 else i1 + i2) - shift)
     var s = "\n" + Seq.fill(indent)(' ').mkString
     if (i2 > 0 && i3 > 0) s += "\n" + Seq.fill(i1 + i2 - i3)(' ').mkString
     terminal.insertInto(document, s)
-    terminal.offset = if (hold) oldOffset else oldOffset + indent + 1
+    terminal.offset = if (hold) oldOff else oldOff + indent + 1
   }
 
   def processCharInsertion(c: Char): Unit = {
@@ -257,7 +257,10 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     }
   }
 
-  def processMousePressed(e: MouseEvent): Unit = {
+  def processMousePressed(e: MouseEvent): Unit =
+    if (e.isShiftDown) processMouseDragged(e) else processMousePressedNoShift(e)
+
+  private def processMousePressedNoShift(e: MouseEvent): Unit = {
     val navigation      = (e.getButton == MouseEvent.BUTTON1 && e.isControlDown) || e.getButton == MouseEvent.BUTTON2
     val targetOffset    = if (navigation) {
       for {
@@ -281,9 +284,11 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   }
 
   def processMouseDragged(e: MouseEvent): Unit = {
-    terminal.offset = document.toNearestOffset(grid.toLocation(e.getPoint))
-    val offsets = Seq(origin, terminal.offset).sorted
-    terminal.selection = Some(Interval(offsets(0), offsets(1)))
+    val pointOffset     = document.toNearestOffset(grid.toLocation(e.getPoint))
+    terminal.offset     = pointOffset
+    val start           = math.min(origin, pointOffset)
+    val stop            = math.max(origin, pointOffset)
+    terminal.selection  = Some(Interval(start, stop))
   }
 
   def processMouseMoved(e: MouseEvent): Unit = {

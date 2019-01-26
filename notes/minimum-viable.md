@@ -10,7 +10,7 @@ The following editor features should be implemented (note: checkmark means that 
  - [ ] FIX: un-indent does not work when applying to single indented line
  - [ ] the history (undo manager) should be observable, so we can properly track dirty state
  - [ ] Quick Find (ctrl-F)
- - [ ] shift and mouse click should make or extend the selection
+ - [X] shift and mouse click should make or extend the selection
  - [ ] Configurable wrapping code ("preamble", "terminator")
  
 The following actions and IDE features should be implemented:
@@ -21,6 +21,7 @@ The following API features should be implemented:
 
  - [ ] Configuration object, e.g. colour scheme, key-map, key-processor, initial text (`CodePane.Config`)
  - [ ] Editor: current location, selection; custom highlight such as flashing (`CodePane`)
+ - [ ] Proper shutdown (e.g. stopping Akka actor)
 
 This would work for Mellite. For ScalaCollider-Swing, additionally the following items:
 
