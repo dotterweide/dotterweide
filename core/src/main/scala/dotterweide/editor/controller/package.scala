@@ -25,39 +25,45 @@ import scala.collection.immutable.{Seq => ISeq}
 
 package object controller {
   private[controller] implicit class DataExt(val data: Data) extends AnyVal {
-    def leafAt(offset: Int): Option[Node] = data.structure.flatMap { root =>
-      val opt = root.offsetOf(offset)
-      opt.flatMap { i =>
-        root.leafAt(i)
-      }
-    }
+    def leafAt(offset: Int): Option[Node] =
+      for {
+        root  <- data.structure
+        i     <- root.offsetOf(offset)
+        n     <- root.leafAt(i)
+      } yield n
 
-    def referenceAt(offset: Int): Option[ReferenceNode] = data.structure.flatMap { root =>
-      val opt = root.offsetOf(offset)
-      opt.flatMap { i =>
-        root.referenceAt(i)
-      }
-    }
+    def referenceAt(offset: Int): Option[ReferenceNode] =
+      for {
+        root  <- data.structure
+        i     <- root.offsetOf(offset)
+        n     <- root.referenceAt(i)
+      } yield n
 
-    def identifierAt(offset: Int): Option[IdentifiedNode] = data.structure.flatMap { root =>
-      val opt = root.offsetOf(offset)
-      opt.flatMap { i =>
-        root.identifierAt(i)
-      }
-    }
+    def identifierAt(offset: Int): Option[IdentifiedNode] =
+      for {
+        root  <- data.structure
+        i     <- root.offsetOf(offset)
+        n     <- root.identifierAt(i)
+      } yield n
 
     def connectedLeafsFor(offset: Int): ISeq[Node] = {
-      val targetNode = referenceAt(offset) collect {
+      val tgtOpt: Option[IdentifiedNode] = referenceAt(offset).collect {
         case ReferenceNodeTarget(node: IdentifiedNode) => node
       } orElse {
         identifierAt(offset)
       }
-      val refs = data.structure.toList.flatMap { root =>
-        root.elements.collect {
-          case ref @ ReferenceNodeTarget(target) if targetNode.contains(target) => ref
-        }
+
+      tgtOpt match {
+        case Some(targetNode) =>
+          val refs: List[ReferenceNode] = data.structure.toList.flatMap { root =>
+            root.elements.collect {
+              case ref @ ReferenceNodeTarget(target) if targetNode == target => ref
+            }
+          }
+          targetNode.id.toList ::: refs.flatMap(_.source)
+
+        case None => Nil
       }
-      targetNode.flatMap(_.id).toList ::: refs.flatMap(_.source)
     }
   }
 

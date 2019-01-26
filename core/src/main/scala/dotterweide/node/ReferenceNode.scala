@@ -18,18 +18,21 @@
 package dotterweide.node
 
 trait ReferenceNode extends Node {
+  // ---- abstract ----
+
+  /** The local identifier */
   def source: Option[Node]
+
+  /** The actual reference location */
+  def target: Option[Node]
+
+  def predefined: Boolean
+
+  // ---- impl ----
 
   def identifier: String = source.map(_.span.text).mkString
 
-  def target: Option[Node]
-
-  def isReferenceTo(node: Node): Boolean = target match {
-    case Some(it) => it == node
-    case None     => false
-  }
-
-  def predefined: Boolean
+  def isReferenceTo(node: Node): Boolean = target.contains(node)
 
   def unresolved: Boolean = !predefined && target.isEmpty
 

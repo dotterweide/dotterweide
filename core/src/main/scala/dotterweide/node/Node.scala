@@ -92,14 +92,16 @@ trait Node extends Evaluable with Translatable with Optimizable {
   }
 
   def referenceAt(offset: Int): Option[ReferenceNode] = {
-    if (offset < 0 || offset > span.end)
+    if (offset < 0 || offset > span.end) {
       throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.begin, span.end))
+    }
     elements.filter(_.span.touches(span.begin + offset)).findBy[ReferenceNode]
   }
 
   def identifierAt(offset: Int): Option[IdentifiedNode] = {
-    if (offset < 0 || offset > span.end)
+    if (offset < 0 || offset > span.end) {
       throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.begin, span.end))
+    }
     val candidates = elements.filter(_.span.touches(span.begin + offset)).collect {
       case node @ NodeParent(identified: IdentifiedNode) if identified.id.contains(node) => identified
     }

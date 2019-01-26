@@ -18,7 +18,11 @@
 package dotterweide.node
 
 trait IdentifiedNode extends Node {
+  // ---- abstract ----
+
   def id: Option[Node]
+
+  // ---- impl ----
 
   def identifier: String = id.map(_.span.text).mkString
 

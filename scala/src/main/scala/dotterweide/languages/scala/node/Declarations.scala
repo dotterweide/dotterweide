@@ -12,7 +12,7 @@
 
 package dotterweide.languages.scala.node
 
-import dotterweide.node.{Node, NodeImpl}
+import dotterweide.node.{IdentifiedNode, Node, NodeImpl}
 
 import scala.reflect.internal.Flags
 
@@ -87,8 +87,10 @@ class FunctionNode(val vParamNodes: List[ValDefNode], val bodyNode: NodeImpl) ex
   children = vParamNodes :+ bodyNode
 }
 
-class IdentNode(val name: NameNode) extends ScalaTree(s"ident: ${name.name}") {
+class IdentNode(val name: NameNode) extends ScalaTree(s"ident: ${name.name}") with IdentifiedNode {
   children = name :: Nil
+
+  def id: Option[Node] = Some(name)
 }
 
 class IfNode(val condNode: NodeImpl, val thenNode: NodeImpl, val elseNode: NodeImpl) extends ScalaTree("if") {

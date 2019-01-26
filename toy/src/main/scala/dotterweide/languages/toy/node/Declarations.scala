@@ -44,7 +44,8 @@ trait UsableNode extends IdentifiedNode {
 }
 
 class FunctionDeclaration extends NodeImpl("function") with BlockHolder
-with UsableNode with NamedNode with TypedNode with FunctionDeclarationTranslator {
+  with UsableNode with NamedNode with TypedNode with FunctionDeclarationTranslator {
+
   def id: Option[NodeImpl] = children.drop(1).headOption
 
   def parametersNode: Option[Parameters] = children.findBy[Parameters]
