@@ -39,6 +39,12 @@ class NodeImpl(val kind: String) extends Node {
 
   def children: ISeq[NodeImpl] = _children
 
+  override def elements: ISeq[NodeImpl] = {
+    def loop(node: NodeImpl): Stream[NodeImpl] =
+      node #:: node.children.toStream.flatMap(loop)
+    loop(this)
+  }
+
   /** Sets the child nodes. As a side effect,
     * updates `span`, and for the children, updates their
     * `nextSibling`, `previousSibling`, and `parent` fields.

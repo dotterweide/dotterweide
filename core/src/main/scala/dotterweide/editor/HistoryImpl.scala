@@ -30,24 +30,27 @@ class HistoryImpl extends History {
       throw new IllegalStateException("Nested capture")
 
     busy = true
-    var events = List.empty[Any]
+    try {
+      var events = List.empty[Any]
 
-    val recorder = events ::= (_: Any)
+      val recorder = events ::= (_: Any)
 
-    document.onChange(recorder)
-    terminal.onChange(recorder)
+      document.onChange(recorder)
+      terminal.onChange(recorder)
 
-    block
+      block
 
-    document.disconnect(recorder)
-    terminal.disconnect(recorder)
+      document.disconnect(recorder)
+      terminal.disconnect(recorder)
 
-    if (events.exists(_.isInstanceOf[DocumentEvent])) {
-      toUndo ::= Action(document, terminal, events)
-      toRedo = Nil
+      if (events.exists(_.isInstanceOf[DocumentEvent])) {
+        toUndo ::= Action(document, terminal, events)
+        toRedo = Nil
+      }
+
+    } finally {
+      busy = false
     }
-
-    busy = false
   }
 
   def canUndo: Boolean = toUndo.nonEmpty

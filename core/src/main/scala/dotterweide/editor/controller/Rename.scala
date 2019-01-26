@@ -18,18 +18,18 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.{Bias, Document}
-import dotterweide.editor.{Action, Data, History, Terminal}
+import dotterweide.editor.{Async, Data, History, StructureAction, Terminal}
 import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class Rename(document: Document, terminal: Terminal, data: Data, history: History) extends Action {
+private class Rename(document: Document, terminal: Terminal, val data: Data, history: History)
+                    (implicit val async: Async) extends StructureAction {
   def name: String        = "Rename"
   def mnemonic: Char      = 'R'
   def keys: ISeq[String]  = "shift pressed F6" :: Nil
 
-  def apply(): Unit = {
-    ??? // data.compute()
+  def applyWithStructure(root: Node): Unit = {
     val leafs: ISeq[Node] = data.connectedLeafsFor(terminal.offset)
     if (leafs.nonEmpty) {
       terminal.selection  = None

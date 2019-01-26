@@ -30,6 +30,8 @@ case class Span(source: CharSequence, interval: Interval) extends IntervalLike {
   def text: String = source.subSequence(begin, end).toString
 
   def leftEdge: Span = Span(source, begin, begin)
+
+  override def toString: String = s"$productPrefix(..., $interval)"
 }
 
 object Span {

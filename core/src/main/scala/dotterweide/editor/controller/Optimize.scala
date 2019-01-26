@@ -18,30 +18,30 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.{Bias, Document}
-import dotterweide.editor.{Action, Data, Terminal}
+import dotterweide.editor.{Async, Data, StructureAction, Terminal}
+import dotterweide.node.Node
 import dotterweide.optimizer.Optimizer
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class Optimize(document: Document, terminal: Terminal, data: Data) extends Action {
+private class Optimize(document: Document, terminal: Terminal, val data: Data)(implicit val async: Async)
+  extends StructureAction {
+
   def name: String        = "Optimize"
   def mnemonic: Char      = 'O'
   def keys: ISeq[String]  = "ctrl alt pressed O" :: Nil
 
-  def apply(): Unit = {
-    ??? // data.compute()
-    data.structure.foreach { root =>
-      terminal.highlights = Nil
-      terminal.selection  = None
+  def applyWithStructure(root: Node): Unit = {
+    terminal.highlights = Nil
+    terminal.selection  = None
 
-      // the anchor allows us to adjust the cursor position
-      val anchor = document.createAnchorAt(terminal.offset, Bias.Left)
-      terminal.offset = 0
+    // the anchor allows us to adjust the cursor position
+    val anchor = document.createAnchorAt(terminal.offset, Bias.Left)
+    terminal.offset = 0
 
-      Optimizer.optimize(root, document)
+    Optimizer.optimize(root, document)
 
-      terminal.offset = anchor.offset
-      anchor.dispose()
-    }
+    terminal.offset = anchor.offset
+    anchor.dispose()
   }
 }

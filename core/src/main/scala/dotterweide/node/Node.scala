@@ -77,16 +77,18 @@ trait Node extends Evaluable with Translatable with Optimizable {
 
   def isLeaf: Boolean = token.isDefined
 
+  /** Total sequence of nodes (flattened) */
   def elements: ISeq[Node] = {
-    def elements(node: Node): Stream[Node] =
-      node #:: node.children.toStream.flatMap(elements)
-    elements(this)
+    def loop(node: Node): Stream[Node] =
+      node #:: node.children.toStream.flatMap(loop)
+    loop(this)
   }
 
   def leafAt(offset: Int): Option[Node] = {
     if (offset < 0 || offset > span.end)
       throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.begin, span.end))
-    elements.filter(_.span.touches(span.begin + offset)).find(_.isLeaf)
+    val offAbs = span.begin + offset
+    elements.filter(_.span.touches(offAbs)).find(_.isLeaf)
   }
 
   def referenceAt(offset: Int): Option[ReferenceNode] = {
@@ -110,19 +112,23 @@ trait Node extends Evaluable with Translatable with Optimizable {
 
     val prefix = if (problem.isDefined) "error: " else ""
 
-    if (isLeaf)
-      prefix + token.get.toString
-    else
-      prefix + kind + "\n" + children.map(n => indent(n.content, 1)).mkString("\n")
+    val suffix = token match {
+      case Some(t)  => t.toString
+      case None     => kind + "\n" + children.map(n => indent(n.content, 1)).mkString("\n")
+    }
+
+    prefix + suffix
   }
 
   override def toString: String = {
     val prefix = if (problem.isDefined) "error: " else ""
 
-    if (isLeaf)
-      prefix + token.get.toString
-    else
-      prefix + kind
+    val suffix = token match {
+      case Some(t)  => t.toString
+      case None     => kind
+    }
+
+    prefix + suffix
   }
 }
 

@@ -35,6 +35,10 @@ trait IntervalLike {
     (!empty && !interval.empty) &&
       interval.begin >= begin && interval.end <= end
 
+  def matches(interval: IntervalLike): Boolean =
+    (!empty && !interval.empty) &&
+      interval.begin == begin && interval.end == end
+
   def intersectsWith(interval: IntervalLike): Boolean =
     (!empty && !interval.empty) &&
       (includes(interval.begin) || includes(interval.end - 1) ||

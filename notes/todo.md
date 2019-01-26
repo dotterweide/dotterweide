@@ -16,6 +16,7 @@
  - optional line-gutter
  - insert/overwrite mode switch
  - go to line/column dialog
+ - shift + click, make selection
  
 ### advanced
 
