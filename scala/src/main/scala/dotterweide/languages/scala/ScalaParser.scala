@@ -25,7 +25,6 @@ import dotterweide.lexer.Token
 import dotterweide.node.{Node, NodeImpl}
 import dotterweide.parser.Parser
 
-import scala.collection.mutable
 import scala.concurrent.Future
 import scala.reflect.api.Position
 import scala.reflect.internal.util.DefinedPosition
@@ -105,19 +104,24 @@ class ScalaParser extends Parser {
             n
           }
 
-          val nameCache = mutable.Set.empty[HasNameNode]
-          val refCache  = mutable.Set.empty[IsRef]
+          // we re-use name-nodes for first use of a symbol
+          var symCache = Map.empty[Global#Symbol, NameNode]
+//          var defCache = Map.empty[NameNode, IsDef]
+          // we collect all references to symbols here,
+          // and in the end we try to resolve them by looking
+          // up the corresponding name nodes and storing their
+          // parents in the reference's target
+          var refMem   = List.empty[(IsRef, Global#Symbol)]
 
           def complete(p: Global#Tree, parents: Parents, n: NodeImpl): n.type = {
             p.pos match {
               case dp: DefinedPosition => setPosition(n, dp)
               case _ =>
             }
-            n match {
-              case hn: IsDef  => nameCache  += hn
-              case hr: IsRef  => refCache   += hr
-              case _ =>
-            }
+//            n match {
+//              case hn: IsDef => defCache += hn.nameNode -> hn
+//              case _ =>
+//            }
             n
           }
 
@@ -128,11 +132,16 @@ class ScalaParser extends Parser {
                 setPosition(nm, pos, inclusive = true /* WTF */)
             }
 
-          val symCache = mutable.Map.empty[Global#Symbol, NameNode]
-
-          def mkSymName(sym: Global#Symbol): NameNode = symCache.getOrElseUpdate(sym,
-            mkName(sym.pos, sym.name)
-          )
+          def mkSymName(sym: Global#Symbol): NameNode = {
+            // note: do not reuse the name-node, because we'll get
+            // in hell with breaking 1:1 children <-> parent, siblings relationships
+//            val n = symCache.getOrElseUpdate(sym,
+//              mkName(sym.pos, sym.name)
+//            )
+            val n = mkName(sym.pos, sym.name)
+            if (!symCache.contains(sym)) symCache += sym -> n
+            n
+          }
 
           def mkName(pos: Position, name: Global#Name): NameNode = {
             val s = name.decoded.trim // WTF `trim`, there are dangling trailing spaces
@@ -148,6 +157,11 @@ class ScalaParser extends Parser {
 //                }
               case _ =>
             }
+            n
+          }
+
+          def addRef(sym: Global#Symbol, n: IsRef): n.type = {
+            refMem ::= ((n, sym))
             n
           }
 
@@ -365,7 +379,7 @@ class ScalaParser extends Parser {
                 // val nameNode      = mkName(p.symbol)
                 val nameNode      = mkName(p.pos, name)
                 val qualifierNode = parseChild1(qualifier)
-                new SelectNode(qualifierNode, nameNode)
+                addRef(p.symbol, new SelectNode(qualifierNode, nameNode))
 
               case c.Super(qualifier /* :Tree */, _ /* mix: TypeName */) =>
                 val qNode = parseChild1(qualifier)
@@ -426,8 +440,12 @@ class ScalaParser extends Parser {
           // log.info("done tree")
 
           // now assign the reference targets
-          refCache.foreach { rn =>
-            rn.target
+          for {
+            (rn, sym) <- refMem
+            name      <- symCache.get(sym)
+            dn        <- name.parent // defCache.get(name)
+          } {
+            rn.target = Some(dn)
           }
 
           var moreErrors = List.empty[NodeImpl]

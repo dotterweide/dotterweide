@@ -109,10 +109,10 @@ class FunctionNode(val vParamNodes: List[ValDefNode], val bodyNode: NodeImpl) ex
   children = vParamNodes :+ bodyNode
 }
 
-class IdentNode(val nameNode: NameNode) extends ScalaTree("ident") with IsRef {
+class IdentNode(val nameNode: NameNode) extends ScalaTree("ident") with HasNameNode /* IsRef */ {
   children = nameNode :: Nil
 
-  def predefined: Boolean = false
+//  def predefined: Boolean = false
 }
 
 class IfNode(val condNode: NodeImpl, val thenNode: NodeImpl, val elseNode: NodeImpl) extends ScalaTree("if") {
@@ -159,9 +159,11 @@ class ReturnNode(val exprNode: NodeImpl) extends ScalaTree("return") {
 }
 
 class SelectNode(val qualifierNode: NodeImpl, val nameNode: NameNode)
-  extends ScalaTree("select") with HasNameNode {
+  extends ScalaTree("select") with IsRef /* HasNameNode */ {
 
   children = qualifierNode :: nameNode :: Nil
+
+  def predefined: Boolean = false
 }
 
 class SuperNode(val qNode: NodeImpl) extends ScalaTree("super") {
