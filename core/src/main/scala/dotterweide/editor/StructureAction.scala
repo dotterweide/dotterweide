@@ -14,7 +14,7 @@ package dotterweide.editor
 
 import dotterweide.node.Node
 
-trait StructureAction extends Action {
+trait StructureAction {
   protected def async : Async
   protected def data  : Data
 

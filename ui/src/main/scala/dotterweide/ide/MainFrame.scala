@@ -78,8 +78,11 @@ class MainFrame(language: Language, text: String) extends Frame {
   private val console   = new ConsoleImpl(coloring)
   private val launcher  = new LauncherImpl()
 
-  private val menu = new MainMenu(tab, this, primaryEditor.data, new NodeInterpreter(console),
-    new NodeInvoker(console), launcher, console, coloring, language.examples)
+  private val menu = {
+    import primaryEditor.async
+    new MainMenu(tab, this, primaryEditor.data, new NodeInterpreter(console),
+      new NodeInvoker(console), launcher, console, coloring, language.examples)
+  }
 
   private def updateTitle(): Unit = {
     val name = tab.file.map(_.getName.replaceAll("\\.%s".format(language.fileType.extension), ""))

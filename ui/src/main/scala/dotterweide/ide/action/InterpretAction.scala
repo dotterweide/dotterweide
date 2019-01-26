@@ -17,14 +17,16 @@
 
 package dotterweide.ide.action
 
-import dotterweide.editor.{Data, Runner}
+import dotterweide.editor.{Async, Data, Runner, StructureAction}
 import dotterweide.ide.{Console, Launcher}
+import dotterweide.node.Node
 import javax.swing.KeyStroke
 
 import scala.swing.Action
 
-class InterpretAction(title0: String, mnemonic0: Char, shortcut: String, data: Data,
-                      interpreter: Runner, launcher: Launcher, console: Console) extends Action(title0) {
+class InterpretAction(title0: String, mnemonic0: Char, shortcut: String, val data: Data, interpreter: Runner,
+                      launcher: Launcher, console: Console)(implicit val async: Async)
+  extends Action(title0) with StructureAction {
 
   mnemonic = mnemonic0
 
@@ -34,14 +36,10 @@ class InterpretAction(title0: String, mnemonic0: Char, shortcut: String, data: D
     enabled = !launcher.active
   }
 
-  def apply(): Unit = {
-    ??? // data.compute()
+  def applyWithStructure(root: Node): Unit =
     if (!data.hasFatalErrors) {
-      data.structure.foreach { root =>
-        launcher.launch(interpreter.run(root))
-      }
+      launcher.launch(interpreter.run(root))
     } else {
       ErrorPrinter.print(data, console)
     }
-  }
 }

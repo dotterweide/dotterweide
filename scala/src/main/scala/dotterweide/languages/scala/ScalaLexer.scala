@@ -13,13 +13,15 @@
 package dotterweide.languages.scala
 
 import dotterweide.Span
-import dotterweide.lexer.{Lexer, Token, TokenKind}
 import dotterweide.languages.scala.node.{ScalaTokens => STk}
+import dotterweide.lexer.{Lexer, Token, TokenKind}
 import scalariform.ScalaVersions
 import scalariform.lexer.{TokenType, Tokens => Tk}
 
+/** The lexer for the Scala language uses
+  * Scalariform and then converts the token types/kinds.
+  */
 object ScalaLexer extends Lexer {
-  // map Scalariform to ToyIDE
   private val mapTypeKinds: Map[TokenType, TokenKind] = Map(
     Tk.PACKAGE                -> STk.PACKAGE,
     Tk.STAR                   -> STk.STAR,

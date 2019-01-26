@@ -18,14 +18,14 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.{Bias, Document}
-import dotterweide.editor.{Async, Data, StructureAction, Terminal}
+import dotterweide.editor.{Action, Async, Data, StructureAction, Terminal}
 import dotterweide.node.Node
 import dotterweide.optimizer.Optimizer
 
 import scala.collection.immutable.{Seq => ISeq}
 
 private class Optimize(document: Document, terminal: Terminal, val data: Data)(implicit val async: Async)
-  extends StructureAction {
+  extends Action with StructureAction {
 
   def name: String        = "Optimize"
   def mnemonic: Char      = 'O'

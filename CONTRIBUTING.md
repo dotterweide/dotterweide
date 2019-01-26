@@ -1,9 +1,9 @@
 # Contributing
 
-We'd love for you to contribute and to improve this project!
+We'd love you to contribute and to improve this project!
 
 As the project is only about to start, we have not strictly defined the guidelines for contribution yet.
-This repository is about experimenting with Coursier and mainly contains soure code. Whether you wish to
+Whether you wish to
 contribute to this repository or start off another sub-project in the context of dotterweide, the best
 is to talk to us on the Gitter channel.
 

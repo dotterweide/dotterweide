@@ -19,7 +19,6 @@ lazy val lgpl2 = "LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")
 lazy val deps = new {
   val main = new {
     val akka            = "2.5.19"
-    val scalaMeta       = "4.1.0"
     val scalariform     = "0.2.6"
     val scalaSwing      = "2.1.0"
   }
@@ -84,7 +83,6 @@ lazy val scalaLang = project.withId(s"$baseNameL-scala").in(file("scala"))
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-actor"     % deps.main.akka,
       "org.scala-lang"    %  "scala-compiler" % scalaVersion.value,
-      "org.scalameta"     %% "scalameta"      % deps.main.scalaMeta,
       "org.scalariform"   %% "scalariform"    % deps.main.scalariform,
     )
   )

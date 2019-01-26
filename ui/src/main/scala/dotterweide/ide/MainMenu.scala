@@ -18,15 +18,17 @@
 package dotterweide.ide
 
 import dotterweide.Example
-import dotterweide.editor.{Data, EditorActions, Runner, Action => _Action}
+import dotterweide.editor.{Async, Data, EditorActions, Runner, Action => _Action}
 import dotterweide.ide.action.{ColoringAction, ExampleAction, ExportToClassAction, InterpretAction, InvokeAction, NewAction, OpenAction, SaveAction, SaveAsAction, StopAction}
 import javax.swing.KeyStroke
 
 import scala.swing.event.Key
 import scala.swing.{Action, CheckMenuItem, Component, Dimension, Frame, Menu, MenuBar, MenuItem, RadioMenuItem, Separator}
 
-private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Runner, invoker: Runner, launcher: Launcher,
-                       console: Console, coloring: DynamicColoring, examples: Seq[Example]) extends MenuBar {
+private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Runner, invoker: Runner,
+                       launcher: Launcher, console: Console, coloring: DynamicColoring, examples: Seq[Example])
+                      (implicit async: Async)
+  extends MenuBar {
 
   private val undo              = new MenuItem("")
   private val redo              = new MenuItem("")

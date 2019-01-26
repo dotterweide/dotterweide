@@ -14,6 +14,9 @@ under Apache License. This project - Dotterweide - is released under the
 [GNU Lesser General Public License v2.1](https://www.gnu.org/licenses/lgpl-2.1.txt) or higher.
 Over time, this project will diverge more and more from the original code base.
 
+## building
+
 The project build with [sbt](http://www.scala-sbt.org/) with the main Scala version being 2.12.x.
 To run the demo, use `sbt dotterweide-demo/run`. Note that the project in progress, there may still be
 `???` lurking in the code.
+
