@@ -35,23 +35,32 @@ class NameNode(val name: String) extends ScalaNode("name") with ScalaLeaf with N
   }
 }
 
+class RefNameNode(name: String) extends NameNode(name) with IsRef {
+  def nameNode: NameNode = this
+
+  def predefined: Boolean = false
+}
+
 sealed trait ScalaLeaf extends Node {
   override def isLeaf: Boolean = true
 }
 
-trait HasNameNode extends IdentifiedNode {
+trait HasNameNode {
   def nameNode: NameNode
+}
 
+trait IsDef extends HasNameNode with IdentifiedNode {
   override def id: Option[NameNode] = Some(nameNode)
 
   // XXX TODO --- default impl results in StringIndexOutOfBoundsException
   override def identifier: String = nameNode.name
 }
 
-trait IsDef extends HasNameNode
+trait IsRef extends HasNameNode with ReferenceNode {
+  override def source: Option[NameNode] = Some(nameNode)
 
-trait IsRef extends ReferenceNode with HasNameNode {
-  override def source: Option[NameNode] = id
+  // XXX TODO --- default impl results in StringIndexOutOfBoundsException
+  override def identifier: String = nameNode.name
 
   var target: Option[Node] = None
 }
@@ -159,11 +168,11 @@ class ReturnNode(val exprNode: NodeImpl) extends ScalaTree("return") {
 }
 
 class SelectNode(val qualifierNode: NodeImpl, val nameNode: NameNode)
-  extends ScalaTree("select") with IsRef /* HasNameNode */ {
+  extends ScalaTree("select") with /* IsRef */ HasNameNode {
 
   children = qualifierNode :: nameNode :: Nil
 
-  def predefined: Boolean = false
+//  def predefined: Boolean = false
 }
 
 class SuperNode(val qNode: NodeImpl) extends ScalaTree("super") {

@@ -132,29 +132,31 @@ class ScalaParser extends Parser {
                 setPosition(nm, pos, inclusive = true /* WTF */)
             }
 
-          def mkSymName(sym: Global#Symbol): NameNode = {
+          def mkDefName(sym: Global#Symbol): NameNode = {
             // note: do not reuse the name-node, because we'll get
             // in hell with breaking 1:1 children <-> parent, siblings relationships
 //            val n = symCache.getOrElseUpdate(sym,
 //              mkName(sym.pos, sym.name)
 //            )
-            val n = mkName(sym.pos, sym.name)
+            val n = completeName(sym.pos, new NameNode(nameString(sym.name)))
             if (!symCache.contains(sym)) symCache += sym -> n
             n
           }
 
-          def mkName(pos: Position, name: Global#Name): NameNode = {
-            val s = name.decoded.trim // WTF `trim`, there are dangling trailing spaces
-            // println(s"'$s'")
-            val n = new NameNode(s)
+          def mkRefName(p: Global#Tree, name: Global#Name): NameNode = {
+            val n = completeName(p.pos, new RefNameNode(nameString(name)))
+            addRef(p.symbol, n)
+          }
+
+          def nameString(name: Global#Name): String =
+            name.decoded.trim // WTF `trim`, there are dangling trailing spaces
+
+          def completeName(pos: Position, n: NameNode): n.type = {
             pos match {
               case pd: DefinedPosition /* if pos.isOpaqueRange */ =>
+                val s = n.name
                 n.span =
-//                  if (leftAligned) {
-                  Span(s, pd.point, pd.point + s.length)
-//                } else {
-//                  Span(s, pos.end - s.length, pos.end)
-//                }
+                Span(s, pd.point, pd.point + s.length)
               case _ =>
             }
             n
@@ -176,7 +178,7 @@ class ScalaParser extends Parser {
 
           def parseIdent(p: Global#Ident, parents: Parents): IdentNode = {
             // c.Ident(_ /* name: Name */)
-            val nameNode  = mkSymName(p.symbol)
+            val nameNode  = mkDefName(p.symbol)
             val n         = new IdentNode(nameNode)
             complete(p, parents, n)
           }
@@ -216,7 +218,7 @@ class ScalaParser extends Parser {
 
             // XXX TODO --- need to add defaults
             val modNodes  = mkMods(p.mods)
-            val nameNode  = mkSymName(p.symbol)
+            val nameNode  = mkDefName(p.symbol)
             val tptNode   = parseChild(p, p.tpt, parents)
             val rhsNode   = parseChild(p, p.rhs, parents)
             val n         = new ValDefNode(modNodes, nameNode, tptNode, rhsNode)
@@ -268,7 +270,7 @@ class ScalaParser extends Parser {
                 new AssignOrNamedArgNode(lhsNode, rhsNode)
 
               case c.Bind(_ /* name: Name */, body /* :Tree */) =>
-                val nameNode  = mkSymName(p.symbol)
+                val nameNode  = mkDefName(p.symbol)
                 val bodyNode  = parseChild1(body)
                 new BindNode(nameNode, bodyNode)
 
@@ -282,7 +284,7 @@ class ScalaParser extends Parser {
               case c.ClassDef(mods /* Modifiers */, _ /* name: TypeName */, tParams /* List[TypeDef] */,
                               impl /* :Template */) =>
                 val modNodes    = mkMods(mods)
-                val nameNode    = mkSymName(p.symbol)
+                val nameNode    = mkDefName(p.symbol)
                 val tParamNodes = tParams.map { child =>
                   parseTypeDef(child, parents1)
                 }
@@ -294,7 +296,7 @@ class ScalaParser extends Parser {
                 // println(s"def-def symbol = ${p.symbol}")
                 // p.symbol.pos
                 val modNodes    = mkMods(mods)
-                val nameNode    = mkSymName(p.symbol)
+                val nameNode    = mkDefName(p.symbol)
                 val tParamNodes = tParams.map { child =>
                   parseTypeDef(child, parents1)
                 }
@@ -355,7 +357,7 @@ class ScalaParser extends Parser {
 //                  val namePos = p.pos.asInstanceOf[RangePosition]
 //                  namePos.point
 //                }
-                val nameNode  = mkSymName(p.symbol)
+                val nameNode  = mkDefName(p.symbol)
                 val childNode = parseTemplate(child, parents1)
                 new ModuleDefNode(modNodes, nameNode, childNode)
 
@@ -377,9 +379,9 @@ class ScalaParser extends Parser {
               case /* in @ */ c.Select(qualifier /* :Tree */, name /* :Name */) =>
                 // Note: interesting thing; if we use `p.symbol`, we find the definition site!
                 // val nameNode      = mkName(p.symbol)
-                val nameNode      = mkName(p.pos, name)
+                val nameNode      = mkRefName(p, name)
                 val qualifierNode = parseChild1(qualifier)
-                addRef(p.symbol, new SelectNode(qualifierNode, nameNode))
+                new SelectNode(qualifierNode, nameNode)
 
               case c.Super(qualifier /* :Tree */, _ /* mix: TypeName */) =>
                 val qNode = parseChild1(qualifier)
