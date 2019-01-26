@@ -17,7 +17,7 @@
 
 package dotterweide.node
 
-trait IdentifiedNode extends Node {
+trait IdentifiedNode extends NodeWithIdentifier {
   // ---- abstract ----
 
   def id: Option[Node]

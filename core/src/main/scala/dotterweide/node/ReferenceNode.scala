@@ -17,7 +17,7 @@
 
 package dotterweide.node
 
-trait ReferenceNode extends Node {
+trait ReferenceNode extends NodeWithIdentifier {
   // ---- abstract ----
 
   /** The local identifier */

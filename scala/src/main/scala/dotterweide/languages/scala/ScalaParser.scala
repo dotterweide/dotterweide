@@ -25,6 +25,7 @@ import dotterweide.lexer.Token
 import dotterweide.node.{Node, NodeImpl}
 import dotterweide.parser.Parser
 
+import scala.collection.mutable
 import scala.concurrent.Future
 import scala.reflect.api.Position
 import scala.reflect.internal.util.DefinedPosition
@@ -82,7 +83,7 @@ class ScalaParser extends Parser {
         val reply = try {
           log.info("begin compile")
           val tree: c.Tree = compile(text)
-          log.info("done compile")
+          // log.info("done compile")
 
           type Parents = List[Global#Tree]
 
@@ -104,11 +105,21 @@ class ScalaParser extends Parser {
             n
           }
 
-          def complete(p: Global#Tree, parents: Parents, n: NodeImpl): n.type =
+          val nameCache = mutable.Set.empty[HasNameNode]
+          val refCache  = mutable.Set.empty[IsRef]
+
+          def complete(p: Global#Tree, parents: Parents, n: NodeImpl): n.type = {
             p.pos match {
-              case dp: DefinedPosition  => setPosition(n, dp)
-              case _                    => n
+              case dp: DefinedPosition => setPosition(n, dp)
+              case _ =>
             }
+            n match {
+              case hn: IsDef  => nameCache  += hn
+              case hr: IsRef  => refCache   += hr
+              case _ =>
+            }
+            n
+          }
 
           def mkMods(mods: Global#Modifiers): List[ModifierNode] =
             mods.positions.iterator.filter(_._2.isDefined).toList.sortBy(_._2.start).map {
@@ -117,7 +128,11 @@ class ScalaParser extends Parser {
                 setPosition(nm, pos, inclusive = true /* WTF */)
             }
 
-          def mkSymName(sym: Global#Symbol): NameNode = mkName(sym.pos, sym.name)
+          val symCache = mutable.Map.empty[Global#Symbol, NameNode]
+
+          def mkSymName(sym: Global#Symbol): NameNode = symCache.getOrElseUpdate(sym,
+            mkName(sym.pos, sym.name)
+          )
 
           def mkName(pos: Position, name: Global#Name): NameNode = {
             val s = name.decoded.trim // WTF `trim`, there are dangling trailing spaces
@@ -147,8 +162,8 @@ class ScalaParser extends Parser {
 
           def parseIdent(p: Global#Ident, parents: Parents): IdentNode = {
             // c.Ident(_ /* name: Name */)
-            val nameNode = mkSymName(p.symbol)
-            val n = new IdentNode(nameNode)
+            val nameNode  = mkSymName(p.symbol)
+            val n         = new IdentNode(nameNode)
             complete(p, parents, n)
           }
 
@@ -239,8 +254,9 @@ class ScalaParser extends Parser {
                 new AssignOrNamedArgNode(lhsNode, rhsNode)
 
               case c.Bind(_ /* name: Name */, body /* :Tree */) =>
-                val bodyNode = parseChild1(body)
-                new BindNode(bodyNode)
+                val nameNode  = mkSymName(p.symbol)
+                val bodyNode  = parseChild1(body)
+                new BindNode(nameNode, bodyNode)
 
               case c.Block(init /* :List[Tree] */, last /* :Tree */) =>
                 val initNodes = init.map { child =>
@@ -264,6 +280,7 @@ class ScalaParser extends Parser {
                 // println(s"def-def symbol = ${p.symbol}")
                 // p.symbol.pos
                 val modNodes    = mkMods(mods)
+                val nameNode    = mkSymName(p.symbol)
                 val tParamNodes = tParams.map { child =>
                   parseTypeDef(child, parents1)
                 }
@@ -274,7 +291,7 @@ class ScalaParser extends Parser {
                 }
                 val tptNode = parseChild1(tpt)
                 val rhsNode = parseChild1(rhs)
-                new DefDefNode(modNodes, tParamNodes, vParamNodesS, tptNode, rhsNode)
+                new DefDefNode(modNodes, nameNode, tParamNodes, vParamNodesS, tptNode, rhsNode)
 
               case c.EmptyTree =>
                 new EmptyNode
@@ -403,8 +420,15 @@ class ScalaParser extends Parser {
             }
             res
           }
+
           val programNode = parse(tree, Nil)
           complete(tree, Nil, programNode)
+          // log.info("done tree")
+
+          // now assign the reference targets
+          refCache.foreach { rn =>
+            rn.target
+          }
 
           var moreErrors = List.empty[NodeImpl]
 
@@ -420,6 +444,8 @@ class ScalaParser extends Parser {
                 moreErrors ::= NodeImpl.createError(None, sp, info.msg)
             }
           }
+
+          log.info("done errors")
 
           if (moreErrors.isEmpty) {
             programNode

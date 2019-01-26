@@ -12,7 +12,7 @@
 
 package dotterweide.languages.scala.node
 
-import dotterweide.node.{IdentifiedNode, Node, NodeImpl}
+import dotterweide.node.{IdentifiedNode, NamedNode, Node, NodeImpl, ReferenceNode}
 
 import scala.reflect.internal.Flags
 
@@ -28,10 +28,32 @@ object ModifierNode {
 }
 class ModifierNode(val code: Long) extends ScalaNode(s"mod: ${ModifierNode.nameOf(code)}") with ScalaLeaf
 
-class NameNode(val name: String) extends ScalaNode(s"name: '$name'") with ScalaLeaf
+class NameNode(val name: String) extends ScalaNode("name") with ScalaLeaf with NamedNode {
+  override def toString: String = {
+    val prefix = if (problem.isDefined) "error: " else ""
+    s"$prefix$kind($name)"
+  }
+}
 
 sealed trait ScalaLeaf extends Node {
   override def isLeaf: Boolean = true
+}
+
+trait HasNameNode extends IdentifiedNode {
+  def nameNode: NameNode
+
+  override def id: Option[NameNode] = Some(nameNode)
+
+  // XXX TODO --- default impl results in StringIndexOutOfBoundsException
+  override def identifier: String = nameNode.name
+}
+
+trait IsDef extends HasNameNode
+
+trait IsRef extends ReferenceNode with HasNameNode {
+  override def source: Option[NameNode] = id
+
+  var target: Option[Node] = None
 }
 
 /////////////////////
@@ -52,8 +74,8 @@ class AssignOrNamedArgNode(val lhsNode: NodeImpl, val rhsNode: NodeImpl) extends
   children = lhsNode :: rhsNode :: Nil
 }
 
-class BindNode(val bodyNode: NodeImpl) extends ScalaTree("bind") {
-  children = bodyNode :: Nil
+class BindNode(val nameNode: NameNode, val bodyNode: NodeImpl) extends ScalaTree("bind") with IsDef {
+  children = nameNode :: bodyNode :: Nil
 }
 
 class BlockNode(val initNodes: List[NodeImpl], val lastNode: NodeImpl)
@@ -66,19 +88,19 @@ class CaseDefNode(val patNode: NodeImpl, val guardNode: NodeImpl, val bodyNode: 
   children = patNode :: guardNode :: bodyNode :: Nil
 }
 
-class ClassDefNode(val mods: List[ModifierNode], val name: NameNode,
+class ClassDefNode(val mods: List[ModifierNode], val nameNode: NameNode,
                    val tParamNodes: List[TypeDefNode], val template: TemplateNode)
-  extends ScalaTree("class") {
+  extends ScalaTree("class") with IsDef {
 
-  children = mods ::: name :: tParamNodes ::: template :: Nil
+  children = mods ::: nameNode :: tParamNodes ::: template :: Nil
 }
 
-class DefDefNode(val mods: List[ModifierNode], val tParamNodes: List[TypeDefNode],
+class DefDefNode(val mods: List[ModifierNode], val nameNode: NameNode, val tParamNodes: List[TypeDefNode],
                  val vParamNodesS: List[List[ValDefNode]],
                  val tptNode: NodeImpl, val rhsNode: NodeImpl)
-  extends ScalaTree("def") {
+  extends ScalaTree("def") with IsDef {
 
-  children = mods ::: tParamNodes ::: vParamNodesS.flatten ::: tptNode :: rhsNode :: Nil
+  children = mods ::: nameNode :: tParamNodes ::: vParamNodesS.flatten ::: tptNode :: rhsNode :: Nil
 }
 
 class EmptyNode extends ScalaTree("empty") with ScalaLeaf
@@ -87,10 +109,10 @@ class FunctionNode(val vParamNodes: List[ValDefNode], val bodyNode: NodeImpl) ex
   children = vParamNodes :+ bodyNode
 }
 
-class IdentNode(val name: NameNode) extends ScalaTree(s"ident: ${name.name}") with IdentifiedNode {
-  children = name :: Nil
+class IdentNode(val nameNode: NameNode) extends ScalaTree("ident") with IsRef {
+  children = nameNode :: Nil
 
-  def id: Option[Node] = Some(name)
+  def predefined: Boolean = false
 }
 
 class IfNode(val condNode: NodeImpl, val thenNode: NodeImpl, val elseNode: NodeImpl) extends ScalaTree("if") {
@@ -105,14 +127,21 @@ class LabelDefNode(val paramNodes: List[IdentNode], val rhsNode: NodeImpl) exten
   children = paramNodes :+ rhsNode
 }
 
-class LiteralNode(val value: Any) extends ScalaTree(s"literal: $value") with ScalaLeaf
+class LiteralNode(val value: Any) extends ScalaTree("literal") with ScalaLeaf {
+  override def toString: String = {
+    val prefix = if (problem.isDefined) "error: " else ""
+    s"$prefix$kind($value)"
+  }
+}
 
 class MatchNode(selNode: NodeImpl, caseNodes: List[CaseDefNode]) extends ScalaTree("match") {
   children = selNode :: caseNodes
 }
 
-class ModuleDefNode(val mods: List[ModifierNode], val name: NameNode, val template: TemplateNode) extends ScalaTree("module") {
-  children = mods ::: name :: template :: Nil
+class ModuleDefNode(val mods: List[ModifierNode], val nameNode: NameNode, val template: TemplateNode)
+  extends ScalaTree("module") with HasNameNode {
+
+  children = mods ::: nameNode :: template :: Nil
 }
 
 class NewNode(val tptNode: NodeImpl) extends ScalaTree("new") {
@@ -129,7 +158,9 @@ class ReturnNode(val exprNode: NodeImpl) extends ScalaTree("return") {
   children = exprNode :: Nil
 }
 
-class SelectNode(val qualifierNode: NodeImpl, val nameNode: NameNode) extends ScalaTree("select") {
+class SelectNode(val qualifierNode: NodeImpl, val nameNode: NameNode)
+  extends ScalaTree("select") with HasNameNode {
+
   children = qualifierNode :: nameNode :: Nil
 }
 
@@ -173,8 +204,8 @@ class UnApplyNode(val funNode: NodeImpl, val argNodes: List[NodeImpl]) extends S
   children = funNode :: argNodes
 }
 
-class ValDefNode(val modNodes: List[ModifierNode], val name: NameNode, val tptNode: NodeImpl, val rhsNode: NodeImpl)
-  extends ScalaTree("val") {
+class ValDefNode(val modNodes: List[ModifierNode], val nameNode: NameNode, val tptNode: NodeImpl, val rhsNode: NodeImpl)
+  extends ScalaTree("val") with HasNameNode {
 
-  children = modNodes ::: (name :: tptNode :: rhsNode :: Nil)
+  children = modNodes ::: (nameNode :: tptNode :: rhsNode :: Nil)
 }
