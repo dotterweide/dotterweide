@@ -3,7 +3,7 @@ lazy val baseNameL  = baseName.toLowerCase
 
 lazy val commonSettings = Seq(
   version                   := "0.1.0-SNAPSHOT",
-//  organization              := "de.sciss",
+  organization              := "de.sciss",  // for now, so we can publish artifacts
   homepage                  := Some(url(s"https://github.com/dotterweide/dotterweide")),
   licenses                  := Seq(lgpl2),
   scalaVersion              := "2.12.8",

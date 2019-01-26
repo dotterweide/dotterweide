@@ -29,5 +29,6 @@
 ## Scala
 
  - we need the node structure to be able to perform most actions,
-   such as find-usages, go-to-definition; also double-click selection
-   of code
+   such as double-click selection of code (fall back to tokens if
+   no structure found)
+ 

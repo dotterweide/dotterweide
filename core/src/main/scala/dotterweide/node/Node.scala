@@ -46,20 +46,18 @@ trait Node extends Evaluable with Translatable with Optimizable {
   def parents: ISeq[Node] = {
     def of(node: Node): Stream[Node] = {
       node.parent match {
-        case Some(parent) => parent #:: of(parent)
-        case None => Stream.empty
+        case Some(parent)   => parent #:: of(parent)
+        case None           => Stream.empty
       }
     }
     of(this)
   }
 
-//  def root: Node = parents.lastOption.getOrElse(this)
-
   def previousSiblings: ISeq[Node] = {
     def of(node: Node): Stream[Node] = {
       node.previousSibling match {
-        case Some(sibling) => sibling #:: of(sibling)
-        case None => Stream.empty
+        case Some(sibling)  => sibling #:: of(sibling)
+        case None           => Stream.empty
       }
     }
     of(this)
@@ -68,8 +66,8 @@ trait Node extends Evaluable with Translatable with Optimizable {
   def nextSiblings: ISeq[Node] = {
     def of(node: Node): Stream[Node] = {
       node.nextSibling match {
-        case Some(sibling) => sibling #:: of(sibling)
-        case None => Stream.empty
+        case Some(sibling)  => sibling #:: of(sibling)
+        case None           => Stream.empty
       }
     }
     of(this)
