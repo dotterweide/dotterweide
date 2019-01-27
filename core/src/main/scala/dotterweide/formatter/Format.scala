@@ -23,4 +23,6 @@ trait Format {
   def distanceFor(a: TokenKind, b: TokenKind): Distance
 
   def indentDeltaFor(a: TokenKind, b: TokenKind): Int
+
+  def defaultTabSize: Int
 }

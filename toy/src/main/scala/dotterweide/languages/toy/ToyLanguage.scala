@@ -46,7 +46,7 @@ object ToyLanguage extends Language {
 
   def format: Format = ToyFormat
 
-  def comment = "//"
+  def lineCommentPrefix = "//"
 
   def inspections: ISeq[Inspection] = List(ReturnOutsideFunction, DuplicateIdentifier, UnresolvedReference,
     VoidValue, Applicability, TypeMismatch, OperatorApplication, IntegerRange, PrefixApplication,

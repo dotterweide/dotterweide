@@ -45,7 +45,7 @@ class ScalaLanguage extends Language {
   def format: Format = ScalaFormat
 
   /** The syntactic prefix for line comments. */
-  def comment: String = "//"
+  def lineCommentPrefix: String = "//"
 
   def inspections: ISeq[Inspection] = Nil
 

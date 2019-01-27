@@ -43,7 +43,7 @@ object LispLanguage extends Language {
 
   def format: Format = LispFormat
 
-  def comment = ";"
+  def lineCommentPrefix = ";"
 
   def inspections: ISeq[Inspection] = Nil
 

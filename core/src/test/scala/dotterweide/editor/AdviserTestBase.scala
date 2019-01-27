@@ -21,7 +21,7 @@ import dotterweide.lexer.Lexer
 import dotterweide.parser.SyncParser
 import org.junit.Assert._
 
-abstract class AdviserTestBase(lexer: Lexer, parser: SyncParser, adviser: Adviser) {
+abstract class AdviserTestBase(lexer: Lexer, parser: SyncParser, adviser: SyncAdviser) {
   protected def assertVariantsAre(code: String)(expected: String*): Unit = {
     assertVariants(code, _.toList == expected.toList)
   }
@@ -35,7 +35,7 @@ abstract class AdviserTestBase(lexer: Lexer, parser: SyncParser, adviser: Advise
   }
 
   private def assertVariants(code: String, check: Seq[String] => Boolean): Unit = {
-    val label = Adviser.Anchor
+    val label = adviser.anchorLabel
     val s     = code.replaceFirst("\\|", label)
     val root  = parser.parse(lexer.analyze(s))
     val anchor = root.elements.find(it => it.isLeaf && it.span.text.contains(label))

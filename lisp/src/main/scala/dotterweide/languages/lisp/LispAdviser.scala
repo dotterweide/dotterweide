@@ -17,7 +17,7 @@
 
 package dotterweide.languages.lisp
 
-import dotterweide.editor.{Adviser, Variant}
+import dotterweide.editor.{SyncAdviser, Variant}
 import dotterweide.languages.lisp.core.CoreFunction
 import dotterweide.languages.lisp.library.Library
 import dotterweide.languages.lisp.node.SymbolNode
@@ -25,11 +25,11 @@ import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
 
-object LispAdviser extends Adviser {
-  def variants(root: Node, anchor: Node): ISeq[Variant] = {
-    anchor.parent match {
+object LispAdviser extends SyncAdviser {
+  def variants(root: Node, anchorNode: Node): ISeq[Variant] = {
+    anchorNode.parent match {
       case Some(symbol: SymbolNode) =>
-        val localSymbols = symbol.accessibleSymbols.map(_.identifier).filter(!_.endsWith(Adviser.Anchor))
+        val localSymbols = symbol.accessibleSymbols.map(_.identifier).filter(!_.endsWith(anchorLabel))
         val symbols = localSymbols ++ CoreFunction.Names ++ Library.instance.symbols
         symbols.map(name => Variant(name, name, 0))
       case _ => Nil

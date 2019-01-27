@@ -21,6 +21,6 @@ import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
 
-class MockAdviser extends Adviser {
+class MockAdviser extends SyncAdviser {
   def variants(root: Node, anchor: Node): ISeq[Variant] = Nil
 }

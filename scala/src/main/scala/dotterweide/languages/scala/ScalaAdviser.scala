@@ -12,11 +12,11 @@
 
 package dotterweide.languages.scala
 
-import dotterweide.editor.{Adviser, Variant}
+import dotterweide.editor.{SyncAdviser, Variant}
 import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
 
-object ScalaAdviser extends Adviser {
-  def variants(root: Node, anchor: Node): ISeq[Variant] = Nil
+object ScalaAdviser extends SyncAdviser {
+  def variants(root: Node, anchor: Node): ISeq[Variant] = Nil // XXX TODO
 }

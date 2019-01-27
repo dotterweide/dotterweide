@@ -18,13 +18,13 @@
 package dotterweide.languages.toy
 
 import dotterweide.Extensions._
-import dotterweide.editor.{Adviser, Variant}
+import dotterweide.editor.{SyncAdviser, Variant}
 import dotterweide.languages.toy.node._
 import dotterweide.node.{Expression, Node}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-object ToyAdviser extends Adviser {
+object ToyAdviser extends SyncAdviser {
   private val PredefinedFunctions   = List("print", "println").map(asFunction)
   private val DefinitionKeywords    = List("def", "var").map(asKeyword)
   private val ControlKeywords       = List("if", "while").map(asControl)

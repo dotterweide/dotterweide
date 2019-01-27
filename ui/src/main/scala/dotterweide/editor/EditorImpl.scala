@@ -34,7 +34,8 @@ import scala.collection.immutable.{Seq => ISeq}
 private class EditorImpl(val document: Document, val data: Data, val holder: ErrorHolder,
                          lexer: Lexer, coloring: Coloring, matcher: BraceMatcher,
                          format: Format, adviser: Adviser, listRenderer: ListCellRenderer[AnyRef],
-                         comment: String, history: History)(implicit val async: Async) extends Editor {
+                         lineCommentPrefix: String, history: History)
+                        (implicit val async: Async) extends Editor {
 
   private val grid = {
     val pIn = Pane.getInsets
@@ -45,12 +46,11 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   private val NormalFont = new Font(coloring.fontFamily, Font.PLAIN, coloring.fontSize)
 
-  private val TabSize = 2
-
   private lazy val renderingHints = Option(Toolkit.getDefaultToolkit.getDesktopProperty("awt.font.desktophints"))
 
   private val controller: Controller =
-    new ControllerImpl(document, data, terminal, grid, adviser, new FormatterImpl(format), TabSize, comment, history)
+    new ControllerImpl(document, data, terminal, grid, adviser,
+      new FormatterImpl(format), tabSize = format.defaultTabSize, lineCommentPrefix = lineCommentPrefix, history)
 
   private val scroll = new JScrollPane(Pane)
 

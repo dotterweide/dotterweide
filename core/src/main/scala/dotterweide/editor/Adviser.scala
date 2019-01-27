@@ -17,17 +17,48 @@
 
 package dotterweide.editor
 
+import dotterweide.document.Document
 import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
-
-trait Adviser {
-  def variants(root: Node, anchor: Node): ISeq[Variant]
-}
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 object Adviser {
-  /** An intermediate label inserted into the text to mark completion point. */
-  val Anchor = "ANCHOR" // XXX TODO --- surely this does no work for every parser?
+  val DefaultAnchor = "ANCHOR"
+}
+trait Adviser {
+  /** @param offset the current cursor position
+    */
+  def variantsAsync(document: Document, data: Data, offset: Int)
+                   (implicit async: Async): Future[(String, ISeq[Variant])]
+}
+
+trait SyncAdviser extends Adviser {
+  def anchorLabel: String = Adviser.DefaultAnchor
+
+  def variantsAsync(document: Document, data: Data, offset: Int)
+                   (implicit async: Async): Future[(String, ISeq[Variant])] = {
+    document.insert(offset, anchorLabel)
+    val fut = data.computeStructure()
+    val tr  = async.await(fut)
+    document.remove(offset, offset + anchorLabel.length)
+    tr match {
+      case Success(structure) =>
+        val tuple = structure.flatMap { root =>
+          root.elements.find(it => it.isLeaf && it.span.text.contains(anchorLabel)).map { anchorNode =>
+            val query = document.text(anchorNode.span.begin, offset)
+            val list  = variants(root, anchorNode)
+            (query, list)
+          }
+        } .getOrElse(("", Nil))
+        Future.successful(tuple)
+
+      case Failure(ex) => Future.failed(ex)
+    }
+  }
+
+  def variants(root: Node, anchorNode: Node): ISeq[Variant]
 }
 
 case class Variant(title: String, content: String, shift: Int) {

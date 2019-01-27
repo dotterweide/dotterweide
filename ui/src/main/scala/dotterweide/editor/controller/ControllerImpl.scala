@@ -31,7 +31,8 @@ import dotterweide.node.{IdentifiedNode, Node}
   * - control and mouse hover set terminal's `hover`
   */
 class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: Grid, adviser: Adviser,
-                     formatter: Formatter, tabSize: Int, comment: String, history: History)(implicit async: Async)
+                     formatter: Formatter, tabSize: Int, lineCommentPrefix: String, history: History)
+                    (implicit async: Async)
   extends Controller {
 
   //TODO extract to some extension (maybe using brace matcher)
@@ -48,7 +49,8 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   private var origin = 0
 
   def actions: EditorActions =
-    new Actions(document, terminal, data, adviser, formatter, tabSize, comment, history)
+    new Actions(document, terminal, data, adviser, formatter, tabSize = tabSize,
+      lineCommentPrefix = lineCommentPrefix, history = history)
 
   def processKeyPressed(e: KeyEvent): Unit = {
     if (isModifierKey(e.getKeyCode)) return

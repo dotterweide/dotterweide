@@ -23,6 +23,8 @@ import dotterweide.formatter.Distance._
 import dotterweide.formatter.{Distance, Format}
 
 object ToyFormat extends Format {
+  def defaultTabSize: Int = 2
+
   def distanceFor(a: TokenKind, b: TokenKind): Distance = (a, b) match {
     case (_, PLUS)    => Space
     case (PLUS, _)    => Space

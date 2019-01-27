@@ -38,6 +38,6 @@ class LispAdviserTest extends AdviserTestBase(LispLexer, LispParser, LispAdviser
 
   @Test
   def anchorExclusion(): Unit = {
-    assertVariantsExclude("(def |)")(Adviser.Anchor)
+    assertVariantsExclude("(def |)")(Adviser.DefaultAnchor)
   }
 }

@@ -22,6 +22,8 @@ import dotterweide.formatter.{Distance, Format}
 import dotterweide.formatter.Distance._
 
 class MockFormat extends Format {
+  def defaultTabSize: Int = 2
+
   def distanceFor(a: TokenKind, b: TokenKind): Distance = Joint
 
   def indentDeltaFor(a: TokenKind, b: TokenKind) = 0

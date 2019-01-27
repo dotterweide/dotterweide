@@ -29,10 +29,13 @@ import scala.collection.immutable.{Seq => ISeq}
 trait Language {
   def name: String
 
+  /** Human readable string for UI presentation. */
   def description: String
 
+  /** Syntactic analysis. */
   def lexer: Lexer
 
+  /** Grammatical and semantic analysis. */
   def parser: Parser
 
   /** A map from color scheme names to the schemes. */
@@ -47,7 +50,7 @@ trait Language {
   def format: Format
 
   /** The syntactic prefix for line comments. */
-  def comment: String
+  def lineCommentPrefix: String
 
   def inspections: ISeq[Inspection]
 

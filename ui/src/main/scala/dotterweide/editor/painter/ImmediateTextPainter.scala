@@ -78,7 +78,7 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
   private def isRelevant(replacement: Replacement): Boolean =
     !contains(replacement.before, '\n') && !contains(replacement.after, '\n') &&
       !(replacement.after.length == 2 && Pairs.contains(replacement.after.toString)) &&
-        replacement.after != Adviser.Anchor
+        replacement.after != Adviser.DefaultAnchor
 
   private def tailLengthFrom(offset: Int): Int = {
     val location = document.toLocation(offset)

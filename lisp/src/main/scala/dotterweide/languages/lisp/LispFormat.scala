@@ -23,6 +23,9 @@ import dotterweide.languages.lisp.LispTokens._
 import dotterweide.lexer.TokenKind
 
 object LispFormat extends Format {
+
+  def defaultTabSize: Int = 2
+
   def distanceFor(a: TokenKind, b: TokenKind): Distance = (a, b) match {
     case (LPAREN | LBRACKET, _)                           => Joint
     case (_, RPAREN | RBRACKET)                           => Joint

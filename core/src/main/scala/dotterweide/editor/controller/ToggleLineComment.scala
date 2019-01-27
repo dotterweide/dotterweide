@@ -35,7 +35,7 @@ import scala.collection.immutable.{Seq => ISeq}
   *      - no. then add line comment. if line was empty, place cursor after comment chars, otherwise
   *        move cursor to next line.
   */
-private class ToggleLineComment(document: Document, terminal: Terminal, comment: String) extends Action {
+private class ToggleLineComment(document: Document, terminal: Terminal, prefix: String) extends Action {
   def name: String        = "Toggle Line Comment"
   def mnemonic: Char      = 'T'
   def keys: ISeq[String]  = "ctrl pressed SLASH" :: Nil
@@ -63,7 +63,7 @@ private class ToggleLineComment(document: Document, terminal: Terminal, comment:
     }
 
     val hasSelection      = oldSelection.isDefined
-    val addComment        = !tuples.forall(_._2.trim.startsWith(comment))
+    val addComment        = !tuples.forall(_._2.trim.startsWith(prefix))
     val csrAfterSelBegin  = oldSelection.exists(_.begin < terminal.offset)
     val moveCursor        = !hasSelection
 
@@ -71,17 +71,17 @@ private class ToggleLineComment(document: Document, terminal: Terminal, comment:
     // make sure we go backwards, so intervals are valid during editing!
     tuples.reverseIterator.foreach { case (interval, line) =>
       if (addComment) {
-        document.insert(interval.begin, comment)
-        if (moveCursor && terminal.offset > interval.begin) terminal.offset += comment.length
+        document.insert(interval.begin, prefix)
+        if (moveCursor && terminal.offset > interval.begin) terminal.offset += prefix.length
       } else {
-        val i = interval.begin + line.indexOf(comment)
-        val commentInterval = Interval(i, i + comment.length)
+        val i = interval.begin + line.indexOf(prefix)
+        val commentInterval = Interval(i, i + prefix.length)
         document.remove(commentInterval)
         if (moveCursor) {
           if (commentInterval.touches(terminal.offset)) {
             terminal.offset = i
           } else {
-            terminal.offset -= comment.length
+            terminal.offset -= prefix.length
           }
         }
       }
