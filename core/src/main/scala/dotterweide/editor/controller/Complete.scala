@@ -19,7 +19,6 @@ package dotterweide.editor.controller
 
 import dotterweide.document.Document
 import dotterweide.editor.{Action, Adviser, Async, Data, History, Terminal, Variant}
-import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
 
@@ -40,6 +39,8 @@ private class Complete(document: Document, terminal: Terminal, data: Data,
   }
 
   private def applyWithResult(query: String, variants: ISeq[Variant]): Unit = {
+//    println("_______")
+//    variants.foreach(v => println(s"""${v.productPrefix}(title = "${v.title}", content = "${v.content}", shift = ${v.shift})"""))
     val filtered  = variants.filter(_.content.startsWith(query))
     filtered match {
       case Seq() =>

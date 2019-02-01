@@ -61,6 +61,12 @@ trait SyncAdviser extends Adviser {
   def variants(root: Node, anchorNode: Node): ISeq[Variant]
 }
 
+/** A candidate for completion.
+  *
+  * @param title    the "word" of the completion, e.g. method name
+  * @param content  the complete text to be inserted, e.g. with trailing spaces or parentheses
+  * @param shift    the cursor motion after insertion, e.g. negative to step back into parentheses
+  */
 case class Variant(title: String, content: String, shift: Int) {
-  override def toString: String = title
+  override def toString: String = title   // so it can be directly used in a list-view
 }

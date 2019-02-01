@@ -20,3 +20,5 @@ The project build with [sbt](http://www.scala-sbt.org/) with the main Scala vers
 To run the demo, use `sbt dotterweide-demo/run`. Note that the project in progress, there may still be
 `???` lurking in the code.
 
+Note that for Scala 2.13.0-M5 compilation, you currently need a locally published version 0.2.7-SNAPSHOT
+of [scalariform](https://github.com/Sciss/scalariform/tree/sciss_work).

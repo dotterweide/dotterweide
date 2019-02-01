@@ -7,7 +7,7 @@ lazy val commonSettings = Seq(
   homepage                  := Some(url(s"https://github.com/dotterweide/dotterweide")),
   licenses                  := Seq(lgpl2),
   scalaVersion              := "2.12.8",
-  crossScalaVersions        := Seq("2.12.8", "2.11.12"),
+  crossScalaVersions        := Seq("2.13.0-M5", "2.12.8", "2.11.12"),
   scalacOptions            ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
   fork in Test              := false,
   fork in (Compile, run)    := true,
@@ -82,9 +82,12 @@ lazy val scalaLang = project.withId(s"$baseNameL-scala").in(file("scala"))
     description := s"$baseName - Scala language",
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-actor"     % deps.main.akka,
-      "org.scala-lang"    %  "scala-compiler" % scalaVersion.value,
-      "org.scalariform"   %% "scalariform"    % deps.main.scalariform,
-    )
+      "org.scala-lang"    %  "scala-compiler" % scalaVersion.value
+    ),
+    libraryDependencies += {
+      val v = if (scalaVersion.value == "2.13.0-M5") "0.2.7-SNAPSHOT" else deps.main.scalariform
+      "org.scalariform"   %% "scalariform"    % v
+    }
   )
 
 lazy val ui = project.withId(s"$baseNameL-ui").in(file("ui"))

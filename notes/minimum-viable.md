@@ -28,6 +28,7 @@ This would work for Mellite. For ScalaCollider-Swing, additionally the following
  - [ ] customizable font size
  - [ ] possible to disable diagnostic as we run through REPL mode
  - [ ] API for symbol-at-cursor, to trigger documentation look-up
+ - [ ] performance needs to be acceptable on Raspberry Pi
 
 -----
 
@@ -35,5 +36,5 @@ The following features are "nice to have" but lower priority:
 
  - [ ] Editor: find-and-replace dialog
  - [ ] Navigation: jump to matching bracket
- - [ ] Incremental selection of enclosing context
+ - [ ] Incremental selection of enclosing context (ctrl-w in IntelliJ)
  

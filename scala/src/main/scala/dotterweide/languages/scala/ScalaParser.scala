@@ -50,12 +50,12 @@ class ScalaParser extends Parser {
 
   private case class Compile(text: String)
 
-  private class CompilerActor extends Actor {
+  private class CompilerActor extends Actor with AbstractCompilerActor {
     private val log = Logging(context.system, this)
 
     private val reporter = new StoreReporter
 
-    private lazy val c: Global = {
+    protected lazy val c: Global = {
       val outputDir = new VirtualDirectory("<virtual-dir>", None)
       val settings  = new Settings(err => Console.err.println(err))
 
@@ -94,6 +94,10 @@ class ScalaParser extends Parser {
       case m =>
         log.error(s"Unknown message $m")
     }
+
+//    private def runComplete(): Unit = {
+//      c.completionsAt()
+//    }
 
     private def runCompile(text: String): NodeImpl = {
       val tree: c.Tree = compile(text)
@@ -264,7 +268,7 @@ class ScalaParser extends Parser {
             val rhsNode = parseChild1(rhs)
             new AssignNode(lhsNode, rhsNode)
 
-          case c.AssignOrNamedArg(lhs /* :Tree */, rhs /* :Tree */) =>
+          case /* c. */ NamedArg(lhs /* :Tree */, rhs /* :Tree */) =>
             val lhsNode = parseChild1(lhs)
             val rhsNode = parseChild1(rhs)
             new AssignOrNamedArgNode(lhsNode, rhsNode)

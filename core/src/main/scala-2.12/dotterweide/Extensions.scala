@@ -18,7 +18,7 @@
 package dotterweide
 
 import scala.collection.generic.CanBuildFrom
-import scala.reflect.{ClassTag, classTag}
+import scala.reflect.ClassTag
 
 object Extensions {
   import language.higherKinds
@@ -27,10 +27,10 @@ object Extensions {
 
   implicit class RichTraversable[CC[X] <: Traversable[X], A](val value: CC[A]) extends AnyVal {
     def filterBy[B](implicit m: ClassTag[B], cbf: CanBuildTo[B, CC]): CC[B] =
-      value.filter(classTag[B].runtimeClass.isInstance(_)).map[B, CC[B]](_.asInstanceOf[B])(collection.breakOut)
+      value.filter(m.runtimeClass.isInstance(_)).map[B, CC[B]](_.asInstanceOf[B])(collection.breakOut)
 
-    def findBy[B: ClassTag]: Option[B] =
-      value.find(classTag[B].runtimeClass.isInstance(_)).map(_.asInstanceOf[B])
+    def findBy[B](implicit m: ClassTag[B]): Option[B] =
+      value.find(m.runtimeClass.isInstance(_)).map(_.asInstanceOf[B])
 
     def collectAll[B](pf: PartialFunction[A, B])(implicit cbf: CanBuildTo[B, CC]): Option[CC[B]] =
       if (value.forall(pf.isDefinedAt)) Some(value.collect(pf)(collection.breakOut)) else None
