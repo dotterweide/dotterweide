@@ -17,7 +17,7 @@
 
 package dotterweide.languages.lisp
 
-import dotterweide.editor.{Adviser, ColorScheme, Coloring}
+import dotterweide.editor.{Adviser, ColorScheme, Styling}
 import dotterweide.formatter.Format
 import dotterweide.inspection.Inspection
 import dotterweide.lexer.{Lexer, TokenKind}
@@ -35,9 +35,9 @@ object LispLanguage extends Language {
 
   def parser: Parser = LispParser
 
-  def colorings: Map[String, Coloring] = Map(
-    "Light" -> new LispColoring(ColorScheme.LightColors),
-    "Dark"  -> new LispColoring(ColorScheme.DarkColors))
+  def colorings: Map[String, Styling] = Map(
+    "Light" -> new LispStyling(ColorScheme.LightColors),
+    "Dark"  -> new LispStyling(ColorScheme.DarkColors))
 
   def complements: ISeq[(TokenKind, TokenKind)] = List(LispTokens.Parens, LispTokens.Brackets)
 

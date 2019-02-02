@@ -24,7 +24,7 @@ import java.text.AttributedString
 import dotterweide.Interval
 import dotterweide.document.Location
 import dotterweide.editor.painter.TextPainter._
-import dotterweide.editor.{Area, Coloring, Pass}
+import dotterweide.editor.{Area, FontSettings, Pass, Styling}
 import dotterweide.lexer.{Lexer, Token}
 
 import scala.collection.immutable.{Seq => ISeq}
@@ -43,6 +43,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
   private var string            = EmptyString
   private var stringValid       = true
   private var singleLineChanged = false
+  private val ascent            = context.grid.ascent
 
   document.onChange { event =>
     stringValid = false
@@ -60,7 +61,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
     }
   }
 
-  coloring.onChange {
+  styling.onChange {
     stringValid = false
 
     notifyObservers(canvas.visibleRectangle)
@@ -86,7 +87,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
     if (data.pass == Pass.Text) {
       data.nextPass()
     }
-    string      = render(document.text, data.tokens, coloring)
+    string      = render(document.text, data.tokens, styling, font)
     stringValid = true
   }
 
@@ -97,12 +98,12 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
 
     if (lineText.length > 0) {
       val tokens    = lexer.analyze(lineText).toList
-      val string    = render(lineText, tokens, coloring)
+      val string    = render(lineText, tokens, styling, font)
 
       val decorated = decorate(string, decorators, lineInterval, - lineInterval.begin)
       val iterator  = decorated.getIterator
 
-      g.drawString(iterator, rectangle.x, rectangle.y + Ascent)
+      g.drawString(iterator, rectangle.x, rectangle.y + ascent)
     }
   }
 
@@ -119,26 +120,24 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
       if (!interval.empty) {
         val iterator  = decorated.getIterator(null /* attributes -- all! */, interval.begin, interval.end)
         val p         = grid.toPoint(Location(line, area.indent))
-        g.drawString(iterator, p.x, p.y + Ascent)
+        g.drawString(iterator, p.x, p.y + ascent)
       }
     }
   }
 }
 
 private object TextPainter {
-  final val Ascent = 15  // XXX TODO --- hard coded for one particular font size
-
   private val EmptyString = new AttributedString("")
 
-  private def render(text: String, tokens: ISeq[Token], coloring: Coloring): AttributedString = {
+  private def render(text: String, tokens: ISeq[Token], styling: Styling, font: FontSettings): AttributedString = {
     val result = new AttributedString(text)
 
     if (!text.isEmpty) {
-      result.addAttribute(TextAttribute.FAMILY, coloring.fontFamily )
-      result.addAttribute(TextAttribute.SIZE  , coloring.fontSize   )
+      result.addAttribute(TextAttribute.FAMILY, font.family)
+      result.addAttribute(TextAttribute.SIZE  , font.size  )
 
       tokens.foreach { token =>
-        val attributes  = coloring.attributesFor(token.kind)
+        val attributes  = styling.attributesFor(token.kind)
         val span        = token.span
         attributes.decorate(result, span.begin, span.end)
       }

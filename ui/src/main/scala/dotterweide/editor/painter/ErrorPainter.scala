@@ -22,7 +22,7 @@ import java.awt.{Color, Graphics, Rectangle}
 
 import dotterweide.Interval
 import dotterweide.editor.painter.ErrorPainter._
-import dotterweide.editor.{Coloring, Error, ErrorHolder, ErrorsChanged}
+import dotterweide.editor.{Styling, Error, ErrorHolder, ErrorsChanged}
 import dotterweide.inspection.Decoration
 
 import scala.collection.immutable.{Seq => ISeq}
@@ -48,23 +48,23 @@ private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends
     val filledRectangles = relevant(rectanglesOf(_ == Decoration.Fill))
 
     if (filledRectangles.nonEmpty) {
-      g.setColor(coloring(Coloring.FillBackground))
+      g.setColor(styling(Styling.FillBackground))
       filledRectangles.foreach(fill(g, _))
     }
 
     val underlinedRectangles = relevant(rectanglesOf(_ == Decoration.Underline))
 
     if (underlinedRectangles.nonEmpty) {
-      g.setColor(coloring(Coloring.UnderlineForeground))
+      g.setColor(styling(Styling.UnderlineForeground))
       underlinedRectangles.foreach(r => drawWavyLine(g, r.x, r.y + r.height - 2, r.width))
     }
   }
 
   override def decorations: Map[Interval, Map[TextAttribute, Color]] = {
     val red = intervalsOf(_ == Decoration.Red)
-      .map(it => (it, Map(TextAttribute.FOREGROUND -> coloring(Coloring.RedForeground))))
+      .map(it => (it, Map(TextAttribute.FOREGROUND -> styling(Styling.RedForeground))))
     val dim = intervalsOf(_ == Decoration.Dim)
-      .map(it => (it, Map(TextAttribute.FOREGROUND -> coloring(Coloring.DimForeground))))
+      .map(it => (it, Map(TextAttribute.FOREGROUND -> styling(Styling.DimForeground))))
     (red ++ dim).toMap
   }
 

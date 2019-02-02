@@ -19,7 +19,7 @@ package dotterweide.editor.painter
 
 import java.awt.{Graphics, Rectangle}
 
-import dotterweide.editor.{Coloring, HighlightsChange}
+import dotterweide.editor.{Styling, HighlightsChange}
 
 private class HighlightPainter(context: PainterContext) extends AbstractPainter(context) {
   terminal.onChange {
@@ -36,7 +36,7 @@ private class HighlightPainter(context: PainterContext) extends AbstractPainter(
       .map(_.intersection(bounds)).filterNot(_.isEmpty)
 
     if (rectangles.nonEmpty) {
-      g.setColor(coloring(Coloring.HighlightBackground))
+      g.setColor(styling(Styling.HighlightBackground))
       rectangles.foreach(fill(g, _))
     }
   }

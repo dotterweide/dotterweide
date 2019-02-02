@@ -19,14 +19,14 @@ package dotterweide.ide
 
 import dotterweide.Example
 import dotterweide.editor.{Async, Data, EditorActions, Runner, Action => _Action}
-import dotterweide.ide.action.{ColoringAction, ExampleAction, ExportToClassAction, InterpretAction, InvokeAction, NewAction, OpenAction, SaveAction, SaveAsAction, StopAction}
+import dotterweide.ide.action.{StylingAction, ExampleAction, ExportToClassAction, InterpretAction, InvokeAction, NewAction, OpenAction, SaveAction, SaveAsAction, StopAction}
 import javax.swing.KeyStroke
 
 import scala.swing.event.Key
 import scala.swing.{Action, CheckMenuItem, Component, Dimension, Frame, Menu, MenuBar, MenuItem, RadioMenuItem, Separator}
 
 private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Runner, invoker: Runner,
-                       launcher: Launcher, console: Console, coloring: DynamicColoring, examples: Seq[Example])
+                       launcher: Launcher, console: Console, coloring: DynamicStyling, examples: Seq[Example])
                       (implicit async: Async)
   extends MenuBar {
 
@@ -149,7 +149,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
   contents += new Menu("Coloring") {
     mnemonic = Key.C
     contents ++= coloring.names.map(it => new RadioMenuItem(it) {
-      action = new ColoringAction(coloring, it)
+      action = new StylingAction(coloring, it)
 
       coloring.onChange {
         updateSelection()

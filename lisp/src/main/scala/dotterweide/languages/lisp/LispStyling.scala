@@ -1,5 +1,5 @@
 /*
- *  ToyColoring.scala
+ *  LispStyling.scala
  *  (Dotterweide)
  *
  *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
@@ -15,15 +15,17 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide.languages.toy
+package dotterweide.languages.lisp
 
 import java.awt.Color
 
-import dotterweide.editor.{AbstractColoring, Attributes, Coloring, Style, Weight}
-import ToyTokens._
+import dotterweide.editor.{AbstractStyling, Attributes, Style, Styling, Weight}
+import dotterweide.languages.lisp.LispTokens._
 import dotterweide.lexer.TokenKind
 
-class ToyColoring(colors: Map[String, Color]) extends AbstractColoring(colors) {
+class LispStyling(colors: Map[String, Color])
+  extends AbstractStyling(colors) {
+
   def attributesFor(kind: TokenKind): Attributes = {
     val foreground  = apply(colorId(kind))
     val weight      = weightFor(kind)
@@ -32,21 +34,20 @@ class ToyColoring(colors: Map[String, Color]) extends AbstractColoring(colors) {
   }
 
   private def colorId(kind: TokenKind) = kind match {
-    case COMMENT                      => Coloring.Comment
-    case BOOLEAN_LITERAL              => Coloring.BooleanLiteral
-    case NUMBER_LITERAL               => Coloring.IntegerLiteral
-    case STRING_LITERAL               => Coloring.StringLiteral
-    case it if Keywords .contains(it) => Coloring.Keyword
-    case it if Types    .contains(it) => Coloring.Keyword
-    case _                            => Coloring.TextForeground
+    case COMMENT            => Styling.Comment
+    case BOOLEAN_LITERAL    => Styling.BooleanLiteral
+    case INTEGER_LITERAL    => Styling.IntegerLiteral
+    case CHARACTER_LITERAL  => Styling.CharLiteral
+    case STRING_LITERAL     => Styling.StringLiteral
+    case PREDEFINED_SYMBOL  => Styling.Keyword
+    case _                  => Styling.TextForeground
   }
 
   private def weightFor(token: TokenKind) = token match {
-    case BOOLEAN_LITERAL              => Weight.Bold
-    case STRING_LITERAL               => Weight.Bold
-    case it if Keywords .contains(it) => Weight.Bold
-    case it if Types    .contains(it) => Weight.Bold
-    case _                            => Weight.Normal
+    case BOOLEAN_LITERAL    => Weight.Bold
+    case STRING_LITERAL     => Weight.Bold
+    case PREDEFINED_SYMBOL  => Weight.Bold
+    case _                  => Weight.Normal
   }
 
   private def styleFor(token: TokenKind) = token match {

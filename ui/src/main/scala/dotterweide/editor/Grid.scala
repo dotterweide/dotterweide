@@ -19,34 +19,35 @@ package dotterweide.editor
 
 import java.awt.{Dimension, Point, Rectangle}
 
+import dotterweide.Observable
 import dotterweide.document.Location
-
-import scala.math.{ceil, floor, max}
 
 /** Grid for the mono-spaced characters of a text.
   * Can translate between cursor positions and visual pixel positions.
   */
-class Grid(val cellWidth: Int, val cellHeight: Int, 
-           val insetLeft: Int = 0, val insetTop: Int = 0, val insetRight: Int = 0, val insetBottom: Int = 0) {
+trait Grid extends Observable {
+
+  def cellWidth   : Int
+  def cellHeight  : Int
+  def ascent      : Int
+
+  def insetLeft   : Int
+  def insetTop    : Int
+  def insetRight  : Int
+  def insetBottom : Int
 
   /** Translates a visible (pixel) point to a virtual text (grid) location.
     * It does so by rounding down the coordinates to the next grid element.
     *
     * Opposite of `toPoint`.
     */
-  def toLocation(point: Point): Location = {
-    val line    = floor((point.y - insetTop ).toDouble / cellHeight.toDouble).toInt
-    val indent  = floor((point.x - insetLeft).toDouble / cellWidth .toDouble).toInt
-    Location(max(0, line), max(0, indent))
-  }
+  def toLocation(point: Point): Location
 
   /** Translates a virtual text (grid) location to a visible (pixel) point.
     *
     * Opposite of `toLocation`.
     */
-  def toPoint(location: Location): Point =
-    new Point(insetLeft + cellWidth * location.indent,
-      insetTop + cellHeight * location.line)
+  def toPoint(location: Location): Point
 
   /** Translates a visible (pixel) rectangle to a virtual text (grid) area.
     * It does so by rounding down the top and left coordinate, and rounding up the right and bottom
@@ -55,27 +56,13 @@ class Grid(val cellWidth: Int, val cellHeight: Int,
     *
     * Opposite of `toRectangle`.
     */
-  def toArea(rectangle: Rectangle): Area = {
-    val beginLine   = max(0, floor((rectangle.y - insetTop ).toDouble / cellHeight.toDouble).toInt)
-    val beginIndent = max(0, floor((rectangle.x - insetLeft).toDouble / cellWidth .toDouble).toInt)
-
-    val endLine   = ceil((rectangle.y - insetTop  + rectangle.height).toDouble / cellHeight.toDouble).toInt
-    val endIndent = ceil((rectangle.x - insetLeft + rectangle.width ).toDouble / cellWidth .toDouble).toInt
-
-    Area(beginLine, beginIndent, endIndent - beginIndent, endLine - beginLine)
-  }
+  def toArea(rectangle: Rectangle): Area
 
   /** Translates a virtual text (grid) area to a visible (pixel) rectangle.
     *
     * Opposite of `toArea`.
     */
-  def toRectangle(area: Area): Rectangle = {
-    val point = toPoint(Location(area.line, area.indent))
-    new Rectangle(point.x, point.y, cellWidth * area.width, cellHeight * area.height)
-  }
+  def toRectangle(area: Area): Rectangle
 
-  def toSize(lines: Int, maximumIndent: Int): Dimension = {
-    val edge = toPoint(Location(lines, maximumIndent))
-    new Dimension(edge.x + cellWidth + insetRight, edge.y + insetBottom)
-  }
+  def toSize(lines: Int, maximumIndent: Int): Dimension
 }

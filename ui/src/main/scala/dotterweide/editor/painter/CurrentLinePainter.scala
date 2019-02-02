@@ -19,7 +19,7 @@ package dotterweide.editor.painter
 
 import java.awt.{Graphics, Rectangle}
 
-import dotterweide.editor.{CaretMovement, Coloring}
+import dotterweide.editor.{CaretMovement, Styling}
 
 /** Simply paints the line in which is the cursor is located using `Coloring.CurrentLineBackground` */
 private class CurrentLinePainter(context: PainterContext) extends AbstractPainter(context) {
@@ -42,7 +42,7 @@ private class CurrentLinePainter(context: PainterContext) extends AbstractPainte
     val rectangle = lineRectangleAt(terminal.offset).intersection(bounds)
 
     if (!rectangle.isEmpty) {
-      g.setColor(coloring(Coloring.CurrentLineBackground))
+      g.setColor(styling(Styling.CurrentLineBackground))
       fill(g, rectangle)
     }
   }

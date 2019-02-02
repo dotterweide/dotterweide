@@ -154,7 +154,7 @@ class ControllerImplTest {
 
   protected def assertEffectIs(before: String, after: String)(f: ControllerImpl => Unit): Unit = {
     doAssertEffectIs(before, after) { (document, terminal) =>
-      val GridMock    = new Grid(cellWidth = 8, cellHeight = 8)
+      val GridMock    = new GridImpl(cellWidth0 = 8, cellHeight0 = 8, ascent0 = 5)
       implicit val async: Async = new AsyncImpl()
       val controller  = new ControllerImpl(document, new MockData(), terminal, GridMock, new MockAdviser(),
         new FormatterImpl(new MockFormat()), 2, "//", new HistoryImpl())

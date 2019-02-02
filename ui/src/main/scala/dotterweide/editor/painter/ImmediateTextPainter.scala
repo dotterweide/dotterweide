@@ -22,7 +22,7 @@ import java.awt.{Color, Graphics, Rectangle}
 import java.text.AttributedString
 
 import dotterweide.document.Replacement
-import dotterweide.editor.{ActionFinished, ActionProcessor, ActionStarted, Adviser, Area, Coloring}
+import dotterweide.editor.{ActionFinished, ActionProcessor, ActionStarted, Adviser, Area, Styling}
 import dotterweide.lexer.Lexer
 
 /** A text painter which becomes active, whenever the `processor`
@@ -42,9 +42,9 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
 
   override def immediate = true
 
-  private var lastEvent: Option[Replacement] = None
-
-  private var immediateAction: Boolean = false
+  private var lastEvent       = Option.empty[Replacement]
+  private var immediateAction = false
+  private val ascent          = context.grid.ascent
 
   processor.onChange {
     case ActionStarted(immediate) =>
@@ -134,22 +134,22 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
         fill(g, rectangle)
 
         val string = new AttributedString(after.toString)
-        string.addAttribute(TextAttribute.FAMILY, coloring.fontFamily )
-        string.addAttribute(TextAttribute.SIZE  , coloring.fontSize   )
+        string.addAttribute(TextAttribute.FAMILY, font.family)
+        string.addAttribute(TextAttribute.SIZE  , font.size  )
 
-        val attributes = coloring.attributesFor(token.kind)
+        val attributes = styling.attributesFor(token.kind)
         attributes.decorate(string, 0, after.length)
 
-        g.drawString(string.getIterator, rectangle.x, rectangle.y + TextPainter.Ascent)
+        g.drawString(string.getIterator, rectangle.x, rectangle.y + ascent)
       }
     }
 
-    g.setColor(coloring(Coloring.CaretForeground))
+    g.setColor(styling(Styling.CaretForeground))
     fill(g, caretRectangleAt(terminal.offset + math.max(0, delta)))
   }
 
   private def backgroundColorAt(offset: Int): Color = {
     val currentLine = document.lineNumberOf(offset) == document.lineNumberOf(terminal.offset)
-    if (currentLine) coloring(Coloring.CurrentLineBackground) else coloring(Coloring.TextBackground)
+    if (currentLine) styling(Styling.CurrentLineBackground) else styling(Styling.TextBackground)
   }
 }

@@ -23,7 +23,7 @@ import dotterweide.lexer.Lexer
 import javax.swing.border.EmptyBorder
 import javax.swing.{DefaultListCellRenderer, JComponent, JList, ListCellRenderer}
 
-private class VariantCellRenderer(lexer: Lexer, coloring: Coloring) extends ListCellRenderer[AnyRef] {
+private class VariantCellRenderer(lexer: Lexer, coloring: Styling) extends ListCellRenderer[AnyRef] {
   private val delegate = new DefaultListCellRenderer().asInstanceOf[ListCellRenderer[AnyRef]]
 
   override def getListCellRendererComponent(list: JList[_ <: AnyRef], value: AnyRef, index: Int,

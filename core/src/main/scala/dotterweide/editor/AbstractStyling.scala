@@ -1,5 +1,5 @@
 /*
- *  ColoringAction.scala
+ *  AbstractStyling.scala
  *  (Dotterweide)
  *
  *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
@@ -15,16 +15,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide.ide.action
+package dotterweide.editor
 
-import dotterweide.ide.DynamicColoring
-
-import scala.swing.Action
-
-/** An action to switch color schemes. */
-class ColoringAction(coloring: DynamicColoring, name: String) extends Action(name) {
-  mnemonic = name.charAt(0)
-
-  def apply(): Unit =
-    coloring.name = name
+abstract class AbstractStyling(colors: Map[String, Color]) extends Styling {
+  def apply(id: String): Color = colors.getOrElse(id,
+    throw new NoSuchElementException(s"Unknown color Id: $id"))
 }

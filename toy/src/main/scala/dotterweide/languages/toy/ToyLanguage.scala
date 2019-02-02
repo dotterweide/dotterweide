@@ -17,7 +17,7 @@
 
 package dotterweide.languages.toy
 
-import dotterweide.editor.{Adviser, ColorScheme, Coloring}
+import dotterweide.editor.{Adviser, ColorScheme, Styling}
 import dotterweide.formatter.Format
 import dotterweide.inspection.Inspection
 import dotterweide.languages.toy.ToyTokens._
@@ -38,9 +38,9 @@ object ToyLanguage extends Language {
 
   def parser: Parser = ProgramParser
 
-  def colorings: Map[String, Coloring] = Map(
-    "Light" -> new ToyColoring(ColorScheme.LightColors),
-    "Dark"  -> new ToyColoring(ColorScheme.DarkColors))
+  def colorings: Map[String, Styling] = Map(
+    "Light" -> new ToyStyling(ColorScheme.LightColors),
+    "Dark"  -> new ToyStyling(ColorScheme.DarkColors))
 
   def complements: ISeq[(TokenKind, TokenKind)] = List((LBRACE, RBRACE), (LPAREN, RPAREN))
 

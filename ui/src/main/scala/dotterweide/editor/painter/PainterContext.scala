@@ -18,7 +18,7 @@
 package dotterweide.editor.painter
 
 import dotterweide.document.Document
-import dotterweide.editor.{Canvas, Coloring, Data, Grid, Terminal}
+import dotterweide.editor.{Canvas, Data, FontSettings, Grid, Styling, Terminal}
 
 private case class PainterContext(document: Document, terminal: Terminal, data: Data,
-                                  canvas: Canvas, grid: Grid, coloring: Coloring)
+                                  canvas: Canvas, grid: Grid, styling: Styling, font: FontSettings)

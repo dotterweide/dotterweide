@@ -19,7 +19,7 @@ package dotterweide.editor.painter
 
 import java.awt.{Graphics, Rectangle}
 
-import dotterweide.editor.{CaretMovement, CaretVisibilityChanged, Coloring}
+import dotterweide.editor.{CaretMovement, CaretVisibilityChanged, Styling}
 
 // XXX TODO --- support overwrite mode (block cursor)
 
@@ -45,7 +45,7 @@ private class CaretPainter(context: PainterContext) extends AbstractPainter(cont
       val rectangle = caretRectangleAt(terminal.offset).intersection(bounds)
 
       if (!rectangle.isEmpty) {
-        g.setColor(coloring(Coloring.CaretForeground))
+        g.setColor(styling(Styling.CaretForeground))
         fill(g, rectangle)
       }
     }

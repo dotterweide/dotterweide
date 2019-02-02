@@ -19,14 +19,14 @@ package dotterweide.editor.painter
 
 import java.awt.{Graphics, Rectangle}
 
-import dotterweide.editor.Coloring
+import dotterweide.editor.Styling
 
 /** Simply fills the bounds with `Coloring.TextBackground` */
 private class BackgroundPainter(context: PainterContext) extends AbstractPainter(context) {
   def id = "background"
 
   def paint(g: Graphics, bounds: Rectangle): Unit = {
-    g.setColor(coloring(Coloring.TextBackground))
+    g.setColor(styling(Styling.TextBackground))
     fill(g, bounds)
   }
 }

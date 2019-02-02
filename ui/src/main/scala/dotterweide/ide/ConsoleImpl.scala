@@ -19,14 +19,14 @@ package dotterweide.ide
 
 import java.awt.{Color, Font}
 
-import dotterweide.editor.Coloring
+import dotterweide.editor.FontSettings
 import javax.swing.text.{AttributeSet, SimpleAttributeSet, StyleConstants}
 import javax.swing.{JTextPane, SwingUtilities}
 
-private class ConsoleImpl(coloring: Coloring) extends JTextPane with Console {
+private class ConsoleImpl(_font: FontSettings) extends JTextPane with Console {
   private val LinkColor = new Color(125, 121, 111)
 
-  setFont(new Font(coloring.fontFamily, Font.PLAIN, coloring.fontSize))
+  setFont(new Font(_font.family, Font.PLAIN, _font.size))
   setEditable(false)
 
   def print(s: String): Unit =

@@ -1,5 +1,5 @@
 /*
- *  Coloring.scala
+ *  Styling.scala
  *  (Dotterweide)
  *
  *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
@@ -20,15 +20,11 @@ package dotterweide.editor
 import dotterweide.Observable
 import dotterweide.lexer.TokenKind
 
-trait Coloring extends Function[String, Color] with Observable {
-  def fontFamily: String
-
-  def fontSize: Int
-
+trait Styling extends Function[String, Color] with Observable {
   def attributesFor(kind: TokenKind): Attributes
 }
 
-object Coloring {
+object Styling {
   val TextForeground            = "TextForeground"
   val TextBackground            = "TextBackground"
   val CurrentLineBackground     = "CurrentLineBackground"

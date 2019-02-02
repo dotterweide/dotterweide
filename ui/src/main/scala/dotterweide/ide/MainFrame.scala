@@ -21,13 +21,15 @@ import java.awt.event.{ActionEvent, ActionListener, FocusAdapter, FocusEvent}
 
 import dotterweide.Language
 import dotterweide.document.Location
-import dotterweide.editor.{Editor, EditorFactory, HistoryImpl, Pass}
+import dotterweide.editor.{Editor, EditorFactory, FontSettings, HistoryImpl, Pass}
 import javax.swing.Timer
 
 import scala.swing.event.{WindowClosed, WindowOpened}
 import scala.swing.{BorderPanel, Component, Frame, Orientation, ScrollPane, SplitPane}
 
-class MainFrame(language: Language, text: String) extends Frame {
+class MainFrame(language: Language, text: String, font: FontSettings = FontSettings.Default)
+  extends Frame {
+
   reactions += {
     case WindowOpened(_) =>
       timer.start()
@@ -43,20 +45,20 @@ class MainFrame(language: Language, text: String) extends Frame {
   }
 
   private val history       = new HistoryImpl()
-  private val coloring      = new DynamicColoring(language.colorings)
-  private val primaryEditor = EditorFactory.createEditorFor(language, history, coloring)
+  private val styling       = new DynamicStyling(language.colorings)
+  private val primaryEditor = EditorFactory.createEditorFor(language, history, styling, font)
 
   private lazy val secondaryEditor = {
     import primaryEditor.async
     EditorFactory.createEditorFor(primaryEditor.document,
-      primaryEditor.data, primaryEditor.holder, language, history, coloring)
+      primaryEditor.data, primaryEditor.holder, language, history, styling, font)
   }
 
   private val data = primaryEditor.data
 
   // a non-repeating timer to invoke the next data pass with a delay
   // (the delay is adjusted in the data observer)
-  private val timer = new Timer(10, new ActionListener() {
+  private val timer = new Timer(10, new ActionListener {
     def actionPerformed(e: ActionEvent): Unit =
       if (data.hasNextPass) {
         data.nextPass()
@@ -73,15 +75,15 @@ class MainFrame(language: Language, text: String) extends Frame {
     }
   }
 
-  private val status    = new StatusBar()
+  private val status    = new StatusBar
   private val tab       = new EditorTabImpl(language.fileType, history, primaryEditor, secondaryEditor)
-  private val console   = new ConsoleImpl(coloring)
-  private val launcher  = new LauncherImpl()
+  private val console   = new ConsoleImpl(font)
+  private val launcher  = new LauncherImpl
 
   private val menu = {
     import primaryEditor.async
     new MainMenu(tab, this, primaryEditor.data, new NodeInterpreter(console),
-      new NodeInvoker(console), launcher, console, coloring, language.examples)
+      new NodeInvoker(console), launcher, console, styling, language.examples)
   }
 
   private def updateTitle(): Unit = {

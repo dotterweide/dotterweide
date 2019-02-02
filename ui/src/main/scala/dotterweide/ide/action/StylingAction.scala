@@ -1,5 +1,5 @@
 /*
- *  AbstractColoring.scala
+ *  StylingAction.scala
  *  (Dotterweide)
  *
  *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
@@ -15,13 +15,16 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide.editor
+package dotterweide.ide.action
 
-abstract class AbstractColoring(colors: Map[String, Color]) extends Coloring {
-  def apply(id: String): Color = colors.getOrElse(id,
-    throw new NoSuchElementException("Unknown color ID: " + id))
+import dotterweide.ide.DynamicStyling
 
-  def fontFamily = "Monospaced"
+import scala.swing.Action
 
-  def fontSize = 14
+/** An action to switch color schemes. */
+class StylingAction(styling: DynamicStyling, name: String) extends Action(name) {
+  mnemonic = name.charAt(0)
+
+  def apply(): Unit =
+    styling.name = name
 }

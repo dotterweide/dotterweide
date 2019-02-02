@@ -17,7 +17,7 @@
 
 package dotterweide
 
-import dotterweide.editor.{Adviser, Coloring}
+import dotterweide.editor.{Adviser, Styling}
 import dotterweide.formatter.Format
 import dotterweide.inspection.Inspection
 import dotterweide.lexer.{Lexer, TokenKind}
@@ -39,7 +39,7 @@ trait Language {
   def parser: Parser
 
   /** A map from color scheme names to the schemes. */
-  def colorings: Map[String, Coloring]
+  def colorings: Map[String, Styling]
 
   /** Pairs of tokens which are symmetric and can be highlighted together,
     * such as matching braces.

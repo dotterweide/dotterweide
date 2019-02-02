@@ -1,5 +1,5 @@
 /*
- *  ScalaColoring.scala
+ *  ScalaStyling.scala
  *  (Dotterweide)
  *
  *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
@@ -14,11 +14,13 @@ package dotterweide.languages.scala
 
 import java.awt.Color
 
-import dotterweide.editor.{AbstractColoring, Attributes, Coloring, Style, Weight}
+import dotterweide.editor.{AbstractStyling, Attributes, Style, Styling, Weight}
 import dotterweide.languages.scala.node.ScalaTokens._
 import dotterweide.lexer.TokenKind
 
-class ScalaColoring(colors: Map[String, Color]) extends AbstractColoring(colors) {
+class ScalaStyling(colors: Map[String, Color])
+  extends AbstractStyling(colors) {
+
   def attributesFor(kind: TokenKind): Attributes = {
     val foreground  = apply(colorId(kind))
     val weight      = weightFor(kind)
@@ -27,14 +29,14 @@ class ScalaColoring(colors: Map[String, Color]) extends AbstractColoring(colors)
   }
 
   private def colorId(kind: TokenKind) = kind match {
-    case TRUE | FALSE                             => Coloring.BooleanLiteral
-    case INTEGER_LITERAL | FLOATING_POINT_LITERAL => Coloring.IntegerLiteral
-    case STRING_LITERAL | STRING_PART             => Coloring.StringLiteral
-    case CHARACTER_LITERAL | SYMBOL_LITERAL       => Coloring.CharLiteral
-    case it if Comments.contains(it)              => Coloring.Comment
-    case it if Keywords.contains(it)              => Coloring.Keyword
+    case TRUE | FALSE                             => Styling.BooleanLiteral
+    case INTEGER_LITERAL | FLOATING_POINT_LITERAL => Styling.IntegerLiteral
+    case STRING_LITERAL | STRING_PART             => Styling.StringLiteral
+    case CHARACTER_LITERAL | SYMBOL_LITERAL       => Styling.CharLiteral
+    case it if Comments.contains(it)              => Styling.Comment
+    case it if Keywords.contains(it)              => Styling.Keyword
 //    case it if Types    .contains(it) => Coloring.Keyword
-    case _ => Coloring.TextForeground
+    case _ => Styling.TextForeground
   }
 
   private def weightFor(token: TokenKind) = token match {

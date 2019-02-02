@@ -12,7 +12,7 @@
 
 package dotterweide.languages.scala
 
-import dotterweide.editor.{Adviser, ColorScheme, Coloring}
+import dotterweide.editor.{Adviser, ColorScheme, Styling}
 import dotterweide.formatter.Format
 import dotterweide.inspection.Inspection
 import dotterweide.languages.scala.node.ScalaTokens._
@@ -31,9 +31,9 @@ class ScalaLanguage extends Language {
   val parser: Parser  = new ScalaParser
 
   /** A map from color scheme names to the schemes. */
-  def colorings: Map[String, Coloring] = Map(
-    "Light" -> new ScalaColoring(ColorScheme.LightColors),
-    "Dark"  -> new ScalaColoring(ColorScheme.DarkColors))
+  def colorings: Map[String, Styling] = Map(
+    "Light" -> new ScalaStyling(ColorScheme.LightColors),
+    "Dark"  -> new ScalaStyling(ColorScheme.DarkColors))
 
   /** Pairs of tokens which are symmetric and can be highlighted together,
     * such as matching braces.

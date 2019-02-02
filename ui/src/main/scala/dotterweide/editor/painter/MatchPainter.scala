@@ -21,7 +21,7 @@ import java.awt.{Graphics, Rectangle}
 
 import dotterweide.{Interval, Span}
 import dotterweide.document.AnchoredInterval
-import dotterweide.editor.{ActionProcessor, Area, BraceMatcher, BraceType, CaretMovement, Color, Coloring, DataEvent, FocusChanged, Inapplicable, Paired, Pass, SelectionChange, Unbalanced, VisibleRectangleChanged}
+import dotterweide.editor.{ActionProcessor, Area, BraceMatcher, BraceType, CaretMovement, Color, Styling, DataEvent, FocusChanged, Inapplicable, Paired, Pass, SelectionChange, Unbalanced, VisibleRectangleChanged}
 import dotterweide.lexer.Token
 
 import scala.collection.immutable.{Seq => ISeq}
@@ -96,9 +96,9 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
   }
 
   private def colorFor(braceType: BraceType): Color = braceType match {
-    case Paired       => coloring(Coloring.PairedBraceBackground    )
-    case Unbalanced   => coloring(Coloring.UnbalancedBraceBackground)
-    case Inapplicable => coloring(Coloring.TextBackground           )
+    case Paired       => styling(Styling.PairedBraceBackground    )
+    case Unbalanced   => styling(Styling.UnbalancedBraceBackground)
+    case Inapplicable => styling(Styling.TextBackground           )
   }
 
   private def toRectangle(interval: Interval): Rectangle = {

@@ -17,7 +17,7 @@
 
 package dotterweide.ide
 
-import dotterweide.editor.{Attributes, Color, Coloring}
+import dotterweide.editor.{Attributes, Color, Styling}
 import dotterweide.lexer.TokenKind
 
 import scala.collection.immutable.{Seq => ISeq}
@@ -25,11 +25,11 @@ import scala.collection.immutable.{Seq => ISeq}
 /** A mutable color scheme, taking a map from scheme names to schemes
   * and notifying observers when the scheme is switched.
   */
-private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring {
+private class DynamicStyling(delegates: Map[String, Styling]) extends Styling {
   require (delegates.nonEmpty)
 
-  private var _name     : String    = delegates.head._1
-  private var _coloring : Coloring  = delegates.head._2
+  private var _name     : String   = delegates.head._1
+  private var _styling  : Styling  = delegates.head._2
 
   def names: ISeq[String] = delegates.keys.toList
   
@@ -38,15 +38,12 @@ private class DynamicColoring(delegates: Map[String, Coloring]) extends Coloring
   def name_=(name: String): Unit =
     if (_name != name) {
       _name = name
-      _coloring = delegates(name)
+      _styling = delegates(name)
 
       notifyObservers()
     }
 
-  def apply(id: String): Color = _coloring(id)
+  def apply(id: String): Color = _styling(id)
 
-  def fontFamily: String  = _coloring.fontFamily
-  def fontSize  : Int     = _coloring.fontSize
-
-  def attributesFor(kind: TokenKind): Attributes = _coloring.attributesFor(kind)
+  def attributesFor(kind: TokenKind): Attributes = _styling.attributesFor(kind)
 }

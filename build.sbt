@@ -22,6 +22,9 @@ lazy val deps = new {
     val scalariform     = "0.2.6"
     val scalaSwing      = "2.1.0"
   }
+  val demo = new {
+    val scopt           = "3.7.1"
+  }
   val test = new {
     val junit           = "4.12"
     val junitInterface  = "0.11"
@@ -108,5 +111,8 @@ lazy val demo = project.withId(s"$baseNameL-demo").in(file("demo"))
   .settings(
     name        := s"$baseName-Demo",
     description := s"$baseName - demo application",
-    mainClass in Compile := Some("dotterweide.Demo")
+    mainClass in Compile := Some("dotterweide.Demo"),
+    libraryDependencies ++= Seq(
+      "com.github.scopt" %% "scopt" % deps.demo.scopt
+    )
   )

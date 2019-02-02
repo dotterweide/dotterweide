@@ -21,17 +21,18 @@ import java.awt.{Graphics, Point, Rectangle}
 
 import dotterweide.Interval
 import dotterweide.document.Document
-import dotterweide.editor.{Area, Canvas, Coloring, Data, Grid, Terminal}
+import dotterweide.editor.{Area, Canvas, Data, FontSettings, Grid, Styling, Terminal}
 
 import scala.collection.immutable.{Seq => ISeq}
 
 private abstract class AbstractPainter(context: PainterContext) extends Painter {
-  protected def document: Document  = context.document
-  protected def terminal: Terminal  = context.terminal
-  protected def data    : Data      = context.data
-  protected def canvas  : Canvas    = context.canvas
-  protected def grid    : Grid      = context.grid
-  protected def coloring: Coloring  = context.coloring
+  protected def document: Document      = context.document
+  protected def terminal: Terminal      = context.terminal
+  protected def data    : Data          = context.data
+  protected def canvas  : Canvas        = context.canvas
+  protected def grid    : Grid          = context.grid
+  protected def styling : Styling       = context.styling
+  protected def font    : FontSettings  = context.font
 
   protected def contains(chars: CharSequence, char: Char): Boolean =
     Range(0, chars.length).exists(i => chars.charAt(i) == char)

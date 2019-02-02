@@ -25,7 +25,7 @@ The following API features should be implemented:
 
 This would work for Mellite. For ScalaCollider-Swing, additionally the following items:
 
- - [ ] customizable font size
+ - [X] customizable font size
  - [ ] possible to disable diagnostic as we run through REPL mode
  - [ ] API for symbol-at-cursor, to trigger documentation look-up
  - [ ] performance needs to be acceptable on Raspberry Pi

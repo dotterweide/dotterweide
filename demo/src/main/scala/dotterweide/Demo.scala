@@ -25,17 +25,34 @@ import dotterweide.languages.lisp.LispLanguage
 import dotterweide.languages.scala.ScalaLanguage
 import dotterweide.languages.toy.ToyLanguage
 
-import scala.swing.{SwingApplication, Window}
+import scala.swing.{Swing, Window}
 
-object Demo extends SwingApplication {
+object Demo {
   private val Languages = List(new ScalaLanguage, ToyLanguage, LispLanguage)
 
-  override def startup(args: Array[String]): Unit = {
-    val lang0 = if (args.length >= 2 && args(0) == "--language") {
-      val langName = args(1).toLowerCase(Locale.US)
-      Languages.find(_.name.toLowerCase(Locale.US) == langName)
-    } else None
-    val lang = lang0.orElse(selectLanguage())
+  case class Config(language: Option[Language] = None)
+
+  def main(args: Array[String]): Unit = {
+    val default = Config()
+
+    def findLanguage(name: String): Option[Language] = {
+      val n          = name.toLowerCase(Locale.US)
+      Languages.find(_.name.toLowerCase(Locale.US) == n)
+    }
+
+    val p = new scopt.OptionParser[Config]("Demo") {
+      opt[String]('l', "language")
+        .text(s"Select language (one of ${Languages.map(_.name).mkString(", ")})")
+        .validate { v => if (findLanguage(v).isDefined) success else failure(s"Unknown language $v") }
+        .action { (v, c) => c.copy(language = findLanguage(v)) }
+    }
+    p.parse(args, default).fold(sys.exit(1)) { config =>
+      Swing.onEDT(run(config))
+    }
+  }
+
+  def run(config: Config): Unit = {
+    val lang = config.language.orElse(selectLanguage())
     lang.foreach(openMainFrame)
   }
 

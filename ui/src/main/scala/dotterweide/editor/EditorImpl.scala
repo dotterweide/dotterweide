@@ -18,6 +18,7 @@
 package dotterweide.editor
 
 import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseMotionAdapter}
+import java.awt.font.FontRenderContext
 import java.awt.{BorderLayout, Cursor, Dimension, Font, Graphics, Graphics2D, Point, Rectangle, Toolkit}
 
 import dotterweide.Interval
@@ -32,19 +33,39 @@ import javax.swing.{JComponent, JPanel, JScrollPane, JViewport, KeyStroke, ListC
 import scala.collection.immutable.{Seq => ISeq}
 
 private class EditorImpl(val document: Document, val data: Data, val holder: ErrorHolder,
-                         lexer: Lexer, coloring: Coloring, matcher: BraceMatcher,
+                         lexer: Lexer, styling: Styling, font: FontSettings, matcher: BraceMatcher,
                          format: Format, adviser: Adviser, listRenderer: ListCellRenderer[AnyRef],
                          lineCommentPrefix: String, history: History)
                         (implicit val async: Async) extends Editor {
 
+  private def mkFont() = new Font(font.family, Font.PLAIN, font.size)
+
+  private var regularFont: Font = mkFont()
+
+  private def gridParam(): (Int, Int, Int) = {
+    val frc     = new FontRenderContext(null, true, false)
+    val sb      = regularFont.getStringBounds("X", frc)
+    val ascent  = math.ceil(-sb.getY).toInt
+    val advance = sb.getWidth.toInt
+    val height  = math.ceil(sb.getHeight * font.lineSpacing).toInt
+    (advance, height, ascent)
+  }
+
   private val grid = {
     val pIn = Pane.getInsets
-    // XXX TODO --- how do we know this grid size works for mono-spaced 14 font?
-    new Grid(cellWidth = 8, cellHeight = 20,
+    val (advance, height, ascent) = gridParam()
+    new GridImpl(cellWidth0 = advance, cellHeight0 = height, ascent0 = ascent,
       insetLeft = pIn.left, insetTop = pIn.top, insetRight = pIn.right, insetBottom = pIn.bottom)
   }
 
-  private val NormalFont = new Font(coloring.fontFamily, Font.PLAIN, coloring.fontSize)
+  font.onChange {
+    regularFont = mkFont()
+    val (advance, height, ascent) = gridParam()
+    grid.cellWidth  = advance
+    grid.cellHeight = height
+    grid.ascent     = ascent
+    Pane.repaint()
+  }
 
   private lazy val renderingHints = Option(Toolkit.getDefaultToolkit.getDesktopProperty("awt.font.desktophints"))
 
@@ -149,7 +170,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   private def shouldDisplayCaret = Pane.isFocusOwner || popupVisible
 
   private val painters = PainterFactory.createPainters(document, terminal, data,
-    canvas, grid, lexer, matcher, holder, coloring, controller)
+    canvas, grid, lexer, matcher, holder, styling, font, controller)
 
   painters.foreach(painter => painter.onChange(handlePaintingRequest(painter, _)))
 
@@ -242,7 +263,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     def choose[A](variants: ISeq[A], query: String)(callback: A => Unit): Unit = {
       val point = toPoint(offset)
       val shifted = new Point(point.x - grid.cellWidth * query.length - 3, point.y + 20)
-      val (popup, list) = ChooserFactory.createPopup(Pane, shifted, NormalFont, variants, listRenderer) { it =>
+      val (popup, list) = ChooserFactory.createPopup(Pane, shifted, regularFont, variants, listRenderer) { it =>
         Pane.requestFocusInWindow() // to draw cursor immediately
         popupVisible = false
         it.foreach(callback)

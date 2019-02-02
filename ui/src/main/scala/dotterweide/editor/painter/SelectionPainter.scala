@@ -21,7 +21,7 @@ import java.awt.font.TextAttribute
 import java.awt.{Color, Graphics, Rectangle}
 
 import dotterweide.Interval
-import dotterweide.editor.{Coloring, SelectionChange}
+import dotterweide.editor.{Styling, SelectionChange}
 
 /** Paints the terminal's `selection` and collects them as decorations. */
 private class SelectionPainter(context: PainterContext) extends AbstractPainter(context) with Decorator {
@@ -40,12 +40,12 @@ private class SelectionPainter(context: PainterContext) extends AbstractPainter(
       .map(_.intersection(bounds)).filterNot(_.isEmpty)
 
     if (rectangles.nonEmpty) {
-      g.setColor(coloring(Coloring.SelectionBackground))
+      g.setColor(styling(Styling.SelectionBackground))
       rectangles.foreach(fill(g, _))
     }
   }
 
   // XXX TODO cache and smart update
   override def decorations: Map[Interval, Map[TextAttribute, Color]] = terminal.selection
-    .map(interval => (interval, Map(TextAttribute.FOREGROUND -> coloring(Coloring.SelectionForeground)))).toMap
+    .map(interval => (interval, Map(TextAttribute.FOREGROUND -> styling(Styling.SelectionForeground)))).toMap
 }

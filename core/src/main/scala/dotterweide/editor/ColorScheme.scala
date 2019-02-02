@@ -17,7 +17,7 @@
 
 package dotterweide.editor
 
-import dotterweide.editor.Coloring._
+import dotterweide.editor.Styling._
 
 object ColorScheme {
   val LightColors: Map[String, Color] = Map(
