@@ -43,7 +43,8 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
   private var string            = EmptyString
   private var stringValid       = true
   private var singleLineChanged = false
-  private val ascent            = context.grid.ascent
+
+  import context.grid.ascent
 
   document.onChange { event =>
     stringValid = false
@@ -61,11 +62,13 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
     }
   }
 
-  styling.onChange {
+  private def resetAll(): Unit = {
     stringValid = false
-
     notifyObservers(canvas.visibleRectangle)
   }
+
+  styling .onChange(resetAll())
+  font    .onChange(resetAll())
 
   override def paint(g: Graphics, bounds: Rectangle): Unit = {
     val area = grid.toArea(bounds)

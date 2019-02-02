@@ -18,7 +18,9 @@ Over time, this project will diverge more and more from the original code base.
 
 The project build with [sbt](http://www.scala-sbt.org/) with the main Scala version being 2.12.x.
 To run the demo, use `sbt dotterweide-demo/run`. Note that the project in progress, there may still be
-`???` lurking in the code.
+`???` lurking in the code. You can pass arguments to the demo run, for example:
+
+    sbt 'dotterweide-demo/run --language scala --colors dark'
 
 Note that for Scala 2.13.0-M5 compilation, you currently need a locally published version 0.2.7-SNAPSHOT
 of [scalariform](https://github.com/Sciss/scalariform/tree/sciss_work).

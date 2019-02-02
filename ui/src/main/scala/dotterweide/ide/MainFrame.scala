@@ -27,7 +27,8 @@ import javax.swing.Timer
 import scala.swing.event.{WindowClosed, WindowOpened}
 import scala.swing.{BorderPanel, Component, Frame, Orientation, ScrollPane, SplitPane}
 
-class MainFrame(language: Language, text: String, font: FontSettings = FontSettings.Default)
+class MainFrame(language: Language, text: String, font: FontSettings = FontSettings.Default,
+                stylingName: Option[String] = None)
   extends Frame {
 
   reactions += {
@@ -44,8 +45,16 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
     dispose()
   }
 
-  private val history       = new HistoryImpl()
-  private val styling       = new DynamicStyling(language.colorings)
+  private val history = new HistoryImpl()
+
+  private val styling = {
+    val res = new DynamicStyling(language.stylings)
+    stylingName.foreach { name =>
+      if (res.names.contains(name)) res.name = name
+    }
+    res
+  }
+
   private val primaryEditor = EditorFactory.createEditorFor(language, history, styling, font)
 
   private lazy val secondaryEditor = {

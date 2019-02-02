@@ -71,7 +71,8 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   private val controller: Controller =
     new ControllerImpl(document, data, terminal, grid, adviser,
-      new FormatterImpl(format), tabSize = format.defaultTabSize, lineCommentPrefix = lineCommentPrefix, history)
+      new FormatterImpl(format), tabSize = format.defaultTabSize, lineCommentPrefix = lineCommentPrefix,
+      font = font, history = history)
 
   private val scroll = new JScrollPane(Pane)
 
@@ -286,7 +287,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   private object Pane extends JComponent with Scrollable {
     setOpaque(true)
-    setBorder(new EmptyBorder(10, 5, 10, 5))
+    setBorder(new EmptyBorder(/* top */ 5, /* left */ 5, /* bottom */ 5, /* right */ 5))
     setFocusable(true)
     setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
     setFocusTraversalKeysEnabled(false)
@@ -325,10 +326,14 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     private def paintOn(g: Graphics, painters: ISeq[Painter]): Unit = {
       val g2d = g.asInstanceOf[Graphics2D]
 
-      renderingHints.foreach(it => g2d.addRenderingHints(it.asInstanceOf[java.util.Map[_, _]]))
+      renderingHints.foreach { it =>
+        g2d.addRenderingHints(it.asInstanceOf[java.util.Map[_, _]])
+      }
 
       val clipBounds = g.getClipBounds
-      painters.foreach(_.paint(g, clipBounds))
+      painters.foreach { p =>
+        p.paint(g, clipBounds)
+      }
     }
   }
 }

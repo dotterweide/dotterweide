@@ -23,45 +23,50 @@ trait EditorActions {
   def complete          : Action
   def copy              : Action
   def cut               : Action
-  def duplicateLine     : Action
-  def clearSelection    : Action
+  def fontEnlarge       : Action
+  def fontShrink        : Action
+  def fontReset         : Action
   def format            : Action
   def goToDeclaration   : Action
-  def indentSelection   : Action
-  def moveLineDown      : Action
-  def moveLineUp        : Action
+  def lineDuplicate     : Action
+  def lineMoveDown      : Action
+  def lineMoveUp        : Action
+  def lineRemove        : Action
   def optimize          : Action
   def paste             : Action
   def redo              : Action
-  def removeLine        : Action
   def rename            : Action
   def selectAll         : Action
+  def selectNone        : Action
+  def selectionIndent   : Action
+  def selectionUnindent : Action
   def showUsages        : Action
   def toggleLineComment : Action
   def undo              : Action
-  def unindentSelection : Action
 
   def all: ISeq[Action] = List(
     complete,
     copy,
     cut,
-    duplicateLine,
-    clearSelection,
+    fontEnlarge,
+    fontShrink,
+    fontReset,
     format,
     goToDeclaration,
-    indentSelection,
-    moveLineDown,
-    moveLineUp,
+    lineDuplicate,
+    lineMoveDown,
+    lineMoveUp,
+    lineRemove,
     optimize,
     paste,
     redo,
-    removeLine,
     rename,
     selectAll,
+    selectNone,
+    selectionIndent,
+    selectionUnindent,
     showUsages,
     toggleLineComment,
-    format,
-    undo,
-    unindentSelection
+    undo
   )
 }

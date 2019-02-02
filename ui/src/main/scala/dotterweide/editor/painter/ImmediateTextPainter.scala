@@ -44,7 +44,8 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
 
   private var lastEvent       = Option.empty[Replacement]
   private var immediateAction = false
-  private val ascent          = context.grid.ascent
+
+  import context.grid.ascent
 
   processor.onChange {
     case ActionStarted(immediate) =>

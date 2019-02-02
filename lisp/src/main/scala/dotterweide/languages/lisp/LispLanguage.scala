@@ -35,9 +35,9 @@ object LispLanguage extends Language {
 
   def parser: Parser = LispParser
 
-  def colorings: Map[String, Styling] = Map(
-    "Light" -> new LispStyling(ColorScheme.LightColors),
-    "Dark"  -> new LispStyling(ColorScheme.DarkColors))
+  def stylings: Map[String, Styling] = Map(
+    ColorScheme.LightName -> new LispStyling(ColorScheme.LightColors),
+    ColorScheme.DarkName  -> new LispStyling(ColorScheme.DarkColors))
 
   def complements: ISeq[(TokenKind, TokenKind)] = List(LispTokens.Parens, LispTokens.Brackets)
 

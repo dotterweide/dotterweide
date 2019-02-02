@@ -157,7 +157,7 @@ class ControllerImplTest {
       val GridMock    = new GridImpl(cellWidth0 = 8, cellHeight0 = 8, ascent0 = 5)
       implicit val async: Async = new AsyncImpl()
       val controller  = new ControllerImpl(document, new MockData(), terminal, GridMock, new MockAdviser(),
-        new FormatterImpl(new MockFormat()), 2, "//", new HistoryImpl())
+        new FormatterImpl(new MockFormat()), 2, "//", FontSettings.Default, new HistoryImpl())
       f(controller)
     }
   }

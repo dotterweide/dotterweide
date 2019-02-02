@@ -19,7 +19,11 @@ package dotterweide.editor
 
 import dotterweide.editor.Styling._
 
+import scala.collection.immutable.{Seq => ISeq}
+
 object ColorScheme {
+  val LightName = "Light"
+
   val LightColors: Map[String, Color] = Map(
     TextForeground            -> Color.black,
     TextBackground            -> Color.white,
@@ -43,6 +47,8 @@ object ColorScheme {
     Comment                   -> new Color(128, 128, 128)
   )
 
+  val DarkName = "Dark"
+
   val DarkColors: Map[String, Color] = Map(
     TextForeground            -> new Color(245, 245, 245),
     TextBackground            -> new Color( 20,  31,  46),
@@ -65,4 +71,6 @@ object ColorScheme {
     Keyword                   -> new Color(  0, 153, 255),
     Comment                   -> new Color( 80, 240,  80)
   )
+
+  def names: ISeq[String] = List(LightName, DarkName)
 }

@@ -31,9 +31,9 @@ class ScalaLanguage extends Language {
   val parser: Parser  = new ScalaParser
 
   /** A map from color scheme names to the schemes. */
-  def colorings: Map[String, Styling] = Map(
-    "Light" -> new ScalaStyling(ColorScheme.LightColors),
-    "Dark"  -> new ScalaStyling(ColorScheme.DarkColors))
+  def stylings: Map[String, Styling] = Map(
+    ColorScheme.LightName -> new ScalaStyling(ColorScheme.LightColors),
+    ColorScheme.DarkName  -> new ScalaStyling(ColorScheme.DarkColors))
 
   /** Pairs of tokens which are symmetric and can be highlighted together,
     * such as matching braces.

@@ -39,7 +39,7 @@ trait Language {
   def parser: Parser
 
   /** A map from color scheme names to the schemes. */
-  def colorings: Map[String, Styling]
+  def stylings: Map[String, Styling]
 
   /** Pairs of tokens which are symmetric and can be highlighted together,
     * such as matching braces.

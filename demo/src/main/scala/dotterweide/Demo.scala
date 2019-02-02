@@ -20,17 +20,19 @@ package dotterweide
 import java.awt.Dimension
 import java.util.Locale
 
+import dotterweide.editor.ColorScheme
 import dotterweide.ide.MainFrame
 import dotterweide.languages.lisp.LispLanguage
 import dotterweide.languages.scala.ScalaLanguage
 import dotterweide.languages.toy.ToyLanguage
 
+import scala.swing.event.WindowClosed
 import scala.swing.{Swing, Window}
 
 object Demo {
   private val Languages = List(new ScalaLanguage, ToyLanguage, LispLanguage)
 
-  case class Config(language: Option[Language] = None)
+  case class Config(language: Option[Language] = None, stylingName: Option[String] = None)
 
   def main(args: Array[String]): Unit = {
     val default = Config()
@@ -45,6 +47,11 @@ object Demo {
         .text(s"Select language (one of ${Languages.map(_.name).mkString(", ")})")
         .validate { v => if (findLanguage(v).isDefined) success else failure(s"Unknown language $v") }
         .action { (v, c) => c.copy(language = findLanguage(v)) }
+
+      opt[String]('c', "colors")
+        .text(s"Select color scheme name (one of ${Languages.map(_.name).mkString(", ")})")
+        .validate { v => if (ColorScheme.names.contains(v.capitalize)) success else failure(s"Unknown scheme $v") }
+        .action { (v, c) => c.copy(stylingName = Some(v.capitalize)) }
     }
     p.parse(args, default).fold(sys.exit(1)) { config =>
       Swing.onEDT(run(config))
@@ -52,21 +59,23 @@ object Demo {
   }
 
   def run(config: Config): Unit = {
-    val lang = config.language.orElse(selectLanguage())
-    lang.foreach(openMainFrame)
+    val langOpt = config.language.orElse(selectLanguage())
+    langOpt.foreach { language =>
+      val code  = language.examples.headOption.fold("")(_.code)
+      val frame = new MainFrame(language, code, stylingName = config.stylingName)
+      frame.preferredSize = new Dimension(874, 696)
+      open(frame)
+      frame.listenTo(frame)
+      frame.reactions += {
+        case WindowClosed(_) => sys.exit()
+      }
+    }
   }
 
   private def selectLanguage(): Option[Language] = {
     val dialog = new LanguageDialog(Languages)
     open(dialog)
     dialog.selection
-  }
-
-  private def openMainFrame(language: Language): Unit = {
-    val code  = language.examples.headOption.fold("")(_.code)
-    val frame = new MainFrame(language, code)
-    frame.preferredSize = new Dimension(874, 696)
-    open(frame)
   }
 
   private def open(window: Window): Unit = {

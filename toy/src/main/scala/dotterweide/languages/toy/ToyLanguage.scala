@@ -38,9 +38,9 @@ object ToyLanguage extends Language {
 
   def parser: Parser = ProgramParser
 
-  def colorings: Map[String, Styling] = Map(
-    "Light" -> new ToyStyling(ColorScheme.LightColors),
-    "Dark"  -> new ToyStyling(ColorScheme.DarkColors))
+  def stylings: Map[String, Styling] = Map(
+    ColorScheme.LightName -> new ToyStyling(ColorScheme.LightColors),
+    ColorScheme.DarkName  -> new ToyStyling(ColorScheme.DarkColors))
 
   def complements: ISeq[(TokenKind, TokenKind)] = List((LBRACE, RBRACE), (LPAREN, RPAREN))
 

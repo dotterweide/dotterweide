@@ -22,7 +22,7 @@ import java.awt.event.{KeyEvent, MouseEvent}
 
 import dotterweide.Interval
 import dotterweide.document.Document
-import dotterweide.editor.{ActionFinished, ActionStarted, Adviser, Async, Data, EditorActions, Grid, History, Terminal}
+import dotterweide.editor.{ActionFinished, ActionStarted, Adviser, Async, Data, EditorActions, FontSettings, Grid, History, Terminal}
 import dotterweide.formatter.Formatter
 import dotterweide.node.{IdentifiedNode, Node}
 
@@ -31,7 +31,8 @@ import dotterweide.node.{IdentifiedNode, Node}
   * - control and mouse hover set terminal's `hover`
   */
 class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: Grid, adviser: Adviser,
-                     formatter: Formatter, tabSize: Int, lineCommentPrefix: String, history: History)
+                     formatter: Formatter, tabSize: Int, lineCommentPrefix: String, font: FontSettings,
+                     history: History)
                     (implicit async: Async)
   extends Controller {
 
@@ -48,9 +49,9 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
 
   private var origin = 0
 
-  def actions: EditorActions =
+  val actions: EditorActions =
     new Actions(document, terminal, data, adviser, formatter, tabSize = tabSize,
-      lineCommentPrefix = lineCommentPrefix, history = history)
+      lineCommentPrefix = lineCommentPrefix, font = font, history = history)
 
   def processKeyPressed(e: KeyEvent): Unit = {
     if (isModifierKey(e.getKeyCode)) return
@@ -79,9 +80,11 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   def processActions(e: KeyEvent): Unit = {
     val keyStroke = AWTKeyStroke.getAWTKeyStroke(e.getKeyCode, e.getModifiers).toString
 
-    for (action <- actions.all
-         if action.keys.contains(keyStroke)
-         if action.enabled) {
+    // XXX TODO --- this is very inefficient
+    for {
+      action <- actions.all
+      if action.enabled && action.keys.contains(keyStroke)
+    } {
       action()
       e.consume()
     }

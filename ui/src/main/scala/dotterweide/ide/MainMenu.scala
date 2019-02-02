@@ -26,52 +26,58 @@ import scala.swing.event.Key
 import scala.swing.{Action, CheckMenuItem, Component, Dimension, Frame, Menu, MenuBar, MenuItem, RadioMenuItem, Separator}
 
 private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Runner, invoker: Runner,
-                       launcher: Launcher, console: Console, coloring: DynamicStyling, examples: Seq[Example])
+                       launcher: Launcher, console: Console, styling: DynamicStyling, examples: Seq[Example])
                       (implicit async: Async)
   extends MenuBar {
 
-  private val undo              = new MenuItem("")
-  private val redo              = new MenuItem("")
   private val complete          = new MenuItem("")
   private val copy              = new MenuItem("")
   private val cut               = new MenuItem("")
-  private val duplicateLine     = new MenuItem("")
-  private val indentSelection   = new MenuItem("")
-  private val unindentSelection = new MenuItem("")
-  private val clearSelection    = new MenuItem("")
+  private val fontEnlarge       = new MenuItem("")
+  private val fontShrink        = new MenuItem("")
+  private val fontReset         = new MenuItem("")
   private val format            = new MenuItem("")
   private val goToDeclaration   = new MenuItem("")
-  private val moveLineDown      = new MenuItem("")
-  private val moveLineUp        = new MenuItem("")
+  private val lineDuplicate     = new MenuItem("")
+  private val liveMoveDown      = new MenuItem("")
+  private val lineMoveUp        = new MenuItem("")
+  private val lineRemove        = new MenuItem("")
   private val optimize          = new MenuItem("")
   private val paste             = new MenuItem("")
-  private val removeLine        = new MenuItem("")
+  private val redo              = new MenuItem("")
   private val rename            = new MenuItem("")
   private val selectAll         = new MenuItem("")
+  private val selectNone        = new MenuItem("")
+  private val selectionIndent   = new MenuItem("")
+  private val selectionUnindent = new MenuItem("")
   private val showUsages        = new MenuItem("")
   private val toggleLineComment = new MenuItem("")
+  private val undo              = new MenuItem("")
 
   def bindTo(actions: EditorActions): Unit = {
     bind(complete         , actions.complete          )
     bind(copy             , actions.copy              )
     bind(cut              , actions.cut               )
-    bind(duplicateLine    , actions.duplicateLine     )
-    bind(indentSelection  , actions.indentSelection   )
-    bind(unindentSelection, actions.unindentSelection )
-    bind(clearSelection   , actions.clearSelection    )
+    bind(fontEnlarge      , actions.fontEnlarge       )
+    bind(fontShrink       , actions.fontShrink        )
+    bind(fontReset        , actions.fontReset         )
     bind(format           , actions.format            )
     bind(goToDeclaration  , actions.goToDeclaration   )
-    bind(moveLineDown     , actions.moveLineDown      )
-    bind(moveLineUp       , actions.moveLineUp        )
     bind(optimize         , actions.optimize          )
+    bind(lineDuplicate    , actions.lineDuplicate     )
+    bind(liveMoveDown     , actions.lineMoveDown      )
+    bind(lineMoveUp       , actions.lineMoveUp        )
+    bind(lineRemove       , actions.lineRemove        )
     bind(paste            , actions.paste             )
-    bind(removeLine       , actions.removeLine        )
+    bind(redo             , actions.redo              )
     bind(rename           , actions.rename            )
     bind(selectAll        , actions.selectAll         )
+    bind(selectNone       , actions.selectNone        )
+    bind(selectionIndent  , actions.selectionIndent   )
+    bind(selectionUnindent, actions.selectionUnindent )
     bind(showUsages       , actions.showUsages        )
     bind(toggleLineComment, actions.toggleLineComment )
     bind(undo             , actions.undo              )
-    bind(redo             , actions.redo              )
   }
 
   private def bind(item: MenuItem, action: _Action): Unit =
@@ -106,12 +112,12 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
     contents += paste
     contents += new Separator()
     contents += selectAll
-    contents += clearSelection
+    contents += selectNone
     contents += new Separator()
-    contents += duplicateLine
-    contents += removeLine
-    contents += indentSelection
-    contents += unindentSelection
+    contents += lineDuplicate
+    contents += lineRemove
+    contents += selectionIndent
+    contents += selectionUnindent
   }
 
   contents += new Menu("Code") {
@@ -128,8 +134,8 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
     contents += optimize
     contents += format
     contents += new Separator()
-    contents += moveLineUp
-    contents += moveLineDown
+    contents += lineMoveUp
+    contents += liveMoveDown
   }
 
   contents += new Menu("Run") {
@@ -146,26 +152,30 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
     contents ++= examples.map(it => new MenuItem(new ExampleAction(it.name, it.mnemonic, tab, it.code)))
   }
 
-  contents += new Menu("Coloring") {
-    mnemonic = Key.C
-    contents ++= coloring.names.map(it => new RadioMenuItem(it) {
-      action = new StylingAction(coloring, it)
+  contents += new Menu("View") {
+    mnemonic = Key.V
+    contents += new Menu("Color Scheme") {
+      contents ++= styling.names.map(it => new RadioMenuItem(it) {
+        action = new StylingAction(styling, it)
 
-      coloring.onChange {
+        styling.onChange {
+          updateSelection()
+        }
+
         updateSelection()
-      }
 
-      updateSelection()
+        private def updateSelection(): Unit =
+          selected = styling.name == it
+      })
+    }
 
-      private def updateSelection(): Unit =
-        selected = coloring.name == it
-    })
-  }
+    contents += new Separator()
+    contents += fontEnlarge
+    contents += fontShrink
+    contents += fontReset
+    contents += new Separator()
 
-  contents += new Menu("Window") {
-    mnemonic = Key.W
-
-    contents += new CheckMenuItem("Split") {
+    contents += new CheckMenuItem("Split Vertically") {
       action = new Action(text) {
         mnemonic = 'S'
         accelerator = Some(KeyStroke.getKeyStroke("ctrl alt pressed S"))

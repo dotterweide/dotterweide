@@ -22,9 +22,9 @@ object FontSettings {
   )
 }
 trait FontSettings extends Observable {
-  def family: String
+  var family: String
 
-  def size: Int
+  var size: Int
 
-  def lineSpacing: Float
+  var lineSpacing: Float
 }

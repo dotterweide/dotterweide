@@ -37,8 +37,8 @@ private class DynamicStyling(delegates: Map[String, Styling]) extends Styling {
   
   def name_=(name: String): Unit =
     if (_name != name) {
-      _name = name
-      _styling = delegates(name)
+      _name     = name
+      _styling  = delegates(name)
 
       notifyObservers()
     }
