@@ -12,6 +12,7 @@ The following editor features should be implemented (note: checkmark means that 
  - [ ] Quick Find (ctrl-F)
  - [X] shift and mouse click should make or extend the selection
  - [ ] Configurable wrapping code ("preamble", "terminator")
+ - [ ] insert/overwrite modes
  
 The following actions and IDE features should be implemented:
 
