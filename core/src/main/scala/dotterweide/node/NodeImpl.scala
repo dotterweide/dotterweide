@@ -53,13 +53,13 @@ class NodeImpl(val kind: String) extends Node {
     val first   = children.head.span
     _children   = children
     val par     = Some(this)
-    var cBegin  = first.begin
-    var cEnd    = first.end
+    var cBegin  = first.start
+    var cEnd    = first.stop
     children.foreach { child =>
       child.parent  = par
       val cSpan     = child.span
-      if (cSpan.begin < cBegin) cBegin = cSpan.begin
-      if (cSpan.end   > cEnd  ) cEnd   = cSpan.end
+      if (cSpan.start < cBegin) cBegin = cSpan.start
+      if (cSpan.stop   > cEnd  ) cEnd   = cSpan.stop
     }
     span = Span(first.source, cBegin, cEnd)
     for ((a, b) <- children.zip(children.tail)) {

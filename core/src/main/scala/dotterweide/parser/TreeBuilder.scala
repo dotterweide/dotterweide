@@ -67,7 +67,7 @@ class TreeBuilder(input: Iterator[Token]) {
     if (region.hasProblem) return
 
     if (isEOF) {
-      val span = Span(headSpan.source, headSpan.end, headSpan.end)
+      val span = Span(headSpan.source, headSpan.stop, headSpan.stop)
       region.add(NodeImpl.createError(None, span, message))
     } else {
       val token = head.getOrElse(throw new NoSuchTokenException())

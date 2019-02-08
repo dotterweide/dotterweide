@@ -44,11 +44,11 @@ private class Complete(document: Document, terminal: Terminal, data: Data,
     val filtered  = variants.filter(_.content.startsWith(query))
     filtered match {
       case Seq() =>
-      case Seq(single) => history.capture(document, terminal) {
+      case Seq(single) => history.capture(name, document, terminal) {
         insert(single, query)
       }
       case multiple => terminal.choose(multiple, query) { it =>
-        history.capture(document, terminal) {
+        history.capture(name, document, terminal) {
           insert(it, query)
         }
       }

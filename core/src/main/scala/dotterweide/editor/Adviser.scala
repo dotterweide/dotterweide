@@ -47,7 +47,7 @@ trait SyncAdviser extends Adviser {
       case Success(structure) =>
         val tuple = structure.flatMap { root =>
           root.elements.find(it => it.isLeaf && it.span.text.contains(anchorLabel)).map { anchorNode =>
-            val query = document.text(anchorNode.span.begin, offset)
+            val query = document.text(anchorNode.span.start, offset)
             val list  = variants(root, anchorNode)
             (query, list)
           }

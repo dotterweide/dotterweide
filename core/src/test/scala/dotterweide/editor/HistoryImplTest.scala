@@ -45,15 +45,15 @@ class HistoryImplTest {
   def nestedRecording(): Unit = {
     val history = new HistoryImpl()
     val (document, terminal) = parseDocument("|")
-    history.capture(document, terminal) {
-      history.capture(document, terminal) {}
+    history.capture("outer", document, terminal) {
+      history.capture("inner", document, terminal) {}
     }
   }
 
   def caretMovementsAreNotRecorded(): Unit = {
     val history = new HistoryImpl()
     val (document, terminal) = parseDocument("|foo")
-    history.capture(document, terminal) {
+    history.capture("move", document, terminal) {
       terminal.offset = 1
     }
     assertFalse(history.canUndo)
@@ -162,12 +162,12 @@ class HistoryImplTest {
 
     val (document, terminal) = parseDocument("|")
 
-    history.capture(document, terminal)(document.insert(0, "a"))
+    history.capture("insert", document, terminal)(document.insert(0, "a"))
     assertTrue(history.canUndo)
     assertFalse(history.canRedo)
     assertEquals("|a", formatDocument(document, terminal))
 
-    history.capture(document, terminal)(document.insert(1, "b"))
+    history.capture("insert", document, terminal)(document.insert(1, "b"))
     assertTrue(history.canUndo)
     assertFalse(history.canRedo)
     assertEquals("|ab", formatDocument(document, terminal))
@@ -199,11 +199,11 @@ class HistoryImplTest {
 
     val (document, terminal) = parseDocument("|")
 
-    history.capture(document, terminal)(document.insert(0, "a"))
-    history.capture(document, terminal)(document.insert(1, "b"))
+    history.capture("insert", document, terminal)(document.insert(0, "a"))
+    history.capture("insert", document, terminal)(document.insert(1, "b"))
     history.undo()
 
-    history.capture(document, terminal)(document.insert(1, "c"))
+    history.capture("insert", document, terminal)(document.insert(1, "c"))
     assertTrue(history.canUndo)
     assertFalse(history.canRedo)
     assertEquals("|ac", formatDocument(document, terminal))
@@ -224,7 +224,7 @@ class HistoryImplTest {
 
     val history = new HistoryImpl()
 
-    history.capture(document, terminal) {
+    history.capture("action", document, terminal) {
       action(document, terminal)
     }
 

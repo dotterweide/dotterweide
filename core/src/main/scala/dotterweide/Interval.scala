@@ -19,32 +19,32 @@ package dotterweide
 
 /** An integer range (in a text).
   *
-  * @param begin  start offset, zero based, inclusive
-  * @param end    end offset, ''exclusive'' (the interval length is `end - begin`).
+  * @param start  start offset, zero based, inclusive
+  * @param stop    end offset, ''exclusive'' (the interval length is `end - begin`).
   */
-case class Interval(begin: Int, end: Int) extends IntervalLike {
-  if (begin  < 0) throw new IllegalArgumentException("Begin must be positive: "  + begin )
-  if (end    < 0) throw new IllegalArgumentException("End must be positive: "    + end   )
+case class Interval(start: Int, stop: Int) extends IntervalLike {
+  if (start  < 0) throw new IllegalArgumentException("Begin must be positive: "  + start )
+  if (stop    < 0) throw new IllegalArgumentException("End must be positive: "    + stop   )
   if (length < 0) throw new IllegalArgumentException("Length must be positive: " + length)
 
   def intersection(interval: Interval): Interval = {
-    val newBegin = math.max(begin, interval.begin)
-    val newEnd   = math.max(newBegin, math.min(end, interval.end))
+    val newBegin = math.max(start, interval.start)
+    val newEnd   = math.max(newBegin, math.min(stop, interval.stop))
     Interval(newBegin, newEnd)
   }
 
   /** Adds a delta `n` to the `begin` */
-  def withBeginShift(n: Int): Interval = copy(begin = begin + n)
+  def withBeginShift(n: Int): Interval = copy(start = start + n)
 
   /** Adds a delta `n` to the `end` */
-  def withEndShift  (n: Int): Interval = copy(end   = end   + n)
+  def withEndShift  (n: Int): Interval = copy(stop   = stop   + n)
 
   /** Shifts the interval forward */
-  def + (n: Int) = Interval(begin + n, end + n)
+  def + (n: Int) = Interval(start + n, stop + n)
 
   /** Shifts the interval backward */
-  def - (n: Int) = Interval(begin - n, end - n)
+  def - (n: Int) = Interval(start - n, stop - n)
 
   /** Applies function `f` to both `begin` and `end` */
-  def transformWith(f: Int => Int): Interval = copy(begin = f(begin), end = f(end))
+  def transformWith(f: Int => Int): Interval = copy(start = f(start), stop = f(stop))
 }

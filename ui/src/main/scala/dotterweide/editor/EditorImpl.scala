@@ -106,7 +106,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   def text: String = document.text
 
   def text_=(s: String): Unit =
-    history.capture(document, terminal) {
+    history.capture("Replace Text", document, terminal) {
       terminal.offset     = 0
       terminal.selection  = None
       terminal.highlights = Nil
@@ -143,7 +143,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
       scrollToOffsetVisible(now)
       updateMessage()
     case HighlightsChange(_, _, now) =>
-      now.headOption.foreach(it => scrollToOffsetVisible(it.begin))
+      now.headOption.foreach(it => scrollToOffsetVisible(it.start))
     case _ =>
   }
 
@@ -194,7 +194,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   // handle external changes
   document.onChange { _ =>
     terminal.offset     = terminal.offset.min(document.length)
-    val selection       = terminal.selection.map(it => Interval(it.begin.min(document.length), it.end.min(document.length)))
+    val selection       = terminal.selection.map(it => Interval(it.start.min(document.length), it.stop.min(document.length)))
     terminal.selection  = selection.filterNot(_.empty)
     terminal.highlights = Nil
   }

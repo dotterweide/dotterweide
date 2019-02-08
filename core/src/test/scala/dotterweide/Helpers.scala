@@ -37,7 +37,7 @@ object Helpers {
 
   object Target {
     def unapply(node: Node): Option[(String, Int)] =
-      Some((node.span.text, node.span.begin))
+      Some((node.span.text, node.span.start))
   }
 
   object Text {
@@ -47,12 +47,12 @@ object Helpers {
 
   object Offset {
     def unapply(node: Node): Option[Int] =
-      Some(node.span.begin)
+      Some(node.span.start)
   }
 
   object Line {
     def unapply(node: Node): Int =
-      node.span.source.take(node.span.begin).count(_ == '\n')
+      node.span.source.take(node.span.start).count(_ == '\n')
   }
 
   def parseDocument(code: String): (Document, Terminal) = {
@@ -95,9 +95,9 @@ object Helpers {
   }
 
   private def assertWithin(interval: Interval, it: Interval): Unit = {
-    assertWithin(interval, it.begin)
-    assertWithin(interval, it.end)
-    assertTrue(it.begin <= it.end)
+    assertWithin(interval, it.start)
+    assertWithin(interval, it.stop)
+    assertTrue(it.start <= it.stop)
   }
 
   private def assertWithin(interval: Interval, i: Int): Unit =
@@ -105,7 +105,7 @@ object Helpers {
 
   def formatDocument(document: Document, view: Terminal): String = {
     val selection = view.selection.toSeq
-    val insertions = selection.map(_.end -> ']') ++ Seq(view.offset -> '|') ++ selection.map(_.begin -> '[')
+    val insertions = selection.map(_.stop -> ']') ++ Seq(view.offset -> '|') ++ selection.map(_.start -> '[')
     val builder = new StringBuilder(document.text)
     for((i, c) <- insertions.sortBy(-_._1)) builder.insert(i, c)
     builder.toString()

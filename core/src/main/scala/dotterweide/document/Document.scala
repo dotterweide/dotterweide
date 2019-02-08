@@ -24,7 +24,7 @@ trait Document extends LinesHolder with ObservableEvents[DocumentEvent] {
 
   def text(begin: Int, end: Int): String = characters.subSequence(begin, end).toString
 
-  def text(interval: Interval): String = text(interval.begin, interval.end)
+  def text(interval: Interval): String = text(interval.start, interval.stop)
 
   def characters: CharSequence
 
@@ -38,12 +38,12 @@ trait Document extends LinesHolder with ObservableEvents[DocumentEvent] {
   def remove(begin: Int, end: Int): Unit
 
   def remove(interval: Interval): Unit =
-    remove(interval.begin, interval.end)
+    remove(interval.start, interval.stop)
 
   def replace(begin: Int, end: Int, s: String): Unit
 
   def replace(interval: Interval, s: String): Unit =
-    replace(interval.begin, interval.end, s)
+    replace(interval.start, interval.stop, s)
 
   def createAnchorAt(offset: Int, bias: Bias): Anchor
 }

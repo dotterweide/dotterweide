@@ -37,7 +37,7 @@ private class DuplicateLine(document: Document, terminal: Terminal) extends Acti
     val snippet   = document.text(interval)
     val addition  = if (selection.isDefined) snippet else "\n%s".format(snippet)
 
-    document.insert(interval.end, addition)
+    document.insert(interval.stop, addition)
 
     terminal.offset += addition.length
 

@@ -23,13 +23,13 @@ package dotterweide
   * @param interval   the interval to select a substring
   */
 case class Span(source: CharSequence, interval: Interval) extends IntervalLike {
-  def begin : Int = interval.begin
-  def end   : Int = interval.end
+  def start : Int = interval.start
+  def stop   : Int = interval.stop
 
   /** The text denoted by `source.subSequence(begin, end)`. */
-  def text: String = source.subSequence(begin, end).toString
+  def text: String = source.subSequence(start, stop).toString
 
-  def leftEdge: Span = Span(source, begin, begin)
+  def leftEdge: Span = Span(source, start, start)
 
   override def toString: String = s"$productPrefix(..., $interval)"
 }

@@ -19,28 +19,35 @@ package dotterweide
 
 trait IntervalLike {
   /** Start offset, zero based, inclusive */
-  def begin : Int
+  def start: Int
+
   /** End offset, _exclusive_ */
-  def end   : Int
+  def stop: Int
 
   /** The interval length is `end - begin` */
-  def length: Int = end - begin
+  def length: Int = stop - start
 
   def empty: Boolean = length == 0
 
-  def includes(offset: Int): Boolean = begin <= offset && offset < end
-  def touches (offset: Int): Boolean = begin <= offset && offset <= end
+  def nonEmpty: Boolean = length > 0
 
-  def includes(interval: IntervalLike): Boolean =
-    (!empty && !interval.empty) &&
-      interval.begin >= begin && interval.end <= end
+  def includes(offset: Int): Boolean = start <= offset && offset < stop
+  def touches (offset: Int): Boolean = start <= offset && offset <= stop
 
-  def matches(interval: IntervalLike): Boolean =
-    (!empty && !interval.empty) &&
-      interval.begin == begin && interval.end == end
+  def includes(that: IntervalLike): Boolean =
+    (this.nonEmpty && that.nonEmpty) &&
+      that.start >= this.start && that.stop <= this.stop
 
-  def intersectsWith(interval: IntervalLike): Boolean =
-    (!empty && !interval.empty) &&
-      (includes(interval.begin) || includes(interval.end - 1) ||
-        interval.includes(begin) || interval.includes(end - 1))
+  def matches(that: IntervalLike): Boolean =
+    (this.nonEmpty && that.nonEmpty) &&
+      that.start == this.start && that.stop == this.stop
+
+  def intersectsWith(that: IntervalLike): Boolean =
+    (this.nonEmpty && that.nonEmpty) &&
+      (this.includes(that.start) || this.includes(that.stop - 1) ||
+       that.includes(this.start) || that.includes(this.stop - 1))
+
+  def overlaps(that: IntervalLike): Boolean =
+    (this.nonEmpty && that.nonEmpty) &&
+      math.max(this.start, that.start) < math.min(this.stop, that.stop)
 }

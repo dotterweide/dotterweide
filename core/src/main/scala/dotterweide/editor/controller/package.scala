@@ -69,7 +69,7 @@ package object controller {
 
   private[controller] implicit class NodeExt(val node: Node) extends AnyVal {
     def offsetOf(i: Int): Option[Int] =
-      if (node.span.touches(i)) Some(i - node.span.begin) else None
+      if (node.span.touches(i)) Some(i - node.span.start) else None
   }
 
   private[controller] implicit class TerminalExt(val terminal: Terminal) extends AnyVal {
@@ -86,7 +86,7 @@ package object controller {
       terminal.selection match {
         case Some(sel) =>
           terminal.selection = None
-          val shift = sel.begin + s.length - terminal.offset
+          val shift = sel.start + s.length - terminal.offset
           if (shift < 0) terminal.offset += shift
           document.replace(sel, s)
           if (shift > 0) terminal.offset += shift

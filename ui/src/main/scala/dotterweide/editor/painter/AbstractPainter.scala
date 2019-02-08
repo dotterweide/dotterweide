@@ -69,8 +69,8 @@ private abstract class AbstractPainter(context: PainterContext) extends Painter 
     val width   = canvas.size.width
     val height  = grid.cellHeight
 
-    val p1      = toPoint(interval.begin)
-    val p2      = toPoint(interval.end  )
+    val p1      = toPoint(interval.start)
+    val p2      = toPoint(interval.stop  )
 
     if (p1.y == p2.y) {
       new Rectangle(p1.x, p1.y, p2.x - p1.x, height) :: Nil

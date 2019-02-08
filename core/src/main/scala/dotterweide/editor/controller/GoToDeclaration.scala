@@ -40,8 +40,8 @@ private class GoToDeclaration(terminal: Terminal, data: Data)(implicit async: As
 
   private def offsetOf(target: Node): Int = {
     target match {
-      case IdentifiedNode(id, _) => id.span.begin
-      case node => node.span.begin
+      case IdentifiedNode(id, _) => id.span.start
+      case node => node.span.start
     }
   }
 }

@@ -36,7 +36,7 @@ trait ToyEvaluable { self: Node =>
 
   protected def place: Place = {
     val enclosure = self.parents.findBy[FunctionDeclaration].map(_.identifier)
-    val line      = self.span.source.take(self.span.begin).count(_ == '\n')
+    val line      = self.span.source.take(self.span.start).count(_ == '\n')
     Place(enclosure, line)
   }
 }

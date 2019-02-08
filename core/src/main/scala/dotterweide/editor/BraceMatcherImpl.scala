@@ -29,9 +29,9 @@ private class BraceMatcherImpl(complements: ISeq[(TokenKind, TokenKind)]) extend
       val tail = tokens.dropWhile(!_.eq(token)).tail
 
       complementIn(tail, complement._1, complement._2).map { it =>
-        if (token.span.begin == offset || it.span.end == offset) Paired else Inapplicable
+        if (token.span.start == offset || it.span.stop == offset) Paired else Inapplicable
       } orElse Some {
-        if (token.span.begin == offset) Unbalanced else Inapplicable
+        if (token.span.start == offset) Unbalanced else Inapplicable
       }
     }
 
@@ -41,9 +41,9 @@ private class BraceMatcherImpl(complements: ISeq[(TokenKind, TokenKind)]) extend
       val tail = tokens.takeWhile(!_.eq(token)).reverse
 
       complementIn(tail, complement._2, complement._1).map { it =>
-        if (token.span.end == offset || it.span.begin == offset) Paired else Inapplicable
+        if (token.span.stop == offset || it.span.start == offset) Paired else Inapplicable
       } orElse Some {
-        if (token.span.end == offset) Unbalanced else Inapplicable
+        if (token.span.stop == offset) Unbalanced else Inapplicable
       }
     }
 

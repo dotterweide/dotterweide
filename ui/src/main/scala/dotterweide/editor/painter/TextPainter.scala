@@ -55,7 +55,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
       if (!contains(replacement.before, '\n') && !contains(replacement.now, '\n')) {
         singleLineChanged = true
 
-        notifyObservers(lineRectangleAt(replacement.begin))
+        notifyObservers(lineRectangleAt(replacement.start))
       } else {
         notifyObservers(canvas.visibleRectangle)
       }
@@ -103,7 +103,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
       val tokens    = lexer.analyze(lineText).toList
       val string    = render(lineText, tokens, styling, font)
 
-      val decorated = decorate(string, decorators, lineInterval, - lineInterval.begin)
+      val decorated = decorate(string, decorators, lineInterval, - lineInterval.start)
       val iterator  = decorated.getIterator
 
       g.drawString(iterator, rectangle.x, rectangle.y + ascent)
@@ -116,12 +116,12 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
     Range(area.line, (area.line + area.height).min(document.linesCount)).foreach { line =>
       val interval = {
         val lineInterval = document.intervalOf(line)
-        val areaInterval = Interval(lineInterval.begin + area.indent, lineInterval.begin + area.indent + area.width)
+        val areaInterval = Interval(lineInterval.start + area.indent, lineInterval.start + area.indent + area.width)
         lineInterval.intersection(areaInterval)
       }
 
       if (!interval.empty) {
-        val iterator  = decorated.getIterator(null /* attributes -- all! */, interval.begin, interval.end)
+        val iterator  = decorated.getIterator(null /* attributes -- all! */, interval.start, interval.stop)
         val p         = grid.toPoint(Location(line, area.indent))
         g.drawString(iterator, p.x, p.y + ascent)
       }
@@ -142,7 +142,7 @@ private object TextPainter {
       tokens.foreach { token =>
         val attributes  = styling.attributesFor(token.kind)
         val span        = token.span
-        attributes.decorate(result, span.begin, span.end)
+        attributes.decorate(result, span.start, span.stop)
       }
     }
 
@@ -159,7 +159,7 @@ private object TextPainter {
 
       decorations.foreach { case (interval, attributes) =>
         attributes.foreach { case (key, value) =>
-          result.addAttribute(key, value, interval.begin + shift, interval.end + shift)
+          result.addAttribute(key, value, interval.start + shift, interval.stop + shift)
         }
       }
 

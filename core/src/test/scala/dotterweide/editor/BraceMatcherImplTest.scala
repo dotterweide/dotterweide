@@ -115,8 +115,8 @@ class BraceMatcherImplTest {
     def indexOf(token: Token): Option[Int] = {
       matcher.braceTypeOf(token, mapped, offset) match {
         case Inapplicable => None
-        case Paired => Some(token.span.begin)
-        case Unbalanced => Some(-token.span.begin - 1)
+        case Paired => Some(token.span.start)
+        case Unbalanced => Some(-token.span.start - 1)
       }
     }
 

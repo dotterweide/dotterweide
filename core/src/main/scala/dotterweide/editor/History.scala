@@ -25,15 +25,23 @@ import dotterweide.document.Document
   * Notifies observers when `canUndo` or `canRedo` change.
   */
 trait History extends Observable {
-  def capture(document: Document, terminal: Terminal)(block: => Unit): Unit
+  def capture(name: String, document: Document, terminal: Terminal)(block: => Unit): Unit
 
   def canUndo: Boolean
 
+  /** Throws an exception if `!canUndo` */
   def undo(): Unit
+
+  /** Throws an exception if `!canUndo` */
+  def undoName: String
 
   def canRedo: Boolean
 
+  /** Throws an exception if `!canRedo` */
   def redo(): Unit
+
+  /** Throws an exception if `!canRedo` */
+  def redoName: String
 
   def clear(): Unit
 }

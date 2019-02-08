@@ -109,6 +109,6 @@ class ScopeTest {
     Helpers.assertNoProblemsIn(elements)
     Helpers.assertNoUnresolvedIn(elements)
     val exit = root.asInstanceOf[Scope].exit
-    exit.map(it => root.span.text.take(it.span.begin).count(_ == '\n'))
+    exit.map(it => root.span.text.take(it.span.start).count(_ == '\n'))
   }
 }

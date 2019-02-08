@@ -26,7 +26,7 @@ trait ToyTranslatable extends Translatable { self: Node =>
     throw TranslationException(message.format(values: _*))
 
   protected def withLine(s: String): String = {
-    val line = self.span.source.take(self.span.begin).count(_ == '\n')
+    val line = self.span.source.take(self.span.start).count(_ == '\n')
     ".line %d\n%s".format(line, s)
   }
 }

@@ -38,9 +38,9 @@ private class Rename(document: Document, terminal: Terminal, val data: Data, his
       terminal.edit(id, "Rename") {
         case Some(text) =>
           terminal.highlights = Nil
-          history.capture(document, terminal) {
+          history.capture(name, document, terminal) {
             val anchor = document.createAnchorAt(terminal.offset, Bias.Right)
-            leafs.map(_.span.interval).sortBy(_.begin).reverse.foreach(document.replace(_, text))
+            leafs.map(_.span.interval).sortBy(_.start).reverse.foreach(document.replace(_, text))
             terminal.offset = anchor.offset
             anchor.dispose()
           }

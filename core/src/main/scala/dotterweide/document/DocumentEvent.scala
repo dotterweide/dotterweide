@@ -17,9 +17,10 @@
 
 package dotterweide.document
 
+import dotterweide.Interval
 import dotterweide.editor.UndoableEdit
 
-sealed trait DocumentEvent extends UndoableEdit{
+sealed trait DocumentEvent extends UndoableEdit {
   def document: Document
 
   def significant: Boolean = true
@@ -34,27 +35,49 @@ case class Insertion(document: Document, offset: Int, chars: CharSequence) exten
   def redo(): Unit =
     document.insert(offset, chars.toString)
 
-  def asReplacement = Replacement(document, begin = offset, end = offset, before = "", now = chars)
+  def interval: Interval = Interval(offset, offset + chars.length)
+
+  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = succ match {
+    case that: Insertion if this.document == that.document && this.interval.touches(that.offset) =>
+      val d = that.offset - this.offset
+      val p = chars.subSequence(0, d).toString + that.chars.toString + chars.subSequence(d, chars.length()).toString
+      val m = copy(chars = p)
+      Some(m)
+
+    case _ => None
+  }
+
+  def asReplacement = Replacement(document, start = offset, stop = offset, before = "", now = chars)
 }
 
-case class Removal(document: Document, begin: Int, end: Int, before: CharSequence) extends DocumentEvent {
+case class Removal(document: Document, start: Int, stop: Int, before: CharSequence) extends DocumentEvent {
+
+  require (before.length == stop - start)
+
   def undo(): Unit =
-    document.insert(offset = begin, before.toString)
+    document.insert(offset = start, before.toString)
+
+  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = None // XXX TODO
 
   def redo(): Unit =
-    document.remove(begin = begin, end = end)
+    document.remove(begin = start, end = stop)
 
-  def asReplacement = Replacement(document, begin = begin, end = end, before = before, now = "")
+  def asReplacement = Replacement(document, start = start, stop = stop, before = before, now = "")
 }
 
-case class Replacement(document: Document, begin: Int, end: Int, before: CharSequence, now: CharSequence)
+case class Replacement(document: Document, start: Int, stop: Int,
+                       before: CharSequence, now: CharSequence)
   extends DocumentEvent {
 
+  require (before.length == stop - start)
+
+  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = None // XXX TODO
+
   def undo(): Unit =
-    document.replace(begin, begin + now.length, before.toString)
+    document.replace(start, start + now.length, before.toString)
 
   def redo(): Unit =
-    document.replace(begin, end, now.toString)
+    document.replace(start, stop, now.toString)
 
   def asReplacement: Replacement = this
 }

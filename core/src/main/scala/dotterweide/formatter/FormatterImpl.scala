@@ -35,8 +35,8 @@ class FormatterImpl(format: Format) extends Formatter {
         format(p._1, p._2, column * tabSize)
       }
       val formatted = (parts ++ tokens.map(_.span.text).lastOption.toSeq).mkString
-      val prefix    = root.span.source.subSequence(0, interval.begin)
-      val suffix    = root.span.source.subSequence(interval.end)
+      val prefix    = root.span.source.subSequence(0, interval.start)
+      val suffix    = root.span.source.subSequence(interval.stop)
       prefix + formatted + suffix
     }
   }
@@ -48,7 +48,7 @@ class FormatterImpl(format: Format) extends Formatter {
   }
 
   private def distanceBetween(a: Token, b: Token): Distance = {
-    val s = a.span.source.subSequence(a.span.end, b.span.begin)
+    val s = a.span.source.subSequence(a.span.stop, b.span.start)
     val lines = s.count(_ == '\n')
     if (lines > 0) Lines(lines) else Spaces(s.count(_ == ' '))
   }
@@ -74,8 +74,8 @@ class FormatterImpl(format: Format) extends Formatter {
 
     val selected = root.elements.flatMap(_.token.toSeq).distinct.filter(_.span.interval.intersectsWith(interval))
 
-    val begin = selected.headOption.map(_.span.begin).getOrElse(root.span.begin)
-    val end   = selected.lastOption.map(_.span.end  ).getOrElse(root.span.end  )
+    val begin = selected.headOption.map(_.span.start).getOrElse(root.span.start)
+    val end   = selected.lastOption.map(_.span.stop  ).getOrElse(root.span.stop  )
 
     (selected, Interval(begin, end))
   }

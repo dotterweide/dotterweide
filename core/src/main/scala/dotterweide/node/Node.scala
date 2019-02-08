@@ -83,24 +83,24 @@ trait Node extends Evaluable with Translatable with Optimizable {
   }
 
   def leafAt(offset: Int): Option[Node] = {
-    if (offset < 0 || offset > span.end)
-      throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.begin, span.end))
-    val offAbs = span.begin + offset
+    if (offset < 0 || offset > span.stop)
+      throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.start, span.stop))
+    val offAbs = span.start + offset
     elements.filter(_.span.touches(offAbs)).find(_.isLeaf)
   }
 
   def referenceAt(offset: Int): Option[ReferenceNode] = {
-    if (offset < 0 || offset > span.end) {
-      throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.begin, span.end))
+    if (offset < 0 || offset > span.stop) {
+      throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.start, span.stop))
     }
-    elements.filter(_.span.touches(span.begin + offset)).findBy[ReferenceNode]
+    elements.filter(_.span.touches(span.start + offset)).findBy[ReferenceNode]
   }
 
   def identifierAt(offset: Int): Option[IdentifiedNode] = {
-    if (offset < 0 || offset > span.end) {
-      throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.begin, span.end))
+    if (offset < 0 || offset > span.stop) {
+      throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.start, span.stop))
     }
-    val candidates = elements.filter(_.span.touches(span.begin + offset)).collect {
+    val candidates = elements.filter(_.span.touches(span.start + offset)).collect {
       case node @ NodeParent(identified: IdentifiedNode) if identified.id.contains(node) => identified
     }
     candidates.headOption

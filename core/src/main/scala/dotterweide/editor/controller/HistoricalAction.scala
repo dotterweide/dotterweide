@@ -22,19 +22,19 @@ import dotterweide.editor.{Action, History, Terminal}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class HistoricalAction(delegate: Action, document: Document, terminal: Terminal, history: History)
+private class HistoricalAction(peer: Action, document: Document, terminal: Terminal, history: History)
   extends Action {
 
-  def keys: ISeq[String]  = delegate.keys
+  def keys: ISeq[String]  = peer.keys
 
-  override def name     : String  = delegate.name
-  override def mnemonic : Char    = delegate.mnemonic
-  override def enabled  : Boolean = delegate.enabled
+  override def name     : String  = peer.name
+  override def mnemonic : Char    = peer.mnemonic
+  override def enabled  : Boolean = peer.enabled
 
-  delegate.onChange(evt => notifyObservers(evt))
+  peer.onChange(evt => notifyObservers(evt))
 
   def apply(): Unit =
-    history.capture(document, terminal) {
-      delegate()
+    history.capture(name, document, terminal) {
+      peer()
     }
 }

@@ -44,7 +44,7 @@ class DocumentImpl(text0: String = "") extends Document {
     val previous = ls.subSequence(begin, end)
     ls = ls.replace(begin, end, "")
     updateAnchors(begin, end, begin)
-    val evt = Removal(this, begin = begin, end = end, before = previous)
+    val evt = Removal(this, start = begin, stop = end, before = previous)
     notifyObservers(evt)
   }
 
@@ -53,7 +53,7 @@ class DocumentImpl(text0: String = "") extends Document {
     val previous = ls.subSequence(begin, end)
     ls = ls.replace(begin, end, chars)
     updateAnchors(begin, end, begin + chars.length)
-    val evt = Replacement(this, begin = begin, end = end, before = previous, now = chars)
+    val evt = Replacement(this, start = begin, stop = end, before = previous, now = chars)
     notifyObservers(evt)
   }
 

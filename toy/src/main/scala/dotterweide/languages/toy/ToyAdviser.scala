@@ -63,7 +63,7 @@ object ToyAdviser extends SyncAdviser {
     val declarations = node.parents
       .filterBy[Scope]
       .flatMap(_.declarations)
-      .filter(_.span.begin < node.span.begin)
+      .filter(_.span.start < node.span.start)
     
     val parameters = declarations.filterBy[Parameter          ].map(p => asValue    (p.identifier))
     val functions  = declarations.filterBy[FunctionDeclaration].map(f => asFunction (f.identifier))

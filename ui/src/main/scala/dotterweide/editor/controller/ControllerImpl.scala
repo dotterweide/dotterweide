@@ -58,9 +58,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
 
     notifyObservers(ActionStarted(isImmediate(e)))
 
-    history.capture(document, terminal) {
-      doProcessKeyPressed(e)
-    }
+    doProcessKeyPressed(e)
 
     processActions(e)
 
@@ -70,9 +68,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   def processKeyTyped(e: KeyEvent): Unit = {
     notifyObservers(ActionStarted(immediate = true))
 
-    history.capture(document, terminal) {
-      doProcessKeyTyped(e)
-    }
+    doProcessKeyTyped(e)
 
     notifyObservers(ActionFinished)
   }
@@ -96,92 +92,111 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     case _ => false
   }
 
-  /** Handles cursor movement and back-space/delete */
-  def doProcessKeyPressed(e: KeyEvent): Unit = {
+  private def capture(name: String)(body: => Unit): Unit =
+    history.capture(name, document, terminal)(body)
+
+  /* Handles cursor movement and back-space/delete */
+  private def doProcessKeyPressed(e: KeyEvent): Unit = {
     if (e.isShiftDown && terminal.selection.isEmpty) origin = terminal.offset
+
+    def move      (body: => Unit): Unit = capture("Move"      )(body)
+    def backspace (body: => Unit): Unit = capture("Backspace" )(body)
+    def delete    (body: => Unit): Unit = capture("Delete"    )(body)
 
     e.getKeyCode match {
       case KeyEvent.VK_LEFT =>
-        if (terminal.offset > 0) {
+        if (terminal.offset > 0) move {
           if (e.isControlDown) {
             terminal.offset = seek(-1)
           } else {
-            terminal.offset = terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset - 1)(_.begin)
+            terminal.offset = terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset - 1)(_.start)
           }
           terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
         }
 
       case KeyEvent.VK_RIGHT =>
-        if (terminal.offset < document.length) {
+        if (terminal.offset < document.length) move {
           if (e.isControlDown) {
             terminal.offset = seek(1)
           } else {
-            terminal.offset = terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset + 1)(_.end)
+            terminal.offset = terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset + 1)(_.stop)
           }
           terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
         }
 
       case KeyEvent.VK_UP if !e.isControlDown =>
-        if (document.lineNumberOf(terminal.offset) > 0) {
+        if (document.lineNumberOf(terminal.offset) > 0) move {
           jumpTo(document.lineNumberOf(terminal.offset) - 1, e.isShiftDown)
         }
 
       case KeyEvent.VK_DOWN if !e.isControlDown =>
-        if (document.lineNumberOf(terminal.offset) < document.linesCount - 1) {
+        if (document.lineNumberOf(terminal.offset) < document.linesCount - 1) move {
           jumpTo(document.lineNumberOf(terminal.offset) + 1, e.isShiftDown)
         }
 
       case KeyEvent.VK_PAGE_UP if !e.isControlDown =>
-        if (document.lineNumberOf(terminal.offset) > 0) {
+        if (document.lineNumberOf(terminal.offset) > 0) move {
           jumpTo(0.max(document.lineNumberOf(terminal.offset) - 10), e.isShiftDown)
         }
 
       case KeyEvent.VK_PAGE_DOWN if !e.isControlDown =>
-        if (document.lineNumberOf(terminal.offset) < document.linesCount - 1) {
+        if (document.lineNumberOf(terminal.offset) < document.linesCount - 1) move {
           jumpTo((document.linesCount - 1).min(document.lineNumberOf(terminal.offset) + 10), e.isShiftDown)
         }
 
       case KeyEvent.VK_HOME if e.isControlDown =>
-        terminal.offset = 0
-        terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+        move {
+          terminal.offset = 0
+          terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+        }
 
       case KeyEvent.VK_END if e.isControlDown =>
-        terminal.offset = document.length
-        terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+        move {
+          terminal.offset = document.length
+          terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+        }
 
       case KeyEvent.VK_HOME =>
-        val origin = terminal.offset
-        val edge = document.startOffsetOf(document.lineNumberOf(terminal.offset))
-        val next = seek(c => c.isWhitespace, edge, 1)
-          .filter(document.toLocation(_).line == document.toLocation(edge).line)
-          .getOrElse(edge)
-        terminal.offset = if (next == origin) edge else next
-        terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+        move {
+          val origin = terminal.offset
+          val edge = document.startOffsetOf(document.lineNumberOf(terminal.offset))
+          val next = seek(c => c.isWhitespace, edge, 1)
+            .filter(document.toLocation(_).line == document.toLocation(edge).line)
+            .getOrElse(edge)
+          terminal.offset     = if (next == origin) edge else next
+          terminal.selection  = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+        }
 
       case KeyEvent.VK_END =>
-        terminal.offset = document.endOffsetOf(document.lineNumberOf(terminal.offset))
-        terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+        move {
+          terminal.offset     = document.endOffsetOf(document.lineNumberOf(terminal.offset))
+          terminal.selection  = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+        }
 
       case KeyEvent.VK_BACK_SPACE if terminal.selection.isDefined =>
-        terminal.insertInto(document, "")
+        backspace {
+          terminal.insertInto(document, "")
+        }
 
       case KeyEvent.VK_BACK_SPACE =>
-        if (terminal.offset > 0) {
-          val length = if (e.isControlDown) terminal.offset - seek(-1) else 1
-          terminal.offset -= length
-          val next = terminal.offset + length
-          val leftChar = document.charAt(next - 1)
-          val rightChar = if (document.length > next) Some(document.charAt(next)) else None
-          val complement = rightChar.flatMap(it => pairs.find(_._1 == leftChar).map(_._2).filter(_ == it))
-          terminal.selection = None
+        if (terminal.offset > 0) backspace {
+          val length          = if (e.isControlDown) terminal.offset - seek(-1) else 1
+          terminal.offset    -= length
+          val next            = terminal.offset + length
+          val leftChar        = document.charAt(next - 1)
+          val rightChar       = if (document.length > next) Some(document.charAt(next)) else None
+          val complement      = rightChar.flatMap(it => pairs.find(_._1 == leftChar).map(_._2).filter(_ == it))
+          terminal.selection  = None
           document.remove(terminal.offset, next + complement.mkString.length)
         }
 
       case KeyEvent.VK_DELETE if !e.isShiftDown && terminal.selection.isDefined =>
-        terminal.insertInto(document, "")
+        delete {
+          terminal.insertInto(document, "")
+        }
 
       case KeyEvent.VK_DELETE if !e.isShiftDown =>
-        if (terminal.offset < document.length) {
+        if (terminal.offset < document.length) delete {
           val length = if (e.isControlDown) seek(1) - terminal.offset else 1
           terminal.selection = None
           document.remove(terminal.offset, terminal.offset + length)
@@ -199,18 +214,24 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     terminal.selection  = if (shiftPressed) fromOriginTo(terminal.offset) else None
   }
 
-  def doProcessKeyTyped(e: KeyEvent): Unit = {
+  private def doProcessKeyTyped(e: KeyEvent): Unit = {
+    def insert(body: => Unit): Unit = capture("Typing")(body)
+
     e.getKeyChar match {
       case c if c == KeyEvent.VK_ENTER && !e.isAltDown && !e.isShiftDown =>
-        if (terminal.selection.isDefined) {
+        if (terminal.selection.isDefined) insert {
           processCharInsertion(c)
-        } else {
+        } else capture("New Line") {
           processEnterPressed(e.isControlDown)
         }
       case c if c == KeyEvent.VK_TAB && !e.isControlDown && !e.isShiftDown && terminal.selection.isEmpty =>
-        terminal.insertInto(document, Seq.fill(tabSize)(' ').mkString)
+        insert {
+          terminal.insertInto(document, Seq.fill(tabSize)(' ').mkString)
+        }
       case c if !c.isControl && !e.isControlDown && !e.isAltDown =>
-        processCharInsertion(c)
+        insert {
+          processCharInsertion(c)
+        }
       case _ =>
     }
   }
@@ -283,8 +304,8 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     } else {
       None
     }
-    terminal.offset     = targetOffset.orElse(leafSpan.map(_.end)).getOrElse(pointOffset)
-    origin              = leafSpan.fold(terminal.offset)(_.begin)
+    terminal.offset     = targetOffset.orElse(leafSpan.map(_.stop)).getOrElse(pointOffset)
+    origin              = leafSpan.fold(terminal.offset)(_.start)
     terminal.selection  = leafSpan.map(_.interval)
   }
 
@@ -309,8 +330,8 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   // TODO remove this duplicate
   private def offsetOf(target: Node): Int = {
     target match {
-      case IdentifiedNode(id, _) => id.span.begin
-      case node => node.span.begin
+      case IdentifiedNode(id, _) => id.span.start
+      case node => node.span.start
     }
   }
 

@@ -44,10 +44,10 @@ private class ToggleLineComment(document: Document, terminal: Terminal, prefix: 
     val oldSelection  = terminal.selection
     val lineNumbers   = oldSelection match {
       case Some(sel) =>
-        val beginLine = document.lineNumberOf(sel.begin)
-        val endLine0  = document.lineNumberOf(sel.end  )
+        val beginLine = document.lineNumberOf(sel.start)
+        val endLine0  = document.lineNumberOf(sel.stop  )
         // don't include last line if selection ends on beginning of line
-        val endIsBOL  = document.startOffsetOf(endLine0) == sel.end
+        val endIsBOL  = document.startOffsetOf(endLine0) == sel.stop
         val endLine   = if (endIsBOL) endLine0 - 1 else endLine0
 
         beginLine to endLine
@@ -64,17 +64,17 @@ private class ToggleLineComment(document: Document, terminal: Terminal, prefix: 
 
     val hasSelection      = oldSelection.isDefined
     val addComment        = !tuples.forall(_._2.trim.startsWith(prefix))
-    val csrAfterSelBegin  = oldSelection.exists(_.begin < terminal.offset)
+    val csrAfterSelBegin  = oldSelection.exists(_.start < terminal.offset)
     val moveCursor        = !hasSelection
 
     terminal.selection = None
     // make sure we go backwards, so intervals are valid during editing!
     tuples.reverseIterator.foreach { case (interval, line) =>
       if (addComment) {
-        document.insert(interval.begin, prefix)
-        if (moveCursor && terminal.offset > interval.begin) terminal.offset += prefix.length
+        document.insert(interval.start, prefix)
+        if (moveCursor && terminal.offset > interval.start) terminal.offset += prefix.length
       } else {
-        val i = interval.begin + line.indexOf(prefix)
+        val i = interval.start + line.indexOf(prefix)
         val commentInterval = Interval(i, i + prefix.length)
         document.remove(commentInterval)
         if (moveCursor) {

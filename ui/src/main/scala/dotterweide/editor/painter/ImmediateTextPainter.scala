@@ -63,9 +63,9 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
 
         val lengthBefore  = replacement.before.length
         val lengthAfter   = replacement.now .length
-        val endAfter      = replacement.begin + lengthAfter
+        val endAfter      = replacement.start + lengthAfter
 
-        val rectangle = rectangleFrom(replacement.begin,
+        val rectangle = rectangleFrom(replacement.start,
           math.max(lengthBefore, lengthAfter) + tailLengthFrom(endAfter) + 1)
         notifyObservers(rectangle)
       }

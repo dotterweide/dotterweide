@@ -43,7 +43,7 @@ package object compiler {
       .filterBy[Scope]
       .init
       .flatMap(_.values)
-      .count(_.span.begin < variable.span.begin)
+      .count(_.span.start < variable.span.start)
 
     def global: Boolean = variable.parent match {
       case Some(_: Program) => true

@@ -102,7 +102,7 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
   }
 
   private def toRectangle(interval: Interval): Rectangle = {
-    val location = document.toLocation(interval.begin)
+    val location = document.toLocation(interval.start)
     val area = Area(location.line, location.indent, interval.length, 1)
     grid.toRectangle(area)
   }

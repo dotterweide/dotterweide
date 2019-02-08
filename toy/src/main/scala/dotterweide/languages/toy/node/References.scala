@@ -27,7 +27,7 @@ trait ToyReference extends ReferenceNode {
 
   protected def targetIn(filter: Scope => Seq[IdentifiedNode]): Option[IdentifiedNode] = source.flatMap { node =>
     parents.filterBy[Scope].flatMap(filter)
-      .filter(_.span.begin < node.span.begin)
+      .filter(_.span.start < node.span.start)
       .find(it => it.identifier == identifier)
   }
 }

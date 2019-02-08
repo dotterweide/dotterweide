@@ -34,9 +34,9 @@ private class IndentSelection(document: Document, terminal: Terminal, tabSize: I
 
   def apply(): Unit =
     terminal.selection.foreach { it =>
-      val selection = if (document.toLocation(it.end).indent == 0) it.withEndShift(-1) else it
-      val beginLine = document.lineNumberOf(selection.begin)
-      val endLine = document.lineNumberOf(selection.end)
+      val selection = if (document.toLocation(it.stop).indent == 0) it.withEndShift(-1) else it
+      val beginLine = document.lineNumberOf(selection.start)
+      val endLine = document.lineNumberOf(selection.stop)
       val interval = Interval(document.startOffsetOf(beginLine), document.endOffsetOf(endLine))
 
       val text = document.text(interval)

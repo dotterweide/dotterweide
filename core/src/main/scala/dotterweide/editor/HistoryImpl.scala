@@ -20,12 +20,13 @@ package dotterweide.editor
 import dotterweide.document.Document
 
 class HistoryImpl extends History {
-  private var toUndo: List[Capture] = Nil
-  private var toRedo: List[Capture] = Nil
+
+  private var toUndo: List[Action] = Nil
+  private var toRedo: List[Action] = Nil
 
   private var busy = false
 
-  def capture(document: Document, terminal: Terminal)(block: => Unit): Unit = {
+  def capture(name: String, document: Document, terminal: Terminal)(block: => Unit): Unit = {
     if (busy)
       throw new IllegalStateException("Nested capture")
 
@@ -43,11 +44,16 @@ class HistoryImpl extends History {
       terminal.disconnect(recorder)
 
       edits.exists(_.significant) && {
-        val couldUndo = toUndo.nonEmpty
+        val oldUndo   = toUndo
+        val couldUndo = oldUndo.nonEmpty
         val couldRedo = toRedo.nonEmpty
-        toUndo ::= Capture(edits)
+        val newEdit = edits match {
+          case single :: Nil  => new SingleAction  (name, single)
+          case _              => new CompoundAction(name, edits )
+        }
+        toUndo ::= newEdit
         toRedo = Nil
-        !couldUndo || couldRedo
+        !couldUndo || couldRedo || (couldUndo && oldUndo.head.name != name)
       }
 
     } finally {
@@ -59,11 +65,14 @@ class HistoryImpl extends History {
 
   def canUndo: Boolean = toUndo.nonEmpty
 
+  def undoName: String = toUndo.head.name
+
   def undo(): Unit =
     toUndo match {
       case action :: tail =>
         action.undo()
-        val fire = tail.isEmpty || toRedo.isEmpty
+        val fire = tail.isEmpty || toRedo.isEmpty ||
+          (action.name != tail.head.name) || (action.name != toRedo.head.name)
         toUndo = tail
         toRedo ::= action
         if (fire) notifyObservers()
@@ -74,11 +83,14 @@ class HistoryImpl extends History {
 
   def canRedo: Boolean = toRedo.nonEmpty
 
+  def redoName: String = toRedo.head.name
+
   def redo(): Unit =
     toRedo match {
       case action :: tail =>
         action.redo()
-        val fire = tail.isEmpty || toUndo.isEmpty
+        val fire = tail.isEmpty || toUndo.isEmpty ||
+          (action.name != tail.head.name) || (action.name != toUndo.head.name)
         toRedo = tail
         toUndo ::= action
         if (fire) notifyObservers()
@@ -94,7 +106,17 @@ class HistoryImpl extends History {
     if (fire) notifyObservers()
   }
 
-  private case class Capture(edits: List[UndoableEdit]) {
+  private sealed abstract class Action(val name: String) {
+    def undo(): Unit
+    def redo(): Unit
+  }
+
+  private class SingleAction(name: String, edit: UndoableEdit) extends Action(name) {
+    def undo(): Unit = edit.undo()
+    def redo(): Unit = edit.redo()
+  }
+
+  private class CompoundAction(name: String, edits: List[UndoableEdit]) extends Action(name) {
     def undo(): Unit =
       edits.foreach(_.undo())
 

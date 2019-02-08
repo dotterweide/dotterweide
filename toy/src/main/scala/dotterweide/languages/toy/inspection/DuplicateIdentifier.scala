@@ -63,7 +63,7 @@ object DuplicateIdentifier extends Inspection {
     } else {
       val outer = scope.parents.findBy[Scope]
         .map(clashableIn(_, extractor)).getOrElse(Nil)
-        .filter(_.span.begin < scope.span.begin)
+        .filter(_.span.start < scope.span.start)
       outer ++ inner
     }
   }

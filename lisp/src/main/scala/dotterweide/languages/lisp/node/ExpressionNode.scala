@@ -23,7 +23,7 @@ import dotterweide.node.Node
 
 trait ExpressionNode extends Node with ReadableNode with QuotableNode {
   def placeIn(source: String): Place = {
-    val line = span.source.take(span.begin).count(_ == '\n')
+    val line = span.source.take(span.start).count(_ == '\n')
     Place(Some(enclosure.map(source + "." + _).getOrElse(source)), line)
   }
 
