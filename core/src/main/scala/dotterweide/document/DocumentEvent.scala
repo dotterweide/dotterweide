@@ -17,39 +17,44 @@
 
 package dotterweide.document
 
-sealed trait DocumentEvent {
-  def undo(document: Document): Unit
-  def redo(document: Document): Unit
+import dotterweide.editor.UndoableEdit
+
+sealed trait DocumentEvent extends UndoableEdit{
+  def document: Document
+
+  def significant: Boolean = true
 
   def asReplacement: Replacement
 }
 
-case class Insertion(offset: Int, chars: CharSequence) extends DocumentEvent {
-  def undo(document: Document): Unit =
+case class Insertion(document: Document, offset: Int, chars: CharSequence) extends DocumentEvent {
+  def undo(): Unit =
     document.remove(offset, offset + chars.length)
 
-  def redo(document: Document): Unit =
+  def redo(): Unit =
     document.insert(offset, chars.toString)
 
-  def asReplacement = Replacement(offset, offset, "", chars)
+  def asReplacement = Replacement(document, begin = offset, end = offset, before = "", now = chars)
 }
 
-case class Removal(begin: Int, end: Int, before: CharSequence) extends DocumentEvent {
-  def undo(document: Document): Unit =
-    document.insert(begin, before.toString)
+case class Removal(document: Document, begin: Int, end: Int, before: CharSequence) extends DocumentEvent {
+  def undo(): Unit =
+    document.insert(offset = begin, before.toString)
 
-  def redo(document: Document): Unit =
-    document.remove(begin, end)
+  def redo(): Unit =
+    document.remove(begin = begin, end = end)
 
-  def asReplacement = Replacement(begin, end, before, "")
+  def asReplacement = Replacement(document, begin = begin, end = end, before = before, now = "")
 }
 
-case class Replacement(begin: Int, end: Int, before: CharSequence, after: CharSequence) extends DocumentEvent {
-  def undo(document: Document): Unit =
-    document.replace(begin, begin + after.length, before.toString)
+case class Replacement(document: Document, begin: Int, end: Int, before: CharSequence, now: CharSequence)
+  extends DocumentEvent {
 
-  def redo(document: Document): Unit =
-    document.replace(begin, end, after.toString)
+  def undo(): Unit =
+    document.replace(begin, begin + now.length, before.toString)
+
+  def redo(): Unit =
+    document.replace(begin, end, now.toString)
 
   def asReplacement: Replacement = this
 }

@@ -42,7 +42,7 @@ private class Actions(document: Document, terminal: Terminal, data: Data, advise
   val lineRemove        : Action = historical(new RemoveLine    (document, terminal))
   val optimize          : Action = historical(new Optimize(document, terminal, data))
   val paste             : Action = historical(new Paste(document, terminal))
-  val redo              : Action = new Redo(document, terminal, history)
+  val redo              : Action = new Redo(history)
   val rename            : Action = new Rename(document, terminal, data, history)
   val selectAll         : Action = historical(new SelectAll(document, terminal))
   val selectNone        : Action = historical(new ClearSelection(terminal))
@@ -50,5 +50,5 @@ private class Actions(document: Document, terminal: Terminal, data: Data, advise
   val selectionUnindent : Action = historical(new UnindentSelection(document, terminal, tabSize = tabSize))
   val showUsages        : Action = historical(new ShowUsages(terminal, data))
   val toggleLineComment : Action = historical(new ToggleLineComment(document, terminal, prefix = lineCommentPrefix))
-  val undo              : Action = new Undo(document, terminal, history)
+  val undo              : Action = new Undo(history)
 }

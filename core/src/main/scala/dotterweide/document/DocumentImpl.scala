@@ -31,11 +31,12 @@ class DocumentImpl(text0: String = "") extends Document {
 
   def characters: CharSequence = ls
 
-  def insert(offset: Int, s: String): Unit = {
+  def insert(offset: Int, chars: String): Unit = {
     check(offset)
-    ls = ls.replace(offset, offset, s)
-    updateAnchors(offset, offset, offset + s.length)
-    notifyObservers(Insertion(offset, s))
+    ls = ls.replace(start = offset, end = offset, chars = chars)
+    updateAnchors(offset, offset, offset + chars.length)
+    val evt = Insertion(this, offset = offset, chars = chars)
+    notifyObservers(evt)
   }
 
   def remove(begin: Int, end: Int): Unit = {
@@ -43,15 +44,17 @@ class DocumentImpl(text0: String = "") extends Document {
     val previous = ls.subSequence(begin, end)
     ls = ls.replace(begin, end, "")
     updateAnchors(begin, end, begin)
-    notifyObservers(Removal(begin, end, previous))
+    val evt = Removal(this, begin = begin, end = end, before = previous)
+    notifyObservers(evt)
   }
 
-  def replace(begin: Int, end: Int, s: String): Unit = {
+  def replace(begin: Int, end: Int, chars: String): Unit = {
     check(begin, end)
     val previous = ls.subSequence(begin, end)
-    ls = ls.replace(begin, end, s)
-    updateAnchors(begin, end, begin + s.length)
-    notifyObservers(Replacement(begin, end, previous, s))
+    ls = ls.replace(begin, end, chars)
+    updateAnchors(begin, end, begin + chars.length)
+    val evt = Replacement(this, begin = begin, end = end, before = previous, now = chars)
+    notifyObservers(evt)
   }
 
   private def updateAnchors(begin: Int, end: Int, end2: Int): Unit =

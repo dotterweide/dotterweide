@@ -32,9 +32,9 @@ private class HoverPainter(context: PainterContext) extends AbstractPainter(cont
     TextAttribute.UNDERLINE -> TextAttribute.UNDERLINE_ON)
 
   terminal.onChange {
-    case HoverChange(from, to) =>
-      from.foreach(offset => hoverInterval(offset).foreach(notifyObservers))
-      to  .foreach(offset => hoverInterval(offset).foreach(notifyObservers))
+    case HoverChange(_, before, now) =>
+      before.foreach(offset => hoverInterval(offset).foreach(notifyObservers))
+      now   .foreach(offset => hoverInterval(offset).foreach(notifyObservers))
     case _ =>
   }
 

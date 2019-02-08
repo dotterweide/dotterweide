@@ -33,7 +33,7 @@ trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
     if (_offset != i) {
       val previous = _offset
       _offset = i
-      notifyObservers(CaretMovement(previous, i))
+      notifyObservers(CaretMovement(this, before = previous, now = i))
     }
 
   def selection: Option[Interval] = _selection
@@ -42,7 +42,7 @@ trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
     if (_selection != s) {
       val previous = _selection
       _selection = s
-      notifyObservers(SelectionChange(previous, s))
+      notifyObservers(SelectionChange(this, before = previous, now = s))
     }
 
   def hover: Option[Int] = _hover
@@ -51,7 +51,7 @@ trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
     if (_hover != i) {
       val previous = _hover
       _hover = i
-      notifyObservers(HoverChange(previous, i))
+      notifyObservers(HoverChange(this, before = previous, now = i))
     }
 
   def highlights: ISeq[Interval] = _highlights
@@ -60,6 +60,6 @@ trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
     if (_highlights != hs) {
       val previous = _highlights
       _highlights = hs
-      notifyObservers(HighlightsChange(previous, hs))
+      notifyObservers(HighlightsChange(this, before = previous, now = hs))
     }
 }

@@ -17,11 +17,11 @@
 
 package dotterweide.editor
 
-import dotterweide.document.{Document, DocumentEvent}
+import dotterweide.document.Document
 
 class HistoryImpl extends History {
-  private var toUndo: List[Action] = Nil
-  private var toRedo: List[Action] = Nil
+  private var toUndo: List[Capture] = Nil
+  private var toRedo: List[Capture] = Nil
 
   private var busy = false
 
@@ -30,10 +30,9 @@ class HistoryImpl extends History {
       throw new IllegalStateException("Nested capture")
 
     busy = true
-    try {
-      var events = List.empty[Any]
-
-      val recorder = events ::= (_: Any)
+    val fire = try {
+      var edits     = List.empty[UndoableEdit]
+      val recorder  = edits ::= (_: UndoableEdit)
 
       document.onChange(recorder)
       terminal.onChange(recorder)
@@ -43,58 +42,63 @@ class HistoryImpl extends History {
       document.disconnect(recorder)
       terminal.disconnect(recorder)
 
-      if (events.exists(_.isInstanceOf[DocumentEvent])) {
-        toUndo ::= Action(document, terminal, events)
+      edits.exists(_.significant) && {
+        val couldUndo = toUndo.nonEmpty
+        val couldRedo = toRedo.nonEmpty
+        toUndo ::= Capture(edits)
         toRedo = Nil
+        !couldUndo || couldRedo
       }
 
     } finally {
       busy = false
     }
+
+    if (fire) notifyObservers()
   }
 
   def canUndo: Boolean = toUndo.nonEmpty
 
-  def undo(): Unit = {
-    if (!canUndo)
-      throw new IllegalStateException("Nothing to undo")
+  def undo(): Unit =
+    toUndo match {
+      case action :: tail =>
+        action.undo()
+        val fire = tail.isEmpty || toRedo.isEmpty
+        toUndo = tail
+        toRedo ::= action
+        if (fire) notifyObservers()
 
-    toUndo.headOption.foreach { action =>
-      action.undo()
-      toUndo = toUndo.tail
-      toRedo ::= action
+      case _ =>
+        throw new IllegalStateException("Nothing to undo")
     }
-  }
 
   def canRedo: Boolean = toRedo.nonEmpty
 
-  def redo(): Unit = {
-    if (!canRedo)
-      throw new IllegalStateException("Nothing to redo")
+  def redo(): Unit =
+    toRedo match {
+      case action :: tail =>
+        action.redo()
+        val fire = tail.isEmpty || toUndo.isEmpty
+        toRedo = tail
+        toUndo ::= action
+        if (fire) notifyObservers()
 
-    toRedo.headOption.foreach { action =>
-      action.redo()
-      toRedo = toRedo.tail
-      toUndo ::= action
+      case _ =>
+        throw new IllegalStateException("Nothing to redo")
     }
-  }
 
   def clear(): Unit = {
+    val fire = toUndo.nonEmpty || toRedo.nonEmpty
     toUndo = Nil
     toRedo = Nil
+    if (fire) notifyObservers()
   }
 
-  private case class Action(document: Document, terminal: Terminal, events: List[Any]) {
+  private case class Capture(edits: List[UndoableEdit]) {
     def undo(): Unit =
-      events.foreach {
-        case it: DocumentEvent => it.undo(document)
-        case it: TerminalEvent => it.undo(terminal)
-      }
+      edits.foreach(_.undo())
 
     def redo(): Unit =
-      events.reverse.foreach {
-        case it: DocumentEvent => it.redo(document)
-        case it: TerminalEvent => it.redo(terminal)
-      }
+      edits.reverse.foreach(_.redo())
   }
 }

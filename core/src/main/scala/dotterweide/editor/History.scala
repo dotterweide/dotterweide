@@ -17,9 +17,14 @@
 
 package dotterweide.editor
 
+import dotterweide.Observable
 import dotterweide.document.Document
 
-trait History {
+/** Undo-redo management.
+  *
+  * Notifies observers when `canUndo` or `canRedo` change.
+  */
+trait History extends Observable {
   def capture(document: Document, terminal: Terminal)(block: => Unit): Unit
 
   def canUndo: Boolean

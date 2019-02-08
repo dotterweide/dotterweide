@@ -8,7 +8,7 @@ The following editor features should be implemented (note: checkmark means that 
 
  - [X] FIX: toggle-line-comment broken when several lines are selected
  - [ ] FIX: un-indent does not work when applying to single indented line
- - [ ] the history (undo manager) should be observable, so we can properly track dirty state
+ - [X] the history (undo manager) should be observable, so we can properly track dirty state
  - [ ] Quick Find (ctrl-F)
  - [X] shift and mouse click should make or extend the selection
  - [ ] Configurable wrapping code ("preamble", "terminator")

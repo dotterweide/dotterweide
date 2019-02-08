@@ -45,7 +45,10 @@ private abstract class AbstractPainter(context: PainterContext) extends Painter 
   protected def toPoint(offset: Int): Point =
     grid.toPoint(document.toLocation(offset))
 
-  /** Calculates the visual rectangles for a text interval, and publishes events for them */
+  /** Calculates the visual rectangles for a text interval, and publishes events for them.
+    *
+    * @param  interval  a "dirty" interval that needs repainting
+    */
   protected def notifyObservers(interval: Interval): Unit =
     rectanglesOf(interval).foreach(notifyObservers)
 

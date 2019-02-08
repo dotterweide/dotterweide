@@ -21,48 +21,40 @@ import dotterweide.Interval
 
 import scala.collection.immutable.{Seq => ISeq}
 
-sealed trait TerminalEvent {
-  def undo(terminal: Terminal): Unit
+sealed trait TerminalEvent extends UndoableEdit {
+  def terminal: Terminal
 
-  def redo(terminal: Terminal): Unit
+  def significant: Boolean = false
 }
 
-case class CaretMovement(from: Int, to: Int) extends TerminalEvent {
-  def undo(terminal: Terminal): Unit = {
-    terminal.offset = from
-  }
+case class CaretMovement(terminal: Terminal, before: Int, now: Int) extends TerminalEvent {
+  def undo(): Unit =
+    terminal.offset = before
 
-  def redo(terminal: Terminal): Unit = {
-    terminal.offset = to
-  }
+  def redo(): Unit =
+    terminal.offset = now
 }
 
-case class SelectionChange(from: Option[Interval], to: Option[Interval]) extends TerminalEvent {
-  def undo(terminal: Terminal): Unit = {
-    terminal.selection = from
-  }
+case class SelectionChange(terminal: Terminal, before: Option[Interval], now: Option[Interval]) extends TerminalEvent {
+  def undo(): Unit =
+    terminal.selection = before
 
-  def redo(terminal: Terminal): Unit = {
-    terminal.selection = to
-  }
+  def redo(): Unit =
+    terminal.selection = now
 }
 
-case class HighlightsChange(from: ISeq[Interval], to: ISeq[Interval]) extends TerminalEvent {
-  def undo(terminal: Terminal): Unit = {
-    terminal.highlights = from
-  }
+case class HighlightsChange(terminal: Terminal, before: ISeq[Interval], now: ISeq[Interval]) extends TerminalEvent {
+  def undo(): Unit =
+    terminal.highlights = before
 
-  def redo(terminal: Terminal): Unit = {
-    terminal.highlights = to
-  }
+  def redo(): Unit =
+    terminal.highlights = now
 }
 
-case class HoverChange(from: Option[Int], to: Option[Int]) extends TerminalEvent {
-  def undo(terminal: Terminal): Unit = {
-    terminal.hover = from
-  }
+case class HoverChange(terminal: Terminal, before: Option[Int], now: Option[Int]) extends TerminalEvent {
+  def undo(): Unit =
+    terminal.hover = before
 
-  def redo(terminal: Terminal): Unit = {
-    terminal.hover = to
-  }
+  def redo(): Unit =
+    terminal.hover = now
 }

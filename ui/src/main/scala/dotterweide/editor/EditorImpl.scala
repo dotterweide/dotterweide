@@ -128,7 +128,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     timer.stop()
   }
 
-  def terminal: Terminal = MyTerminal
+  def terminal: Terminal = TerminalImpl
 
   document.onChange { _ =>
     val size = grid.toSize(document.linesCount, document.maximumIndent)
@@ -139,11 +139,11 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   }
 
   terminal.onChange {
-    case CaretMovement(_, to) =>
-      scrollToOffsetVisible(to)
+    case CaretMovement(_, _, now) =>
+      scrollToOffsetVisible(now)
       updateMessage()
-    case HighlightsChange(_, to) =>
-      to.headOption.foreach(it => scrollToOffsetVisible(it.begin))
+    case HighlightsChange(_, _, now) =>
+      now.headOption.foreach(it => scrollToOffsetVisible(it.begin))
     case _ =>
   }
 
@@ -260,9 +260,10 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     def focusLost   (e: FocusEvent): Unit = updateCaret()
   })
 
-  private object MyTerminal extends AbstractTerminal {
+  private object TerminalImpl extends AbstractTerminal {
     def choose[A](variants: ISeq[A], query: String)(callback: A => Unit): Unit = {
       val point = toPoint(offset)
+      // XXX TODO -- should probably use `grid.cellHeight` instead of `20`
       val shifted = new Point(point.x - grid.cellWidth * query.length - 3, point.y + 20)
       val (popup, list) = ChooserFactory.createPopup(Pane, shifted, regularFont, variants, listRenderer) { it =>
         Pane.requestFocusInWindow() // to draw cursor immediately

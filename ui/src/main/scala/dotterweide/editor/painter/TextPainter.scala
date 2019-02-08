@@ -52,7 +52,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
     if (canvas.visible) {
       val replacement = event.asReplacement
 
-      if (!contains(replacement.before, '\n') && !contains(replacement.after, '\n')) {
+      if (!contains(replacement.before, '\n') && !contains(replacement.now, '\n')) {
         singleLineChanged = true
 
         notifyObservers(lineRectangleAt(replacement.begin))

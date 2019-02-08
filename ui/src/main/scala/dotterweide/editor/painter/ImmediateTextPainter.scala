@@ -62,7 +62,7 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
         lastEvent = Some(replacement)
 
         val lengthBefore  = replacement.before.length
-        val lengthAfter   = replacement.after .length
+        val lengthAfter   = replacement.now .length
         val endAfter      = replacement.begin + lengthAfter
 
         val rectangle = rectangleFrom(replacement.begin,
@@ -77,9 +77,9 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
     * temporary insertion of completion `Anchor`.
     */
   private def isRelevant(replacement: Replacement): Boolean =
-    !contains(replacement.before, '\n') && !contains(replacement.after, '\n') &&
-      !(replacement.after.length == 2 && Pairs.contains(replacement.after.toString)) &&
-        replacement.after != Adviser.DefaultAnchor
+    !contains(replacement.before, '\n') && !contains(replacement.now, '\n') &&
+      !(replacement.now.length == 2 && Pairs.contains(replacement.now.toString)) &&
+        replacement.now != Adviser.DefaultAnchor
 
   private def tailLengthFrom(offset: Int): Int = {
     val location = document.toLocation(offset)
@@ -94,7 +94,7 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
 
   override def paint(g: Graphics, bounds: Rectangle): Unit = {
     lastEvent.foreach {
-      case Replacement(begin, _, before, after) =>
+      case Replacement(_, begin, _, before, after) =>
         paintReplacement(g, begin, before, after)
     }
     lastEvent = None

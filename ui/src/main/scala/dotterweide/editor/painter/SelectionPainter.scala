@@ -28,9 +28,9 @@ private class SelectionPainter(context: PainterContext) extends AbstractPainter(
   def id = "selection"
 
   terminal.onChange {
-    case SelectionChange(from, to) =>
-      from.foreach(notifyObservers)
-      to  .foreach(notifyObservers)
+    case SelectionChange(_, before, now) =>
+      before.foreach(notifyObservers)
+      now   .foreach(notifyObservers)
     case _ =>
   }
 

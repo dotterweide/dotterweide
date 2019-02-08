@@ -28,9 +28,9 @@ private class CaretPainter(context: PainterContext) extends AbstractPainter(cont
   def id = "caret"
 
   terminal.onChange {
-    case CaretMovement(from, to) =>
-      notifyObservers(caretRectangleAt(from))
-      notifyObservers(caretRectangleAt(to))
+    case CaretMovement(_, before, now) =>
+      notifyObservers(caretRectangleAt(before))
+      notifyObservers(caretRectangleAt(now))
     case _ =>
   }
 

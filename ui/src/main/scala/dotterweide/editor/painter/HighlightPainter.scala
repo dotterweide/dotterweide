@@ -23,9 +23,9 @@ import dotterweide.editor.{Styling, HighlightsChange}
 
 private class HighlightPainter(context: PainterContext) extends AbstractPainter(context) {
   terminal.onChange {
-    case HighlightsChange(from, to) =>
-      from.foreach(notifyObservers)
-      to.foreach(notifyObservers)
+    case HighlightsChange(_, before, now) =>
+      before.foreach(notifyObservers)
+      now   .foreach(notifyObservers)
     case _ =>
   }
 

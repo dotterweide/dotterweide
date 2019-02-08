@@ -26,9 +26,9 @@ private class CurrentLinePainter(context: PainterContext) extends AbstractPainte
   def id = "current line"
 
   terminal.onChange {
-    case CaretMovement(from, to) =>
-      val fromRectangle = lineRectangleAt(from)
-      val toRectangle   = lineRectangleAt(to)
+    case CaretMovement(_, before, now) =>
+      val fromRectangle = lineRectangleAt(before)
+      val toRectangle   = lineRectangleAt(now)
 
       if (fromRectangle != toRectangle) {
         // XXX TODO --- if rectangles are adjacent, could fire one union rectangle
