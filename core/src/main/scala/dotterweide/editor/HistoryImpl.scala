@@ -20,7 +20,6 @@ package dotterweide.editor
 import dotterweide.document.Document
 
 class HistoryImpl extends History {
-
   private var toUndo: List[NamedEdit] = Nil
   private var toRedo: List[NamedEdit] = Nil
 
@@ -30,11 +29,27 @@ class HistoryImpl extends History {
   def blockMerge(): Unit =
     _blockMerge = true
 
+  private var _canUndo  = false
+  private var _canRedo  = false
+  private var _undoName = ""
+  private var _redoName = ""
+
+  private val Empty   = new Compound("", Nil, significant = false)
+
+  // add a non-significant edit puts it into pending limbo,
+  // because we do not yet want to purge the redo tree at this stage
+  private var pending = Empty
+
   def add(edit: NamedEdit): Unit = {
-//    if (edit.significant) {
-      val oldUndo   = toUndo
-      val couldUndo = oldUndo.nonEmpty
-      val couldRedo = toRedo.nonEmpty
+    if (edit.significant) {
+      val undoNameOld = _undoName
+      val canUndoOld  = _canUndo
+      val canRedoOld  = _canRedo
+
+      if (pending.nonEmpty) {
+        toUndo  ::= pending
+        pending   = Empty
+      }
 
       toUndo = toUndo match {
         case head :: tail if !_blockMerge =>
@@ -45,22 +60,18 @@ class HistoryImpl extends History {
 
         case _ => edit :: toUndo
       }
+      _canUndo  = true
+      _undoName = toUndo.head.name
+      toRedo    = Nil
+      _canRedo  = false
+      _redoName = ""
 
-      toRedo      = Nil
-      val fire = !couldUndo || couldRedo || (couldUndo && oldUndo.head.name != toUndo.head.name)
+      val fire = !canUndoOld || canRedoOld || (canUndoOld && undoNameOld != _undoName)
       if (fire) notifyObservers()
 
-//    } else {
-//      val a: Action = pending match {
-//        case Some(aOld) => aOld.append(edit)
-//        case None       =>
-//          edit match {
-//            case a0: Action => a0
-//            case _          => new Action(edit.name, edit :: Nil, significant = false)
-//          }
-//      }
-//      pending = Some(a)
-//    }
+    } else {
+      pending = pending.append(edit)
+    }
 
     _blockMerge = false
   }
@@ -94,8 +105,8 @@ class HistoryImpl extends History {
 
       if (edits.nonEmpty) {
         val hasSig = edits.exists(_.significant)
-        val edit = new Action(name, edits, significant = hasSig)
-        if (hasSig) add(edit)
+        val edit = new Compound(name, edits, significant = hasSig)
+        add(edit)
       }
 
     } finally {
@@ -103,13 +114,14 @@ class HistoryImpl extends History {
     }
   }
 
-  def canUndo: Boolean = toUndo.nonEmpty
+  def canUndo: Boolean = _canUndo // toUndo.nonEmpty
 
-  def undoName: String = toUndo.head.name
+  def undoName: String = _undoName // toUndo.head.name
 
   def undo(): Unit =
     toUndo match {
       case action :: tail =>
+        ???
         action.undo()
         val fire = tail.isEmpty || toRedo.isEmpty ||
           (action.name != tail.head.name) || (action.name != toRedo.head.name)
@@ -122,13 +134,14 @@ class HistoryImpl extends History {
         throw new IllegalStateException("Nothing to undo")
     }
 
-  def canRedo: Boolean = toRedo.nonEmpty
+  def canRedo: Boolean = _canRedo // toRedo.nonEmpty
 
-  def redoName: String = toRedo.head.name
+  def redoName: String = _redoName // toRedo.head.name
 
   def redo(): Unit =
     toRedo match {
       case action :: tail =>
+        ???
         action.redo()
         val fire = tail.isEmpty || toUndo.isEmpty ||
           (action.name != tail.head.name) || (action.name != toUndo.head.name)
@@ -142,21 +155,25 @@ class HistoryImpl extends History {
     }
 
   def clear(): Unit = {
+    ???
     val fire = toUndo.nonEmpty || toRedo.nonEmpty
     toUndo = Nil
     toRedo = Nil
     if (fire) notifyObservers()
   }
 
-  private class Action(val name: String, edits: List[UndoableEdit], val significant: Boolean)
+  private class Compound(val name: String, edits: List[UndoableEdit], val significant: Boolean)
     extends NamedEdit {
 
-    def append(that: UndoableEdit): Action = {
+    def isEmpty : Boolean = edits.isEmpty
+    def nonEmpty: Boolean = edits.nonEmpty
+
+    def append(that: UndoableEdit): Compound = {
       val more = that match {
-        case a: Action  => a.edits
-        case _          => that :: Nil
+        case a: Compound  => a.edits
+        case _            => that :: Nil
       }
-      new Action(name, edits ::: more, significant = significant || that.significant)
+      new Compound(name, edits ::: more, significant = significant || that.significant)
     }
 
     def undo(): Unit =
@@ -166,8 +183,8 @@ class HistoryImpl extends History {
       edits.reverse.foreach(_.redo())
 
     def tryMerge(succ: UndoableEdit): Option[NamedEdit] = succ match {
-      case that: Action if !this.significant && !that.significant =>
-        val m = new Action(name, edits = this.edits ::: that.edits, significant = significant)
+      case that: Compound if !this.significant && !that.significant =>
+        val m = new Compound(name, edits = this.edits ::: that.edits, significant = significant)
         Some(m)
 
       case _ => None
