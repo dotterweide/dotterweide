@@ -27,6 +27,8 @@ import dotterweide.document.Document
 trait History extends Observable {
   def capture(name: String, document: Document, terminal: Terminal)(block: => Unit): Unit
 
+  def add(edit: NamedEdit): Unit
+
   def canUndo: Boolean
 
   /** Throws an exception if `!canUndo` */

@@ -21,17 +21,37 @@ import dotterweide.document.Document
 
 class HistoryImpl extends History {
 
-  private var toUndo: List[Action] = Nil
-  private var toRedo: List[Action] = Nil
+  private var toUndo: List[NamedEdit] = Nil
+  private var toRedo: List[NamedEdit] = Nil
 
   private var busy = false
+
+  def add(edit: NamedEdit): Unit = {
+    val oldUndo   = toUndo
+    val couldUndo = oldUndo.nonEmpty
+    val couldRedo = toRedo.nonEmpty
+
+    toUndo match {
+      case head :: tail =>
+        head.tryMerge(edit) match {
+          case Some(merged) => toUndo = merged :: tail
+          case None         => toUndo ::= edit
+        }
+
+      case _ => toUndo ::= edit
+    }
+
+    toRedo = Nil
+    val fire = !couldUndo || couldRedo || (couldUndo && oldUndo.head.name != toUndo.head.name)
+    if (fire) notifyObservers()
+  }
 
   def capture(name: String, document: Document, terminal: Terminal)(block: => Unit): Unit = {
     if (busy)
       throw new IllegalStateException("Nested capture")
 
     busy = true
-    val fire = try {
+    try {
       var edits     = List.empty[UndoableEdit]
       val recorder  = edits ::= (_: UndoableEdit)
 
@@ -43,24 +63,14 @@ class HistoryImpl extends History {
       document.disconnect(recorder)
       terminal.disconnect(recorder)
 
-      edits.exists(_.significant) && {
-        val oldUndo   = toUndo
-        val couldUndo = oldUndo.nonEmpty
-        val couldRedo = toRedo.nonEmpty
-        val newEdit = edits match {
-          case single :: Nil  => new SingleAction  (name, single)
-          case _              => new CompoundAction(name, edits )
-        }
-        toUndo ::= newEdit
-        toRedo = Nil
-        !couldUndo || couldRedo || (couldUndo && oldUndo.head.name != name)
+      if (edits.exists(_.significant)) {
+        val edit = new Action(name, edits)
+        add(edit)
       }
 
     } finally {
       busy = false
     }
-
-    if (fire) notifyObservers()
   }
 
   def canUndo: Boolean = toUndo.nonEmpty
@@ -106,21 +116,25 @@ class HistoryImpl extends History {
     if (fire) notifyObservers()
   }
 
-  private sealed abstract class Action(val name: String) {
-    def undo(): Unit
-    def redo(): Unit
-  }
+//  private sealed abstract class Action(val name: String) {
+//    def undo(): Unit
+//    def redo(): Unit
+//  }
+//
+//  private class SingleAction(name: String, edit: UndoableEdit) extends Action(name) {
+//    def undo(): Unit = edit.undo()
+//    def redo(): Unit = edit.redo()
+//  }
 
-  private class SingleAction(name: String, edit: UndoableEdit) extends Action(name) {
-    def undo(): Unit = edit.undo()
-    def redo(): Unit = edit.redo()
-  }
-
-  private class CompoundAction(name: String, edits: List[UndoableEdit]) extends Action(name) {
+  private class Action(val name: String, edits: List[UndoableEdit]) extends NamedEdit {
     def undo(): Unit =
       edits.foreach(_.undo())
 
     def redo(): Unit =
       edits.reverse.foreach(_.redo())
+
+    def tryMerge(succ: UndoableEdit): Option[NamedEdit] = None
+
+    def significant: Boolean = true
   }
 }

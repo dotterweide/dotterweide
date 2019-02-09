@@ -19,8 +19,6 @@ trait UndoableEdit {
   def undo(): Unit
   def redo(): Unit
 
-//  def name: String
-
   /** Tries to merge this edit with a successive edit.
     *
     * @return   `Some` new edit containing both this and the successive edit, if possible,
@@ -30,4 +28,10 @@ trait UndoableEdit {
 
   /** Whether this edit is destructive to the document model or not. */
   def significant: Boolean
+}
+
+trait NamedEdit extends UndoableEdit {
+  def name: String
+
+  override def tryMerge(succ: UndoableEdit): Option[NamedEdit]
 }

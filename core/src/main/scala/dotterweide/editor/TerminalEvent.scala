@@ -34,7 +34,13 @@ case class CaretMovement(terminal: Terminal, before: Int, now: Int) extends Term
   def redo(): Unit =
     terminal.offset = now
 
-  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = None // XXX TODO
+  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = succ match {
+    case that: CaretMovement if this.terminal == that.terminal =>
+      val m = copy(now = that.now)
+      Some(m)
+
+    case _ => None
+  }
 }
 
 case class SelectionChange(terminal: Terminal, before: Option[Interval], now: Option[Interval]) extends TerminalEvent {

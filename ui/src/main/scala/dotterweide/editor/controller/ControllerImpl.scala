@@ -36,7 +36,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
                     (implicit async: Async)
   extends Controller {
 
-  //TODO extract to some extension (maybe using brace matcher)
+  // XXX TODO extract to some extension (maybe using brace matcher)
   private val pairs = List(
     ('(', ')'),
     ('[', ']'),
@@ -100,7 +100,6 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     if (e.isShiftDown && terminal.selection.isEmpty) origin = terminal.offset
 
     def move      (body: => Unit): Unit = capture("Move"      )(body)
-    def backspace (body: => Unit): Unit = capture("Backspace" )(body)
     def delete    (body: => Unit): Unit = capture("Delete"    )(body)
 
     e.getKeyCode match {
@@ -173,21 +172,26 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
           terminal.selection  = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
         }
 
-      case KeyEvent.VK_BACK_SPACE if terminal.selection.isDefined =>
-        backspace {
-          terminal.insertInto(document, "")
+      case KeyEvent.VK_BACK_SPACE =>
+        def backspace(interval: Interval): Unit = {
+          val edit = Backspace(document, terminal, interval)
+          history.add(edit)
         }
 
-      case KeyEvent.VK_BACK_SPACE =>
-        if (terminal.offset > 0) backspace {
-          val length          = if (e.isControlDown) terminal.offset - seek(-1) else 1
-          terminal.offset    -= length
-          val next            = terminal.offset + length
-          val leftChar        = document.charAt(next - 1)
-          val rightChar       = if (document.length > next) Some(document.charAt(next)) else None
-          val complement      = rightChar.flatMap(it => pairs.find(_._1 == leftChar).map(_._2).filter(_ == it))
-          terminal.selection  = None
-          document.remove(terminal.offset, next + complement.mkString.length)
+        terminal.selection match {
+          case Some(sel) => backspace(sel)
+
+          case None if terminal.offset > 0 =>
+            val off             = terminal.offset
+            val length          = if (e.isControlDown) off - seek(-1) else 1
+            val remStart        = off - length
+            val leftChar        = document.charAt(off - 1)
+            val rightChar       = if (document.length > off) Some(document.charAt(off)) else None
+            val complement: Option[Char] = rightChar.flatMap(it => pairs.find(_._1 == leftChar).map(_._2).filter(_ == it))
+            val remStop         = if (complement.isEmpty) off else off + 1
+            backspace(Interval(remStart, remStop))
+
+          case _ =>
         }
 
       case KeyEvent.VK_DELETE if !e.isShiftDown && terminal.selection.isDefined =>
@@ -361,9 +365,9 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   }
 
   private def seek(increment: Int): Int = {
-    val predicates = List[Char => Boolean](_.isWhitespace, _.isLetter, _.isDigit)
-    val other = (c: Char) => predicates.forall(!_(c))
-    val target = (other :: predicates).reverse.view.flatMap(seek(_, terminal.offset, increment).toSeq)
+    val predicates  = List[Char => Boolean](_.isWhitespace, _.isLetter, _.isDigit)
+    val other       = (c: Char) => predicates.forall(!_(c))
+    val target      = (other :: predicates).reverse.view.flatMap(seek(_, terminal.offset, increment).toSeq)
     target.headOption.getOrElse(terminal.offset + increment)
   }
 
