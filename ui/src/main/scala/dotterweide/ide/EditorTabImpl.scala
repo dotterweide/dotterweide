@@ -29,7 +29,6 @@ private class EditorTabImpl(val fileType: FileType, val history: History,
 
   private val structure = new StructureTab(primaryEditor.data, primaryEditor.terminal)
   private var _split    = false
-  private var _original = ""
   private var _file     = Option.empty[File]
 
   updateLayout()
@@ -38,7 +37,6 @@ private class EditorTabImpl(val fileType: FileType, val history: History,
 
   def text_=(s: String): Unit = {
     primaryEditor.text = s
-    _original = s
     history.clear()
   }
 
@@ -49,7 +47,17 @@ private class EditorTabImpl(val fileType: FileType, val history: History,
     notifyObservers(EditorTab.FileChanged(file))
   }
 
-  def changed: Boolean = text != _original
+  private var _dirty = history.canUndo
+
+  history.onChange {
+    val newDirty = history.canUndo
+    if (_dirty != newDirty) {
+      _dirty = newDirty
+      notifyObservers(EditorTab.DirtyChanged(newDirty))
+    }
+  }
+
+  def isDirty: Boolean = _dirty
 
   def split: Boolean = _split
 

@@ -25,6 +25,7 @@ object EditorTab {
   sealed trait Update
   case class FileChanged (newFile: Option[File] ) extends Update
   case class SplitChanged(isSplit: Boolean      ) extends Update
+  case class DirtyChanged(isDirty: Boolean      ) extends Update
 }
 trait EditorTab extends ObservableEvents[EditorTab.Update] {
   def fileType: FileType
@@ -36,7 +37,7 @@ trait EditorTab extends ObservableEvents[EditorTab.Update] {
     */
   var text: String
 
-  def changed: Boolean
+  def isDirty: Boolean
 
   var split: Boolean
 }

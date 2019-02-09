@@ -256,8 +256,12 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   })
 
   Pane.addFocusListener(new FocusListener {
-    def focusGained (e: FocusEvent): Unit = updateCaret()
-    def focusLost   (e: FocusEvent): Unit = updateCaret()
+    def focusGained(e: FocusEvent): Unit = updateCaret()
+
+    def focusLost(e: FocusEvent): Unit = {
+      updateCaret()
+      history.blockMerge()
+    }
   })
 
   private object TerminalImpl extends AbstractTerminal {

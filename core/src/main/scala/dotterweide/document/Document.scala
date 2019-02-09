@@ -33,6 +33,9 @@ trait Document extends LinesHolder with ObservableEvents[DocumentEvent] {
   def charOptionAt(offset: Int): Option[Char] =
     if (offset >= 0 && offset < length) Some(charAt(offset)) else None
 
+  def charAtOrElse(offset: Int, default: Char): Char =
+    if (offset >= 0 && offset < length) charAt(offset) else default
+
   def insert(offset: Int, s: String): Unit
 
   def remove(begin: Int, end: Int): Unit

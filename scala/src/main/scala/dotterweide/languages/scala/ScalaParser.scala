@@ -82,9 +82,9 @@ class ScalaParser extends Parser {
     def receive: Receive = {
       case Compile(text) =>
         val reply = try {
-          log.info("begin compile")
+          log.debug("begin compile")
           val root = runCompile(text)
-          log.info("done compile")
+          log.debug("done compile")
           root
         } catch {
           case e: Exception => akka.actor.Status.Failure(e)
@@ -94,10 +94,6 @@ class ScalaParser extends Parser {
       case m =>
         log.error(s"Unknown message $m")
     }
-
-//    private def runComplete(): Unit = {
-//      c.completionsAt()
-//    }
 
     private def runCompile(text: String): NodeImpl = {
       val tree: c.Tree = compile(text)
@@ -463,7 +459,7 @@ class ScalaParser extends Parser {
         }
       }
 
-      log.info("done errors")
+      log.debug("done errors")
 
       if (moreErrors.isEmpty) {
         programNode

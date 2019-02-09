@@ -30,6 +30,7 @@ trait UndoableEdit {
   def significant: Boolean
 }
 
+/** An edit that is visible to the user, adding a representation name. */
 trait NamedEdit extends UndoableEdit {
   def name: String
 

@@ -96,8 +96,9 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
   }
 
   private def updateTitle(): Unit = {
-    val name = tab.file.map(_.getName.replaceAll("\\.%s".format(language.fileType.extension), ""))
-    title = "%s - Dotterweide 0.1.0-SNAPSHOT".format(name.getOrElse("Untitled"))
+    val name      = tab.file.map(_.getName.replaceAll("\\.%s".format(language.fileType.extension), ""))
+    val dirtyMark = if (tab.isDirty) "*" else ""
+    title = "%s%s - Dotterweide 0.1.0-SNAPSHOT".format(dirtyMark, name.getOrElse("Untitled"))
   }
 
   private def updateMessageFor(editor: Editor): Unit = {
@@ -146,7 +147,8 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
   menuBar = menu
 
   tab.onChange {
-    case EditorTab.FileChanged(_) => updateTitle()
+    case EditorTab.FileChanged  (_) => updateTitle()
+    case EditorTab.DirtyChanged (_) => updateTitle()
     case _ =>
   }
 

@@ -99,8 +99,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   private def doProcessKeyPressed(e: KeyEvent): Unit = {
     if (e.isShiftDown && terminal.selection.isEmpty) origin = terminal.offset
 
-    def move      (body: => Unit): Unit = capture("Move"      )(body)
-    def delete    (body: => Unit): Unit = capture("Delete"    )(body)
+    def move(body: => Unit): Unit = capture("Move")(body)
 
     e.getKeyCode match {
       case KeyEvent.VK_LEFT =>
@@ -186,24 +185,31 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
             val length          = if (e.isControlDown) off - seek(-1) else 1
             val remStart        = off - length
             val leftChar        = document.charAt(off - 1)
-            val rightChar       = if (document.length > off) Some(document.charAt(off)) else None
-            val complement: Option[Char] = rightChar.flatMap(it => pairs.find(_._1 == leftChar).map(_._2).filter(_ == it))
-            val remStop         = if (complement.isEmpty) off else off + 1
+            val rightChar       = if (document.length > off) document.charAt(off) else '?'
+            val complement      = pairs.contains((leftChar, rightChar))
+            val remStop         = if (complement) off + 1 else off
             backspace(Interval(remStart, remStop))
 
           case _ =>
         }
 
-      case KeyEvent.VK_DELETE if !e.isShiftDown && terminal.selection.isDefined =>
-        delete {
-          terminal.insertInto(document, "")
+      case KeyEvent.VK_DELETE if !e.isShiftDown =>
+        def delete(interval: Interval): Unit = {
+          val edit = Delete(document, terminal, interval)
+          history.add(edit)
         }
 
-      case KeyEvent.VK_DELETE if !e.isShiftDown =>
-        if (terminal.offset < document.length) delete {
-          val length = if (e.isControlDown) seek(1) - terminal.offset else 1
-          terminal.selection = None
-          document.remove(terminal.offset, terminal.offset + length)
+        terminal.selection match {
+          case Some(sel) => delete(sel)
+
+          case None if terminal.offset < document.length =>
+            val off       = terminal.offset
+            val length    = if (e.isControlDown) seek(1) - off else 1
+            val remStart  = off
+            val remStop   = off + length
+            delete(Interval(remStart, remStop))
+
+          case _ =>
         }
 
       case _ =>
@@ -225,22 +231,35 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
       case c if c == KeyEvent.VK_ENTER && !e.isAltDown && !e.isShiftDown =>
         if (terminal.selection.isDefined) insert {
           processCharInsertion(c)
-        } else capture("New Line") {
-          processEnterPressed(e.isControlDown)
+        } else {
+          val edit = mkLineNew(hold = e.isControlDown)
+          history.add(edit)
         }
+
       case c if c == KeyEvent.VK_TAB && !e.isControlDown && !e.isShiftDown && terminal.selection.isEmpty =>
-        insert {
-          terminal.insertInto(document, Seq.fill(tabSize)(' ').mkString)
-        }
+        val chars = " " * tabSize
+        val edit = typing(chars, advance = chars.length)
+        history.add(edit)
+
       case c if !c.isControl && !e.isControlDown && !e.isAltDown =>
-        insert {
-          processCharInsertion(c)
+        if (isClosingPair(c)) {
+          insert { terminal.offset += 1 }
+        } else {
+          val chars = mkInsertionChars(c)
+          if (isClosingBlock(c)) insert {
+            processCloseBlock(c)
+            typing(chars)
+          } else {
+            val edit = typing(chars)
+            history.add(edit)
+          }
         }
+
       case _ =>
     }
   }
 
-  def processEnterPressed(hold: Boolean = false): Unit = {
+  private def mkLineNew(hold: Boolean): NewLine = {
     val oldOff  = terminal.offset
     val n       = document.lineNumberOf(terminal.offset)
     val prefix  = document.text(document.startOffsetOf(n), terminal.offset)
@@ -250,40 +269,64 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     val i3      = document.charOptionAt(terminal.offset).filter(_ == BlockClosing).fold(0)(_ => tabSize)
     val shift   = suffix.takeWhile(_.isWhitespace).length
     val indent  = 0.max((if (i2 == 0 && i3 > i1) i1 + i2 - i3 else i1 + i2) - shift)
-    var s = "\n" + Seq.fill(indent)(' ').mkString
-    if (i2 > 0 && i3 > 0) s += "\n" + Seq.fill(i1 + i2 - i3)(' ').mkString
-    terminal.insertInto(document, s)
-    terminal.offset = if (hold) oldOff else oldOff + indent + 1
+    var chars   = "\n" + Seq.fill(indent)(' ').mkString
+    if (i2 > 0 && i3 > 0) chars += "\n" + Seq.fill(i1 + i2 - i3)(' ').mkString
+    val newOff  = if (hold) oldOff else oldOff + indent + 1
+    NewLine(document, terminal, chars, offsetAfter = newOff)
   }
 
+  def processEnterPressed(hold: Boolean = false): Unit = {
+    mkLineNew(hold = hold)
+  }
+
+  // XXX TODO --- would be great if we could also find an early matching opening mark
+  private def isClosingPair(c: Char): Boolean = {
+    val nextChar = document.charAtOrElse(terminal.offset    , '?')
+    val prevChar = document.charAtOrElse(terminal.offset - 1, '?')
+    (nextChar == c) && pairs.contains((prevChar, nextChar))
+  }
+
+  private def isClosingBlock(c: Char): Boolean =
+    c == BlockClosing
+
+  private def processCloseBlock(c: Char): Unit = {
+    val indent        = terminal.offset - document.startOffsetOf(document.lineNumberOf(terminal.offset))
+    val targetIndent  = 0.max(indentFrom(document.lineNumberOf(terminal.offset)) - tabSize)
+    if (indent > targetIndent) {
+      val d = indent - targetIndent
+      if (document.text(terminal.offset - d, terminal.offset).forall(_.isWhitespace)) {
+        terminal.offset -= d
+        document.remove(terminal.offset, terminal.offset + d)
+      }
+    } else if (indent < targetIndent) {
+      val d = targetIndent - indent
+      document.insert(terminal.offset, Seq.fill(d)(' ').mkString)
+      terminal.offset += d
+    }
+  }
+
+  private def mkInsertionChars(c: Char): String = {
+    val nextChar = document.charAtOrElse(terminal.offset, '?')
+    if (nextChar.isLetterOrDigit || nextChar == c) c.toString
+    else pairs.collectFirst {
+      case (`c`, close) => s"$c$close"
+    } .getOrElse(c.toString)
+  }
+
+  private def typing(chars: String, advance: Int = 1): Typing =
+    Typing(document, terminal, chars, advance = advance)
+
+  // XXX TODO --- this public method here is mainly for the tests
   def processCharInsertion(c: Char): Unit = {
-    val nextChar = document.charOptionAt(terminal.offset)
-    val prevChar = document.charOptionAt(terminal.offset - 1)
-
-    val complementChar = nextChar.filter(_ == c).flatMap(it => pairs.find(_._2 == it).map(_._1))
-
-    if (prevChar.exists(complementChar.contains)) {
+    // if we are closing a pair, simply "overwrite" the closing character by moving the cursor to the right
+    if (isClosingPair(c)) {
       terminal.offset += 1
     } else {
-      val complement = if (nextChar.exists(it => it.isLetterOrDigit || it == c)) None else pairs.find(_._1 == c).map(_._2)
-      val s = c.toString + complement.mkString
-      if (s == BlockClosing.toString) {
-        val indent = terminal.offset - document.startOffsetOf(document.lineNumberOf(terminal.offset))
-        val targetIndent = 0.max(indentFrom(document.lineNumberOf(terminal.offset)) - tabSize)
-        if (indent > targetIndent) {
-          val d = indent - targetIndent
-          if (document.text(terminal.offset - d, terminal.offset).forall(_.isWhitespace)) {
-            terminal.offset -= d
-            document.remove(terminal.offset, terminal.offset + d)
-          }
-        } else if (indent < targetIndent) {
-          val d = targetIndent - indent
-          document.insert(terminal.offset, Seq.fill(d)(' ').mkString)
-          terminal.offset += d
-        }
+      val s = mkInsertionChars(c)
+      if (isClosingBlock(c)) {
+        processCloseBlock(c)
       }
-      terminal.insertInto(document, s)
-      if (complement.isDefined) terminal.offset -= 1
+      typing(s)
     }
   }
 
