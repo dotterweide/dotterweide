@@ -76,7 +76,7 @@ class HistoryImpl extends History {
     _blockMerge = false
   }
 
-  def capture(name: String, document: Document, terminal: Terminal)(block: => Unit): Unit = {
+  def capture[A](name: String, document: Document, terminal: Terminal)(block: => A): A = {
     if (busy)
       throw new IllegalStateException("Nested capture")
 
@@ -98,7 +98,7 @@ class HistoryImpl extends History {
       document.onChange(recorder)
       terminal.onChange(recorder)
 
-      block
+      val res = block
 
       document.disconnect(recorder)
       terminal.disconnect(recorder)
@@ -108,6 +108,8 @@ class HistoryImpl extends History {
         val edit = new Compound(name, edits, significant = hasSig)
         add(edit)
       }
+
+      res
 
     } finally {
       busy = false

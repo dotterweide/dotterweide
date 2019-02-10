@@ -12,7 +12,7 @@ The following editor features should be implemented (note: checkmark means that 
  - [ ] Quick Find (ctrl-F)
  - [X] shift and mouse click should make or extend the selection
  - [ ] Configurable wrapping code ("preamble", "terminator")
- - [ ] insert/overwrite modes
+ - [X] insert/overwrite modes
  
 The following actions and IDE features should be implemented:
 
@@ -38,4 +38,8 @@ The following features are "nice to have" but lower priority:
  - [ ] Editor: find-and-replace dialog
  - [ ] Navigation: jump to matching bracket
  - [ ] Incremental selection of enclosing context (ctrl-w in IntelliJ)
+ - [ ] Navigation: jump to previous / next method (alt up/down in IntelliJ)
+ - [ ] Block comments (ctrl-shift slash in IntelliJ)
+ - [ ] Navigation history (ctrl-alt left/right in IntelliJ)
+ - [ ] Enter in overwrite mode goes to beginning of new line instead of inserting new line (IntelliJ)
  

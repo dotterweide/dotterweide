@@ -22,7 +22,7 @@ import java.awt.event.{KeyEvent, MouseEvent}
 
 import dotterweide.Interval
 import dotterweide.document.Document
-import dotterweide.editor.{ActionFinished, ActionStarted, Adviser, Async, Data, EditorActions, FontSettings, Grid, History, Terminal}
+import dotterweide.editor.{ActionFinished, ActionStarted, Adviser, Async, Data, EditorActions, FontSettings, Grid, History, NamedEdit, Terminal}
 import dotterweide.formatter.Formatter
 import dotterweide.node.{IdentifiedNode, Node}
 
@@ -92,7 +92,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     case _ => false
   }
 
-  private def capture(name: String)(body: => Unit): Unit =
+  private def capture[A](name: String)(body: => A): A =
     history.capture(name, document, terminal)(body)
 
   /* Handles cursor movement and back-space/delete */
@@ -212,6 +212,9 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
           case _ =>
         }
 
+      case KeyEvent.VK_INSERT =>
+        terminal.overwriteMode = !terminal.overwriteMode
+
       case _ =>
     }
   }
@@ -246,11 +249,15 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
           insert { terminal.offset += 1 }
         } else {
           val chars = mkInsertionChars(c)
+
+          @inline
+          def perform() = typing(chars, overwrite = terminal.overwriteMode)
+
           if (isClosingBlock(c)) insert {
             processCloseBlock(c)
-            typing(chars)
+            perform()
           } else {
-            val edit = typing(chars)
+            val edit = perform()
             history.add(edit)
           }
         }
@@ -313,8 +320,12 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     } .getOrElse(c.toString)
   }
 
-  private def typing(chars: String, advance: Int = 1): Typing =
-    Typing(document, terminal, chars, advance = advance)
+  private def typing(chars: String, advance: Int = 1, overwrite: Boolean = false): NamedEdit =
+    if (overwrite) {
+      Overwrite (document, terminal, chars, advance = advance)
+    } else {
+      Insert    (document, terminal, chars, advance = advance)
+    }
 
   // XXX TODO --- this public method here is mainly for the tests
   def processCharInsertion(c: Char): Unit = {

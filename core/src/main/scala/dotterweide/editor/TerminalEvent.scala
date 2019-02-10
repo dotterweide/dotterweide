@@ -43,6 +43,16 @@ case class CaretMovement(terminal: Terminal, before: Int, now: Int) extends Term
   }
 }
 
+case class CaretMode(terminal: Terminal, overwrite: Boolean) extends TerminalEvent {
+  def undo(): Unit =
+    terminal.overwriteMode = !overwrite
+
+  def redo(): Unit =
+    terminal.overwriteMode = overwrite
+
+  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = None
+}
+
 case class SelectionChange(terminal: Terminal, before: Option[Interval], now: Option[Interval]) extends TerminalEvent {
   def undo(): Unit =
     terminal.selection = before

@@ -59,9 +59,10 @@ private abstract class AbstractPainter(context: PainterContext) extends Painter 
   }
 
   /** Calculates the caret's visual rectangle given a text offset */
-  protected def caretRectangleAt(offset: Int): Rectangle = {
+  protected def caretRectangleAt(offset: Int, overwrite: Boolean = terminal.overwriteMode): Rectangle = {
     val point = toPoint(offset)
-    new Rectangle(point.x, point.y, 2, grid.cellHeight)
+    val w     = if (overwrite) grid.cellWidth else 2
+    new Rectangle(point.x, point.y, w, grid.cellHeight)
   }
 
   /** Calculates the visual rectangles covering a given text interval */

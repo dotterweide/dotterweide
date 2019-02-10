@@ -28,7 +28,10 @@ object Styling {
   val TextForeground            = "TextForeground"
   val TextBackground            = "TextBackground"
   val CurrentLineBackground     = "CurrentLineBackground"
+  /** the color of the caret */
   val CaretForeground           = "CaretForeground"
+  /** the color of text painted complementary on top of an insertion caret */
+  val CaretComplement           = "CaretComplement"
   val SelectionForeground       = "SelectionForeground"
   val SelectionBackground       = "SelectionBackground"
   val HighlightBackground       = "HighlightBackground"

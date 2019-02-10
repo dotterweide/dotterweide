@@ -34,7 +34,7 @@ trait History extends Observable {
     * @param block      an action that produces events as a side effect. These events
     *                   will make up the edit.
     */
-  def capture(name: String, document: Document, terminal: Terminal)(block: => Unit): Unit
+  def capture[A](name: String, document: Document, terminal: Terminal)(block: => A): A
 
   /** Add another edit to the history.
     * Unless merging is blocked, it tries to merge this edit

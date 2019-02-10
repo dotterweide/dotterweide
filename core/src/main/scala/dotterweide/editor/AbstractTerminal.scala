@@ -25,7 +25,16 @@ trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
   private var _offset     : Int               = 0
   private var _selection  : Option[Interval]  = None
   private var _hover      : Option[Int]       = None
+  private var _overwrite  : Boolean           = false
   private var _highlights : ISeq[Interval]    = Nil
+
+  def overwriteMode: Boolean = _overwrite
+
+  def overwriteMode_=(b: Boolean): Unit =
+    if (_overwrite != b) {
+      _overwrite = b
+      notifyObservers(CaretMode(this, overwrite = b))
+    }
 
   def offset: Int = _offset
 

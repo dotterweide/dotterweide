@@ -19,7 +19,7 @@ package dotterweide.editor.painter
 
 import java.awt.{Graphics, Rectangle}
 
-import dotterweide.editor.{CaretMovement, CaretVisibilityChanged, Styling}
+import dotterweide.editor.{CaretMode, CaretMovement, CaretVisibilityChanged, Styling}
 
 // XXX TODO --- support overwrite mode (block cursor)
 
@@ -29,8 +29,12 @@ private class CaretPainter(context: PainterContext) extends AbstractPainter(cont
 
   terminal.onChange {
     case CaretMovement(_, before, now) =>
-      notifyObservers(caretRectangleAt(before))
-      notifyObservers(caretRectangleAt(now))
+      notifyObservers(caretRectangleAt(before ))
+      notifyObservers(caretRectangleAt(now    ))
+
+    case CaretMode(_, _) =>
+      notifyObservers(caretRectangleAt(terminal.offset, overwrite = true))  // maximum dirty rectangle
+
     case _ =>
   }
 
@@ -42,11 +46,18 @@ private class CaretPainter(context: PainterContext) extends AbstractPainter(cont
 
   override def paint(g: Graphics, bounds: Rectangle): Unit =
     if (canvas.caretVisible) {
-      val rectangle = caretRectangleAt(terminal.offset).intersection(bounds)
+      val pos       = terminal.offset
+      val caretRect = caretRectangleAt(pos).intersection(bounds)
 
-      if (!rectangle.isEmpty) {
+      if (!caretRect.isEmpty) {
         g.setColor(styling(Styling.CaretForeground))
-        fill(g, rectangle)
+        val ovr = terminal.overwriteMode
+        // XXX TODO --- this a quick hack until we have better
+        // integration with TextPainter to actually paint the
+        // text character under the cursor in the specified color
+        if (ovr) g.setXORMode(styling(Styling.CaretComplement))
+        fill(g, caretRect)
+        if (ovr) g.setPaintMode()
       }
     }
 }

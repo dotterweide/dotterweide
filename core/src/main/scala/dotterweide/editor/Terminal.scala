@@ -30,6 +30,8 @@ trait Terminal extends ObservableEvents[TerminalEvent] {
 
   var highlights: ISeq[Interval]
 
+  var overwriteMode: Boolean
+
   def choose[A](variants: ISeq[A], query: String)(callback: A => Unit): Unit
 
   def edit(s: String, title: String)(callback: Option[String] => Unit): Unit

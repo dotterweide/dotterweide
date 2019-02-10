@@ -31,11 +31,13 @@ import dotterweide.lexer.Lexer
   *
   * It's quite a hack, using funky stuff like `g.copyArea` to move pixels around, and
   * being the only painter with `immediate = true` causing special behaviour in the editor implementation.
-  * TODO: This needs major reworking to be well integrated.
+  *
+  * XXX TODO: This needs major reworking to be well integrated.
   */
 private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, processor: ActionProcessor)
   extends AbstractPainter(context) {
 
+  // XXX TODO --- should be language dependent
   private val Pairs = Set("()", "[]", "{}", "\"\"")
 
   def id = "immediate text"
@@ -146,7 +148,14 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
     }
 
     g.setColor(styling(Styling.CaretForeground))
-    fill(g, caretRectangleAt(terminal.offset + math.max(0, delta)))
+    val ovr = terminal.overwriteMode
+    // XXX TODO --- this a quick hack until we have better
+    // integration with TextPainter to actually paint the
+    // text character under the cursor in the specified color
+    if (ovr) g.setXORMode(styling(Styling.CaretComplement))
+    val caretRect = caretRectangleAt(terminal.offset + math.max(0, delta))
+    fill(g, caretRect)
+    if (ovr) g.setPaintMode()
   }
 
   private def backgroundColorAt(offset: Int): Color = {
