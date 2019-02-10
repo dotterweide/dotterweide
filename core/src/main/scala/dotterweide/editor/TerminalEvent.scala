@@ -50,7 +50,13 @@ case class SelectionChange(terminal: Terminal, before: Option[Interval], now: Op
   def redo(): Unit =
     terminal.selection = now
 
-  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = None // XXX TODO
+  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = succ match {
+    case that: SelectionChange if this.terminal == that.terminal =>
+      val m = copy(now = that.now)
+      Some(m)
+
+    case _ => None
+  }
 }
 
 case class HighlightsChange(terminal: Terminal, before: ISeq[Interval], now: ISeq[Interval]) extends TerminalEvent {
@@ -60,7 +66,13 @@ case class HighlightsChange(terminal: Terminal, before: ISeq[Interval], now: ISe
   def redo(): Unit =
     terminal.highlights = now
 
-  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = None // XXX TODO
+  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = succ match {
+    case that: HighlightsChange if this.terminal == that.terminal =>
+      val m = copy(now = that.now)
+      Some(m)
+
+    case _ => None
+  }
 }
 
 case class HoverChange(terminal: Terminal, before: Option[Int], now: Option[Int]) extends TerminalEvent {
@@ -70,5 +82,11 @@ case class HoverChange(terminal: Terminal, before: Option[Int], now: Option[Int]
   def redo(): Unit =
     terminal.hover = now
 
-  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = None // XXX TODO
+  def tryMerge(succ: UndoableEdit): Option[UndoableEdit] = succ match {
+    case that: HoverChange if this.terminal == that.terminal =>
+      val m = copy(now = that.now)
+      Some(m)
+
+    case _ => None
+  }
 }

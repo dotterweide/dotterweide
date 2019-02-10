@@ -70,7 +70,7 @@ class HistoryImpl extends History {
       if (fire) notifyObservers()
 
     } else {
-      pending = pending.append(edit)
+      if (_canUndo) pending = pending.merge(edit)
     }
 
     _blockMerge = false
@@ -119,61 +119,111 @@ class HistoryImpl extends History {
   def undoName: String = _undoName // toUndo.head.name
 
   def undo(): Unit =
-    toUndo match {
-      case action :: tail =>
-        ???
-        action.undo()
-        val fire = tail.isEmpty || toRedo.isEmpty ||
-          (action.name != tail.head.name) || (action.name != toRedo.head.name)
-        toUndo = tail
-        toRedo ::= action
-        blockMerge()
-        if (fire) notifyObservers()
+    if (pending.nonEmpty) {
+      pending.undo()
+      pending = Empty
+    } else {
+      toUndo match {
+        case action :: tail =>
+          action.undo()
+          val canRedoOld  = _canRedo
+          val undoNameOld = _undoName
+          val redoNameOld = _redoName
+          toUndo = tail
+          toRedo ::= action
+          _canUndo  = tail.nonEmpty
+          _canRedo  = true
+          if (action.significant) {
+            _redoName     = action.name
+            _undoName     = toUndo match {
+              case head :: _ if head.significant  => head.name
+              case _ :: pen :: _                  => pen.name
+              case _                              => ""
+            }
+          }
 
-      case _ =>
-        throw new IllegalStateException("Nothing to undo")
+          val fire = !_canUndo || !canRedoOld || _undoName != undoNameOld || _redoName != redoNameOld
+          blockMerge()
+          if (fire) notifyObservers()
+
+        case _ =>
+          throw new IllegalStateException("Nothing to undo")
+      }
     }
 
   def canRedo: Boolean = _canRedo // toRedo.nonEmpty
 
   def redoName: String = _redoName // toRedo.head.name
 
-  def redo(): Unit =
+  def redo(): Unit = {
+    if (pending.nonEmpty) {
+      pending.undo()
+      pending = Empty
+    }
     toRedo match {
       case action :: tail =>
-        ???
         action.redo()
-        val fire = tail.isEmpty || toUndo.isEmpty ||
-          (action.name != tail.head.name) || (action.name != toUndo.head.name)
+        val canUndoOld  = _canUndo
+        val undoNameOld = _undoName
+        val redoNameOld = _redoName
         toRedo = tail
         toUndo ::= action
+        _canRedo  = tail.nonEmpty
+        _canUndo  = true
+        if (action.significant) {
+          _undoName     = action.name
+          _redoName     = toRedo match {
+            case head :: _ if head.significant  => head.name
+            case _ :: pen :: _                  => pen.name
+            case _                              => ""
+          }
+        }
+
+        val fire = !_canRedo || !canUndoOld || _undoName != undoNameOld || _redoName != redoNameOld
         blockMerge()
         if (fire) notifyObservers()
 
       case _ =>
         throw new IllegalStateException("Nothing to redo")
     }
+  }
 
   def clear(): Unit = {
-    ???
     val fire = toUndo.nonEmpty || toRedo.nonEmpty
-    toUndo = Nil
-    toRedo = Nil
+    _canUndo  = false
+    toUndo    = Nil
+    _undoName = ""
+    _canRedo  = false
+    toRedo    = Nil
+    _redoName = ""
+    pending   = Empty
     if (fire) notifyObservers()
   }
 
-  private class Compound(val name: String, edits: List[UndoableEdit], val significant: Boolean)
+  private class Compound(val name: String, val edits: List[UndoableEdit], val significant: Boolean)
     extends NamedEdit {
 
     def isEmpty : Boolean = edits.isEmpty
     def nonEmpty: Boolean = edits.nonEmpty
 
-    def append(that: UndoableEdit): Compound = {
-      val more = that match {
-        case a: Compound  => a.edits
-        case _            => that :: Nil
+    private def mergeEdits(succ: List[UndoableEdit]): List[UndoableEdit] =
+      (succ, edits) match {
+        case (init :+ succLast, head :: tail) =>
+          head.tryMerge(succLast) match {
+            case Some(merge)  => init ::: merge :: tail
+            case None         => succ ::: edits
+          }
+
+        case _ => succ ::: edits
       }
-      new Compound(name, edits ::: more, significant = significant || that.significant)
+
+    def merge(succ: UndoableEdit): Compound = {
+      val succEdits = succ match {
+        case a: Compound  => a.edits
+        case _            => succ :: Nil
+      }
+      val newEdits = mergeEdits(succEdits)
+      new Compound(name, newEdits, significant = significant || succ.significant)
     }
 
     def undo(): Unit =
@@ -184,7 +234,8 @@ class HistoryImpl extends History {
 
     def tryMerge(succ: UndoableEdit): Option[NamedEdit] = succ match {
       case that: Compound if !this.significant && !that.significant =>
-        val m = new Compound(name, edits = this.edits ::: that.edits, significant = significant)
+        val newEdits = mergeEdits(that.edits)
+        val m = new Compound(name, edits = newEdits, significant = significant)
         Some(m)
 
       case _ => None
