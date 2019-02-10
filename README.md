@@ -22,3 +22,7 @@ To run the demo, use `sbt dotterweide-demo/run`. Note that the project in progre
 
     sbt 'dotterweide-demo/run --language scala --colors dark'
 
+## documentation
+
+Pretty much informal at this stage; see the `notes` directory and the -org project; ask in the Gitter channel.
+There are [a few videos](https://peertube.social/video-channels/dotterweide/videos).
