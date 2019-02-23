@@ -27,6 +27,7 @@ object ErrorPrinter {
     console.clear()
     console.print("Errors found:\n", ErrorColor)
     data.errors.filter(_.fatal).foreach { it =>
+      // XXX TODO inefficient
       val line = data.text.substring(0, it.interval.start).count(_ == '\n') + 1
       console.print("\nError (", ErrorColor)
       console.printLink(line.toString, line)

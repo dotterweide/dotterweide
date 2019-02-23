@@ -39,7 +39,8 @@ The following features are "nice to have" but lower priority:
  - [ ] Navigation: jump to matching bracket
  - [ ] Incremental selection of enclosing context (ctrl-w in IntelliJ)
  - [ ] Navigation: jump to previous / next method (alt up/down in IntelliJ)
- - [ ] Block comments (ctrl-shift slash in IntelliJ)
+ - [ ] Block comments (ctrl-shift slash in IntelliJ); if selection start and stop are at beginning of line,
+       it inserts a new line before and after block, otherwise it inserts the delimiters directly
  - [ ] Navigation history (ctrl-alt left/right in IntelliJ)
  - [ ] Enter in overwrite mode goes to beginning of new line instead of inserting new line (IntelliJ)
  
