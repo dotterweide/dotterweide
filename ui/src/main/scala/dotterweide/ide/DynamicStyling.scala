@@ -25,7 +25,7 @@ import scala.collection.immutable.{Seq => ISeq}
 /** A mutable color scheme, taking a map from scheme names to schemes
   * and notifying observers when the scheme is switched.
   */
-private class DynamicStyling(delegates: Map[String, Styling]) extends Styling {
+class DynamicStyling(delegates: Map[String, Styling]) extends Styling {
   require (delegates.nonEmpty)
 
   private var _name     : String   = delegates.head._1

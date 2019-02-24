@@ -17,17 +17,20 @@
 
 package dotterweide.ide
 
-import java.awt.{Color, Font}
+import java.awt.{Color, EventQueue, Font}
 
 import dotterweide.editor.FontSettings
 import javax.swing.text.{AttributeSet, SimpleAttributeSet, StyleConstants}
-import javax.swing.{JTextPane, SwingUtilities}
 
-private class ConsoleImpl(_font: FontSettings) extends JTextPane with Console {
+import scala.swing.{Component, Swing, TextPane}
+
+private class ConsoleImpl(_font: FontSettings) extends TextPane with Console {
   private val LinkColor = new Color(125, 121, 111)
 
-  setFont(new Font(_font.family, Font.PLAIN, _font.size))
-  setEditable(false)
+  font      = new Font(_font.family, Font.PLAIN, _font.size)
+  editable  = false
+
+  def component: Component = this
 
   def print(s: String): Unit =
     doPrint(s, null)
@@ -45,11 +48,13 @@ private class ConsoleImpl(_font: FontSettings) extends JTextPane with Console {
   }
 
   private def doPrint(s: String, attributes: AttributeSet): Unit =
-    SwingUtilities.invokeLater(new Runnable {
-      def run(): Unit =
-        getDocument.insertString(getDocument.getLength, s, attributes)
-    })
+    if (EventQueue.isDispatchThread) {
+      val doc = peer.getDocument
+      doc.insertString(doc.getLength, s, attributes)
+    } else {
+      Swing.onEDT(doPrint(s, attributes))
+    }
 
   def clear(): Unit =
-    setText("")
+    text = ""
 }

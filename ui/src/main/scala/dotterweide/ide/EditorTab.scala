@@ -21,6 +21,8 @@ import java.io.File
 
 import dotterweide.{FileType, ObservableEvents}
 
+import scala.swing.Component
+
 object EditorTab {
   sealed trait Update
   case class FileChanged (newFile: Option[File] ) extends Update
@@ -40,4 +42,6 @@ trait EditorTab extends ObservableEvents[EditorTab.Update] {
   def isDirty: Boolean
 
   var split: Boolean
+
+  def component: Component
 }

@@ -51,10 +51,10 @@ lazy val core = project.withId(s"$baseNameL-core").in(file("core"))
   .settings(testSettings)
   .settings(
     name        := s"$baseName-Core",
-    description := s"$baseName - Core API"
-//    libraryDependencies ++= Seq(
-//      "net.sourceforge.jasmin" % "jasmin" % "1.1",
-//    ),
+    description := s"$baseName - Core API",
+    libraryDependencies ++= Seq(
+      "org.scala-lang.modules" %% "scala-swing" % deps.main.scalaSwing
+    )
   )
 
 lazy val lispLang = project.withId(s"$baseNameL-lisp").in(file("lisp"))

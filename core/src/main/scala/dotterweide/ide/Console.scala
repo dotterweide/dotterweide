@@ -20,12 +20,16 @@ package dotterweide.ide
 import dotterweide.Output
 import dotterweide.editor.Color
 
+import scala.swing.{Component, Label}
+
 trait Console extends Output {
   def print(s: String, color: Color): Unit
 
   def printLink(s: String, line: Int): Unit
 
   def clear(): Unit
+
+  def component: Component
 }
 
 object Console {
@@ -37,5 +41,9 @@ object Console {
     def printLink(s: String, line: Int): Unit = ()
 
     def clear(): Unit = ()
+
+    private[this] lazy val _component = new Label
+
+    def component: Component = _component
   }
 }

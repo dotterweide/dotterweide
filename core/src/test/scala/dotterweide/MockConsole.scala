@@ -20,6 +20,8 @@ package dotterweide
 import dotterweide.editor.Color
 import dotterweide.ide.Console
 
+import scala.swing.{Component, Label}
+
 class MockConsole extends Console {
   private val builder = new StringBuilder()
 
@@ -38,6 +40,8 @@ class MockConsole extends Console {
   def printLink(s: String, line: Int): Unit = {
     print(s)
   }
+
+  lazy val component: Component = new Label
 
   def text: String = builder.toString()
 }

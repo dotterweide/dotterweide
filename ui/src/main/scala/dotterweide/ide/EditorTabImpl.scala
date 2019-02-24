@@ -22,7 +22,7 @@ import java.io.File
 import dotterweide.FileType
 import dotterweide.editor.{Editor, History}
 
-import scala.swing.{BorderPanel, Orientation, ScrollPane, SplitPane}
+import scala.swing.{BorderPanel, Component, Orientation, ScrollPane, SplitPane}
 
 private class EditorTabImpl(val fileType: FileType, val history: History,
                             primaryEditor: Editor, secondaryEditor: => Editor) extends BorderPanel with EditorTab {
@@ -32,6 +32,8 @@ private class EditorTabImpl(val fileType: FileType, val history: History,
   private var _file     = Option.empty[File]
 
   updateLayout()
+
+  def component: Component = this
 
   def text: String = primaryEditor.text
 
