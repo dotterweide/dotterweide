@@ -44,4 +44,6 @@ trait EditorTab extends ObservableEvents[EditorTab.Update] {
   var split: Boolean
 
   def component: Component
+
+  var structureVisible: Boolean
 }

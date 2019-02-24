@@ -27,9 +27,9 @@ import scala.swing.{BorderPanel, Component, Orientation, ScrollPane, SplitPane}
 private class EditorTabImpl(val fileType: FileType, val history: History,
                             primaryEditor: Editor, secondaryEditor: => Editor) extends BorderPanel with EditorTab {
 
-  private val structure = new StructureTab(primaryEditor.data, primaryEditor.terminal)
   private var _split    = false
   private var _file     = Option.empty[File]
+  private var structure = Option.empty[StructureTab]
 
   updateLayout()
 
@@ -61,6 +61,17 @@ private class EditorTabImpl(val fileType: FileType, val history: History,
 
   def isDirty: Boolean = _dirty
 
+  def structureVisible: Boolean = structure.isDefined
+
+  def structureVisible_=(value: Boolean): Unit = if (value != structure.isDefined) {
+    structure.foreach(_.dispose())
+    structure = if (!value) None else {
+      val st = new StructureTab(primaryEditor.data, primaryEditor.terminal)
+      Some(st)
+    }
+    updateLayout()
+  }
+
   def split: Boolean = _split
 
   def split_=(b: Boolean): Unit = if (_split != b) {
@@ -74,15 +85,21 @@ private class EditorTabImpl(val fileType: FileType, val history: History,
   private def updateLayout(): Unit = {
     val editors = if (split) {
       val pane = new SplitPane(Orientation.Horizontal, primaryEditor.component, secondaryEditor.component)
-      pane.resizeWeight = 0.5d
+      pane.resizeWeight = 0.5
       pane.border = null
       pane
     } else {
       primaryEditor.component
     }
 
-    val pane = new SplitPane(Orientation.Vertical, editors, new ScrollPane(structure))
-    pane.resizeWeight = 0.7d
+    val pane = structure match {
+      case Some(st) =>
+        val res = new SplitPane(Orientation.Vertical, editors, new ScrollPane(st))
+        res.resizeWeight = 0.7
+        res
+      case None =>
+        editors
+    }
 
     peer.removeAll()
     add(pane, BorderPanel.Position.Center)

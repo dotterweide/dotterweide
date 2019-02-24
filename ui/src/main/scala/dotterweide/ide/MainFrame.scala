@@ -21,10 +21,12 @@ import scala.swing.Frame
 import scala.swing.event.WindowClosed
 
 class MainFrame(language: Language, text: String, font: FontSettings = FontSettings.Default,
-                stylingName: Option[String] = None)
+                stylingName: Option[String] = None, structure: Boolean = true)
   extends Frame {
 
   private val panel: Panel = new PanelImpl(language, text = text, font = font, stylingName = stylingName)
+
+  panel.editorTab.structureVisible = structure
 
   reactions += {
     case WindowClosed(_) =>

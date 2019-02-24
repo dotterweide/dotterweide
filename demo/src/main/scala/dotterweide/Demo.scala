@@ -36,7 +36,7 @@ object Demo {
     LispLanguage
   )
 
-  case class Config(language: Option[Language] = None, stylingName: Option[String] = None)
+  case class Config(language: Option[Language] = None, stylingName: Option[String] = None, structure: Boolean = true)
 
   def main(args: Array[String]): Unit = {
     val default = Config()
@@ -56,6 +56,10 @@ object Demo {
         .text(s"Select color scheme name (one of ${Languages.map(_.name).mkString(", ")})")
         .validate { v => if (ColorScheme.names.contains(v.capitalize)) success else failure(s"Unknown scheme $v") }
         .action { (v, c) => c.copy(stylingName = Some(v.capitalize)) }
+
+      opt[Unit]("no-structure")
+        .text("Do not show structure view")
+        .action { (_, c) => c.copy(structure = false) }
     }
     p.parse(args, default).fold(sys.exit(1)) { config =>
       Swing.onEDT(run(config))
@@ -66,7 +70,7 @@ object Demo {
     val langOpt = config.language.orElse(selectLanguage())
     langOpt.foreach { language =>
       val code  = language.examples.headOption.fold("")(_.code)
-      val frame = new MainFrame(language, code, stylingName = config.stylingName)
+      val frame = new MainFrame(language, code, stylingName = config.stylingName, structure = config.structure)
       frame.preferredSize = new Dimension(874, 696)
       open(frame)
       frame.listenTo(frame)
