@@ -22,20 +22,19 @@ object ScalaExamples {
       |// Project Euler - Problem 1
       |
       |// The sum of all the multiples of 3 or 5 below 1000.
-      |object Euler1 {
-      |  var sum = 0
       |
-      |  var i = 0
+      |var sum = 0
       |
-      |  while (i < 1000) {
-      |    if (i % 3 == 0 || i % 5 == 0) {
-      |      sum += i
-      |    }
-      |    i += 1
+      |var i = 0
+      |
+      |while (i < 1000) {
+      |  if (i % 3 == 0 || i % 5 == 0) {
+      |    sum += i
       |  }
-      |
-      |  println(sum)
+      |  i += 1
       |}
+      |
+      |println(sum)
       |""".stripMargin
 
   val Euler2: String =
@@ -193,12 +192,13 @@ object ScalaExamples {
       |""".stripMargin
 
   val Values: ISeq[Example] = List(
-    Example("Project Euler 1", '1', Euler1),
-    Example("Project Euler 2", '2', Euler2),
-    Example("Project Euler 6", '6', Euler6),
-    Example("Fibonacci Numbers", 'F', FibonacciNumbers),
-    Example("Prime Numbers", 'P', PrimeNumbers),
-    Example("Highlighting Demo", 'H', HighlightingDemo),
-    Example("Exception", 'E', Exception),
-    Example("Stack Overflow", 'S', StackOverflow))
+    Example("Project Euler 1"   , '1', Euler1           ),
+    Example("Project Euler 2"   , '2', Euler2           ),
+    Example("Project Euler 6"   , '6', Euler6           ),
+    Example("Fibonacci Numbers" , 'F', FibonacciNumbers ),
+    Example("Prime Numbers"     , 'P', PrimeNumbers     ),
+    Example("Highlighting Demo" , 'H', HighlightingDemo ),
+    Example("Exception"         , 'E', Exception        ),
+    Example("Stack Overflow"    , 'S', StackOverflow    )
+  )
 }

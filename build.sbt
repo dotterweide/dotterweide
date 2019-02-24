@@ -18,7 +18,7 @@ lazy val lgpl2 = "LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")
 
 lazy val deps = new {
   val main = new {
-    val akka            = "2.5.19"
+    val akka            = "2.5.21"
     val scalariform     = "0.2.7"
     val scalaSwing      = "2.1.0"
   }

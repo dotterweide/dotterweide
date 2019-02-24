@@ -56,5 +56,7 @@ object ToyLanguage extends Language {
 
   def fileType = FileType("Toy file", "toy")
 
+  def dispose(): Unit = ()
+
   def examples: ISeq[Example] = ToyExamples.Values
 }

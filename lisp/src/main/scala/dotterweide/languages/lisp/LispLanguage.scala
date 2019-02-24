@@ -27,13 +27,13 @@ import dotterweide.{Example, FileType, Language}
 import scala.collection.immutable.{Seq => ISeq}
 
 object LispLanguage extends Language {
-  def name = "Lisp"
-
+  def name        = "Lisp"
   def description = "Clojure-like functional language"
 
-  def lexer: Lexer = LispLexer
-
-  def parser: Parser = LispParser
+  def lexer   : Lexer   = LispLexer
+  def parser  : Parser  = LispParser
+  def format  : Format  = LispFormat
+  def adviser : Adviser = LispAdviser
 
   def stylings: Map[String, Styling] = Map(
     ColorScheme.LightName -> new LispStyling(ColorScheme.LightColors),
@@ -41,15 +41,13 @@ object LispLanguage extends Language {
 
   def complements: ISeq[(TokenKind, TokenKind)] = List(LispTokens.Parens, LispTokens.Brackets)
 
-  def format: Format = LispFormat
-
   def lineCommentPrefix = ";"
 
   def inspections: ISeq[Inspection] = Nil
 
-  def adviser: Adviser = LispAdviser
-
   def fileType = FileType("Lisp file", "lisp")
+
+  def dispose(): Unit = ()
 
   def examples: ISeq[Example] = LispExamples.Values
 }

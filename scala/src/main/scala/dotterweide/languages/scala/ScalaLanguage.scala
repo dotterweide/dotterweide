@@ -22,13 +22,17 @@ import dotterweide.{Example, FileType, Language}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-class ScalaLanguage extends Language {
-  def name: String = "Scala"
+class ScalaLanguage(prelude: String = "", postlude: String = "", val examples: ISeq[Example] = Nil)
+  extends Language {
 
-  def description: String = "The Scala programming language"
+  def name        : String = "Scala"
+  def description : String = "The Scala programming language"
 
   def lexer : Lexer   = ScalaLexer
-  val parser: Parser  = new ScalaParser
+
+  private[this] val _parser = new ScalaParser(prelude = prelude, postlude = postlude)
+
+  def parser: Parser = _parser
 
   /** A map from color scheme names to the schemes. */
   def stylings: Map[String, Styling] = Map(
@@ -53,5 +57,7 @@ class ScalaLanguage extends Language {
 
   def fileType: FileType = FileType("Scala file", "scala")
 
-  def examples: ISeq[Example] = ScalaExamples.Values
+  def dispose(): Unit = {
+    _parser.dispose()
+  }
 }

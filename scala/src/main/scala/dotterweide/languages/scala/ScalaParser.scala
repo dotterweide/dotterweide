@@ -44,7 +44,7 @@ import scala.util.{Failure, Success}
   * the tree structure according to our needs. Not all tree types are mapped yet,
   * but everything covered in the Dotterweide code-base itself is mapped.
   */
-class ScalaParser extends Parser {
+class ScalaParser(prelude: String, postlude: String) extends Parser {
   private val system                  = ActorSystem("ScalaParser")
   private val compilerActor: ActorRef = system.actorOf(Props(new CompilerActor), "compiler")
 
@@ -69,9 +69,9 @@ class ScalaParser extends Parser {
       new Global(settings, reporter)
     }
 
-    private def compile(text: String): c.Tree = {
+    private def compile(fullText: String): c.Tree = {
       import c._
-      val srcFile   = newSourceFile(text)
+      val srcFile   = newSourceFile(fullText)
       val respTypes = new Response[c.Tree]
       c.askReset()
       c.askLoadedTyped(srcFile, keepLoaded = false /* true */, respTypes) // XXX TODO --- keep-loaded or not?
@@ -95,16 +95,21 @@ class ScalaParser extends Parser {
         log.error(s"Unknown message $m")
     }
 
-    private def runCompile(text: String): NodeImpl = {
-      val tree: c.Tree = compile(text)
+    private def runCompile(text0: String): NodeImpl = {
+      val fullText      = prelude + text0 + postlude
+      val mainStart     = prelude.length
+      val mainStop      = mainStart + text0.length
+      val tree: c.Tree  = compile(fullText)
 
       type Parents = List[Global#Tree]
 
       def setPosition(n: NodeImpl, pos: Position, inclusive: Boolean = false): n.type = {
-        val start     = pos.start
-        val stop      = if (inclusive) pos.end + 1 else pos.end
-        val spanText  = text.substring(start, stop)
-        n.span        = Span(spanText, start, stop)
+        val start     = math.max(0, pos.start - mainStart)
+        val stop      = math.min(mainStop, if (inclusive) pos.end + 1 else pos.end) - mainStart
+        if (stop >= start) {
+          val spanText  = text0.substring(start, stop)
+          n.span        = Span(spanText, start, stop)
+        }
         n
       }
 
@@ -154,9 +159,12 @@ class ScalaParser extends Parser {
       def completeName(pos: Position, n: NameNode): n.type = {
         pos match {
           case pd: DefinedPosition /* if pos.isOpaqueRange */ =>
-            val s = n.name
-            n.span =
-            Span(s, pd.point, pd.point + s.length)
+            val s     = n.name
+            val start = pd.point - mainStart
+            val stop  = start + s.length
+            if (start >= 0 && stop <= text0.length) {
+              n.span = Span(s, start, stop)
+            }
           case _ =>
         }
         n
@@ -447,16 +455,17 @@ class ScalaParser extends Parser {
       var moreErrors = List.empty[NodeImpl]
 
       reporter.infos.iterator.filter(info => info.pos.isDefined && info.severity.id >= 2).foreach { info =>
-        val sp = Span("", info.pos.start, info.pos.end)
+        val n   = new NodeImpl("leaf")
+        setPosition(n, info.pos)
+        val sp  = n.span
 
+        // XXX TODO inefficient
         val childOpt = programNode.elements.find(_.span.matches(sp))
-        childOpt match {
-          case Some(child) =>
-            child.problem = Some(info.msg)
-          case None =>
-            // log.info(s"no span for error: ${info.msg}")
-            moreErrors ::= NodeImpl.createError(None, sp, info.msg)
+        val child = childOpt.getOrElse {
+          moreErrors ::= n
+          n
         }
+        child.problem = Some(info.msg)
       }
 
       log.debug("done errors")
@@ -474,6 +483,7 @@ class ScalaParser extends Parser {
   def parseAsync(text: String, tokens: Iterator[Token])(implicit async: Async): Future[Node] = {
      import async.executionContext
 
+    // XXX TODO --- timeout is arbitrary
     val fut = compilerActor.ask(Compile(text))(Timeout(5, TimeUnit.SECONDS)).mapTo[Node]
     fut.onComplete {
       case Success(_) =>
@@ -482,5 +492,9 @@ class ScalaParser extends Parser {
         ex.printStackTrace()
     }
     fut
+  }
+
+  def dispose(): Unit = {
+    system.terminate()  // or `stop(compileActor)`?
   }
 }

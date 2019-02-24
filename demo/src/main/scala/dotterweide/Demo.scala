@@ -23,14 +23,18 @@ import java.util.Locale
 import dotterweide.editor.ColorScheme
 import dotterweide.ide.MainFrame
 import dotterweide.languages.lisp.LispLanguage
-import dotterweide.languages.scala.ScalaLanguage
+import dotterweide.languages.scala.{ScalaExamples, ScalaLanguage}
 import dotterweide.languages.toy.ToyLanguage
 
 import scala.swing.event.WindowClosed
 import scala.swing.{Swing, Window}
 
 object Demo {
-  private val Languages = List(new ScalaLanguage, ToyLanguage, LispLanguage)
+  private val Languages = List(
+    new ScalaLanguage(prelude = "object Main {", postlude = "}", examples = ScalaExamples.Values),
+    ToyLanguage,
+    LispLanguage
+  )
 
   case class Config(language: Option[Language] = None, stylingName: Option[String] = None)
 

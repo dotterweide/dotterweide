@@ -58,5 +58,10 @@ trait Language {
 
   def fileType: FileType
 
+  /** Disposes resources associated with this language instance.
+    * The object should not be used beyond this point.
+    */
+  def dispose(): Unit
+
   def examples: ISeq[Example]
 }
