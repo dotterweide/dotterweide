@@ -13,6 +13,7 @@
 package dotterweide.ide
 
 import java.awt.event.{ActionEvent, ActionListener, FocusAdapter, FocusEvent}
+import java.io.File
 
 import dotterweide.Language
 import dotterweide.document.Location
@@ -47,6 +48,10 @@ class PanelImpl(language: Language, text: String, font: FontSettings = FontSetti
   private val primaryEditor: Editor = EditorFactory.createEditorFor(language, history, styling, font)
 
   val data: Data = primaryEditor.data
+
+  def file: Option[File] = editorTab.file
+
+  def isDirty: Boolean = editorTab.isDirty
 
   implicit val async: Async = primaryEditor.async
 

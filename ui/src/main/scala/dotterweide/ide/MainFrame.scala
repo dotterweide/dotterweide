@@ -67,5 +67,5 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
 
   menuBar = menu
 
-  updateTitle(panel.editorTab.file, panel.editorTab.isDirty)
+  updateTitle(panel.file, panel.isDirty)
 }

@@ -22,8 +22,9 @@ import scala.swing.Component
 object Panel {
   sealed trait Update
   case class EditorFocused(editor: Editor) extends Update
-  case class FileOrDirtyChange(file: Option[File], dirty: Boolean) extends Update
+  case class FileOrDirtyChange(file: Option[File], isDirty: Boolean) extends Update
 }
+/** The main IDE component. */
 trait Panel extends ObservableEvents[Panel.Update] {
   def component: Component
 
@@ -42,4 +43,8 @@ trait Panel extends ObservableEvents[Panel.Update] {
   def styling: DynamicStyling
 
   def dispose(): Unit
+
+  def file: Option[File]
+
+  def isDirty: Boolean
 }
