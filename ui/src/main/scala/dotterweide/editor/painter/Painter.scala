@@ -17,7 +17,7 @@
 
 package dotterweide.editor.painter
 
-import java.awt.{Graphics, Rectangle}
+import java.awt.{Graphics2D, Rectangle}
 
 import dotterweide.ObservableEvents
 
@@ -28,8 +28,25 @@ trait Painter extends ObservableEvents[Rectangle] {
   /** Purely informal / informational */
   def id: String
 
+  /** Relative position in the painting stack. Lower layers are painted early,
+    * higher layers are painted on top of lower layers.
+    */
+  def layer: Int
+
   def immediate: Boolean = false
 
   /** Paints the contents within the given visual bounds. */
-  def paint(g: Graphics, bounds: Rectangle): Unit
+  def paint(g: Graphics2D, bounds: Rectangle): Unit
+}
+object Painter {
+  final val LayerImmediate    = -100
+  final val LayerBackground   = 0
+  final val LayerCurrentLine  = 100
+  final val LayerErrors       = 200
+  final val LayerMatches      = 300
+  final val LayerHighlights   = 400
+  final val LayerHover        = 500
+  final val LayerSelection    = 600
+  final val LayerText         = 700
+  final val LayerCaret        = 800
 }

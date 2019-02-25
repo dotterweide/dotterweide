@@ -18,14 +18,16 @@
 package dotterweide.editor.painter
 
 import java.awt.font.TextAttribute
-import java.awt.{Color, Graphics, Rectangle}
+import java.awt.{Color, Graphics2D, Rectangle}
 
 import dotterweide.Interval
-import dotterweide.editor.{Styling, SelectionChange}
+import dotterweide.editor.{SelectionChange, Styling}
 
 /** Paints the terminal's `selection` and collects them as decorations. */
 private class SelectionPainter(context: PainterContext) extends AbstractPainter(context) with Decorator {
   def id = "selection"
+
+  def layer: Int = Painter.LayerSelection
 
   terminal.onChange {
     case SelectionChange(_, before, now) =>
@@ -34,7 +36,7 @@ private class SelectionPainter(context: PainterContext) extends AbstractPainter(
     case _ =>
   }
 
-  override def paint(g: Graphics, bounds: Rectangle): Unit = {
+  override def paint(g: Graphics2D, bounds: Rectangle): Unit = {
     // XXX TODO inefficient
     val rectangles = terminal.selection.toSeq.flatMap(rectanglesOf)
       .map(_.intersection(bounds)).filterNot(_.isEmpty)

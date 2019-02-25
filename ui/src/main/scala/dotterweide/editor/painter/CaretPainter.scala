@@ -17,15 +17,17 @@
 
 package dotterweide.editor.painter
 
-import java.awt.{Graphics, Rectangle}
+import java.awt.{Graphics2D, Rectangle}
 
 import dotterweide.editor.{CaretMode, CaretMovement, CaretVisibilityChanged, Styling}
 
-// XXX TODO --- support overwrite mode (block cursor)
+// XXX TODO --- support overwrite mode (block cursor) without XOR paint mode
 
 /** Paints the cursor position as a vertical line. */
 private class CaretPainter(context: PainterContext) extends AbstractPainter(context) {
   def id = "caret"
+
+  def layer: Int = Painter.LayerCaret
 
   terminal.onChange {
     case CaretMovement(_, before, now) =>
@@ -44,7 +46,7 @@ private class CaretPainter(context: PainterContext) extends AbstractPainter(cont
     case _ =>
   }
 
-  override def paint(g: Graphics, bounds: Rectangle): Unit =
+  override def paint(g: Graphics2D, bounds: Rectangle): Unit =
     if (canvas.caretVisible) {
       val pos       = terminal.offset
       val caretRect = caretRectangleAt(pos).intersection(bounds)

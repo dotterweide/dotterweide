@@ -23,7 +23,7 @@ import java.awt.{BorderLayout, Cursor, Dimension, Font, Graphics, Graphics2D, Po
 
 import dotterweide.Interval
 import dotterweide.document.Document
-import dotterweide.editor.controller.{Controller, ControllerImpl}
+import dotterweide.editor.controller.ControllerImpl
 import dotterweide.editor.painter.{Painter, PainterFactory}
 import dotterweide.formatter.{Format, FormatterImpl}
 import dotterweide.lexer.Lexer
@@ -34,7 +34,7 @@ import scala.collection.immutable.{Seq => ISeq}
 
 private class EditorImpl(val document     : Document,
                          val data         : Data,
-                         val holder       : ErrorHolder,
+                         val errorHolder       : ErrorHolder,
                          lexer            : Lexer,
                          styling          : Styling,
                          font             : FontSettings,
@@ -80,10 +80,13 @@ private class EditorImpl(val document     : Document,
 
   private[this] lazy val renderingHints = Option(Toolkit.getDefaultToolkit.getDesktopProperty("awt.font.desktophints"))
 
-  private[this] val controller: Controller =
+  private[this] val controller: ControllerImpl =
     new ControllerImpl(document, data, terminal, grid, adviser,
       new FormatterImpl(format), tabSize = format.defaultTabSize, lineCommentPrefix = lineCommentPrefix,
       font = font, history = history)
+
+  def addAction   (a: Action): Unit = controller.addAction    (a)
+  def removeAction(a: Action): Unit = controller.removeAction (a)
 
   // XXX TODO --- is there a reason we don't use scala-swing here?
   private[this] val scroll = {
@@ -96,7 +99,7 @@ private class EditorImpl(val document     : Document,
   private[this] val canvas = new CanvasImpl(Pane, scroll)
 
   val component: swing.Component = {
-    val stripe = new Stripe(document, data, holder, grid, canvas)
+    val stripe = new Stripe(document, data, errorHolder, grid, canvas)
     stripe.onChange { y =>
       val point = toPoint(terminal.offset)
       terminal.offset = document.toNearestOffset(grid.toLocation(new Point(point.x, y)))
@@ -173,7 +176,7 @@ private class EditorImpl(val document     : Document,
     case _ =>
   }
 
-  holder.onChange { _ =>
+  errorHolder.onChange { _ =>
     updateMessage()
   }
 
@@ -196,17 +199,41 @@ private class EditorImpl(val document     : Document,
 
   private def shouldDisplayCaret = Pane.isFocusOwner || popupVisible
 
-  private[this] val painters = PainterFactory.createPainters(document, terminal, data,
-    canvas, grid, lexer, matcher, holder, styling, font, controller)
+  private[this] var painters = PainterFactory.createPainters(document, terminal, data,
+    canvas, grid, lexer, matcher, errorHolder, styling, font, controller)
 
-  painters.foreach(painter => painter.onChange(handlePaintingRequest(painter, _)))
+  private[this] var customPainters = Map.empty[Painter, Rectangle => Unit]
 
-  private[this] val handlePaintingRequest = (painter: Painter, rectangle: Rectangle) => {
+  private def registerPainter(p: Painter): Rectangle => Unit = {
+    val f: Rectangle => Unit = handlePaintingRequest(p, _)
+    p.onChange(f)
+    f
+  }
+
+  painters.foreach(registerPainter)
+
+  def addPainter(p: Painter): Unit = {
+    val f = registerPainter(p)
+    customPainters += p -> f
+    val idx0  = painters.indexWhere(_.layer > p.layer)
+    val idx   = if (idx0 < 0) painters.size else idx0
+    painters  = painters.patch(idx, p :: Nil, 0)
+  }
+
+  def removePainter(p: Painter): Unit = {
+    painters = painters.filterNot(_ == p)
+    customPainters.get(p).foreach { f =>
+      p.disconnect(f)
+      customPainters -= p
+    }
+  }
+
+  private[this] val handlePaintingRequest = (p: Painter, rectangle: Rectangle) => {
     if (canvas.visible) {
       val visibleRectangle = rectangle.intersection(canvas.visibleRectangle)
 
       if (!visibleRectangle.isEmpty) {
-        if (painter.immediate) {
+        if (p.immediate) {
           Pane.paintImmediately(painters.filter(_.immediate))
         } else {
           Pane.repaint(visibleRectangle)
@@ -247,7 +274,7 @@ private class EditorImpl(val document     : Document,
   }
 
   private def errorAt(offset: Int): Option[Error] = {
-    val errors = holder.errors.filter(_.interval.withEndShift(1).includes(offset))
+    val errors = errorHolder.errors.filter(_.interval.withEndShift(1).includes(offset))
     errors.sortBy(!_.fatal).headOption
   }
 
@@ -346,19 +373,20 @@ private class EditorImpl(val document     : Document,
     }
 
     override def paintComponent(g: Graphics): Unit =
-      paintOn(g, painters.filterNot(_.immediate))
+      paintOn(g.asInstanceOf[Graphics2D], painters.filterNot(_.immediate))
 
     def paintImmediately(painters: ISeq[Painter]): Unit =
-      Option(getGraphics).foreach { graphics =>
-        paintOn(graphics, painters)
-        Toolkit.getDefaultToolkit.sync()
+      getGraphics match {
+        case g: Graphics2D =>
+          paintOn(g, painters)
+          Toolkit.getDefaultToolkit.sync()
+
+        case _ =>
       }
 
-    private def paintOn(g: Graphics, painters: ISeq[Painter]): Unit = {
-      val g2d = g.asInstanceOf[Graphics2D]
-
+    private def paintOn(g: Graphics2D, painters: ISeq[Painter]): Unit = {
       renderingHints.foreach { it =>
-        g2d.addRenderingHints(it.asInstanceOf[java.util.Map[_, _]])
+        g.addRenderingHints(it.asInstanceOf[java.util.Map[_, _]])
       }
 
       val clipBounds = g.getClipBounds

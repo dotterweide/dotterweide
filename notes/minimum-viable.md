@@ -18,8 +18,13 @@ The following actions and IDE features should be implemented:
  
 The following API features should be implemented:
 
- - [ ] Configuration object, e.g. colour scheme, key-map, key-processor, initial text (`CodePane.Config`)
- - [ ] Editor: current location, selection; custom highlight such as flashing (`CodePane`)
+ - [X] Configuration: colour scheme
+ - [ ] Configuration: key-map
+ - [ ] Configuration: key-processor
+ - [X] Configuration: initial text
+ - [X] Editor: current location
+ - [X] Editor: selection
+ - [ ] Editor: flashing
  - [X] Proper shutdown (e.g. stopping Akka actor)
 
 This would work for Mellite. For ScalaCollider-Swing, additionally the following items:
@@ -43,4 +48,5 @@ The following items are "nice to have" but lower priority:
        it inserts a new line before and after block, otherwise it inserts the delimiters directly
  - [ ] Navigation history (ctrl-alt left/right in IntelliJ)
  - [ ] Enter in overwrite mode goes to beginning of new line instead of inserting new line (IntelliJ)
+ - [ ] FIX: tool tip, error hovers in submin-dark look bad (drop-shadow white text on white)
  

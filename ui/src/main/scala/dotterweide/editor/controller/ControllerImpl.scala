@@ -22,9 +22,11 @@ import java.awt.event.{KeyEvent, MouseEvent}
 
 import dotterweide.Interval
 import dotterweide.document.Document
-import dotterweide.editor.{ActionFinished, ActionStarted, Adviser, Async, Data, EditorActions, FontSettings, Grid, History, NamedEdit, Terminal}
+import dotterweide.editor.{Action, ActionFinished, ActionStarted, Adviser, Async, Data, EditorActions, FontSettings, Grid, History, NamedEdit, Terminal}
 import dotterweide.formatter.Formatter
 import dotterweide.node.{IdentifiedNode, Node}
+
+import scala.collection.immutable.{Seq => ISeq}
 
 /** Implements `Controller`
   *
@@ -53,6 +55,14 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     new Actions(document, terminal, data, adviser, formatter, tabSize = tabSize,
       lineCommentPrefix = lineCommentPrefix, font = font, history = history)
 
+  private[this] var actionSeq: ISeq[Action] = actions.all
+
+  def addAction(a: Action): Unit =
+    actionSeq = a +: actionSeq
+
+  def removeAction(a: Action): Unit =
+    actionSeq = actionSeq.filterNot(_ == a)
+
   def processKeyPressed(e: KeyEvent): Unit = {
     if (isModifierKey(e.getKeyCode)) return
 
@@ -78,7 +88,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
 
     // XXX TODO --- this is very inefficient
     for {
-      action <- actions.all
+      action <- actionSeq
       if action.enabled && action.keys.contains(keyStroke)
     } {
       action()

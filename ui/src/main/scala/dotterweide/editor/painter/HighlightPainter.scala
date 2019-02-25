@@ -17,11 +17,15 @@
 
 package dotterweide.editor.painter
 
-import java.awt.{Graphics, Rectangle}
+import java.awt.{Graphics2D, Rectangle}
 
-import dotterweide.editor.{Styling, HighlightsChange}
+import dotterweide.editor.{HighlightsChange, Styling}
 
 private class HighlightPainter(context: PainterContext) extends AbstractPainter(context) {
+  def id = "highlight"
+
+  def layer: Int = Painter.LayerHighlights
+
   terminal.onChange {
     case HighlightsChange(_, before, now) =>
       before.foreach(notifyObservers)
@@ -29,9 +33,7 @@ private class HighlightPainter(context: PainterContext) extends AbstractPainter(
     case _ =>
   }
 
-  def id = "highlight"
-
-  def paint(g: Graphics, bounds: Rectangle): Unit = {
+  def paint(g: Graphics2D, bounds: Rectangle): Unit = {
     val rectangles = terminal.highlights.flatMap(rectanglesOf)
       .map(_.intersection(bounds)).filterNot(_.isEmpty)
 

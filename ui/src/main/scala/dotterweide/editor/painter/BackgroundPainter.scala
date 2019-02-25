@@ -17,7 +17,7 @@
 
 package dotterweide.editor.painter
 
-import java.awt.{Graphics, Rectangle}
+import java.awt.{Graphics2D, Rectangle}
 
 import dotterweide.editor.Styling
 
@@ -25,7 +25,9 @@ import dotterweide.editor.Styling
 private class BackgroundPainter(context: PainterContext) extends AbstractPainter(context) {
   def id = "background"
 
-  def paint(g: Graphics, bounds: Rectangle): Unit = {
+  def layer: Int = Painter.LayerBackground
+
+  def paint(g: Graphics2D, bounds: Rectangle): Unit = {
     g.setColor(styling(Styling.TextBackground))
     fill(g, bounds)
   }

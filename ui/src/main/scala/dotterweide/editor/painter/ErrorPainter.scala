@@ -18,11 +18,11 @@
 package dotterweide.editor.painter
 
 import java.awt.font.TextAttribute
-import java.awt.{Color, Graphics, Rectangle}
+import java.awt.{Color, Graphics, Graphics2D, Rectangle}
 
 import dotterweide.Interval
 import dotterweide.editor.painter.ErrorPainter._
-import dotterweide.editor.{Styling, Error, ErrorHolder, ErrorsChanged}
+import dotterweide.editor.{Error, ErrorHolder, ErrorsChanged, Styling}
 import dotterweide.inspection.Decoration
 
 import scala.collection.immutable.{Seq => ISeq}
@@ -35,13 +35,15 @@ import scala.collection.immutable.{Seq => ISeq}
 private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends AbstractPainter(context) with Decorator {
   def id = "errors"
 
+  def layer: Int = Painter.LayerErrors
+
   errors.onChange {
     case ErrorsChanged(before, after) if canvas.visible =>
       difference(before, after).foreach(notifyObservers)
     case _ =>
   }
 
-  override def paint(g: Graphics, bounds: Rectangle): Unit = {
+  override def paint(g: Graphics2D, bounds: Rectangle): Unit = {
     def relevant(rectangles: ISeq[Rectangle]) =
       rectangles.map(_.intersection(bounds)).filterNot(_.isEmpty)
 

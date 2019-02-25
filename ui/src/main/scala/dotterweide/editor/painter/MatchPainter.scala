@@ -17,12 +17,12 @@
 
 package dotterweide.editor.painter
 
-import java.awt.{Graphics, Rectangle}
+import java.awt.{Graphics2D, Rectangle}
 
-import dotterweide.{Interval, Span}
 import dotterweide.document.AnchoredInterval
-import dotterweide.editor.{ActionProcessor, Area, BraceMatcher, BraceType, CaretMovement, Color, Styling, DataEvent, FocusChanged, Inapplicable, Paired, Pass, SelectionChange, Unbalanced, VisibleRectangleChanged}
+import dotterweide.editor.{ActionProcessor, Area, BraceMatcher, BraceType, CaretMovement, Color, DataEvent, FocusChanged, Inapplicable, Paired, Pass, SelectionChange, Styling, Unbalanced, VisibleRectangleChanged}
 import dotterweide.lexer.Token
+import dotterweide.{Interval, Span}
 
 import scala.collection.immutable.{Seq => ISeq}
 
@@ -31,6 +31,10 @@ import scala.collection.immutable.{Seq => ISeq}
 /** A painter for matching (or unbalanced) braces. */
 private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
                            processor: ActionProcessor) extends AbstractPainter(context) {
+
+  def id = "match"
+
+  def layer: Int = Painter.LayerMatches
 
   private[this] var anchoredMatches: ISeq[AnchoredMatch] = Nil
 
@@ -81,9 +85,7 @@ private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
       }
     }
 
-  def id = "match"
-
-  def paint(g: Graphics, bounds: Rectangle): Unit = {
+  def paint(g: Graphics2D, bounds: Rectangle): Unit = {
     anchoredMatches.foreach { it =>
       val rectangle = toRectangle(it.interval).intersection(bounds)
 

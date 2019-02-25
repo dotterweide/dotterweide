@@ -17,7 +17,8 @@ import java.io.File
 
 import dotterweide.Language
 import dotterweide.document.Location
-import dotterweide.editor.{Async, Data, Editor, EditorFactory, FontSettings, History, HistoryImpl, Pass}
+import dotterweide.editor.painter.Painter
+import dotterweide.editor.{Action, Async, Data, Editor, EditorFactory, FontSettings, History, HistoryImpl, Pass}
 import javax.swing.Timer
 
 import scala.swing.event.UIElementShown
@@ -36,9 +37,8 @@ class PanelImpl(language          : Language,
 
   def dispose(): Unit = if (!disposed) {
     disposed = true
-    timer           .stop()
-    primaryEditor   .dispose()
-    secondaryEditor .dispose()
+    timer.stop()
+    editors.foreach(_.dispose())
   }
 
   val history: History = new HistoryImpl
@@ -64,12 +64,20 @@ class PanelImpl(language          : Language,
 
   private[this] val secondaryEditor : Editor = {
     EditorFactory.createEditorFor(primaryEditor.document,
-      primaryEditor.data, primaryEditor.holder, language, history, styling, font, preferredGridSize)
+      primaryEditor.data, primaryEditor.errorHolder, language, history, styling, font, preferredGridSize)
   }
+
+  private[this] val editors = primaryEditor :: secondaryEditor :: Nil
 
   private[this] var _currentEditor = primaryEditor
 
   def currentEditor: Editor = _currentEditor
+
+  def addPainter    (p: Painter): Unit = editors.foreach(_.addPainter   (p))
+  def removePainter (p: Painter): Unit = editors.foreach(_.removePainter(p))
+
+  def addAction     (a: Action) : Unit = editors.foreach(_.addAction    (a))
+  def removeAction  (a: Action) : Unit = editors.foreach(_.removeAction (a))
 
   // a non-repeating timer to invoke the next data pass with a delay
   // (the delay is adjusted in the data observer)
@@ -122,8 +130,7 @@ class PanelImpl(language          : Language,
     })
   }
 
-  register(primaryEditor)
-  register(secondaryEditor)
+  editors.foreach(register)
 
   updateMessageFor      (primaryEditor)
   updateCaretLocationFor(primaryEditor)

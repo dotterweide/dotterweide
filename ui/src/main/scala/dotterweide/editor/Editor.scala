@@ -19,6 +19,7 @@ package dotterweide.editor
 
 import dotterweide.Observable
 import dotterweide.document.Document
+import dotterweide.editor.painter.Painter
 
 import scala.swing.Component
 
@@ -27,14 +28,16 @@ trait Editor extends Observable {
 
   def data: Data
 
-  def holder: ErrorHolder
-
   def terminal: Terminal
+
+  def errorHolder: ErrorHolder
 
   implicit def async: Async
 
+  /** The main component enclosing all sub-components represented by the editor. */
   def component: Component
 
+  /** The text editor component which should get focus while editing. */
   def pane: Component
 
   var text: String
@@ -43,5 +46,18 @@ trait Editor extends Observable {
 
   def message: Option[String]
 
+  /** Disposes all resources associated with the editor. */
   def dispose(): Unit
+
+  /** Adds a custom painter and inserts it at its layer position. */
+  def addPainter(p: Painter): Unit
+
+  /** Removes a custom painter. */
+  def removePainter(p: Painter): Unit
+
+  /** Registers a custom action. */
+  def addAction(a: Action): Unit
+
+  /** Unregisters a custom action. */
+  def removeAction(a: Action): Unit
 }

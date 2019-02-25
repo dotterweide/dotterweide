@@ -15,7 +15,8 @@ package dotterweide.ide
 import java.io.File
 
 import dotterweide.ObservableEvents
-import dotterweide.editor.{Async, Data, Editor, History}
+import dotterweide.editor.painter.Painter
+import dotterweide.editor.{Action, Async, Data, Editor, History}
 
 import scala.swing.Component
 
@@ -27,8 +28,6 @@ object Panel {
 /** The main IDE component. */
 trait Panel extends ObservableEvents[Panel.Update] {
   def component: Component
-
-//  def console: Console
 
   def currentEditor: Editor
 
@@ -49,4 +48,16 @@ trait Panel extends ObservableEvents[Panel.Update] {
   def file: Option[File]
 
   def isDirty: Boolean
+
+  /** Adds a custom painter to all editors, inserting it at its layer position. */
+  def addPainter(p: Painter): Unit
+
+  /** Removes a custom painter from all editors. */
+  def removePainter(p: Painter): Unit
+
+  /** Registers a custom action with all editors. */
+  def addAction(a: Action): Unit
+
+  /** Unregisters a custom action from all editors. */
+  def removeAction(a: Action): Unit
 }

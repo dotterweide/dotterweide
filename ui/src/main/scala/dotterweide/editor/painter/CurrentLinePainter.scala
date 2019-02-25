@@ -17,13 +17,15 @@
 
 package dotterweide.editor.painter
 
-import java.awt.{Graphics, Rectangle}
+import java.awt.{Graphics2D, Rectangle}
 
 import dotterweide.editor.{CaretMovement, Styling}
 
 /** Simply paints the line in which is the cursor is located using `Coloring.CurrentLineBackground` */
 private class CurrentLinePainter(context: PainterContext) extends AbstractPainter(context) {
   def id = "current line"
+
+  def layer: Int = Painter.LayerCurrentLine
 
   terminal.onChange {
     case CaretMovement(_, before, now) =>
@@ -38,7 +40,7 @@ private class CurrentLinePainter(context: PainterContext) extends AbstractPainte
     case _ =>
   }
 
-  override def paint(g: Graphics, bounds: Rectangle): Unit = {
+  override def paint(g: Graphics2D, bounds: Rectangle): Unit = {
     val rectangle = lineRectangleAt(terminal.offset).intersection(bounds)
 
     if (!rectangle.isEmpty) {

@@ -18,7 +18,7 @@
 package dotterweide.editor.painter
 
 import java.awt.font.TextAttribute
-import java.awt.{Color, Graphics, Rectangle}
+import java.awt.{Color, Graphics, Graphics2D, Rectangle}
 import java.text.AttributedString
 
 import dotterweide.document.Replacement
@@ -37,10 +37,12 @@ import dotterweide.lexer.Lexer
 private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, processor: ActionProcessor)
   extends AbstractPainter(context) {
 
+  def id = "immediate text"
+
+  def layer: Int = Painter.LayerImmediate
+
   // XXX TODO --- should be language dependent
   private[this] val Pairs = Set("()", "[]", "{}", "\"\"")
-
-  def id = "immediate text"
 
   override def immediate = true
 
@@ -94,7 +96,7 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
     grid.toRectangle(area)
   }
 
-  override def paint(g: Graphics, bounds: Rectangle): Unit = {
+  override def paint(g: Graphics2D, bounds: Rectangle): Unit = {
     lastEvent.foreach {
       case Replacement(_, begin, _, before, after) =>
         paintReplacement(g, begin, before, after)

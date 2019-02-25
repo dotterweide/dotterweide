@@ -32,6 +32,8 @@ trait Language {
   /** Human readable string for UI presentation. */
   def description: String
 
+  def fileType: FileType
+
   /** Syntactic analysis. */
   def lexer: Lexer
 
@@ -55,8 +57,6 @@ trait Language {
   def inspections: ISeq[Inspection]
 
   def adviser: Adviser
-
-  def fileType: FileType
 
   /** Disposes resources associated with this language instance.
     * The object should not be used beyond this point.

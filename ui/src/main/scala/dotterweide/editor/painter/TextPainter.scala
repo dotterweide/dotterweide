@@ -18,7 +18,7 @@
 package dotterweide.editor.painter
 
 import java.awt.font.TextAttribute
-import java.awt.{Graphics, Rectangle}
+import java.awt.{Graphics, Graphics2D, Rectangle}
 import java.text.AttributedString
 
 import dotterweide.Interval
@@ -39,6 +39,8 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
                           decorators: ISeq[Decorator]) extends AbstractPainter(context) {
 
   def id = "text"
+
+  def layer: Int = Painter.LayerText
 
   private[this] var string            = EmptyString
   private[this] var stringValid       = true
@@ -70,7 +72,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
   styling .onChange(resetAll())
   font    .onChange(resetAll())
 
-  override def paint(g: Graphics, bounds: Rectangle): Unit = {
+  override def paint(g: Graphics2D, bounds: Rectangle): Unit = {
     val area = grid.toArea(bounds)
 
     if (singleLineChanged && area.height == 1) {
