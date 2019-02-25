@@ -25,7 +25,7 @@ import dotterweide.editor.{Area, Canvas, Data, FontSettings, Grid, Styling, Term
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private abstract class AbstractPainter(context: PainterContext) extends Painter {
+abstract class AbstractPainter(context: PainterContext) extends Painter {
   protected def document: Document      = context.document
   protected def terminal: Terminal      = context.terminal
   protected def data    : Data          = context.data
@@ -33,6 +33,9 @@ private abstract class AbstractPainter(context: PainterContext) extends Painter 
   protected def grid    : Grid          = context.grid
   protected def styling : Styling       = context.styling
   protected def font    : FontSettings  = context.font
+
+  /** Default implementation does nothing. */
+  def dispose(): Unit = ()
 
   protected def contains(chars: CharSequence, char: Char): Boolean =
     Range(0, chars.length).exists(i => chars.charAt(i) == char)

@@ -37,6 +37,8 @@ trait Painter extends ObservableEvents[Rectangle] {
 
   /** Paints the contents within the given visual bounds. */
   def paint(g: Graphics2D, bounds: Rectangle): Unit
+
+  def dispose(): Unit
 }
 object Painter {
   final val LayerImmediate    = -100
@@ -47,6 +49,7 @@ object Painter {
   final val LayerHighlights   = 400
   final val LayerHover        = 500
   final val LayerSelection    = 600
-  final val LayerText         = 700
-  final val LayerCaret        = 800
+  final val LayerFlash        = 700
+  final val LayerText         = 800
+  final val LayerCaret        = 900
 }

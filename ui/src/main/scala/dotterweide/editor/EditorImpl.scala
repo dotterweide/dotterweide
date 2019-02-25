@@ -146,6 +146,7 @@ private class EditorImpl(val document     : Document,
   def dispose(): Unit = {
     tooltipHandler.dispose()
     timer.stop()
+    painters.foreach(_.dispose())
   }
 
   def terminal: Terminal = TerminalImpl
