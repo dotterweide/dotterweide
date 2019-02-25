@@ -37,17 +37,17 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   extends Controller {
 
   // XXX TODO extract to some extension (maybe using brace matcher)
-  private val pairs = List(
+  private[this] val pairs = List(
     ('(', ')'),
     ('[', ']'),
     ('{', '}'),
     ('\"', '\"')
   )
 
-  private val BlockOpening = '{'
-  private val BlockClosing = '}'
+  private[this] val BlockOpening = '{'
+  private[this] val BlockClosing = '}'
 
-  private var origin = 0
+  private[this] var origin = 0
 
   val actions: EditorActions =
     new Actions(document, terminal, data, adviser, formatter, tabSize = tabSize,

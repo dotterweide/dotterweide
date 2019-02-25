@@ -18,7 +18,7 @@
 package dotterweide.compiler
 
 case class Code(instructions: String = "", fields: String = "", methods: String = "") {
-  private val Template =
+  private[this] val Template =
     """
       |.class public %s
       |.super java/lang/Object

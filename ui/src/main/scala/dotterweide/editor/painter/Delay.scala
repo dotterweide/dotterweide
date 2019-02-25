@@ -24,9 +24,9 @@ import dotterweide.editor.{ActionFinished, ActionProcessor, ActionStarted}
   * of a `processor`. It is used by [[MatchPainter]].
   */
 private class Delay[A](delegate: ObservableEvents[A], processor: ActionProcessor) extends ObservableEvents[A] {
-  private var delay = false
+  private[this] var delay = false
   
-  private var events = List.empty[A]
+  private[this] var events = List.empty[A]
 
   processor.onChange {
     case ActionStarted(_) =>

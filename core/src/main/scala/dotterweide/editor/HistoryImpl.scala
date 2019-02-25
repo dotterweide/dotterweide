@@ -20,25 +20,25 @@ package dotterweide.editor
 import dotterweide.document.Document
 
 class HistoryImpl extends History {
-  private var toUndo: List[NamedEdit] = Nil
-  private var toRedo: List[NamedEdit] = Nil
+  private[this] var toUndo: List[NamedEdit] = Nil
+  private[this] var toRedo: List[NamedEdit] = Nil
 
-  private var busy        = false
-  private var _blockMerge = false
+  private[this] var busy        = false
+  private[this] var _blockMerge = false
 
   def blockMerge(): Unit =
     _blockMerge = true
 
-  private var _canUndo  = false
-  private var _canRedo  = false
-  private var _undoName = ""
-  private var _redoName = ""
+  private[this] var _canUndo  = false
+  private[this] var _canRedo  = false
+  private[this] var _undoName = ""
+  private[this] var _redoName = ""
 
-  private val Empty   = new Compound("", Nil, significant = false)
+  private[this] val Empty   = new Compound("", Nil, significant = false)
 
   // add a non-significant edit puts it into pending limbo,
   // because we do not yet want to purge the redo tree at this stage
-  private var pending = Empty
+  private[this] var pending = Empty
 
   def add(edit: NamedEdit): Unit = {
     if (edit.significant) {

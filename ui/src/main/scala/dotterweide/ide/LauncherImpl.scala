@@ -20,7 +20,7 @@ package dotterweide.ide
 import javax.swing.SwingUtilities
 
 private class LauncherImpl extends Launcher {
-  private var thread: Option[Thread] = None
+  private[this] var thread: Option[Thread] = None
 
   def launch(action: => Unit): Unit = {
     thread = Some(new Thread(new MyRunnable(() => action)))

@@ -40,7 +40,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   private def mkFont() = new Font(font.family, Font.PLAIN, font.size)
 
-  private var regularFont: Font = mkFont()
+  private[this] var regularFont: Font = mkFont()
 
   private def gridParam(): (Int, Int, Int) = {
     val frc     = new FontRenderContext(null, true, false)
@@ -51,7 +51,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     (advance, height, ascent)
   }
 
-  private val grid = {
+  private[this] val grid = {
     val pIn = Pane.getInsets
     val (advance, height, ascent) = gridParam()
     new GridImpl(cellWidth0 = advance, cellHeight0 = height, ascent0 = ascent,
@@ -67,16 +67,16 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
     Pane.repaint()
   }
 
-  private lazy val renderingHints = Option(Toolkit.getDefaultToolkit.getDesktopProperty("awt.font.desktophints"))
+  private[this] lazy val renderingHints = Option(Toolkit.getDefaultToolkit.getDesktopProperty("awt.font.desktophints"))
 
-  private val controller: Controller =
+  private[this] val controller: Controller =
     new ControllerImpl(document, data, terminal, grid, adviser,
       new FormatterImpl(format), tabSize = format.defaultTabSize, lineCommentPrefix = lineCommentPrefix,
       font = font, history = history)
 
-  private val scroll = new JScrollPane(Pane)
+  private[this] val scroll = new JScrollPane(Pane)
 
-  private val canvas = new CanvasImpl(Pane, scroll)
+  private[this] val canvas = new CanvasImpl(Pane, scroll)
 
   val component: swing.Component = {
     val stripe = new Stripe(document, data, holder, grid, canvas)
@@ -113,7 +113,7 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
       document.text       = s
     }
 
-  private var _message: Option[String] = None
+  private[this] var _message: Option[String] = None
 
   def message: Option[String] = _message
 
@@ -154,14 +154,14 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
   private def updateMessage(): Unit =
     message = errorAt(terminal.offset).map(_.message)
 
-  private var popupVisible = false
+  private[this] var popupVisible = false
 
   private def toPoint(offset: Int): Point = grid.toPoint(document.toLocation(offset))
 
-  private val tooltipHandler = new TooltipHandler(Pane,
+  private[this] val tooltipHandler = new TooltipHandler(Pane,
     point => document.toOffset(grid.toLocation(point)).flatMap(errorAt))
 
-  private val timer = new Timer(500, new ActionListener() {
+  private[this] val timer = new Timer(500, new ActionListener() {
     def actionPerformed(e: ActionEvent): Unit =
       if (shouldDisplayCaret) {
         canvas.caretVisible = !canvas.caretVisible
@@ -170,12 +170,12 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   private def shouldDisplayCaret = Pane.isFocusOwner || popupVisible
 
-  private val painters = PainterFactory.createPainters(document, terminal, data,
+  private[this] val painters = PainterFactory.createPainters(document, terminal, data,
     canvas, grid, lexer, matcher, holder, styling, font, controller)
 
   painters.foreach(painter => painter.onChange(handlePaintingRequest(painter, _)))
 
-  private val handlePaintingRequest = (painter: Painter, rectangle: Rectangle) => {
+  private[this] val handlePaintingRequest = (painter: Painter, rectangle: Rectangle) => {
     if (canvas.visible) {
       val visibleRectangle = rectangle.intersection(canvas.visibleRectangle)
 

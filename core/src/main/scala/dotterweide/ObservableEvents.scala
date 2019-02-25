@@ -18,7 +18,7 @@
 package dotterweide
 
 trait ObservableEvents[A] {
-  private var observers = List.empty[A => Unit]
+  private[this] var observers = List.empty[A => Unit]
 
   def onChange(action: A => Unit): Unit =
     observers ::= action

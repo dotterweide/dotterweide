@@ -20,11 +20,11 @@ package dotterweide.ide
 import scala.swing.{Alignment, FlowPanel, Label}
 
 class StatusBar extends FlowPanel(FlowPanel.Alignment.Left)() {
-  private val _message = new Label() {
+  private[this] val _message = new Label() {
     horizontalAlignment = Alignment.Leading
   }
 
-  private val _position = new Label() {
+  private[this] val _position = new Label() {
     horizontalAlignment = Alignment.Leading
   }
 

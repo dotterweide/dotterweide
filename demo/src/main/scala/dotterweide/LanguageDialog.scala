@@ -27,11 +27,11 @@ import scala.swing.event.WindowClosing
 import scala.swing.{Action, BorderPanel, Button, Component, Dialog, Dimension, FlowPanel, ScrollPane, Swing}
 
 class LanguageDialog(languages: ISeq[Language]) extends Dialog {
-  private val table         = new JTable(LanguageTableModel)
-  private val okButton      = new Button(Action("OK"    )(onOk    ()))
-  private val cancelButton  = new Button(Action("Cancel")(onCancel()))
+  private[this] val table         = new JTable(LanguageTableModel)
+  private[this] val okButton      = new Button(Action("OK"    )(onOk    ()))
+  private[this] val cancelButton  = new Button(Action("Cancel")(onCancel()))
 
-  private var itemSelected  = false
+  private[this] var itemSelected  = false
 
   modal         = true
   title         = "Language selection - Dotterweide"
@@ -64,9 +64,9 @@ class LanguageDialog(languages: ISeq[Language]) extends Dialog {
     border = Swing.EmptyBorder(10)
     layoutManager.setVgap(3)
 
-    private val contentPane = new ScrollPane(Component.wrap(table))
+    private[this] val contentPane = new ScrollPane(Component.wrap(table))
 
-    private val buttonsPane = new FlowPanel(FlowPanel.Alignment.Trailing)(
+    private[this] val buttonsPane = new FlowPanel(FlowPanel.Alignment.Trailing)(
       okButton, Swing.HStrut(6), cancelButton) { hGap = 0; vGap = 0 }
 
     add(contentPane, BorderPanel.Position.Center)

@@ -40,9 +40,9 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
 
   def id = "text"
 
-  private var string            = EmptyString
-  private var stringValid       = true
-  private var singleLineChanged = false
+  private[this] var string            = EmptyString
+  private[this] var stringValid       = true
+  private[this] var singleLineChanged = false
 
   import context.grid.ascent
 

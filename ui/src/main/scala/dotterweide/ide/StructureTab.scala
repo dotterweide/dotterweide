@@ -27,13 +27,13 @@ import javax.swing.tree.{DefaultMutableTreeNode, DefaultTreeModel}
 import scala.swing.{BorderPanel, Component}
 
 private class StructureTab(data: Data, terminal: Terminal) extends BorderPanel {
-  private val tree = new JTree(new DefaultMutableTreeNode("root"))
+  private[this] val tree = new JTree(new DefaultMutableTreeNode("root"))
 
   tree.setEditable(false)
 
   add(Component.wrap(tree), BorderPanel.Position.Center)
 
-  private val dataL: DataEvent => Unit = {
+  private[this] val dataL: DataEvent => Unit = {
     case DataEvent(Pass.Parser, _) =>
       val root = data.structure.getOrElse(
         throw new IllegalStateException("No root node after parser pass"))
@@ -44,14 +44,14 @@ private class StructureTab(data: Data, terminal: Terminal) extends BorderPanel {
 
   data.onChange(dataL)
 
-  private val treeSelectionL = new TreeSelectionListener() {
+  private[this] val treeSelectionL = new TreeSelectionListener() {
     def valueChanged(e: TreeSelectionEvent): Unit =
       updateTreeHighlight()
   }
 
   tree.addTreeSelectionListener(treeSelectionL)
 
-  private val treeFocusL = new FocusAdapter() {
+  private[this] val treeFocusL = new FocusAdapter() {
     override def focusGained(e: FocusEvent): Unit = {
       terminal.selection = None
       updateTreeHighlight()

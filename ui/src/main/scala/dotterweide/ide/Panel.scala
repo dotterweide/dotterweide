@@ -15,7 +15,7 @@ package dotterweide.ide
 import java.io.File
 
 import dotterweide.ObservableEvents
-import dotterweide.editor.{Async, Data, Editor}
+import dotterweide.editor.{Async, Data, Editor, EditorActions, History}
 
 import scala.swing.Component
 
@@ -39,6 +39,8 @@ trait Panel extends ObservableEvents[Panel.Update] {
   def status: StatusBar
 
   def editorTab: EditorTab
+
+  def history: History
 
   def styling: DynamicStyling
 

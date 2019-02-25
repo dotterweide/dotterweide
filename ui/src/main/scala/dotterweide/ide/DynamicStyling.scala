@@ -28,8 +28,8 @@ import scala.collection.immutable.{Seq => ISeq}
 class DynamicStyling(delegates: Map[String, Styling]) extends Styling {
   require (delegates.nonEmpty)
 
-  private var _name     : String   = delegates.head._1
-  private var _styling  : Styling  = delegates.head._2
+  private[this] var _name     : String   = delegates.head._1
+  private[this] var _styling  : Styling  = delegates.head._2
 
   def names: ISeq[String] = delegates.keys.toList
   

@@ -25,7 +25,7 @@ private abstract class DocumentAction(document: Document, terminal: Terminal) ex
   /** Recalculates the current enabled state. */
   protected def calcEnabled(): Boolean
 
-  private var _enabled = calcEnabled()
+  private[this] var _enabled = calcEnabled()
 
   final override def enabled: Boolean = _enabled
 

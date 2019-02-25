@@ -20,8 +20,8 @@ package dotterweide.document
 import scala.collection.immutable.{Seq => ISeq}
 
 class DocumentImpl(text0: String = "") extends Document {
-  private var ls      = new LinedString(text0)
-  private var anchors = List.empty[AnchorImpl]
+  private[this] var ls      = new LinedString(text0)
+  private[this] var anchors = List.empty[AnchorImpl]
 
   def length: Int     = ls.length
   def text  : String  = ls.toString

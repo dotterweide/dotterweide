@@ -20,7 +20,7 @@ package dotterweide.languages.lisp.core
 import dotterweide.languages.lisp.value.Environment
 
 private class NameGenerator(environment: Environment) {
-  private var aliases = Map[String, String]()
+  private[this] var aliases = Map[String, String]()
 
   def unique(name: String): String = aliases.getOrElse(name, {
     val alias = name + "_" + environment.nextId()

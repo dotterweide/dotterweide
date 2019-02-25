@@ -39,8 +39,8 @@ trait HandleValue extends Value with EvaluableToSelf {
 }
 
 abstract class AbstractHandleValue(name: String, input: InputStream, output: OutputStream) extends HandleValue {
-  private val bufferedInput   = new BufferedInputStream (input )
-  private val bufferedOutput  = new BufferedOutputStream(output)
+  private[this] val bufferedInput   = new BufferedInputStream (input )
+  private[this] val bufferedOutput  = new BufferedOutputStream(output)
 
   def presentation: String = name
 

@@ -22,7 +22,7 @@ import dotterweide.interpreter.{ContextImpl, EvaluationException}
 import dotterweide.node.Node
 
 private class NodeInterpreter(console: Console) extends Runner {
-  private val ErrorColor = new Color(127, 0, 0)
+  private[this] val ErrorColor = new Color(127, 0, 0)
 
   def run(root: Node): Unit = {
     console.clear()

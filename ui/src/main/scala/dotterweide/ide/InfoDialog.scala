@@ -31,7 +31,7 @@ private class InfoDialog(owner: Window, file: String, scrolling: Boolean) extend
   modal = true
   title = "About the program"
 
-  private val pane = new EditorPane() {
+  private[this] val pane = new EditorPane() {
     focusable = false
     border = {
       val spacer = new EmptyBorder(5, 10, 10, 10)
@@ -43,15 +43,15 @@ private class InfoDialog(owner: Window, file: String, scrolling: Boolean) extend
     editable = false
   }
 
-  private val action = new Action("OK") {
+  private[this] val action = new Action("OK") {
     def apply(): Unit = dispose()
   }
 
-  private val button = new Button(action) {
+  private[this] val button = new Button(action) {
     preferredSize = new Dimension(85, preferredSize.height)
   }
 
-  private val footer = new BorderPanel() {
+  private[this] val footer = new BorderPanel() {
     border = new EmptyBorder(5, 5, 5, 5)
     add(button, BorderPanel.Position.East)
   }

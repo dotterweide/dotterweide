@@ -22,9 +22,9 @@ import dotterweide.editor.{Color, Runner}
 import dotterweide.node.Node
 
 private class NodeInvoker(console: Console) extends Runner {
-  private val ErrorColor = new Color(127, 0, 0)
+  private[this] val ErrorColor = new Color(127, 0, 0)
 
-  private val Name = "Main"
+  private[this] val Name = "Main"
 
   def run(root: Node): Unit = {
     console.clear()

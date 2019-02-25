@@ -23,7 +23,7 @@ import javax.swing.KeyStroke
 import scala.swing.{Action, Swing}
 
 /** Wraps an `editor.Action` inside a `scala.swing.Action`. */
-private class ActionAdapter(peer: _Action) extends Action(peer.name) {
+class ActionAdapter(peer: _Action) extends Action(peer.name) {
   mnemonic    = peer.mnemonic
   accelerator = Option(KeyStroke.getKeyStroke(peer.keys.headOption.orNull))
   enabled     = peer.enabled

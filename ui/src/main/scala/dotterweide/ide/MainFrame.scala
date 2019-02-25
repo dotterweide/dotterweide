@@ -24,7 +24,7 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
                 stylingName: Option[String] = None, structure: Boolean = true)
   extends Frame {
 
-  private val panel: Panel = new PanelImpl(language, text = text, font = font, stylingName = stylingName)
+  private[this] val panel: Panel = new PanelImpl(language, text = text, font = font, stylingName = stylingName)
 
   panel.editorTab.structureVisible = structure
 
@@ -38,9 +38,9 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
     dispose()
   }
 
-  private val launcher: Launcher  = new LauncherImpl
+  private[this] val launcher: Launcher  = new LauncherImpl
 
-  private val menu = {
+  private[this] val menu = {
     val console = panel.console
     import panel.async
     new MainMenu(panel.editorTab, this, panel.data, new NodeInterpreter(console),

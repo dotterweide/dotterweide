@@ -22,10 +22,10 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class ContextImpl extends Context {
-  private val MaxFrames   = 100
-  private var frames      = List[Frame]()
-  private var allocations = List[ListBuffer[String]]()
-  private val heap        = mutable.Map[String, Value]()
+  private[this] val MaxFrames   = 100
+  private[this] var frames      = List[Frame]()
+  private[this] var allocations = List[ListBuffer[String]]()
+  private[this] val heap        = mutable.Map[String, Value]()
 
   def get(local: Boolean, name: String): Value =
     storage(local).getOrElse(name,

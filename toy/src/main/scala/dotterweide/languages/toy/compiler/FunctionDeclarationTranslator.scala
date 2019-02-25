@@ -21,7 +21,7 @@ import dotterweide.compiler.{Code, Labels}
 import dotterweide.languages.toy.node.FunctionDeclaration
 
 trait FunctionDeclarationTranslator extends ToyTranslatable { self: FunctionDeclaration =>
-  private val Template =
+  private[this] val Template =
     """
       |.method private %s(%s)%s
       |   .limit stack 10

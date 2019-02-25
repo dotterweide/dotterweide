@@ -27,7 +27,7 @@ class ListValue private (val content: List[Expression], val place: Option[Place]
 
   def valueType: NodeType = LispType.ListType
 
-  private val macroExpansionCache = new SingleValueCache[(MacroFunction, Seq[Expression]), Expression]()
+  private[this] val macroExpansionCache = new SingleValueCache[(MacroFunction, Seq[Expression]), Expression]()
 
   def eval(environment: Environment, output: Output): Expression = {
     if (content.nonEmpty) content.head.eval(environment, output) match {

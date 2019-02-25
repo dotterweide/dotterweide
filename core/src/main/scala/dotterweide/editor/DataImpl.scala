@@ -46,10 +46,10 @@ private class DataImpl(document: Document, lexer: Lexer, parser: Parser, inspect
 
   def hasNextPass: Boolean = pass.next.isDefined
 
-  private var busyCount     = 0
-  private var busyPass      = -1
+  private[this] var busyCount     = 0
+  private[this] var busyPass      = -1
 
-  private var futStructure: Future[Option[Node]] = Future.successful(None)
+  private[this] var futStructure: Future[Option[Node]] = Future.successful(None)
 
   def nextPass(): Unit = {
     val next = pass.next.getOrElse(

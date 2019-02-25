@@ -22,8 +22,8 @@ private abstract class UndoRedoAction(history: History) extends Action {
 
   protected def calcName(): String
 
-  private var _enabled  = calcEnabled ()
-  private var _name     = calcName    ()
+  private[this] var _enabled  = calcEnabled ()
+  private[this] var _name     = calcName    ()
 
   final override def enabled: Boolean = _enabled
   final override def name   : String  = _name

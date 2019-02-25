@@ -23,7 +23,7 @@ import java.awt.{Dimension, Rectangle}
 import javax.swing.{JComponent, JScrollPane}
 
 private class CanvasImpl(component: JComponent, scrollPane: JScrollPane) extends Canvas {
-  private var _caretVisible = false
+  private[this] var _caretVisible = false
 
   component.addHierarchyListener(new HierarchyListener {
     override def hierarchyChanged(e: HierarchyEvent): Unit =
@@ -32,7 +32,7 @@ private class CanvasImpl(component: JComponent, scrollPane: JScrollPane) extends
       }
   })
 
-  private val scrollListener = new AdjustmentListener {
+  private[this] val scrollListener = new AdjustmentListener {
     def adjustmentValueChanged(e: AdjustmentEvent): Unit =
       notifyObservers(VisibleRectangleChanged(component.getVisibleRect))
   }

@@ -26,7 +26,7 @@ import scala.swing.{BorderPanel, Component, Orientation, ScrollPane, SplitPane}
 class PanelImpl(language: Language, text: String, font: FontSettings = FontSettings.Default,
                 stylingName: Option[String] = None) extends Panel {
 
-  private var disposed = false
+  private[this] var disposed = false
 
   def dispose(): Unit = if (!disposed) {
     disposed = true
@@ -35,7 +35,7 @@ class PanelImpl(language: Language, text: String, font: FontSettings = FontSetti
     secondaryEditor .dispose()
   }
 
-  private val history: History = new HistoryImpl
+  val history: History = new HistoryImpl
 
   val styling: DynamicStyling = {
     val res = new DynamicStyling(language.stylings)
@@ -45,7 +45,7 @@ class PanelImpl(language: Language, text: String, font: FontSettings = FontSetti
     res
   }
 
-  private val primaryEditor: Editor = EditorFactory.createEditorFor(language, history, styling, font)
+  private[this] val primaryEditor: Editor = EditorFactory.createEditorFor(language, history, styling, font)
 
   val data: Data = primaryEditor.data
 
@@ -55,18 +55,18 @@ class PanelImpl(language: Language, text: String, font: FontSettings = FontSetti
 
   implicit val async: Async = primaryEditor.async
 
-  private val secondaryEditor : Editor = {
+  private[this] val secondaryEditor : Editor = {
     EditorFactory.createEditorFor(primaryEditor.document,
       primaryEditor.data, primaryEditor.holder, language, history, styling, font)
   }
 
-  private var _currentEditor = primaryEditor
+  private[this] var _currentEditor = primaryEditor
 
   def currentEditor: Editor = _currentEditor
 
   // a non-repeating timer to invoke the next data pass with a delay
   // (the delay is adjusted in the data observer)
-  private val timer = new Timer(10, new ActionListener {
+  private[this] val timer = new Timer(10, new ActionListener {
     def actionPerformed(e: ActionEvent): Unit =
       if (data.hasNextPass) {
         data.nextPass()

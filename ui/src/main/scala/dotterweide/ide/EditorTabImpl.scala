@@ -27,9 +27,9 @@ import scala.swing.{BorderPanel, Component, Orientation, ScrollPane, SplitPane}
 private class EditorTabImpl(val fileType: FileType, val history: History,
                             primaryEditor: Editor, secondaryEditor: => Editor) extends BorderPanel with EditorTab {
 
-  private var _split    = false
-  private var _file     = Option.empty[File]
-  private var structure = Option.empty[StructureTab]
+  private[this] var _split    = false
+  private[this] var _file     = Option.empty[File]
+  private[this] var structure = Option.empty[StructureTab]
 
   updateLayout()
 
@@ -49,7 +49,7 @@ private class EditorTabImpl(val fileType: FileType, val history: History,
     notifyObservers(EditorTab.FileChanged(file))
   }
 
-  private var _dirty = history.canUndo
+  private[this] var _dirty = history.canUndo
 
   history.onChange {
     val newDirty = history.canUndo

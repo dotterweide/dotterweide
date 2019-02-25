@@ -18,7 +18,7 @@
 package dotterweide.languages.lisp.value
 
 private class SingleValueCache[K, V] {
-  private var cachedPair: Option[(K, V)] = None
+  private[this] var cachedPair: Option[(K, V)] = None
 
   def getOrUpdate(key: K)(value: => V): V = {
     cachedPair.filter(_._1 == key).map(_._2).getOrElse {

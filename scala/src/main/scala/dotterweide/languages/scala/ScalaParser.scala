@@ -45,15 +45,15 @@ import scala.util.{Failure, Success}
   * but everything covered in the Dotterweide code-base itself is mapped.
   */
 class ScalaParser(prelude: String, postlude: String) extends Parser {
-  private val system                  = ActorSystem("ScalaParser")
-  private val compilerActor: ActorRef = system.actorOf(Props(new CompilerActor), "compiler")
+  private[this] val system                  = ActorSystem("ScalaParser")
+  private[this] val compilerActor: ActorRef = system.actorOf(Props(new CompilerActor), "compiler")
 
   private case class Compile(text: String)
 
   private class CompilerActor extends Actor with AbstractCompilerActor {
-    private val log = Logging(context.system, this)
+    private[this] val log = Logging(context.system, this)
 
-    private val reporter = new StoreReporter
+    private[this] val reporter = new StoreReporter
 
     protected lazy val c: Global = {
       val outputDir = new VirtualDirectory("<virtual-dir>", None)

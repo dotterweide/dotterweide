@@ -22,7 +22,7 @@ import dotterweide.document.{AnchoredInterval, Document}
 import scala.collection.immutable.{Seq => ISeq}
 
 private class ErrorHolderImpl(document: Document, data: Data) extends ErrorHolder {
-  private var passToAnchoredErrors = Map.empty[Pass, ISeq[AnchoredError]]
+  private[this] var passToAnchoredErrors = Map.empty[Pass, ISeq[AnchoredError]]
 
   data.onChange {
     case DataEvent(pass, passErrors) =>

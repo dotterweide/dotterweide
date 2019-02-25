@@ -30,13 +30,13 @@ import scala.collection.immutable.{Seq => ISeq}
 private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: Grid, canvas: Canvas)
   extends JComponent with ObservableEvents[Int] {
 
-  private val MarkSize        = new Dimension(14, 4)
-  private val DefaultDelay    = ToolTipManager.sharedInstance().getInitialDelay
-  private val Led             = new Rectangle(2, 2, MarkSize.width - 4, MarkSize.width - 4)
+  private[this] val MarkSize        = new Dimension(14, 4)
+  private[this] val DefaultDelay    = ToolTipManager.sharedInstance().getInitialDelay
+  private[this] val Led             = new Rectangle(2, 2, MarkSize.width - 4, MarkSize.width - 4)
 
-  private var status: Status  = Status.Normal
+  private[this] var status: Status  = Status.Normal
 
-  private var descriptors: ISeq[Descriptor] = Nil
+  private[this] var descriptors: ISeq[Descriptor] = Nil
 
   setMinimumSize  (new Dimension(MarkSize.width, 0))
   setMaximumSize  (new Dimension(MarkSize.width, Int.MaxValue))

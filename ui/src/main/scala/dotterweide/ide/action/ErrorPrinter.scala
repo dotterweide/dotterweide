@@ -21,7 +21,7 @@ import dotterweide.editor.{Color, Data}
 import dotterweide.ide.Console
 
 object ErrorPrinter {
-  private val ErrorColor = new Color(127, 0, 0)
+  private[this] val ErrorColor = new Color(127, 0, 0)
 
   def print(data: Data, console: Console): Unit = {
     console.clear()

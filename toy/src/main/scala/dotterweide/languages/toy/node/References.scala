@@ -33,7 +33,7 @@ trait ToyReference extends ReferenceNode {
 }
 
 class ReferenceToFunction extends NodeImpl("referenceToFunction") with ToyReference {
-  private val PredefinedIdentifiers = List("print", "println")
+  private[this] val PredefinedIdentifiers = List("print", "println")
 
   lazy val target: Option[IdentifiedNode] = targetIn(_.functions)
 

@@ -38,14 +38,14 @@ private class ImmediateTextPainter(context: PainterContext, lexer: Lexer, proces
   extends AbstractPainter(context) {
 
   // XXX TODO --- should be language dependent
-  private val Pairs = Set("()", "[]", "{}", "\"\"")
+  private[this] val Pairs = Set("()", "[]", "{}", "\"\"")
 
   def id = "immediate text"
 
   override def immediate = true
 
-  private var lastEvent       = Option.empty[Replacement]
-  private var immediateAction = false
+  private[this] var lastEvent       = Option.empty[Replacement]
+  private[this] var immediateAction = false
 
   import context.grid.ascent
 

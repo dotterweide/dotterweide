@@ -20,8 +20,8 @@ package dotterweide.lexer
 import dotterweide.Span
 
 abstract class AbstractTokenIterator(input: CharSequence) extends Iterator[Token] {
-  private var index   = 0
-  private var marker  = -1
+  private[this] var index   = 0
+  private[this] var marker  = -1
 
   def advance(): Unit =
     advance(1)

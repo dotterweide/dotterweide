@@ -32,9 +32,9 @@ import scala.collection.immutable.{Seq => ISeq}
 private class MatchPainter(context: PainterContext, matcher: BraceMatcher,
                            processor: ActionProcessor) extends AbstractPainter(context) {
 
-  private var anchoredMatches: ISeq[AnchoredMatch] = Nil
+  private[this] var anchoredMatches: ISeq[AnchoredMatch] = Nil
 
-  private var completeData = true
+  private[this] var completeData = true
 
   new Delay(terminal, processor).onChange {
     case CaretMovement(_, _, _)             if data.pass != Pass.Text => update()

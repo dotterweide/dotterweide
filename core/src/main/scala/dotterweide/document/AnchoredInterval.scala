@@ -24,8 +24,8 @@ import dotterweide.Interval
   * @param origin     the initial interval
   */
 class AnchoredInterval(document: Document, origin: Interval, beginBias: Bias = Bias.Right, endBias: Bias = Bias.Left) {
-  private val beginAnchor = document.createAnchorAt(origin.start, beginBias )
-  private val endAnchor   = document.createAnchorAt(origin.stop  , endBias   )
+  private[this] val beginAnchor = document.createAnchorAt(origin.start, beginBias )
+  private[this] val endAnchor   = document.createAnchorAt(origin.stop  , endBias   )
 
   def interval = Interval(beginAnchor.offset, beginAnchor.offset.max(endAnchor.offset))
 

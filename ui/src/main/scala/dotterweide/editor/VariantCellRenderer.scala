@@ -24,7 +24,7 @@ import javax.swing.border.EmptyBorder
 import javax.swing.{DefaultListCellRenderer, JComponent, JList, ListCellRenderer}
 
 private class VariantCellRenderer(lexer: Lexer, coloring: Styling) extends ListCellRenderer[AnyRef] {
-  private val delegate = new DefaultListCellRenderer().asInstanceOf[ListCellRenderer[AnyRef]]
+  private[this] val delegate = new DefaultListCellRenderer().asInstanceOf[ListCellRenderer[AnyRef]]
 
   override def getListCellRendererComponent(list: JList[_ <: AnyRef], value: AnyRef, index: Int,
                                             isSelected: Boolean, cellHasFocus: Boolean): Component = {

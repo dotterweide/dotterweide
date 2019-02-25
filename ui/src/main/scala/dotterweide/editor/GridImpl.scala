@@ -30,9 +30,9 @@ class GridImpl(cellWidth0: Int, cellHeight0: Int, ascent0: Int,
                val insetLeft: Int = 0, val insetTop: Int = 0, val insetRight: Int = 0, val insetBottom: Int = 0)
   extends Grid {
 
-  private var _cellWidth  = cellWidth0
-  private var _cellHeight = cellHeight0
-  private var _ascent     = ascent0
+  private[this] var _cellWidth  = cellWidth0
+  private[this] var _cellHeight = cellHeight0
+  private[this] var _ascent     = ascent0
 
   def cellWidth : Int = _cellWidth
   def cellHeight: Int = _cellHeight

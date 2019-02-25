@@ -28,11 +28,10 @@ class ScalaLanguage(prelude: String = "", postlude: String = "", val examples: I
   def name        : String = "Scala"
   def description : String = "The Scala programming language"
 
-  def lexer : Lexer   = ScalaLexer
-
   private[this] val _parser = new ScalaParser(prelude = prelude, postlude = postlude)
 
-  def parser: Parser = _parser
+  def lexer : Lexer   = ScalaLexer
+  def parser: Parser  = _parser
 
   /** A map from color scheme names to the schemes. */
   def stylings: Map[String, Styling] = Map(

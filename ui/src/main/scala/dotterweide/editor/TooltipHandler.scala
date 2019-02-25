@@ -24,18 +24,18 @@ import javax.swing.border.{CompoundBorder, EmptyBorder, LineBorder}
 import javax.swing.{JComponent, JLabel, Popup, PopupFactory, Timer}
 
 private class TooltipHandler(component: JComponent, lookup: Point => Option[Error]) {
-  private val Timeout           = 500
-  private val TooltipShift      = new Dimension(5, 5)
-  private val TooltipBackground = new AWTColor(0xFDFEE2)
+  private[this] val Timeout           = 500
+  private[this] val TooltipShift      = new Dimension(5, 5)
+  private[this] val TooltipBackground = new AWTColor(0xFDFEE2)
 
-  private val TooltipBorder = new CompoundBorder(
+  private[this] val TooltipBorder = new CompoundBorder(
     new LineBorder(AWTColor.BLACK, 1, true),
     new EmptyBorder(3, 3, 3, 3))
 
-  private var pointer : Option[Point] = None
-  private var popup   : Option[Popup] = None
+  private[this] var pointer : Option[Point] = None
+  private[this] var popup   : Option[Popup] = None
 
-  private val tooltipTimer = new Timer(Timeout, new ActionListener() {
+  private[this] val tooltipTimer = new Timer(Timeout, new ActionListener() {
     def actionPerformed(e: ActionEvent): Unit =
       for (point <- pointer; error <- lookup(point)) {
         val p = createPopup(error, new Point(point.x + TooltipShift.width, point.y + TooltipShift.height))

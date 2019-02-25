@@ -27,7 +27,7 @@ import dotterweide.node.ReferenceNode
 
 /** A no-op painter that collects terminal hovers as decorations (blue underlined text). */
 private class HoverPainter(context: PainterContext) extends AbstractPainter(context) with Decorator {
-  private val HoverAttributes = Map(
+  private[this] val HoverAttributes = Map(
     TextAttribute.FOREGROUND -> Color.BLUE,
     TextAttribute.UNDERLINE -> TextAttribute.UNDERLINE_ON)
 

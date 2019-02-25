@@ -12,9 +12,9 @@
 package dotterweide.editor
 
 class FontSettingsImpl(family0: String, size0: Int, lineSpacing0: Float) extends FontSettings {
-  private var _family       = family0
-  private var _size         = size0
-  private var _lineSpacing  = lineSpacing0
+  private[this] var _family       = family0
+  private[this] var _size         = size0
+  private[this] var _lineSpacing  = lineSpacing0
 
   def family      : String  = _family
   def size        : Int     = _size

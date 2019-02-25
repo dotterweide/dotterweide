@@ -29,13 +29,11 @@ class NodeImpl(val kind: String) extends Node {
 
   var problem: Option[String] = None
 
-  var parent: Option[Node] = None
+  var parent          : Option[Node] = None
+  var previousSibling : Option[Node] = None
+  var nextSibling     : Option[Node] = None
 
-  var previousSibling: Option[Node] = None
-
-  var nextSibling: Option[Node] = None
-
-  private var _children: ISeq[NodeImpl] = Nil
+  private[this] var _children: ISeq[NodeImpl] = Nil
 
   def children: ISeq[NodeImpl] = _children
 

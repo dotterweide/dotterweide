@@ -25,7 +25,7 @@ import javax.swing.text.{AttributeSet, SimpleAttributeSet, StyleConstants}
 import scala.swing.{Component, Swing, TextPane}
 
 private class ConsoleImpl(_font: FontSettings) extends TextPane with Console {
-  private val LinkColor = new Color(125, 121, 111)
+  private[this] val LinkColor = new Color(125, 121, 111)
 
   font      = new Font(_font.family, Font.PLAIN, _font.size)
   editable  = false

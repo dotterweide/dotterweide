@@ -18,7 +18,7 @@
 package dotterweide.compiler
 
 class Labels {
-  private val Ids = Range(1, Int.MaxValue).iterator
+  private[this] val Ids = Range(1, Int.MaxValue).iterator
 
   def next(): String = "Label%d".format(Ids.next())
 }

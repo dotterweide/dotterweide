@@ -24,13 +24,10 @@ import dotterweide.node.NodeImpl
 import scala.collection.immutable.{Seq => ISeq}
 
 class TreeBuilder(input: Iterator[Token]) {
-  private val in = input.filterNot(_.kind == TokenKind.WS).buffered
-
-  private var head: Option[Token] = None
-
-  private var headSpan = Span("", 0, 0)
-
-  private var regions = List(new MyRegion(headSpan))
+  private[this] val in        = input.filterNot(_.kind == TokenKind.WS).buffered
+  private[this] var head      = Option.empty[Token]
+  private[this] var headSpan  = Span("", 0, 0)
+  private[this] var regions   = List(new MyRegion(headSpan))
 
   if (hasNext) {
     advance()
@@ -114,8 +111,8 @@ class TreeBuilder(input: Iterator[Token]) {
   }
 
   private class MyRegion(tokenSpan: Span) extends Region {
-    private var entries = List.empty[NodeImpl]
-    private var closed  = false
+    private[this] var entries = List.empty[NodeImpl]
+    private[this] var closed  = false
 
     def close(node: NodeImpl, collapseHolderNode: Boolean): Unit =
       capture(node, collapseHolderNode = collapseHolderNode)(identity)

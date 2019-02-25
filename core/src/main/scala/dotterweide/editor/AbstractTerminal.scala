@@ -22,11 +22,11 @@ import dotterweide.{Interval, ObservableEvents}
 import scala.collection.immutable.{Seq => ISeq}
 
 trait AbstractTerminal extends Terminal with ObservableEvents[TerminalEvent] {
-  private var _offset     : Int               = 0
-  private var _selection  : Option[Interval]  = None
-  private var _hover      : Option[Int]       = None
-  private var _overwrite  : Boolean           = false
-  private var _highlights : ISeq[Interval]    = Nil
+  private[this] var _offset     : Int               = 0
+  private[this] var _selection  : Option[Interval]  = None
+  private[this] var _hover      : Option[Int]       = None
+  private[this] var _overwrite  : Boolean           = false
+  private[this] var _highlights : ISeq[Interval]    = Nil
 
   def overwriteMode: Boolean = _overwrite
 
