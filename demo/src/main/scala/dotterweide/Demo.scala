@@ -71,7 +71,7 @@ object Demo {
     langOpt.foreach { language =>
       val code  = language.examples.headOption.fold("")(_.code)
       val frame = new MainFrame(language, code, stylingName = config.stylingName, structure = config.structure)
-      frame.preferredSize = new Dimension(874, 696)
+//      frame.preferredSize = new Dimension(874, 696)
       open(frame)
       frame.listenTo(frame)
       frame.reactions += {

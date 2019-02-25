@@ -23,8 +23,14 @@ import javax.swing.Timer
 import scala.swing.event.UIElementShown
 import scala.swing.{BorderPanel, Component, Orientation, ScrollPane, SplitPane}
 
-class PanelImpl(language: Language, text: String, font: FontSettings = FontSettings.Default,
-                stylingName: Option[String] = None, console: Option[Console]) extends Panel {
+class PanelImpl(language          : Language,
+                text              : String              = "",
+                font              : FontSettings        = FontSettings.Default,
+                stylingName       : Option[String]      = None,
+                console           : Option[Console]     = None,
+                preferredGridSize : Option[(Int, Int)]  = None
+               )
+  extends Panel {
 
   private[this] var disposed = false
 
@@ -45,7 +51,8 @@ class PanelImpl(language: Language, text: String, font: FontSettings = FontSetti
     res
   }
 
-  private[this] val primaryEditor: Editor = EditorFactory.createEditorFor(language, history, styling, font)
+  private[this] val primaryEditor: Editor =
+    EditorFactory.createEditorFor(language, history, styling, font, preferredGridSize)
 
   val data: Data = primaryEditor.data
 
@@ -57,7 +64,7 @@ class PanelImpl(language: Language, text: String, font: FontSettings = FontSetti
 
   private[this] val secondaryEditor : Editor = {
     EditorFactory.createEditorFor(primaryEditor.document,
-      primaryEditor.data, primaryEditor.holder, language, history, styling, font)
+      primaryEditor.data, primaryEditor.holder, language, history, styling, font, preferredGridSize)
   }
 
   private[this] var _currentEditor = primaryEditor

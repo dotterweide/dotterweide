@@ -32,11 +32,22 @@ import javax.swing.{JComponent, JPanel, JScrollPane, JViewport, KeyStroke, ListC
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class EditorImpl(val document: Document, val data: Data, val holder: ErrorHolder,
-                         lexer: Lexer, styling: Styling, font: FontSettings, matcher: BraceMatcher,
-                         format: Format, adviser: Adviser, listRenderer: ListCellRenderer[AnyRef],
-                         lineCommentPrefix: String, history: History)
-                        (implicit val async: Async) extends Editor {
+private class EditorImpl(val document     : Document,
+                         val data         : Data,
+                         val holder       : ErrorHolder,
+                         lexer            : Lexer,
+                         styling          : Styling,
+                         font             : FontSettings,
+                         matcher          : BraceMatcher,
+                         format           : Format,
+                         adviser          : Adviser,
+                         listRenderer     : ListCellRenderer[AnyRef],
+                         lineCommentPrefix: String,
+                         history          : History,
+                         preferredGridSize: Option[(Int, Int)]
+                        )
+                        (implicit val async: Async)
+  extends Editor {
 
   private def mkFont() = new Font(font.family, Font.PLAIN, font.size)
 
@@ -130,8 +141,18 @@ private class EditorImpl(val document: Document, val data: Data, val holder: Err
 
   def terminal: Terminal = TerminalImpl
 
-  document.onChange { _ =>
-    val size = grid.toSize(document.linesCount, document.maximumIndent)
+  preferredGridSize match {
+    case Some((linesCount, maximumIndent)) =>
+      updateGridSize(linesCount, maximumIndent)
+    case None =>
+      document.onChange { _ =>
+        // XXX TODO inefficient
+        updateGridSize(document.linesCount, document.maximumIndent)
+      }
+  }
+
+  private def updateGridSize(linesCount: Int, maximumIndent: Int): Unit = {
+    val size = grid.toSize(linesCount, maximumIndent)
     if (Pane.getPreferredSize != size) {
       Pane.setPreferredSize(size)
       Pane.revalidate()

@@ -21,22 +21,31 @@ import dotterweide.Language
 import dotterweide.document.{Document, DocumentImpl}
 
 object EditorFactory {
-  def createEditorFor(language: Language, history: History, styling: Styling, font: FontSettings): Editor = {
+  /**
+    * @param preferredGridSize    optional tuple of `(lines, maximumIndent)`
+    */
+  def createEditorFor(language: Language, history: History, styling: Styling, font: FontSettings,
+                      preferredGridSize: Option[(Int, Int)]): Editor = {
     implicit val async: Async = new AsyncImpl()
     val document: Document    = new DocumentImpl()
     val data    : Data        = new DataImpl(document, language.lexer, language.parser, language.inspections)
     val holder  : ErrorHolder = new ErrorHolderImpl(document, data)
 
-    createEditorFor(document, data, holder, language, history, styling, font)
+    createEditorFor(document, data, holder, language, history, styling, font, preferredGridSize)
   }
 
+  /**
+    * @param preferredGridSize    optional tuple of `(lines, maximumIndent)`
+    */
   def createEditorFor(document: Document, data: Data, holder: ErrorHolder, language: Language,
-                      history: History, styling: Styling, font: FontSettings)(implicit async: Async): Editor = {
+                      history: History, styling: Styling, font: FontSettings,
+                      preferredGridSize: Option[(Int, Int)])(implicit async: Async): Editor = {
 
     val listRenderer  = new VariantCellRenderer(language.lexer, styling)
     val matcher       = new BraceMatcherImpl(language.complements)
 
     new EditorImpl(document, data, holder, language.lexer, styling, font, matcher, language.format,
-      language.adviser, listRenderer, lineCommentPrefix = language.lineCommentPrefix, history = history)
+      language.adviser, listRenderer, lineCommentPrefix = language.lineCommentPrefix, history = history,
+      preferredGridSize = preferredGridSize)
   }
 }
