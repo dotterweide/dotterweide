@@ -15,7 +15,7 @@ package dotterweide.ide
 import java.io.File
 
 import dotterweide.ObservableEvents
-import dotterweide.editor.{Async, Data, Editor, EditorActions, History}
+import dotterweide.editor.{Async, Data, Editor, History}
 
 import scala.swing.Component
 
@@ -28,7 +28,7 @@ object Panel {
 trait Panel extends ObservableEvents[Panel.Update] {
   def component: Component
 
-  def console: Console
+//  def console: Console
 
   def currentEditor: Editor
 

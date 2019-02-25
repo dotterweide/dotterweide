@@ -24,7 +24,7 @@ import scala.swing.event.UIElementShown
 import scala.swing.{BorderPanel, Component, Orientation, ScrollPane, SplitPane}
 
 class PanelImpl(language: Language, text: String, font: FontSettings = FontSettings.Default,
-                stylingName: Option[String] = None) extends Panel {
+                stylingName: Option[String] = None, console: Option[Console]) extends Panel {
 
   private[this] var disposed = false
 
@@ -87,8 +87,6 @@ class PanelImpl(language: Language, text: String, font: FontSettings = FontSetti
 
   val editorTab: EditorTab = new EditorTabImpl(language.fileType, history, primaryEditor, secondaryEditor)
 
-  val console: Console = new ConsoleImpl(font)
-
   private def updateMessageFor(editor: Editor): Unit = {
     status.message = editor.message.mkString
   }
@@ -124,11 +122,17 @@ class PanelImpl(language: Language, text: String, font: FontSettings = FontSetti
   updateCaretLocationFor(primaryEditor)
 
   val component: Component = new BorderPanel() {
-    val split = new SplitPane(Orientation.Horizontal, editorTab.component, new ScrollPane(console.component))
-    split.dividerLocation = 507
-    split.resizeWeight    = 1.0
-    split.border          = null
-    add(split , BorderPanel.Position.Center)
+    private[this] val center = console match {
+      case Some(c)  =>
+        val split             = new SplitPane(Orientation.Horizontal, editorTab.component, new ScrollPane(c.component))
+        split.dividerLocation = 507
+        split.resizeWeight    = 1.0
+        split.border          = null
+        split
+
+      case None => editorTab.component
+    }
+    add(center , BorderPanel.Position.Center)
     add(status, BorderPanel.Position.South )
 
     reactions += {
