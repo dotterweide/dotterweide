@@ -14,7 +14,7 @@ package dotterweide.ide
 
 import java.io.File
 
-import dotterweide.ObservableEvents
+import dotterweide.{FileType, ObservableEvents}
 import dotterweide.editor.painter.Painter
 import dotterweide.editor.{Action, Async, Data, Editor, History}
 
@@ -22,8 +22,10 @@ import scala.swing.Component
 
 object Panel {
   sealed trait Update
-  case class EditorFocused(editor: Editor) extends Update
-  case class FileOrDirtyChange(file: Option[File], isDirty: Boolean) extends Update
+  case class EditorFocused(editor : Editor      ) extends Update
+  case class FileChanged  (newFile: Option[File]) extends Update
+  case class SplitChanged (isSplit: Boolean     ) extends Update
+  case class DirtyChanged (isDirty: Boolean     ) extends Update
 }
 /** The main IDE component. */
 trait Panel extends ObservableEvents[Panel.Update] {
@@ -37,17 +39,26 @@ trait Panel extends ObservableEvents[Panel.Update] {
 
   def status: StatusBar
 
-  def editorTab: EditorTab
-
   def history: History
 
   def styling: DynamicStyling
 
   def dispose(): Unit
 
-  def file: Option[File]
+  var file: Option[File]
 
   def isDirty: Boolean
+
+  def fileType: FileType
+
+  /** The editor's content. When changed,
+    * the undo history is erased.
+    */
+  var text: String
+
+  var split: Boolean
+
+  var structureVisible: Boolean
 
   /** Adds a custom painter to all editors, inserting it at its layer position. */
   def addPainter(p: Painter): Unit

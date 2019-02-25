@@ -25,7 +25,7 @@ import javax.swing.KeyStroke
 import scala.swing.event.Key
 import scala.swing.{Action, CheckMenuItem, Component, Dimension, Frame, Menu, MenuBar, MenuItem, RadioMenuItem, Separator}
 
-private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Runner, invoker: Runner,
+private class MainMenu(panel: Panel, frame: Frame, data: Data, interpreter: Runner, invoker: Runner,
                        launcher: Launcher, console: Console, styling: DynamicStyling, examples: Seq[Example])
                       (implicit async: Async)
   extends MenuBar {
@@ -86,10 +86,10 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
   contents += new Menu("File") {
     private[this] val parent = Component.wrap(frame.peer.getRootPane)
     mnemonic = Key.F
-    contents += new MenuItem(new NewAction    ("New"        , 'N', "ctrl pressed N"       , parent, tab))
-    contents += new MenuItem(new OpenAction   ("Open..."    , 'O', "ctrl pressed O"       , parent, tab))
-    contents += new MenuItem(new SaveAction   ("Save"       , 'S', "ctrl pressed S"       , parent, tab))
-    contents += new MenuItem(new SaveAsAction ("Save As..." , 'A', "shift ctrl pressed S" , parent, tab))
+    contents += new MenuItem(new NewAction    ("New"        , 'N', "ctrl pressed N"       , parent, panel))
+    contents += new MenuItem(new OpenAction   ("Open..."    , 'O', "ctrl pressed O"       , parent, panel))
+    contents += new MenuItem(new SaveAction   ("Save"       , 'S', "ctrl pressed S"       , parent, panel))
+    contents += new MenuItem(new SaveAsAction ("Save As..." , 'A', "shift ctrl pressed S" , parent, panel))
     contents += new Separator()
     contents += new MenuItem(new ExportToClassAction("Export to Class...", 'E', data, parent))
     contents += new Separator()
@@ -149,7 +149,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
 
   contents += new Menu("Examples") {
     mnemonic = Key.X
-    contents ++= examples.map(it => new MenuItem(new ExampleAction(it.name, it.mnemonic, tab, it.code)))
+    contents ++= examples.map(it => new MenuItem(new ExampleAction(it.name, it.mnemonic, panel, it.code)))
   }
 
   contents += new Menu("View") {
@@ -180,7 +180,7 @@ private class MainMenu(tab: EditorTab, frame: Frame, data: Data, interpreter: Ru
         mnemonic = 'S'
         accelerator = Some(KeyStroke.getKeyStroke("ctrl alt pressed S"))
         def apply(): Unit =
-          tab.split = selected
+          panel.split = selected
       }
     }
   }

@@ -17,28 +17,28 @@
 
 package dotterweide.ide.action
 
-import dotterweide.ide.EditorTab
+import dotterweide.ide.Panel
 import javax.swing.KeyStroke
 
 import scala.swing.{Action, Component}
 
 class SaveAction(title0: String, mnemonic0: Char, shortcut: String,
-                 parent: Component, tab: EditorTab) extends Action(title0) {
+                 parent: Component, panel: Panel) extends Action(title0) {
 
   mnemonic    = mnemonic0
   accelerator = Some(KeyStroke.getKeyStroke(shortcut))
-  enabled     = tab.isDirty
+  enabled     = panel.isDirty
 
-  tab.onChange {
-    case EditorTab.DirtyChanged(b) => enabled = b
+  panel.onChange {
+    case Panel.DirtyChanged(b) => enabled = b
     case _ =>
   }
 
   def apply(): Unit = {
-    if (tab.file.isDefined) {
-      tab.file.foreach(IO.write(_, tab.text))
+    if (panel.file.isDefined) {
+      panel.file.foreach(IO.write(_, panel.text))
     } else {
-      SaveAsAction.performOn(tab, parent)
+      SaveAsAction.performOn(panel, parent)
     }
   }
 }

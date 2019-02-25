@@ -17,14 +17,14 @@
 
 package dotterweide.ide.action
 
-import dotterweide.ide.EditorTab
+import dotterweide.ide.Panel
 
 import scala.swing.Action
 
 /** An action to replace the editor contents with a code example. */
-class ExampleAction(title0: String, mnemonic0: Char, tab: EditorTab, code: String) extends Action(title0) {
+class ExampleAction(title0: String, mnemonic0: Char, panel: Panel, code: String) extends Action(title0) {
   mnemonic = mnemonic0
 
   def apply(): Unit =
-    tab.text = code.filterNot(_ == '\r').trim
+    panel.text = code.filterNot(_ == '\r').trim
 }

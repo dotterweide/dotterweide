@@ -19,25 +19,25 @@ package dotterweide.ide.action
 
 import java.io.File
 
-import dotterweide.ide.EditorTab
+import dotterweide.ide.Panel
 import javax.swing.KeyStroke
 import javax.swing.filechooser.FileNameExtensionFilter
 
 import scala.swing.{Action, Component, Dialog, FileChooser}
 
 class SaveAsAction(title0: String, mnemonic0: Char, shortcut: String,
-                           parent: Component, tab: EditorTab) extends Action(title0) {
+                   parent: Component, panel: Panel) extends Action(title0) {
   mnemonic = mnemonic0
 
   accelerator = Some(KeyStroke.getKeyStroke(shortcut))
 
   def apply(): Unit = {
-    SaveAsAction.performOn(tab, parent)
+    SaveAsAction.performOn(panel, parent)
   }
 }
 
 private object SaveAsAction {
-  def performOn(tab: EditorTab, parent: Component, selection: Option[File] = None): Unit = {
+  def performOn(tab: Panel, parent: Component, selection: Option[File] = None): Unit = {
     val chooser = new FileChooser()
     chooser.title = "Save As"
     chooser.fileFilter = new FileNameExtensionFilter(tab.fileType.name, tab.fileType.extension)
@@ -67,7 +67,7 @@ private object SaveAsAction {
     new File(path)
   }
 
-  private def doSave(file: File, tab: EditorTab): Unit = {
+  private def doSave(file: File, tab: Panel): Unit = {
     IO.write(file, tab.text)
     tab.file = Some(file)
   }

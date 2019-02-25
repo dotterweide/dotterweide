@@ -25,10 +25,10 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
   extends Frame {
 
   private[this] val console : Console = new ConsoleImpl(font)
-  private[this] val panel   : Panel   = new PanelImpl(language, text = text, font = font, stylingName = stylingName,
+  private[this] val panel   : Panel   = new PanelImpl(language, text0 = text, font = font, stylingName = stylingName,
     console = Some(console))
 
-  panel.editorTab.structureVisible = structure
+  panel.structureVisible = structure
 
   reactions += {
     case WindowClosed(_) =>
@@ -44,7 +44,7 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
 
   private[this] val menu = {
     import panel.async
-    new MainMenu(panel.editorTab, this, panel.data, new NodeInterpreter(console),
+    new MainMenu(panel, this, panel.data, new NodeInterpreter(console),
       new NodeInvoker(console), launcher, console, panel.styling, language.examples)
   }
 
@@ -60,8 +60,10 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
   focused(panel.currentEditor)
 
   panel.onChange {
-    case Panel.EditorFocused(editor) => focused(editor)
-    case Panel.FileOrDirtyChange(f, d) => updateTitle(file = f, dirty = d)
+    case Panel.EditorFocused(editor)  => focused(editor)
+    case Panel.FileChanged(f)         => updateTitle(file = f, dirty = panel.isDirty)
+    case Panel.DirtyChanged(d)        => updateTitle(file = panel.file, dirty = d)
+    case _ =>
   }
 
   contents = panel.component

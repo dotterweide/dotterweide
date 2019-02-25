@@ -17,14 +17,14 @@
 
 package dotterweide.ide.action
 
-import dotterweide.ide.EditorTab
+import dotterweide.ide.Panel
 import javax.swing.KeyStroke
 import javax.swing.filechooser.FileNameExtensionFilter
 
 import scala.swing.{Action, Component, FileChooser}
 
 class OpenAction(title0: String, mnemonic0: Char, shortcut: String,
-                         parent: Component, tab: EditorTab) extends Action(title0) {
+                 parent: Component, panel: Panel) extends Action(title0) {
   mnemonic = mnemonic0
 
   accelerator = Some(KeyStroke.getKeyStroke(shortcut))
@@ -32,12 +32,12 @@ class OpenAction(title0: String, mnemonic0: Char, shortcut: String,
   def apply(): Unit = {
     val chooser = new FileChooser()
     chooser.title = "Open"
-    chooser.fileFilter = new FileNameExtensionFilter(tab.fileType.name, tab.fileType.extension)
+    chooser.fileFilter = new FileNameExtensionFilter(panel.fileType.name, panel.fileType.extension)
     chooser.showOpenDialog(parent) match {
       case FileChooser.Result.Approve =>
         val file = chooser.selectedFile
-        tab.text = IO.read(file)
-        tab.file = Some(file)
+        panel.text = IO.read(file)
+        panel.file = Some(file)
       case _ =>
     }
   }

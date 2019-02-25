@@ -17,19 +17,19 @@
 
 package dotterweide.ide.action
 
-import dotterweide.ide.EditorTab
+import dotterweide.ide.Panel
 import javax.swing.KeyStroke
 
 import scala.swing.{Action, Component}
 
 class NewAction(title0: String, mnemonic0: Char, shortcut: String,
-                        parent: Component, tab: EditorTab) extends Action(title0) {
+                parent: Component, panel: Panel) extends Action(title0) {
   mnemonic = mnemonic0
 
   accelerator = Some(KeyStroke.getKeyStroke(shortcut))
 
   def apply(): Unit = {
-    tab.text = ""
-    tab.file = None
+    panel.text = ""
+    panel.file = None
   }
 }
