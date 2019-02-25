@@ -85,7 +85,13 @@ private class EditorImpl(val document     : Document,
       new FormatterImpl(format), tabSize = format.defaultTabSize, lineCommentPrefix = lineCommentPrefix,
       font = font, history = history)
 
-  private[this] val scroll = new JScrollPane(Pane)
+  // XXX TODO --- is there a reason we don't use scala-swing here?
+  private[this] val scroll = {
+    val res = new JScrollPane(Pane)
+    // cf. https://git.iem.at/sciss/Submin/issues/5
+    res.putClientProperty("styleId", "undecorated")
+    res
+  }
 
   private[this] val canvas = new CanvasImpl(Pane, scroll)
 
@@ -141,17 +147,16 @@ private class EditorImpl(val document     : Document,
 
   def terminal: Terminal = TerminalImpl
 
-  preferredGridSize match {
-    case Some((linesCount, maximumIndent)) =>
-      updateGridSize(linesCount, maximumIndent)
-    case None =>
-      document.onChange { _ =>
-        // XXX TODO inefficient
-        updateGridSize(document.linesCount, document.maximumIndent)
-      }
+  preferredGridSize.foreach {
+    case (linesCount, maximumIndent) =>
+      val size = grid.toSize(linesCount, maximumIndent)
+      Pane.setPreferredSize(size)
+      scroll.setPreferredSize(scroll.getPreferredSize)
   }
 
-  private def updateGridSize(linesCount: Int, maximumIndent: Int): Unit = {
+  document.onChange { _ =>
+    // XXX TODO inefficient
+    import document.{linesCount, maximumIndent}
     val size = grid.toSize(linesCount, maximumIndent)
     if (Pane.getPreferredSize != size) {
       Pane.setPreferredSize(size)

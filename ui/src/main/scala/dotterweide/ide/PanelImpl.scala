@@ -131,7 +131,8 @@ class PanelImpl(language          : Language,
   val component: Component = new BorderPanel() {
     private[this] val center = console match {
       case Some(c)  =>
-        val split             = new SplitPane(Orientation.Horizontal, editorTab.component, new ScrollPane(c.component))
+        val scroll            = new ScrollPane(c.component)
+        val split             = new SplitPane(Orientation.Horizontal, editorTab.component, scroll)
         split.dividerLocation = 507
         split.resizeWeight    = 1.0
         split.border          = null
