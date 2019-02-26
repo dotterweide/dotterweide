@@ -18,6 +18,7 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.Document
+import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, Terminal}
 
 import scala.collection.immutable.{Seq => ISeq}

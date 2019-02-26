@@ -1,5 +1,5 @@
 /*
- *  package.scala
+ *  ControllerOps.scala
  *  (Dotterweide)
  *
  *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.
@@ -10,11 +10,6 @@
  *  contact@sciss.de
  */
 
-/*
- * Original code copyright 2018 Pavel Fatin, https://pavelfatin.com
- * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
- */
-
 package dotterweide.editor
 
 import dotterweide.Interval
@@ -23,8 +18,8 @@ import dotterweide.node.{IdentifiedNode, Node, ReferenceNode, ReferenceNodeTarge
 
 import scala.collection.immutable.{Seq => ISeq}
 
-package object controller {
-  private[controller] implicit class DataExt(val data: Data) extends AnyVal {
+object ControllerOps {
+  implicit class DataOps(val data: Data) extends AnyVal {
     def leafAt(offset: Int): Option[Node] =
       for {
         root  <- data.structure
@@ -67,12 +62,12 @@ package object controller {
     }
   }
 
-  private[controller] implicit class NodeExt(val node: Node) extends AnyVal {
+  implicit class NodeOps(val node: Node) extends AnyVal {
     def offsetOf(i: Int): Option[Int] =
       if (node.span.touches(i)) Some(i - node.span.start) else None
   }
 
-  private[controller] implicit class TerminalExt(val terminal: Terminal) extends AnyVal {
+  implicit class TerminalOps(val terminal: Terminal) extends AnyVal {
     /** Produces an interval covering the line on which the cursor is currently positioned. */
     def currentLineIntervalIn(document: Document): Interval = {
       val line = document.lineNumberOf(terminal.offset)

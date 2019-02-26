@@ -21,6 +21,7 @@ import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 
 import dotterweide.document.Document
+import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, Terminal}
 
 private class Copy(document: Document, terminal: Terminal) extends Action {

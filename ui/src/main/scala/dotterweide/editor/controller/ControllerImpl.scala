@@ -22,6 +22,7 @@ import java.awt.event.{KeyEvent, MouseEvent}
 
 import dotterweide.Interval
 import dotterweide.document.Document
+import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, ActionFinished, ActionStarted, Adviser, Async, Data, EditorActions, FontSettings, Grid, History, NamedEdit, Terminal}
 import dotterweide.formatter.Formatter
 import dotterweide.node.{IdentifiedNode, Node}

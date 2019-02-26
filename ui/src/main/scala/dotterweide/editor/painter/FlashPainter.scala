@@ -15,11 +15,11 @@ package dotterweide.editor.painter
 import java.awt.event.{ActionEvent, ActionListener}
 import java.awt.{Graphics2D, Rectangle}
 
-import dotterweide.editor.FlashEmitter
+import dotterweide.editor.Flash
 import javax.swing.Timer
 
 /** Paints an interval background between selection and text for a given duration in milliseconds. */
-class FlashPainter(context: PainterContext, duration: Int, emitter: FlashEmitter)
+class FlashPainter(context: PainterContext, duration: Int, emitter: Flash)
   extends AbstractPainter(context) {
 
   def id: String = "flash"

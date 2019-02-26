@@ -18,6 +18,7 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.{Bias, Document}
+import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, Async, Data, History, StructureAction, Terminal}
 import dotterweide.node.Node
 

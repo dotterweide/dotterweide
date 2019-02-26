@@ -17,6 +17,7 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, Async, Data, Terminal}
 import dotterweide.node.{IdentifiedNode, Node}
 

@@ -21,6 +21,7 @@ import java.awt.Toolkit
 import java.awt.datatransfer.DataFlavor
 
 import dotterweide.document.Document
+import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, Terminal}
 
 private class Paste(document: Document, terminal: Terminal) extends Action {
