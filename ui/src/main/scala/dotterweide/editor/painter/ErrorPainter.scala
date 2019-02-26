@@ -32,7 +32,9 @@ import scala.collection.immutable.{Seq => ISeq}
   * It directly paints `Decoration.Fill` (background) and `Decoration.Underline` (wavy),
   * while collecting `Decoration.Red` and `Decoration.Red` as foreground `decorations`.
   */
-private class ErrorPainter(context: PainterContext, errors: ErrorHolder) extends AbstractPainter(context) with Decorator {
+private class ErrorPainter(context: PainterContext, errors: ErrorHolder)
+  extends AbstractPainter(context) with Decorator {
+
   def id = "errors"
 
   def layer: Int = Painter.LayerErrors

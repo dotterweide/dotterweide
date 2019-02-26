@@ -83,7 +83,7 @@ private class MainMenu(panel: Panel, frame: Frame, data: Data, interpreter: Runn
   private def bind(item: MenuItem, action: _Action): Unit =
     item.action = new ActionAdapter(action)
 
-  contents += new Menu("File") {
+  val mFile: Menu = new Menu("File") {
     private[this] val parent = Component.wrap(frame.peer.getRootPane)
     mnemonic = Key.F
     contents += new MenuItem(new NewAction    ("New"        , 'N', "ctrl pressed N"       , parent, panel))
@@ -101,7 +101,9 @@ private class MainMenu(panel: Panel, frame: Frame, data: Data, interpreter: Runn
     })
   }
 
-  contents += new Menu("Edit") {
+  contents += mFile
+
+  val mEdit: Menu = new Menu("Edit") {
     mnemonic = Key.E
 
     contents += undo
@@ -120,7 +122,9 @@ private class MainMenu(panel: Panel, frame: Frame, data: Data, interpreter: Runn
     contents += selectionUnindent
   }
 
-  contents += new Menu("Code") {
+  contents += mEdit
+
+  val mCode: Menu = new Menu("Code") {
     mnemonic = Key.D
 
     contents += goToDeclaration
@@ -138,7 +142,9 @@ private class MainMenu(panel: Panel, frame: Frame, data: Data, interpreter: Runn
     contents += liveMoveDown
   }
 
-  contents += new Menu("Run") {
+  contents += mCode
+
+  val mRun: Menu = new Menu("Run") {
     mnemonic = Key.R
 
     contents += new MenuItem(new InterpretAction("Interpret", 'I', "shift pressed F10", data, interpreter, launcher, console))
@@ -147,12 +153,16 @@ private class MainMenu(panel: Panel, frame: Frame, data: Data, interpreter: Runn
     contents += new MenuItem(new StopAction("Stop", 'S', "ctrl pressed F2", launcher, console))
   }
 
-  contents += new Menu("Examples") {
+  contents += mRun
+
+  val mExamples: Menu = new Menu("Examples") {
     mnemonic = Key.X
     contents ++= examples.map(it => new MenuItem(new ExampleAction(it.name, it.mnemonic, panel, it.code)))
   }
 
-  contents += new Menu("View") {
+  contents += mExamples
+
+  val mView: Menu = new Menu("View") {
     mnemonic = Key.V
     contents += new Menu("Color Scheme") {
       contents ++= styling.names.map(it => new RadioMenuItem(it) {
@@ -185,7 +195,9 @@ private class MainMenu(panel: Panel, frame: Frame, data: Data, interpreter: Runn
     }
   }
 
-  contents += new Menu("Help") {
+  contents += mView
+
+  val mHelp: Menu = new Menu("Help") {
     mnemonic = Key.H
 
     contents += new MenuItem(new Action("License") {
@@ -214,4 +226,6 @@ private class MainMenu(panel: Panel, frame: Frame, data: Data, interpreter: Runn
       }
     })
   }
+
+  contents += mHelp
 }

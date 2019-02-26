@@ -36,7 +36,8 @@ object Demo {
     LispLanguage
   )
 
-  case class Config(language: Option[Language] = None, stylingName: Option[String] = None, structure: Boolean = true)
+  case class Config(language: Option[Language] = None, stylingName: Option[String] = None,
+                    structure: Boolean = true, flash: Boolean = false)
 
   def main(args: Array[String]): Unit = {
     val default = Config()
@@ -60,6 +61,10 @@ object Demo {
       opt[Unit]("no-structure")
         .text("Do not show structure view")
         .action { (_, c) => c.copy(structure = false) }
+
+      opt[Unit]("flash")
+        .text("Demo flash function via shift-return")
+        .action { (_, c) => c.copy(flash = true) }
     }
     p.parse(args, default).fold(sys.exit(1)) { config =>
       Swing.onEDT(run(config))
@@ -70,7 +75,8 @@ object Demo {
     val langOpt = config.language.orElse(selectLanguage())
     langOpt.foreach { language =>
       val code  = language.examples.headOption.fold("")(_.code)
-      val frame = new MainFrame(language, code, stylingName = config.stylingName, structure = config.structure)
+      val frame = new MainFrame(language, code, stylingName = config.stylingName, structure = config.structure,
+        flash = config.flash)
       frame.preferredSize = new Dimension(874, 696)
       open(frame)
       frame.listenTo(frame)

@@ -19,12 +19,12 @@ The following actions and IDE features should be implemented:
 The following API features should be implemented:
 
  - [X] Configuration: colour scheme
- - [ ] Configuration: key-map
- - [ ] Configuration: key-processor
+ - [ ] Configuration: key-map registration
+ - [ ] Configuration: key-processor (for what?)
  - [X] Configuration: initial text
  - [X] Editor: current location
  - [X] Editor: selection
- - [ ] Editor: flashing
+ - [X] Editor: flashing
  - [X] Proper shutdown (e.g. stopping Akka actor)
 
 This would work for Mellite. For ScalaCollider-Swing, additionally the following items:

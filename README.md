@@ -21,6 +21,8 @@ To run the demo, use `sbt dotterweide-demo/run`. Note that the project in progre
 `???` lurking in the code. You can pass arguments to the demo run, for example:
 
     sbt 'dotterweide-demo/run --language scala --colors dark'
+    
+For interpreter integration, try `--flash` switch in the demo (shift-return flashes line or selection).
 
 ## documentation
 

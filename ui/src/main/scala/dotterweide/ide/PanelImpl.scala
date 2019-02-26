@@ -15,12 +15,12 @@ package dotterweide.ide
 import java.awt.event.{ActionEvent, ActionListener, FocusAdapter, FocusEvent}
 import java.io.File
 
-import dotterweide.{FileType, Language}
 import dotterweide.document.Location
-import dotterweide.editor.painter.Painter
-import dotterweide.editor.{Action, Async, Data, Editor, EditorFactory, FontSettings, History, HistoryImpl, Pass}
+import dotterweide.editor.{Async, Data, Editor, EditorFactory, FontSettings, History, HistoryImpl, Pass}
+import dotterweide.{FileType, Language}
 import javax.swing.Timer
 
+import scala.collection.immutable.{Seq => ISeq}
 import scala.swing.event.UIElementShown
 import scala.swing.{BorderPanel, Component, Orientation, ScrollPane, SplitPane}
 
@@ -63,7 +63,7 @@ class PanelImpl(language          : Language,
       primaryEditor.data, primaryEditor.errorHolder, language, history, styling, font, preferredGridSize)
   }
 
-  private[this] val editors = primaryEditor :: secondaryEditor :: Nil
+  val editors: ISeq[Editor] = primaryEditor :: secondaryEditor :: Nil
 
   private[this] var _currentEditor = primaryEditor
 
@@ -116,11 +116,11 @@ class PanelImpl(language          : Language,
 
   def currentEditor: Editor = _currentEditor
 
-  def addPainter    (p: Painter): Unit = editors.foreach(_.addPainter   (p))
-  def removePainter (p: Painter): Unit = editors.foreach(_.removePainter(p))
-
-  def addAction     (a: Action) : Unit = editors.foreach(_.addAction    (a))
-  def removeAction  (a: Action) : Unit = editors.foreach(_.removeAction (a))
+//  def addPainter    (p: Painter): Unit = editors.foreach(_.addPainter   (p))
+//  def removePainter (p: Painter): Unit = editors.foreach(_.removePainter(p))
+//
+//  def addAction     (a: Action) : Unit = editors.foreach(_.addAction    (a))
+//  def removeAction  (a: Action) : Unit = editors.foreach(_.removeAction (a))
 
   private def updateMessageFor(editor: Editor): Unit = {
     status.message = editor.message.mkString

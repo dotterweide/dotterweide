@@ -19,7 +19,7 @@ package dotterweide.editor
 
 import dotterweide.Observable
 import dotterweide.document.Document
-import dotterweide.editor.painter.Painter
+import dotterweide.editor.painter.{Painter, PainterContext}
 
 import scala.swing.Component
 
@@ -48,6 +48,8 @@ trait Editor extends Observable {
 
   /** Disposes all resources associated with the editor. */
   def dispose(): Unit
+
+  def painterContext: PainterContext
 
   /** Adds a custom painter and inserts it at its layer position. */
   def addPainter(p: Painter): Unit

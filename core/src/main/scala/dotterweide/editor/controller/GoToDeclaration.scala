@@ -29,20 +29,23 @@ private class GoToDeclaration(terminal: Terminal, data: Data)(implicit async: As
   def keys: ISeq[String]  = "ctrl pressed B" :: Nil
 
   def apply(): Unit = {
-    import async.executionContext
+    val fut = data.computeStructure()
+    val tr  = async.await(fut)
     for {
-      _         <- data.computeStructure()
+      _         <- tr
       reference <- data.referenceAt(terminal.offset)
       target    <- reference.target
     } {
+      // assert (EventQueue.isDispatchThread)
       terminal.offset = offsetOf(target)
     }
   }
 
   private def offsetOf(target: Node): Int = {
-    target match {
-      case IdentifiedNode(id, _) => id.span.start
-      case node => node.span.start
+    val n = target match {
+      case IdentifiedNode(id, _)  => id
+      case _                      => target
     }
+    n.span.start
   }
 }

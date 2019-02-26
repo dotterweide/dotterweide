@@ -14,10 +14,10 @@ package dotterweide.ide
 
 import java.io.File
 
+import dotterweide.editor.{Async, Data, Editor, History}
 import dotterweide.{FileType, ObservableEvents}
-import dotterweide.editor.painter.Painter
-import dotterweide.editor.{Action, Async, Data, Editor, History}
 
+import scala.collection.immutable.{Seq => ISeq}
 import scala.swing.Component
 
 object Panel {
@@ -32,6 +32,8 @@ trait Panel extends ObservableEvents[Panel.Update] {
   def component: Component
 
   def currentEditor: Editor
+
+  def editors: ISeq[Editor]
 
   def data: Data
 
@@ -59,16 +61,4 @@ trait Panel extends ObservableEvents[Panel.Update] {
   var split: Boolean
 
   var structureVisible: Boolean
-
-  /** Adds a custom painter to all editors, inserting it at its layer position. */
-  def addPainter(p: Painter): Unit
-
-  /** Removes a custom painter from all editors. */
-  def removePainter(p: Painter): Unit
-
-  /** Registers a custom action with all editors. */
-  def addAction(a: Action): Unit
-
-  /** Unregisters a custom action from all editors. */
-  def removeAction(a: Action): Unit
 }

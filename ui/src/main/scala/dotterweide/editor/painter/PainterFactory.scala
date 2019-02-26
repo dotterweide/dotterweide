@@ -17,8 +17,7 @@
 
 package dotterweide.editor.painter
 
-import dotterweide.document.Document
-import dotterweide.editor.{ActionProcessor, BraceMatcher, Canvas, Data, ErrorHolder, FontSettings, Grid, Styling, Terminal}
+import dotterweide.editor.{ActionProcessor, BraceMatcher, ErrorHolder}
 import dotterweide.lexer.Lexer
 
 import scala.collection.immutable.{Seq => ISeq}
@@ -37,11 +36,9 @@ object PainterFactory {
     * - `TextPainter`           : text foreground painting, including error, hover, and selection decorations
     * - `CaretPainter`          : cursor position
     */
-  def createPainters(document: Document, terminal: Terminal, data: Data, canvas: Canvas, grid: Grid, lexer: Lexer,
-                     matcher: BraceMatcher, errors: ErrorHolder, styling: Styling, font: FontSettings,
+  def createPainters(context: PainterContext, lexer: Lexer, matcher: BraceMatcher, errors: ErrorHolder,
                      processor: ActionProcessor): ISeq[Painter] = {
 
-    val context           = PainterContext(document, terminal, data, canvas, grid, styling, font)
     val errorPainter      = new ErrorPainter    (context, errors)
     val hoverPainter      = new HoverPainter    (context)
     val selectionPainter  = new SelectionPainter(context)

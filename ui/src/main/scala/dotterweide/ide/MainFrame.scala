@@ -15,13 +15,15 @@ package dotterweide.ide
 import java.io.File
 
 import dotterweide.Language
-import dotterweide.editor.{Editor, FontSettings}
+import dotterweide.editor.controller.FlashAction
+import dotterweide.editor.painter.FlashPainter
+import dotterweide.editor.{Editor, FlashImpl, FontSettings}
 
 import scala.swing.Frame
 import scala.swing.event.WindowClosed
 
 class MainFrame(language: Language, text: String, font: FontSettings = FontSettings.Default,
-                stylingName: Option[String] = None, structure: Boolean = true)
+                stylingName: Option[String] = None, structure: Boolean = true, flash: Boolean = false)
   extends Frame {
 
   private[this] val console : Console = new ConsoleImpl(font)
@@ -29,6 +31,14 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
     console = Some(console))
 
   panel.structureVisible = structure
+
+  if (flash) {
+    val emitter = new FlashImpl
+    panel.editors.foreach { ed =>
+      ed.addPainter (new FlashPainter(ed.painterContext, emitter))
+      ed.addAction  (new FlashAction(ed.document, ed.terminal, emitter))
+    }
+  }
 
   reactions += {
     case WindowClosed(_) =>

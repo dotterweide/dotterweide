@@ -24,7 +24,7 @@ import java.awt.{BorderLayout, Cursor, Dimension, Font, Graphics, Graphics2D, Po
 import dotterweide.Interval
 import dotterweide.document.Document
 import dotterweide.editor.controller.ControllerImpl
-import dotterweide.editor.painter.{Painter, PainterFactory}
+import dotterweide.editor.painter.{Painter, PainterContext, PainterFactory}
 import dotterweide.formatter.{Format, FormatterImpl}
 import dotterweide.lexer.Lexer
 import javax.swing.border.EmptyBorder
@@ -200,8 +200,9 @@ private class EditorImpl(val document     : Document,
 
   private def shouldDisplayCaret = Pane.isFocusOwner || popupVisible
 
-  private[this] var painters = PainterFactory.createPainters(document, terminal, data,
-    canvas, grid, lexer, matcher, errorHolder, styling, font, controller)
+  val painterContext: PainterContext = PainterContext(document, terminal, data, canvas, grid, styling, font)
+
+  private[this] var painters = PainterFactory.createPainters(painterContext, lexer, matcher, errorHolder, controller)
 
   private[this] var customPainters = Map.empty[Painter, Rectangle => Unit]
 

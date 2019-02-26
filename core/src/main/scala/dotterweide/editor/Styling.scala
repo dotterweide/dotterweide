@@ -48,4 +48,7 @@ object Styling {
   val StringLiteral             = "StringLiteral"
   val Keyword                   = "Keyword"
   val Comment                   = "Comment"
+  val FlashInfo                 = "FlashInfo"
+  val FlashWarn                 = "FlashWarn"
+  val FlashError                = "FlashError"
 }
