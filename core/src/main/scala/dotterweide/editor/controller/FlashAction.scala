@@ -38,9 +38,8 @@ class FlashAction(
 
   /** Sub-classes may override this. Default implementation returns selection or current line. */
   protected def mkSpan(): Span = {
-    val iv  = terminal.selection.getOrElse(terminal.currentLineIntervalIn(document))
-    val txt = document.text(iv)
-    Span(txt, iv)
+    val iv = terminal.selection.getOrElse(terminal.currentLineIntervalIn(document))
+    Span(document.characters, iv)
   }
 
   def apply(): Unit = {

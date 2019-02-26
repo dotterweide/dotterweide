@@ -19,12 +19,12 @@ package dotterweide
 
 /** A text span combines a text substring with its interval within a parent text.
   *
-  * @param source     the (entire) parent text
+  * @param source     the (entire!) parent text
   * @param interval   the interval to select a substring
   */
 case class Span(source: CharSequence, interval: Interval) extends IntervalLike {
   def start : Int = interval.start
-  def stop   : Int = interval.stop
+  def stop  : Int = interval.stop
 
   /** The text denoted by `source.subSequence(begin, end)`. */
   def text: String = source.subSequence(start, stop).toString

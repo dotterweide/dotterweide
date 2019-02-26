@@ -15,7 +15,7 @@ package dotterweide.ide
 import java.awt.event.{ActionEvent, ActionListener, FocusAdapter, FocusEvent}
 import java.io.File
 
-import dotterweide.document.Location
+import dotterweide.document.{Document, DocumentImpl, Location}
 import dotterweide.editor.{Async, Data, Editor, EditorFactory, FontSettings, History, HistoryImpl, Pass}
 import dotterweide.{FileType, Language}
 import javax.swing.Timer
@@ -51,15 +51,17 @@ class PanelImpl(language          : Language,
     res
   }
 
+  val document: Document = new DocumentImpl()
+
   private[this] val primaryEditor: Editor =
-    EditorFactory.createEditorFor(language, history, styling, font, preferredGridSize)
+    EditorFactory.createEditorFor(document, language, history, styling, font, preferredGridSize)
 
   val data: Data = primaryEditor.data
 
   implicit val async: Async = primaryEditor.async
 
   private[this] val secondaryEditor : Editor = {
-    EditorFactory.createEditorFor(primaryEditor.document,
+    EditorFactory.createEditorFor(document,
       primaryEditor.data, primaryEditor.errorHolder, language, history, styling, font, preferredGridSize)
   }
 
@@ -80,11 +82,20 @@ class PanelImpl(language          : Language,
     t
   }
 
-  val status: StatusBar = new StatusBar
+  val status: StatusBar = new StatusBarImpl
 
   private[this] val editorTab = new BorderPanel
 
-  val component: Component = new BorderPanel() {
+  private[this] val bottomPanel = new BorderPanel {
+    add(status.component, BorderPanel.Position.Center)
+  }
+
+  def setBottomRightComponent(c: Component): Unit = {
+    bottomPanel.layout(c) = BorderPanel.Position.East
+    bottomPanel.revalidate()
+  }
+
+  val component: Component = new BorderPanel {
     private[this] val center = console match {
       case Some(c)  =>
         val scroll            = new ScrollPane(c.component)
@@ -96,8 +107,8 @@ class PanelImpl(language          : Language,
 
       case None => editorTab
     }
-    add(center , BorderPanel.Position.Center)
-    add(status, BorderPanel.Position.South )
+    add(center     , BorderPanel.Position.Center)
+    add(bottomPanel, BorderPanel.Position.South )
 
     reactions += {
       case UIElementShown(_) if !_disposed => timer.restart()

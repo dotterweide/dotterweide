@@ -18,16 +18,16 @@
 package dotterweide.editor
 
 import dotterweide.Language
-import dotterweide.document.{Document, DocumentImpl}
+import dotterweide.document.Document
 
 object EditorFactory {
   /**
     * @param preferredGridSize    optional tuple of `(lines, maximumIndent)`
     */
-  def createEditorFor(language: Language, history: History, styling: Styling, font: FontSettings,
+  def createEditorFor(document: Document, language: Language, history: History,
+                      styling: Styling, font: FontSettings,
                       preferredGridSize: Option[(Int, Int)]): Editor = {
     implicit val async: Async = new AsyncImpl()
-    val document: Document    = new DocumentImpl()
     val data    : Data        = new DataImpl(document, language.lexer, language.parser, language.inspections)
     val holder  : ErrorHolder = new ErrorHolderImpl(document, data)
 

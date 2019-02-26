@@ -14,6 +14,7 @@ package dotterweide.ide
 
 import java.io.File
 
+import dotterweide.document.Document
 import dotterweide.editor.{Async, Data, Editor, History}
 import dotterweide.{FileType, ObservableEvents}
 
@@ -34,6 +35,8 @@ trait Panel extends ObservableEvents[Panel.Update] {
   def currentEditor: Editor
 
   def editors: ISeq[Editor]
+
+  def document: Document
 
   def data: Data
 
@@ -61,4 +64,10 @@ trait Panel extends ObservableEvents[Panel.Update] {
   var split: Boolean
 
   var structureVisible: Boolean
+
+  /** Sets or replaces a custom component shown on the bottom
+    * right of the panel, that is on the right hand side of the
+    * status bar.
+    */
+  def setBottomRightComponent(c: Component): Unit
 }
