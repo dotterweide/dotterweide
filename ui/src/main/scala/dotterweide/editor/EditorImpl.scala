@@ -322,8 +322,7 @@ private class EditorImpl(val document     : Document,
   private object TerminalImpl extends AbstractTerminal {
     def choose[A](variants: ISeq[A], query: String)(callback: A => Unit): Unit = {
       val point = toPoint(offset)
-      // XXX TODO -- should probably use `grid.cellHeight` instead of `20`
-      val shifted = new Point(point.x - grid.cellWidth * query.length - 3, point.y + 20)
+      val shifted = new Point(point.x - grid.cellWidth * query.length - 3, point.y + grid.cellHeight - 3)
       val (popup, list) = ChooserFactory.createPopup(Pane, shifted, regularFont, variants, listRenderer) { it =>
         Pane.requestFocusInWindow() // to draw cursor immediately
         popupVisible = false

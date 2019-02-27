@@ -20,19 +20,23 @@ package dotterweide.editor
 import java.awt.{Component, Font}
 
 import dotterweide.lexer.Lexer
-import javax.swing.border.EmptyBorder
-import javax.swing.{DefaultListCellRenderer, JComponent, JList, ListCellRenderer}
+import javax.swing.{DefaultListCellRenderer, JList, ListCellRenderer}
 
 private class VariantCellRenderer(lexer: Lexer, coloring: Styling) extends ListCellRenderer[AnyRef] {
-  private[this] val delegate = new DefaultListCellRenderer().asInstanceOf[ListCellRenderer[AnyRef]]
+  private[this] val delegate: ListCellRenderer[AnyRef] = new DefaultListCellRenderer()
 
   override def getListCellRendererComponent(list: JList[_ <: AnyRef], value: AnyRef, index: Int,
                                             isSelected: Boolean, cellHasFocus: Boolean): Component = {
     val s = value.toString
 
-    val result = delegate.getListCellRendererComponent(list, s, index, isSelected, cellHasFocus)
+    val result  = delegate.getListCellRendererComponent(list, s, index, isSelected, cellHasFocus)
 
-    result.asInstanceOf[JComponent].setBorder(new EmptyBorder(2, 2, 2, 4))
+    result.setPreferredSize(null)
+    val dim = result.getPreferredSize
+    // add extra pixels because of drop-shadow problem in Submin
+    dim.width  += 6
+    dim.height += 2
+    result.setPreferredSize(dim)
 
     val tokens = lexer.analyze(s)
     if (tokens.hasNext) {

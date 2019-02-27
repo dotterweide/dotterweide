@@ -14,7 +14,8 @@ lazy val commonSettings = Seq(
   parallelExecution in Test := false
 )
 
-lazy val lgpl2 = "LGPL v2.1+" -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")
+lazy val lgpl2  = "LGPL v2.1+"  -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")
+lazy val gpl3   = "GPL v3+"     -> url("http://www.gnu.org/licenses/gpl-3.0.txt")
 
 lazy val deps = new {
   val main = new {
@@ -24,6 +25,7 @@ lazy val deps = new {
   }
   val demo = new {
     val scopt           = "3.7.1"
+    val submin          = "0.2.4"
   }
   val test = new {
     val junit           = "4.12"
@@ -108,8 +110,10 @@ lazy val demo = project.withId(s"$baseNameL-demo").in(file("demo"))
   .settings(
     name        := s"$baseName-Demo",
     description := s"$baseName - demo application",
+    licenses    := Seq(gpl3),
     mainClass in Compile := Some("dotterweide.Demo"),
     libraryDependencies ++= Seq(
-      "com.github.scopt" %% "scopt" % deps.demo.scopt
+      "com.github.scopt"  %% "scopt"  % deps.demo.scopt,
+      "de.sciss"          %  "submin" % deps.demo.submin
     )
   )

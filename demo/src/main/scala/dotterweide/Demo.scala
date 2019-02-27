@@ -20,6 +20,7 @@ package dotterweide
 import java.awt.Dimension
 import java.util.Locale
 
+import de.sciss.submin.Submin
 import dotterweide.editor.ColorScheme
 import dotterweide.ide.MainFrame
 import dotterweide.languages.lisp.LispLanguage
@@ -36,8 +37,15 @@ object Demo {
     LispLanguage
   )
 
+  sealed trait Laf
+  object Laf {
+    case object Default     extends Laf
+    case object SubminLight extends Laf
+    case object SubminDark  extends Laf
+  }
+
   case class Config(language: Option[Language] = None, stylingName: Option[String] = None,
-                    structure: Boolean = true, flash: Boolean = false)
+                    structure: Boolean = true, flash: Boolean = false, laf: Laf = Laf.Default)
 
   def main(args: Array[String]): Unit = {
     val default = Config()
@@ -65,8 +73,22 @@ object Demo {
       opt[Unit]("flash")
         .text("Demo flash function via shift-return")
         .action { (_, c) => c.copy(flash = true) }
+
+      opt[Unit]("submin-light")
+        .text("Use Submin light look-and-feel")
+        .action { (_, c) => c.copy(laf = Laf.SubminLight) }
+
+      opt[Unit]("submin-dark")
+        .text("Use Submin dark look-and-feel")
+        .action { (_, c) => c.copy(laf = Laf.SubminDark) }
     }
     p.parse(args, default).fold(sys.exit(1)) { config =>
+      config.laf match {
+        case Laf.SubminLight  => Submin.install(false)
+        case Laf.SubminDark   => Submin.install(true )
+        case Laf.Default      =>
+      }
+
       Swing.onEDT(run(config))
     }
   }
