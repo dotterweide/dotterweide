@@ -1,6 +1,7 @@
 package scala.tools.nsc.interactive
 
 import scala.reflect.internal.util.SourceFile
+import scala.tools.nsc.util.WorkScheduler
 
 /** An access point to package private methods. */
 object DotterweidePeek {
@@ -15,6 +16,9 @@ object DotterweidePeek {
   def typedTree(c: Global)(source: SourceFile, forceReload: Boolean): c.Tree = {
     c.typedTree(source, forceReload)
   }
+
+  def scheduler(c: Global): WorkScheduler = c.scheduler
+  def scheduler_=(c: Global)(value: WorkScheduler): Unit = c.scheduler = value
 
 //  def minRunId(c: Global): Int = c.minRunId
 //  def minRunId_=(c: Global)(value: Int): Unit = c.minRunId = value

@@ -22,15 +22,21 @@ import dotterweide.{Example, FileType, Language}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-class ScalaLanguage(prelude: String = "", postlude: String = "", val examples: ISeq[Example] = Nil)
+class ScalaLanguage(
+                     scalaVersion : String = "2.12.8",
+                     prelude      : String = "",
+                     postlude     : String = "",
+                     val examples : ISeq[Example] = Nil
+                   )
   extends Language {
 
   def name        : String = "Scala"
   def description : String = "The Scala programming language"
 
-  private[this] val _parser = new ScalaParser(prelude = prelude, postlude = postlude)
+  private[this] val _lexer  = new ScalaLexer  (scalaVersion = scalaVersion)
+  private[this] val _parser = new ScalaParser (scalaVersion = scalaVersion, prelude = prelude, postlude = postlude)
 
-  def lexer : Lexer   = ScalaLexer
+  def lexer : Lexer   = _lexer
   def parser: Parser  = _parser
 
   /** A map from color scheme names to the schemes. */
