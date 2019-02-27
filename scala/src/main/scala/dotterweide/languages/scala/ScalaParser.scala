@@ -18,6 +18,7 @@ import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.event.Logging
 import akka.pattern.ask
 import akka.util.Timeout
+import com.typesafe.config.ConfigFactory
 import dotterweide.Span
 import dotterweide.document.Document
 import dotterweide.editor.{Adviser, Async, Data}
@@ -30,7 +31,8 @@ import scala.concurrent.Future
 import scala.reflect.api.Position
 import scala.reflect.internal.util.{DefinedPosition, Position => _Position}
 import scala.tools.nsc.Settings
-import scala.tools.nsc.interactive.Global
+import scala.tools.nsc.interactive.DotterweidePeek._
+import scala.tools.nsc.interactive.{DotterweidePeek, Global}
 import scala.tools.nsc.io.VirtualDirectory
 import scala.tools.nsc.reporters.StoreReporter
 import scala.tools.nsc.settings.ScalaVersion
@@ -46,7 +48,15 @@ import scala.util.{Failure, Success}
   * but everything covered in the Dotterweide code-base itself is mapped.
   */
 class ScalaParser(prelude: String, postlude: String) extends Parser with Adviser {
-  private[this] val system                  = ActorSystem("ScalaParser")
+
+  private[this] val DEBUG = true
+
+  private[this] val system = if (!DEBUG) ActorSystem("ScalaParser") else {
+    ActorSystem("ScalaParser",
+      ConfigFactory.parseString("""akka.loglevel = DEBUG""")  // WTF, is there no simpler way to set the log level?
+    )
+  }
+
   private[this] val compilerActor: ActorRef = system.actorOf(Props(new CompilerActor), "compiler")
 
   private case class Compile  (text: String)
@@ -68,10 +78,10 @@ class ScalaParser(prelude: String, postlude: String) extends Parser with Adviser
       // we can go directly into the API without using the `ask` methods,
       // if we ensure we're single threaded -- which is the case inside the actor.
       // When setting that setting to `false`, we have to go through `ask`
-      // methods and wait for the responses to complete.
+      // methods and wait for the responses to complete. `ask` is incompatible
+      // with a number of things, including `completionsAt`.
 
-//      settings.YpresentationAnyThread .value  = true // needed to print typed tree. XXX TODO -- do we really need it?
-      settings.YpresentationAnyThread .value  = false
+      settings.YpresentationAnyThread .value  = true
       settings.Yrangepos              .value  = true
 //      settings.Yvalidatepos           .value  = "analyze" :: Nil
       settings.source                 .value  = ScalaVersion("2.12.8")
@@ -81,10 +91,15 @@ class ScalaParser(prelude: String, postlude: String) extends Parser with Adviser
 
     private def compile(fullText: String): c.Tree = {
       val srcFile   = c.newSourceFile(fullText)
-      val respTree  = new c.Response[c.Tree]
-      c.askReset()
-      c.askLoadedTyped(srcFile, keepLoaded = false /* true */, respTree) // XXX TODO --- keep-loaded or not?
-      val treeTyped: c.Tree = respTree.get.left.get
+      // c.askReset()
+      c.newTyperRun()
+      reloadSource(c)(srcFile)
+      reporter.reset()
+//      val respTree  = new c.Response[c.Tree]
+      // c.askLoadedTyped(srcFile, keepLoaded = false, response = respTree)
+//      waitLoadedTyped(c)(srcFile, respTree, keepLoaded = false, onSameThread = true)
+//    val treeTyped: c.Tree = respTree.get.left.get
+      val treeTyped: c.Tree = typedTree(c)(srcFile, forceReload = true)
       treeTyped
     }
 
@@ -120,20 +135,13 @@ class ScalaParser(prelude: String, postlude: String) extends Parser with Adviser
       val fullText  = (prelude + text0 + postlude).patch(offset, "_CURSOR_ ", 0)
       val srcFile   = c.newSourceFile(fullText)
       val pos       = _Position.offset(srcFile, offset)
-      c.askReset()
-      val respTree  = new c.Response[c.Tree]
-      c.askLoadedTyped(srcFile, keepLoaded = true, respTree)
-      val respComp = c.askForResponse { () =>
-        // c.newTyperRun()
-        c.completionsAt(pos)
-      }
+      // c.askReset()
+      c.newTyperRun()
+      // minRunId_=(c)(c.currentRunId)
+      val res = c.completionsAt(pos)
 
-      val res = respComp.get.left.get
       println(s"name = '${res.name}', positionDelta = ${res.positionDelta}; size = ${res.results.size}")
-//      res.results.foreach { m =>
-//        println(m)
-//      }
-      "foo" -> Nil
+      res.name.decoded -> Nil
     }
 
     private def runCompile(text0: String): NodeImpl = {
@@ -494,6 +502,7 @@ class ScalaParser(prelude: String, postlude: String) extends Parser with Adviser
       }
 
       var moreErrors = List.empty[NodeImpl]
+      var errorCount = 0
 
       reporter.infos.iterator.filter(info => info.pos.isDefined && info.severity.id >= 2).foreach { info =>
         val n   = new NodeImpl("leaf")
@@ -507,9 +516,10 @@ class ScalaParser(prelude: String, postlude: String) extends Parser with Adviser
           n
         }
         child.problem = Some(info.msg)
+        errorCount += 1
       }
 
-      log.debug("done errors")
+      log.debug(s"done errors ($errorCount)")
 
       if (moreErrors.isEmpty) {
         programNode
