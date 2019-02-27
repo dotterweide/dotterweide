@@ -72,12 +72,11 @@ class ScalaParser(prelude: String, postlude: String) extends Parser with Adviser
     }
 
     private def compile(fullText: String): c.Tree = {
-      import c._
-      val srcFile   = newSourceFile(fullText)
-      val resp      = new Response[c.Tree]
+      val srcFile   = c.newSourceFile(fullText)
+      val respTree  = new c.Response[c.Tree]
       c.askReset()
-      c.askLoadedTyped(srcFile, keepLoaded = false /* true */, resp) // XXX TODO --- keep-loaded or not?
-      val treeTyped: c.Tree = resp.get.left.get
+      c.askLoadedTyped(srcFile, keepLoaded = false /* true */, respTree) // XXX TODO --- keep-loaded or not?
+      val treeTyped: c.Tree = respTree.get.left.get
       treeTyped
     }
 
@@ -110,18 +109,17 @@ class ScalaParser(prelude: String, postlude: String) extends Parser with Adviser
 
     private def runComplete(text0: String, offset0: Int): Adviser.Result = {
       val offset    = offset0 + prelude.length
-      val fullText  = (prelude + text0 + postlude).patch(offset, "_CURSOR_", 0)
+      val fullText  = (prelude + text0 + postlude).patch(offset, "_CURSOR_ ", 0)
       val srcFile   = c.newSourceFile(fullText)
       val pos       = _Position.offset(srcFile, offset)
-//      val resp      = new c.Response[c.Tree]
-      val resp      = new c.Response[Unit]
-      // XXX TODO --- does not completely reset; we get all sorts of exceptions,
-      // particularly `NullPointerException` if invoking `completionsAt` twice with the same text
       c.askReset()
-//      c.askParsedEntered(srcFile, keepLoaded = false /* getting "marking unit as crashed if using `true` */, resp)
-//      c.askReload(srcFile :: Nil, resp)
-//      c.askLoadedTyped(srcFile, keepLoaded = false /* true */, resp) // XXX TODO --- keep-loaded or not?
-      val res       = c.completionsAt(pos)
+//      val respTree  = new c.Response[c.Tree]
+//      c.askLoadedTyped(srcFile, keepLoaded = true, respTree)
+      val respComp = c.askForResponse { () =>
+        c.completionsAt(pos)
+      }
+
+      val res = respComp.get.left.get
       println(s"name = '${res.name}', positionDelta = ${res.positionDelta}; size = ${res.results.size}")
 //      res.results.foreach { m =>
 //        println(m)
