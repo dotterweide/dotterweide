@@ -63,7 +63,15 @@ class ScalaParser(prelude: String, postlude: String) extends Parser with Adviser
 
       settings.outputDirs.setSingleOutput(outputDir)
       settings.usejavacp              .value  = true
-      settings.YpresentationAnyThread .value  = true // needed to print typed tree. XXX TODO -- do we really need it?
+
+      // Message from Jason Zaugg: When using `YpresentationAnyThread`,
+      // we can go directly into the API without using the `ask` methods,
+      // if we ensure we're single threaded -- which is the case inside the actor.
+      // When setting that setting to `false`, we have to go through `ask`
+      // methods and wait for the responses to complete.
+
+//      settings.YpresentationAnyThread .value  = true // needed to print typed tree. XXX TODO -- do we really need it?
+      settings.YpresentationAnyThread .value  = false
       settings.Yrangepos              .value  = true
 //      settings.Yvalidatepos           .value  = "analyze" :: Nil
       settings.source                 .value  = ScalaVersion("2.12.8")
@@ -113,9 +121,10 @@ class ScalaParser(prelude: String, postlude: String) extends Parser with Adviser
       val srcFile   = c.newSourceFile(fullText)
       val pos       = _Position.offset(srcFile, offset)
       c.askReset()
-//      val respTree  = new c.Response[c.Tree]
-//      c.askLoadedTyped(srcFile, keepLoaded = true, respTree)
+      val respTree  = new c.Response[c.Tree]
+      c.askLoadedTyped(srcFile, keepLoaded = true, respTree)
       val respComp = c.askForResponse { () =>
+        // c.newTyperRun()
         c.completionsAt(pos)
       }
 
