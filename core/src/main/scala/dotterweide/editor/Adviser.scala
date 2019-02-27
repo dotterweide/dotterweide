@@ -18,6 +18,7 @@
 package dotterweide.editor
 
 import dotterweide.document.Document
+import dotterweide.editor.Adviser.Result
 import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
@@ -26,19 +27,23 @@ import scala.util.{Failure, Success}
 
 object Adviser {
   val DefaultAnchor = "ANCHOR"
+
+  type Result = (String, ISeq[Variant])
 }
 trait Adviser {
   /** @param offset the current cursor position
+    *
+    * @return the future result, a tuple of `(query, variants)`
     */
   def variantsAsync(document: Document, data: Data, offset: Int)
-                   (implicit async: Async): Future[(String, ISeq[Variant])]
+                   (implicit async: Async): Future[Result]
 }
 
 trait SyncAdviser extends Adviser {
   def anchorLabel: String = Adviser.DefaultAnchor
 
   def variantsAsync(document: Document, data: Data, offset: Int)
-                   (implicit async: Async): Future[(String, ISeq[Variant])] = {
+                   (implicit async: Async): Future[Result] = {
     document.insert(offset, anchorLabel)
     val fut = data.computeStructure()
     val tr  = async.await(fut)

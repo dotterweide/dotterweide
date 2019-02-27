@@ -19,8 +19,7 @@ The following actions and IDE features should be implemented:
 The following API features should be implemented:
 
  - [X] Configuration: colour scheme
- - [ ] Configuration: key-map registration
- - [ ] Configuration: key-processor (for what?)
+ - [X] Configuration: key-map registration (done through actions)
  - [X] Configuration: initial text
  - [X] Editor: current location
  - [X] Editor: selection

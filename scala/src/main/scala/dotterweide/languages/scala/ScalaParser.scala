@@ -19,7 +19,8 @@ import akka.event.Logging
 import akka.pattern.ask
 import akka.util.Timeout
 import dotterweide.Span
-import dotterweide.editor.Async
+import dotterweide.document.Document
+import dotterweide.editor.{Adviser, Async, Data}
 import dotterweide.languages.scala.node._
 import dotterweide.lexer.Token
 import dotterweide.node.{Node, NodeImpl}
@@ -27,7 +28,7 @@ import dotterweide.parser.Parser
 
 import scala.concurrent.Future
 import scala.reflect.api.Position
-import scala.reflect.internal.util.DefinedPosition
+import scala.reflect.internal.util.{DefinedPosition, Position => _Position}
 import scala.tools.nsc.Settings
 import scala.tools.nsc.interactive.Global
 import scala.tools.nsc.io.VirtualDirectory
@@ -44,11 +45,12 @@ import scala.util.{Failure, Success}
   * the tree structure according to our needs. Not all tree types are mapped yet,
   * but everything covered in the Dotterweide code-base itself is mapped.
   */
-class ScalaParser(prelude: String, postlude: String) extends Parser {
+class ScalaParser(prelude: String, postlude: String) extends Parser with Adviser {
   private[this] val system                  = ActorSystem("ScalaParser")
   private[this] val compilerActor: ActorRef = system.actorOf(Props(new CompilerActor), "compiler")
 
-  private case class Compile(text: String)
+  private case class Compile  (text: String)
+  private case class Complete (text: String, offset: Int)
 
   private class CompilerActor extends Actor with AbstractCompilerActor {
     private[this] val log = Logging(context.system, this)
@@ -72,10 +74,10 @@ class ScalaParser(prelude: String, postlude: String) extends Parser {
     private def compile(fullText: String): c.Tree = {
       import c._
       val srcFile   = newSourceFile(fullText)
-      val respTypes = new Response[c.Tree]
+      val resp      = new Response[c.Tree]
       c.askReset()
-      c.askLoadedTyped(srcFile, keepLoaded = false /* true */, respTypes) // XXX TODO --- keep-loaded or not?
-      val treeTyped: c.Tree = respTypes.get.left.get
+      c.askLoadedTyped(srcFile, keepLoaded = false /* true */, resp) // XXX TODO --- keep-loaded or not?
+      val treeTyped: c.Tree = resp.get.left.get
       treeTyped
     }
 
@@ -91,8 +93,40 @@ class ScalaParser(prelude: String, postlude: String) extends Parser {
         }
         sender() ! reply
 
+      case Complete(text, offset) =>
+        val reply = try {
+          log.debug("begin complete")
+          val root = runComplete(text, offset)
+          log.debug("done complete")
+          root
+        } catch {
+          case e: Exception => akka.actor.Status.Failure(e)
+        }
+        sender() ! reply
+
       case m =>
         log.error(s"Unknown message $m")
+    }
+
+    private def runComplete(text0: String, offset0: Int): Adviser.Result = {
+      val offset    = offset0 + prelude.length
+      val fullText  = (prelude + text0 + postlude).patch(offset, "_CURSOR_", 0)
+      val srcFile   = c.newSourceFile(fullText)
+      val pos       = _Position.offset(srcFile, offset)
+//      val resp      = new c.Response[c.Tree]
+      val resp      = new c.Response[Unit]
+      // XXX TODO --- does not completely reset; we get all sorts of exceptions,
+      // particularly `NullPointerException` if invoking `completionsAt` twice with the same text
+      c.askReset()
+//      c.askParsedEntered(srcFile, keepLoaded = false /* getting "marking unit as crashed if using `true` */, resp)
+//      c.askReload(srcFile :: Nil, resp)
+//      c.askLoadedTyped(srcFile, keepLoaded = false /* true */, resp) // XXX TODO --- keep-loaded or not?
+      val res       = c.completionsAt(pos)
+      println(s"name = '${res.name}', positionDelta = ${res.positionDelta}; size = ${res.results.size}")
+//      res.results.foreach { m =>
+//        println(m)
+//      }
+      "foo" -> Nil
     }
 
     private def runCompile(text0: String): NodeImpl = {
@@ -481,7 +515,7 @@ class ScalaParser(prelude: String, postlude: String) extends Parser {
   }
 
   def parseAsync(text: String, tokens: Iterator[Token])(implicit async: Async): Future[Node] = {
-     import async.executionContext
+    import async.executionContext
 
     // XXX TODO --- timeout is arbitrary
     val fut = compilerActor.ask(Compile(text))(Timeout(5, TimeUnit.SECONDS)).mapTo[Node]
@@ -489,6 +523,21 @@ class ScalaParser(prelude: String, postlude: String) extends Parser {
       case Success(_) =>
       case Failure(ex) =>
         println("Compilation failed:")
+        ex.printStackTrace()
+    }
+    fut
+  }
+
+  def variantsAsync(document: Document, data: Data, offset: Int)
+                   (implicit async: Async): Future[Adviser.Result] = {
+    import async.executionContext
+
+    // XXX TODO --- timeout is arbitrary
+    val fut = compilerActor.ask(Complete(document.text, offset))(Timeout(5, TimeUnit.SECONDS)).mapTo[Adviser.Result]
+    fut.onComplete {
+      case Success(_) =>
+      case Failure(ex) =>
+        println("Completion failed:")
         ex.printStackTrace()
     }
     fut

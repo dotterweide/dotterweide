@@ -36,7 +36,8 @@ class ScalaLanguage(prelude: String = "", postlude: String = "", val examples: I
   /** A map from color scheme names to the schemes. */
   def stylings: Map[String, Styling] = Map(
     ColorScheme.LightName -> new ScalaStyling(ColorScheme.LightColors),
-    ColorScheme.DarkName  -> new ScalaStyling(ColorScheme.DarkColors))
+    ColorScheme.DarkName  -> new ScalaStyling(ColorScheme.DarkColors)
+  )
 
   /** Pairs of tokens which are symmetric and can be highlighted together,
     * such as matching braces.
@@ -52,7 +53,7 @@ class ScalaLanguage(prelude: String = "", postlude: String = "", val examples: I
 
   def inspections: ISeq[Inspection] = Nil
 
-  def adviser: Adviser = ScalaAdviser
+  def adviser: Adviser = _parser
 
   def fileType: FileType = FileType("Scala file", "scala")
 
