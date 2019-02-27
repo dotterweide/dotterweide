@@ -51,4 +51,5 @@ object Styling {
   val FlashInfo                 = "FlashInfo"
   val FlashWarn                 = "FlashWarn"
   val FlashError                = "FlashError"
+  var Hover                     = "Hover"
 }

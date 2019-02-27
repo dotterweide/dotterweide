@@ -18,11 +18,10 @@
 package dotterweide.editor.painter
 
 import java.awt.font.TextAttribute
-import java.awt.{Color, Graphics2D, Rectangle}
-import java.io
+import java.awt.{Graphics2D, Rectangle}
 
 import dotterweide.Interval
-import dotterweide.editor.HoverChange
+import dotterweide.editor.{HoverChange, Styling}
 import dotterweide.node.ReferenceNode
 
 /** A no-op painter that collects terminal hovers as decorations (blue underlined text). */
@@ -31,9 +30,17 @@ private class HoverPainter(context: PainterContext) extends AbstractPainter(cont
 
   def layer: Int = Painter.LayerHover
 
-  private[this] val HoverAttributes = Map(
-    TextAttribute.FOREGROUND -> Color.BLUE,
-    TextAttribute.UNDERLINE -> TextAttribute.UNDERLINE_ON)
+  private def mkAttributes() =
+    Map(
+      TextAttribute.FOREGROUND  -> styling(Styling.Hover),
+      TextAttribute.UNDERLINE   -> TextAttribute.UNDERLINE_ON
+    )
+
+  private[this] var hoverAttributes = mkAttributes()
+
+  styling.onChange {
+    hoverAttributes = mkAttributes()
+  }
 
   terminal.onChange {
     case HoverChange(_, before, now) =>
@@ -49,7 +56,7 @@ private class HoverPainter(context: PainterContext) extends AbstractPainter(cont
 
   def paint(g: Graphics2D, bounds: Rectangle): Unit = ()
 
-  override def decorations: Map[Interval, Map[TextAttribute, io.Serializable]] =
+  override def decorations: Map[Interval, Map[TextAttribute, Any]] =
     terminal.hover.flatMap(hoverInterval)
-      .map(interval => (interval, HoverAttributes)).toMap
+      .map(interval => (interval, hoverAttributes)).toMap
 }

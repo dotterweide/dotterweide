@@ -47,8 +47,9 @@ object ColorScheme {
     Keyword                   -> new Color(  0,   0, 128),
     Comment                   -> new Color(128, 128, 128),
     FlashInfo                 -> new Color(153, 204, 255),
-    FlashWarn                 -> new Color(255, 128, 0),
-    FlashError                -> Color.red
+    FlashWarn                 -> new Color(255, 128,   0),
+    FlashError                -> Color.red,
+    Hover                     -> Color.blue
   )
 
   val DarkName = "Dark"
@@ -76,8 +77,9 @@ object ColorScheme {
     Keyword                   -> new Color(  0, 153, 255),
     Comment                   -> new Color( 80, 240,  80),
     FlashInfo                 -> new Color( 20,  95, 180),  // PairedBraceBackground too close to SelectionBackground
-    FlashWarn                 -> new Color(255, 128, 0),
-    FlashError                -> Color.red
+    FlashWarn                 -> new Color(255, 128,   0),
+    FlashError                -> Color.red,
+    Hover                     -> new Color(128, 192, 255)
   )
 
   def names: ISeq[String] = List(LightName, DarkName)

@@ -15,6 +15,7 @@ package dotterweide.languages.scala
 import dotterweide.editor.{Adviser, Variant}
 
 import scala.reflect.internal.util.{Position => _Position}
+import scala.tools.nsc.interactive.DotterweidePeek.reloadSource
 
 // XXX TODO --- this is mostly copy-and-paste from ScalaInterpreterPane, needs clean up
 object AdviserImpl {
@@ -67,7 +68,8 @@ private trait AdviserImpl {
     val pos       = _Position.offset(srcFile, offset)
     // c.askReset()
     c.newTyperRun()
-    // minRunId_=(c)(c.currentRunId)
+    reloadSource(c)(srcFile)
+    reporter.reset()
     val result = c.completionsAt(pos)
 
     log.debug(s"complete name = '${result.name}', delta = ${result.positionDelta}; size = ${result.results.size}")
