@@ -73,5 +73,5 @@ trait SyncAdviser extends Adviser {
   * @param shift    the cursor motion after insertion, e.g. negative to step back into parentheses
   */
 case class Variant(title: String, content: String, shift: Int) {
-  override def toString: String = title   // so it can be directly used in a list-view
+  override def toString: String = content // title   // so it can be directly used in a list-view
 }

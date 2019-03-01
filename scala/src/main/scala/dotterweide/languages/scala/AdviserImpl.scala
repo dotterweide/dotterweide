@@ -15,6 +15,7 @@ package dotterweide.languages.scala
 import dotterweide.editor.{Adviser, Variant}
 
 import scala.reflect.internal.util.{Position => _Position}
+import scala.tools.nsc.Global
 import scala.tools.nsc.interactive.DotterweidePeek.reloadSource
 
 // XXX TODO --- this is mostly copy-and-paste from ScalaInterpreterPane, needs clean up
@@ -117,7 +118,18 @@ private trait AdviserImpl {
         sym <- member.sym.alternatives
         sugared = sym.sugaredSymbolOrSelf
       } yield {
-        val tp = member.prefix.memberType(sym)
+        val tp: c.Type = member.prefix.memberType(sym)
+
+        def mkParamInfo(params: List[Global#Symbol]): String =
+          params.map { p =>
+            val pn  = p.nameString
+            val ps0 = p.signatureString
+            val pc  = ps0.startsWith(": ")
+            val si  = ps0.lastIndexOf('.') + 1
+            val ps  = if (si == 0) ps0 else (if (pc) ": " else "") + ps0.substring(si)
+            val pd  = if (p.hasDefault) " = {}" else ""
+            pn + ps + pd
+          } .mkString("(", ", ", ")")
 
         val info: String =
           if (sugared.isType) {
@@ -131,12 +143,12 @@ private trait AdviserImpl {
               val info0 = c.typeParamsString(tp)
               // XXX TODO -- a bit of DRY
               val info1 = ret match {
-                case c.MethodType(params, _)  => params.map(_.defString).mkString("(", ",", ")")
-                case _                      => ""
+                case c.MethodType(params, _)  => mkParamInfo(params)
+                case _                        => ""
               }
               info0 + info1
 
-            case c.MethodType(params, _)  => params.map(_.defString).mkString("(", ",", ")")
+            case c.MethodType(params, _)  => mkParamInfo(params)
             case _                        => ""
           }
 
