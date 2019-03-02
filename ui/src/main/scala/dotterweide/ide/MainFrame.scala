@@ -26,8 +26,9 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
                 stylingName: Option[String] = None, structure: Boolean = true, flash: Boolean = false)
   extends Frame {
 
-  private[this] val console : Console = new ConsoleImpl(font)
-  private[this] val panel   : Panel   = new PanelImpl(language, text0 = text, font = font, stylingName = stylingName,
+  val console: Console = new ConsoleImpl(font)
+
+  val panel: Panel = new PanelImpl(language, text0 = text, font = font, stylingName = stylingName,
     console = Some(console))
 
   panel.structureVisible = structure

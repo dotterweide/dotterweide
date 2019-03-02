@@ -22,10 +22,13 @@ import java.util.Locale
 
 import de.sciss.submin.Submin
 import dotterweide.editor.ColorScheme
+import dotterweide.editor.controller.LookUpTypeAction
 import dotterweide.ide.MainFrame
 import dotterweide.languages.lisp.LispLanguage
+import dotterweide.languages.scala.node.ScalaType
 import dotterweide.languages.scala.{ScalaExamples, ScalaLanguage}
 import dotterweide.languages.toy.ToyLanguage
+import dotterweide.node.NodeType
 
 import scala.swing.event.WindowClosed
 import scala.swing.{Swing, Window}
@@ -104,6 +107,32 @@ object Demo {
       frame.listenTo(frame)
       frame.reactions += {
         case WindowClosed(_) => sys.exit()
+      }
+
+      // for Scala, we install the type-at-cursor action (ctrl-alt-D)
+      language match {
+        case sl: ScalaLanguage =>
+          val panel = frame.panel
+          panel.editors.foreach { ed =>
+            import panel.async
+            ed.addAction(new LookUpTypeAction(ed.document, ed.terminal, ed.data, language.adviser) {
+              override def run(tpe: Option[NodeType]): Unit = {
+                super.run(tpe)
+                tpe.foreach {
+                  case sd: ScalaType =>
+                    val pathOpt = sd.scalaDocPath()
+                    pathOpt.foreach { path =>
+                      val url = s"https://www.scala-lang.org/api/${sl.scalaVersion}/$path"
+                      frame.console.print(url + "\n")
+                    }
+
+                  case _ =>
+                }
+              }
+            })
+          }
+
+        case _ =>
       }
     }
   }

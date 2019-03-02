@@ -191,10 +191,7 @@ object ScalaExamples {
       |foo()
       |""".stripMargin
 
-  val Debug: String = "Vector.apply()"
-
   val Values: ISeq[Example] = List(
-    Example("DEBUG", '0', Debug),
     Example("Project Euler 1"   , '1', Euler1           ),
     Example("Project Euler 2"   , '2', Euler2           ),
     Example("Project Euler 6"   , '6', Euler6           ),

@@ -22,6 +22,7 @@ inspired by SuperCollider.
 |`ctrl X`           |Cut to clipboard                   |
 |`ctrl Y`           |Remove line                        |
 |`ctrl Z`           |Undo                               |
+|`ctrl alt S`       |Toggle vertical split              |
 |`shift TAB`        |Decrease indentation               |
 |`shift ctrl DOWN`  |Move line down                     |
 |`shift ctrl F7`    |Show usages                        |

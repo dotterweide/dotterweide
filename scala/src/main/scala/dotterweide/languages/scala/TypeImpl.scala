@@ -12,7 +12,7 @@
 
 package dotterweide.languages.scala
 
-import dotterweide.languages.scala.node.{ClassOrModuleType, ClassType, MethodType, ModuleType, PackageOrClassOrModuleType, PackageType, ScalaType}
+import dotterweide.languages.scala.node.{AbstractType, ClassOrModuleType, ClassType, MethodType, ModuleType, NullaryMethodType, PackageType, PolyType, ScalaType}
 import dotterweide.node.NodeType
 
 import scala.reflect.internal.util.{Position => _Position}
@@ -32,35 +32,35 @@ private trait TypeImpl {
 
 //    println(s"TYPE TREE = $result | ${result.tpe} | ${result.getClass}")
 
-    def prefixType(tpe: c.Type): Option[PackageOrClassOrModuleType] = {
+    def prefixType(tpe: c.Type): Option[ScalaType] = {
       val sym = tpe.typeSymbol
       if (sym.isPackageClass /* isPackageObjectOrClass */) {
         val s     = tpe.safeToString
-        val name  = if (s.endsWith(".type")) s.substring(0, s.length - 5) else s
+        // classes like `Predef` have a prefix that is just `"type"`.
+        val name  = if (s.endsWith(".type")) s.substring(0, s.length - 5) else if (s == "type") "" else s
         Some(PackageType(name))
 
       } else {
-        tpe match {
-          case c.TypeRef(pre, symC, _) if symC.isClass =>
-            prefixType(pre).map { preTpe =>
-              ClassType(preTpe, symC.nameString)
-            }
-
-          case c.SingleType(pre, symC) if symC.isModuleOrModuleClass =>
-            prefixType(pre).map { preTpe =>
-              ModuleType(preTpe, symC.nameString)
-            }
-
-          case _ => None
-        }
+        detect(tpe)
       }
     }
 
-    // XXX TODO --- what is the correct way to get package and class / object name?
+    // XXX TODO --- this is all quite messy
+
     def detect(tpe: c.Type): Option[ScalaType] = tpe match {
-      case c.TypeRef(pre, symC, _) if symC.isClass =>
-        prefixType(pre).map { preTpe =>
-          ClassType(preTpe, symC.nameString)
+      case c.TypeRef(pre, symC, _) =>
+        if (symC.isClass) {
+          prefixType(pre).flatMap { preTpe =>
+            val ct = ClassType(preTpe, symC.nameString)
+            Some(ct)
+          }
+        } else if (symC.isAbstractType) {
+          val preOpt = if (pre == c.NoPrefix) Some(None) else prefixType(pre).map(Some(_))
+          preOpt.map { pre =>
+            AbstractType(pre, symC.nameString)
+          }
+        } else {
+          None
         }
 
       case c.SingleType(pre, symC) if symC.isModuleOrModuleClass =>
@@ -69,8 +69,21 @@ private trait TypeImpl {
         }
 
       case c.NullaryMethodType(ret) =>
-        println("TODO - NullaryMethodType")
-        None
+        result match {
+          case c.Select(qual, name) =>
+            detect(qual.tpe).flatMap {
+              case parent: ClassOrModuleType =>
+                detect(ret).map { retTpe =>
+                  NullaryMethodType(parent, name.decoded, ret = retTpe)
+                }
+
+              case _ => None
+            }
+
+          case _ =>
+            println(s"NullaryMethodType, no idea what to do with $result")
+            None
+        }
 
       case c.MethodType(params, ret) =>
         val paramsTpe = params.flatMap { p => detect(p.tpe).map { pTpe => p.nameString -> pTpe }}
@@ -85,11 +98,47 @@ private trait TypeImpl {
 
                 case _ => None
               }
+
+            case _ =>
+              println(s"MethodType, no idea what to do with $result")
+              None
           }
         }
+
+      case c.PolyType(tParams, res) =>
+        val tParamsTpe = tParams.flatMap { p => detect(p.tpe) } // .map { pTpe => p.nameString -> pTpe }}
+        if (tParamsTpe.size < tParams.size) None else {
+          val resTpeOpt = detect(res)
+          resTpeOpt.map { resTpe =>
+            PolyType(tParamsTpe, resTpe)
+          }
+        }
+
       case _ => None
     }
 
-    detect(result.tpe)
+    // There is weird thing about nullary methods in that
+    // `SinOsc.ar` for example gives the correct `v.Select` but
+    // the `result.tpe` gives the _return_ type of `SinOsc.ar`, not
+    // the `NullaryMethodType` - which we want. The following match
+    // is aimed at rectifying that.
+    result match {
+      case c.Select(qual, name) =>
+        result.tpe match {
+          case c.TypeRef(_, _, _) | c.SingleType(_, _) =>
+            // special casing
+            detect(qual.tpe).flatMap {
+              case parent: ClassOrModuleType =>
+                detect(result.tpe).map { retTpe =>
+                  NullaryMethodType(parent, name = name.decoded, ret = retTpe)
+                }
+              case _ => None
+            }
+
+          case _ => detect(result.tpe)
+        }
+
+      case _ => detect(result.tpe)
+    }
   }
 }

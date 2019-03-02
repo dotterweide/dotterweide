@@ -17,6 +17,7 @@ import dotterweide.formatter.Format
 import dotterweide.inspection.Inspection
 import dotterweide.languages.scala.node.ScalaTokens._
 import dotterweide.lexer.{Lexer, TokenKind}
+import dotterweide.parser.Parser
 import dotterweide.{Example, FileType, Language}
 
 import scala.collection.immutable.{Seq => ISeq}
@@ -33,11 +34,11 @@ class ScalaLanguage(
   def description : String = "The Scala programming language"
 
   private[this] val _lexer  = new ScalaLexer  (scalaVersion = scalaVersion)
-  private[this] val _parser = new ScalaParserImpl (scalaVersion = scalaVersion, prelude = prelude, postlude = postlude)
+  private[this] val _parser = new ScalaParser (scalaVersion = scalaVersion, prelude = prelude, postlude = postlude)
 
   def lexer: Lexer = _lexer
 
-  override def parser: ScalaParser = _parser
+  def parser: Parser = _parser
 
   /** A map from color scheme names to the schemes. */
   def stylings: Map[String, Styling] = Map(
