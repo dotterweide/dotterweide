@@ -27,12 +27,14 @@ trait IntervalLike {
   /** The interval length is `end - begin` */
   def length: Int = stop - start
 
-  def empty: Boolean = length == 0
+  def empty: Boolean = start == stop
 
-  def nonEmpty: Boolean = length > 0
+  def nonEmpty: Boolean = start < stop
 
   def includes(offset: Int): Boolean = start <= offset && offset < stop
   def touches (offset: Int): Boolean = start <= offset && offset <= stop
+
+  def touchesNonEmpty(offset: Int): Boolean = touches(offset) && nonEmpty
 
   def includes(that: IntervalLike): Boolean =
     (this.nonEmpty && that.nonEmpty) &&

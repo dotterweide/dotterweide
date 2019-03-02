@@ -86,21 +86,21 @@ trait Node extends Evaluable with Translatable with Optimizable {
     if (offset < 0 || offset > span.stop)
       throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.start, span.stop))
     val offAbs = span.start + offset
-    elements.filter(_.span.touches(offAbs)).find(_.isLeaf)
+    elements.filter(_.span.touchesNonEmpty(offAbs)).find(_.isLeaf)
   }
 
   def referenceAt(offset: Int): Option[ReferenceNode] = {
     if (offset < 0 || offset > span.stop) {
       throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.start, span.stop))
     }
-    elements.filter(_.span.touches(span.start + offset)).findBy[ReferenceNode]
+    elements.filter(_.span.touchesNonEmpty(span.start + offset)).findBy[ReferenceNode]
   }
 
   def identifierAt(offset: Int): Option[IdentifiedNode] = {
     if (offset < 0 || offset > span.stop) {
       throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.start, span.stop))
     }
-    val candidates = elements.filter(_.span.touches(span.start + offset)).collect {
+    val candidates = elements.filter(_.span.touchesNonEmpty(span.start + offset)).collect {
       case node @ NodeParent(identified: IdentifiedNode) if identified.id.contains(node) => identified
     }
     candidates.headOption
