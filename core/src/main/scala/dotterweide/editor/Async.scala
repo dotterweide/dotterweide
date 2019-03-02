@@ -16,6 +16,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 trait Async {
+  /** Await the future with an internal timeout. */
   def await[A](f: Future[A]): Try[A]
 
   def defer(block: => Unit): Unit

@@ -74,27 +74,46 @@ private trait ParserImpl {
       //            val n = symCache.getOrElseUpdate(sym,
       //              mkName(sym.pos, sym.name)
       //            )
-      val n = completeName(sym.pos, new NameNode(nameString(sym.name)))
+      val n = completeDefName(sym.pos, new NameNode(nameString(sym.name)))
       if (!symCache.contains(sym)) symCache += sym -> n
       n
     }
 
     def mkRefName(p: Global#Tree, name: Global#Name): NameNode = {
-      val n = completeName(p.pos, new RefNameNode(nameString(name)))
+      val n   = new RefNameNode(nameString(name))
+      val pp  = p.pos
+      completeRefName(pp, n)
       addRef(p.symbol, n)
     }
 
     def nameString(name: Global#Name): String =
       name.decoded.trim // WTF `trim`, there are dangling trailing spaces
 
-    def completeName(pos: Position, n: NameNode): n.type = {
+    def completeRefName(pos: Position, n: NameNode): n.type = {
       pos match {
-        case pd: DefinedPosition /* if pos.isOpaqueRange */ =>
-          val s     = n.name
+        case pd: DefinedPosition =>
           val start = pd.point - mainStart
-          val stop  = start + s.length
+          val stop  = pd.end   - mainStart
           if (start >= 0 && stop <= text0.length) {
-            n.span = Span(s, start, stop)
+            val spanText = text0.substring(start, stop)
+            n.span = Span(spanText, start, stop)
+          }
+        case _ =>
+      }
+      n
+    }
+
+    // since it's a definition, it can't be renamed.
+    // in val-def, we need to use n.name.length
+    // for the span, not pos.end!
+    def completeDefName(pos: Position, n: NameNode): n.type = {
+      pos match {
+        case pd: DefinedPosition =>
+          val spanText  = n.name
+          val start     = pd.point - mainStart
+          val stop      = start + spanText.length
+          if (start >= 0 && stop <= text0.length) {
+            n.span = Span(spanText, start, stop)
           }
         case _ =>
       }
@@ -117,7 +136,9 @@ private trait ParserImpl {
 
     def parseIdent(p: Global#Ident, parents: Parents): IdentNode = {
       // c.Ident(_ /* name: Name */)
-      val nameNode  = mkDefName(p.symbol)
+      val nameNode = completeRefName(p.pos, new NameNode(nameString(p.name)))
+      if (!symCache.contains(p.symbol)) symCache += p.symbol -> nameNode
+
       val n         = new IdentNode(nameNode)
       complete(p, parents, n)
     }
