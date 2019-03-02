@@ -17,10 +17,12 @@
 
 package dotterweide.editor
 
-import dotterweide.node.Node
+import dotterweide.node.{Node, NodeType}
 
 import scala.collection.immutable.{Seq => ISeq}
 
 class MockAdviser extends SyncAdviser {
   def variants(root: Node, anchor: Node): ISeq[Variant] = Nil
+
+  def typeAt(root: Node, offset: Int): Option[NodeType] = None
 }

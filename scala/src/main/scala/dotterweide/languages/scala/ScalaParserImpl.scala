@@ -64,8 +64,8 @@ class ScalaParserImpl(scalaVersion: String, prelude: String, postlude: String) e
     fut
   }
 
-  def typeAsync(document: Document, data: Data, offset: Int)
-               (implicit async: Async): Future[Option[NodeType]] = {
+  def typeAtAsync(document: Document, data: Data, offset: Int)
+                 (implicit async: Async): Future[Option[NodeType]] = {
     import async.executionContext
 
     // XXX TODO --- timeout is arbitrary

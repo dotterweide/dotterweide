@@ -78,7 +78,7 @@ private class CompilerActor(scalaVersion: String, protected val prelude: String,
   def receive: Receive = {
     case Compile  (text)          => tryHandle("compile"  )(runCompile  (text))
     case Complete (text, offset)  => tryHandle("complete" )(runComplete (text, offset))
-    case Type     (text, offset)  => tryHandle("type"     )(runType     (text, offset))
+    case Type     (text, offset)  => tryHandle("type"     )(runTypeAt     (text, offset))
 
     case m =>
       log.error(s"Unknown message $m")

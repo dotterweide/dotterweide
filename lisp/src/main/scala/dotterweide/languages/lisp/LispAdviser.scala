@@ -21,7 +21,7 @@ import dotterweide.editor.{SyncAdviser, Variant}
 import dotterweide.languages.lisp.core.CoreFunction
 import dotterweide.languages.lisp.library.Library
 import dotterweide.languages.lisp.node.SymbolNode
-import dotterweide.node.Node
+import dotterweide.node.{Node, NodeType}
 
 import scala.collection.immutable.{Seq => ISeq}
 
@@ -35,4 +35,6 @@ object LispAdviser extends SyncAdviser {
       case _ => Nil
     }
   }
+
+  def typeAt(root: Node, offset: Int): Option[NodeType] = None  // XXX TODO
 }

@@ -19,7 +19,7 @@ package dotterweide.editor
 
 import dotterweide.document.Document
 import dotterweide.editor.Adviser.Result
-import dotterweide.node.Node
+import dotterweide.node.{Node, NodeType}
 
 import scala.collection.immutable.{Seq => ISeq}
 import scala.concurrent.Future
@@ -37,6 +37,9 @@ trait Adviser {
     */
   def variantsAsync(document: Document, data: Data, offset: Int)
                    (implicit async: Async): Future[Result]
+
+  def typeAtAsync(document: Document, data: Data, offset: Int)
+                 (implicit async: Async): Future[Option[NodeType]]
 }
 
 trait SyncAdviser extends Adviser {
@@ -64,6 +67,23 @@ trait SyncAdviser extends Adviser {
   }
 
   def variants(root: Node, anchorNode: Node): ISeq[Variant]
+
+  def typeAtAsync(document: Document, data: Data, offset: Int)
+                 (implicit async: Async): Future[Option[NodeType]] = {
+    val fut = data.computeStructure()
+    val tr = async.await(fut)
+    tr match {
+      case Success(structure) =>
+        val resOpt = structure.flatMap { root =>
+          typeAt(root, offset = offset)
+        }
+        Future.successful(resOpt)
+
+      case Failure(ex) => Future.failed(ex)
+    }
+  }
+
+  def typeAt(root: Node, offset: Int): Option[NodeType]
 }
 
 /** A candidate for completion.

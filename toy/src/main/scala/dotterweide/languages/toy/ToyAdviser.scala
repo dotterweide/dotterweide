@@ -20,7 +20,7 @@ package dotterweide.languages.toy
 import dotterweide.Extensions._
 import dotterweide.editor.{SyncAdviser, Variant}
 import dotterweide.languages.toy.node._
-import dotterweide.node.{Expression, Node}
+import dotterweide.node.{Expression, Node, NodeType}
 
 import scala.collection.immutable.{Seq => ISeq}
 
@@ -58,6 +58,8 @@ object ToyAdviser extends SyncAdviser {
       case _ => Nil
     }
   }
+
+  def typeAt(root: Node, offset: Int): Option[NodeType] = None  // XXX TODO
 
   private def referencesFor(node: Node): ISeq[Variant] = {
     val declarations = node.parents

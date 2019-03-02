@@ -12,17 +12,7 @@
 
 package dotterweide.languages.scala
 
-import dotterweide.document.Document
-import dotterweide.editor.{Adviser, Async, Data}
-import dotterweide.node.NodeType
+import dotterweide.editor.Adviser
 import dotterweide.parser.Parser
 
-import scala.concurrent.Future
-
-trait ScalaParser extends Parser with Adviser {
-  // XXX TODO temporary API
-  // eventually, all `Language` instances should have a `Typer` method
-  // or the `Adviser` should be extended by this method.
-  def typeAsync(document: Document, data: Data, offset: Int)
-               (implicit async: Async): Future[Option[NodeType]]
-}
+trait ScalaParser extends Parser with Adviser
