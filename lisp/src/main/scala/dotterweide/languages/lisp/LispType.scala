@@ -17,22 +17,16 @@
 
 package dotterweide.languages.lisp
 
-import dotterweide.node.NodeType
+import dotterweide.node.AbstractNodeType
 
-abstract sealed class LispType(presentation: String) extends NodeType(presentation)
+abstract sealed class LispType(presentation: String) extends AbstractNodeType(presentation)
 
 object LispType {
-  case object IntegerType extends LispType("integer")
-
-  case object BooleanType extends LispType("boolean")
-
+  case object IntegerType   extends LispType("integer"  )
+  case object BooleanType   extends LispType("boolean"  )
   case object CharacterType extends LispType("character")
-
-  case object SymbolType extends LispType("symbol")
-
-  case object FunctionType extends LispType("function")
-
-  case object ListType extends LispType("list")
-
-  case object HandleType extends LispType("handle")
+  case object SymbolType    extends LispType("symbol"   )
+  case object FunctionType  extends LispType("function" )
+  case object ListType      extends LispType("list"     )
+  case object HandleType    extends LispType("handle"   )
 }

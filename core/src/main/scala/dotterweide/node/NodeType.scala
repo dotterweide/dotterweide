@@ -17,5 +17,8 @@
 
 package dotterweide.node
 
-abstract class NodeType(val presentation: String)
+trait NodeType {
+  def presentation: String
+}
 
+abstract class AbstractNodeType(val presentation: String) extends NodeType

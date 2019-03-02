@@ -19,3 +19,14 @@ So from `start == point` we can determine that the name is actually invisible.
 
 __No:__ That's not the case. Because `Vector` is `Select(Select(Ident(scala),Name(package)),Name(Vector))`, and here
 `Name(Vector)` also has that property.
+
+--------
+
+# `typedTreeAt`
+
+`.tpe` giving
+
+- `Sample<>Rate()` -> `MethodType` (obviously referring to `apply`)
+- `Sample<>Rate.apply()` -> `UniqueSingleType`
+- `12<>34` -> `UniqueConstantType`
+- `SinOsc.ar()<>` -> `ClassNoArgsTypeRef`

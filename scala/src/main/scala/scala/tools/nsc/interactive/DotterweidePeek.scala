@@ -13,9 +13,11 @@ object DotterweidePeek {
   def reloadSource(c: Global)(source: SourceFile): Unit =
     c.reloadSource(source)
 
-  def typedTree(c: Global)(source: SourceFile, forceReload: Boolean): c.Tree = {
+  def typedTree(c: Global)(source: SourceFile, forceReload: Boolean): c.Tree =
     c.typedTree(source, forceReload)
-  }
+
+  def typedTreeAt(c: Global)(pos: c.Position): c.Tree =
+    c.typedTreeAt(pos)
 
   def scheduler(c: Global): WorkScheduler = c.scheduler
   def scheduler_=(c: Global)(value: WorkScheduler): Unit = c.scheduler = value

@@ -1,5 +1,5 @@
 /*
- *  Declarations.scala
+ *  ScalaNodes.scala
  *  (Dotterweide)
  *
  *  Copyright (c) 2019 the Dotterweide authors. All rights reserved.

@@ -25,9 +25,10 @@ import scala.tools.nsc.settings.ScalaVersion
 private object CompilerActor {
   case class Compile  (text: String)
   case class Complete (text: String, offset: Int)
+  case class Type     (text: String, offset: Int)
 }
 private class CompilerActor(scalaVersion: String, protected val prelude: String, protected val postlude: String)
-  extends Actor with ParserImpl with AdviserImpl with AbstractCompilerActor {
+  extends Actor with ParserImpl with AdviserImpl with TypeImpl with AbstractCompilerActor {
 
   import CompilerActor._
 
@@ -77,6 +78,7 @@ private class CompilerActor(scalaVersion: String, protected val prelude: String,
   def receive: Receive = {
     case Compile  (text)          => tryHandle("compile"  )(runCompile  (text))
     case Complete (text, offset)  => tryHandle("complete" )(runComplete (text, offset))
+    case Type     (text, offset)  => tryHandle("type"     )(runType     (text, offset))
 
     case m =>
       log.error(s"Unknown message $m")

@@ -17,9 +17,9 @@
 
 package dotterweide.languages.toy
 
-import dotterweide.node.NodeType
+import dotterweide.node.AbstractNodeType
 
-abstract sealed class ToyType(presentation: String) extends NodeType(presentation)
+abstract sealed class ToyType(presentation: String) extends AbstractNodeType(presentation)
 
 object ToyType {
   case object StringType  extends ToyType("string")
