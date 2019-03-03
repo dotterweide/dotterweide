@@ -14,6 +14,7 @@ package dotterweide.languages.scala
 
 import akka.actor.Actor
 import akka.event.{Logging, LoggingAdapter}
+import dotterweide.build.Version
 
 import scala.tools.nsc.Settings
 import scala.tools.nsc.interactive.DotterweidePeek._
@@ -27,7 +28,9 @@ private object CompilerActor {
   case class Complete (text: String, offset: Int)
   case class Type     (text: String, offset: Int)
 }
-private class CompilerActor(scalaVersion: String, protected val prelude: String, protected val postlude: String)
+// XXX TODO --- since we use the enclosing class path, this will cause
+// problems if `scalaVersion` is binary incompatible to the running VM
+private class CompilerActor(scalaVersion: Version, protected val prelude: String, protected val postlude: String)
   extends Actor with ParserImpl with AdviserImpl with TypeImpl with AbstractCompilerActor {
 
   import CompilerActor._
@@ -53,7 +56,7 @@ private class CompilerActor(scalaVersion: String, protected val prelude: String,
     settings.YpresentationAnyThread .value  = true
     settings.Yrangepos              .value  = true
     //      settings.Yvalidatepos           .value  = "analyze" :: Nil
-    settings.source                 .value  = ScalaVersion(scalaVersion) // "2.12.8"
+    settings.source                 .value  = ScalaVersion(scalaVersion.toString) // "2.12.8"
 
     val res = new Global(settings, reporter)
     // we simply set this scheduler as an insurance that we do not accidentally schedule requests

@@ -97,7 +97,7 @@ sealed trait MethodOrNullaryMethodType extends ScalaType {
 case class MethodType(parent: ClassOrModuleType, name: String, params: ISeq[(String, ScalaType)], ret: ScalaType)
   extends MethodOrNullaryMethodType {
 
-  def presentation: String = s"${parent.presentation}.$name"
+  def presentation: String = s"${parent.presentation}#$name"
 
   def scalaDocPathWithPoly(polyRep: String): Option[String] = {
     val paramPaths = params.map {
@@ -114,7 +114,7 @@ case class MethodType(parent: ClassOrModuleType, name: String, params: ISeq[(Str
 case class NullaryMethodType(parent: ClassOrModuleType, name: String, ret: ScalaType)
   extends MethodOrNullaryMethodType {
 
-  def presentation: String = s"${parent.presentation}.$name"
+  def presentation: String = s"${parent.presentation}#$name"
 
   def scalaDocPathWithPoly(polyRep: String): Option[String] = {
     val parentPathOpt = parent.scalaDocPath()

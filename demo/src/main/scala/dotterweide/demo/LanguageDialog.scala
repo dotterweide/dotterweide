@@ -15,10 +15,11 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide
+package dotterweide.demo
 
 import java.awt.event.{KeyEvent, MouseAdapter, MouseEvent}
 
+import dotterweide.Language
 import javax.swing.table.AbstractTableModel
 import javax.swing.{JComponent, JTable, KeyStroke, ListSelectionModel}
 

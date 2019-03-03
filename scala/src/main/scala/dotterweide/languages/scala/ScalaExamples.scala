@@ -23,18 +23,11 @@ object ScalaExamples {
       |
       |// The sum of all the multiples of 3 or 5 below 1000.
       |
-      |var sum = 0
-      |
-      |var i = 0
-      |
-      |while (i < 1000) {
-      |  if (i % 3 == 0 || i % 5 == 0) {
-      |    sum += i
-      |  }
-      |  i += 1
+      |val mul = (1 until 1000).filter { x =>
+      |  x % 3 == 0 || x % 5 == 0
       |}
       |
-      |println(sum)
+      |println(mul.sum)
       |""".stripMargin
 
   val Euler2: String =
@@ -81,6 +74,21 @@ object ScalaExamples {
       |}
       |
       |println(sum * sum - sumOfSquares)
+      |""".stripMargin
+
+  val Euler21: String =
+    """
+      |// Project Euler - Problem 21
+      |
+      |// Find the sum of all the amicable numbers under 10000.
+      |
+      |def divisors(n: Int): Seq[Int] = (1 to n/2).filter(x => n % x == 0)
+      |
+      |def divSum(n: Int): Int = divisors(n).sum
+      |
+      |def amicable(a: Int): Boolean = divSum(divSum(a)) == a && divSum(a) != a
+      |
+      |println((1 until 10000).filter(x => amicable(x)).sum)
       |""".stripMargin
 
   val FibonacciNumbers: String =
@@ -195,6 +203,7 @@ object ScalaExamples {
     Example("Project Euler 1"   , '1', Euler1           ),
     Example("Project Euler 2"   , '2', Euler2           ),
     Example("Project Euler 6"   , '6', Euler6           ),
+    Example("Project Euler 21"  , 'A', Euler21          ),
     Example("Fibonacci Numbers" , 'F', FibonacciNumbers ),
     Example("Prime Numbers"     , 'P', PrimeNumbers     ),
     Example("Highlighting Demo" , 'H', HighlightingDemo ),

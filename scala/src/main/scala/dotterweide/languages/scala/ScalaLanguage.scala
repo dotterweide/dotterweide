@@ -12,6 +12,7 @@
 
 package dotterweide.languages.scala
 
+import dotterweide.build.Version
 import dotterweide.editor.{Adviser, ColorScheme, Styling}
 import dotterweide.formatter.Format
 import dotterweide.inspection.Inspection
@@ -23,9 +24,9 @@ import dotterweide.{Example, FileType, Language}
 import scala.collection.immutable.{Seq => ISeq}
 
 class ScalaLanguage(
-                     val scalaVersion : String = "2.12.8",
-                     val prelude      : String = "",
-                     val postlude     : String = "",
+                     val scalaVersion : Version = Version(2,12,8),
+                     val prelude      : String  = "",
+                     val postlude     : String  = "",
                      val examples     : ISeq[Example] = Nil
                    )
   extends Language {

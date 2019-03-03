@@ -20,6 +20,7 @@ lazy val gpl3   = "GPL v3+"     -> url("http://www.gnu.org/licenses/gpl-3.0.txt"
 lazy val deps = new {
   val main = new {
     val akka            = "2.5.21"
+    val dispatch        = "1.0.0"
     val scalariform     = "0.2.7"
     val scalaSwing      = "2.1.0"
   }
@@ -37,7 +38,7 @@ lazy val testSettings = Seq(
   libraryDependencies ++= Seq(
     "junit"        % "junit"           % deps.test.junit          % Test,
     "com.novocode" % "junit-interface" % deps.test.junitInterface % Test
-  ),
+  )
 )
 
 lazy val root = project.withId(baseNameL).in(file("."))
@@ -104,8 +105,20 @@ lazy val ui = project.withId(s"$baseNameL-ui").in(file("ui"))
     )
   )
 
+lazy val docBrowser = project.withId(s"$baseNameL-doc-browser").in(file("doc-browser"))
+  .dependsOn(core)
+  .settings(commonSettings)
+  .settings(testSettings)
+  .settings(
+    name        := s"$baseName-DocBrowser",
+    description := s"$baseName - documentation browser",
+    libraryDependencies ++= Seq(
+      "org.dispatchhttp" %% "dispatch-core" % deps.main.dispatch // downloading of http resources
+    )
+  )
+
 lazy val demo = project.withId(s"$baseNameL-demo").in(file("demo"))
-  .dependsOn(ui, lispLang, toyLang, scalaLang)
+  .dependsOn(ui, lispLang, toyLang, scalaLang, docBrowser)
   .settings(commonSettings)
   .settings(
     name        := s"$baseName-Demo",

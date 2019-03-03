@@ -11,10 +11,11 @@ The following editor features should be implemented (note: checkmark means that 
  - [X] shift and mouse click should make or extend the selection
  - [X] Configurable wrapping code ("prelude", "postlude")
  - [X] insert/overwrite modes
+ - [ ] FIX: skip over closing parentheses; issue #4
  
 The following actions and IDE features should be implemented:
 
- - [ ] Code completion
+ - [X] Code completion
  
 The following API features should be implemented:
 
@@ -30,7 +31,7 @@ This would work for Mellite. For ScalaCollider-Swing, additionally the following
 
  - [X] customizable font size
  - [ ] possible to disable diagnostic as we run through REPL mode
- - [ ] API for symbol-at-cursor, to trigger documentation look-up
+ - [X] API for symbol-at-cursor, to trigger documentation look-up
  - [ ] performance needs to be acceptable on Raspberry Pi
 
 -----
@@ -47,5 +48,5 @@ The following items are "nice to have" but lower priority:
        it inserts a new line before and after block, otherwise it inserts the delimiters directly
  - [ ] Navigation history (ctrl-alt left/right in IntelliJ)
  - [ ] Enter in overwrite mode goes to beginning of new line instead of inserting new line (IntelliJ)
- - [ ] FIX: tool tip, error hovers in submin-dark look bad (drop-shadow white text on white)
+ - [X] FIX: tool tip, error hovers in submin-dark look bad (drop-shadow white text on white)
  

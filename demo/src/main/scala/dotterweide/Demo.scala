@@ -18,17 +18,17 @@
 package dotterweide
 
 import java.awt.Dimension
+import java.nio.file.Files
 import java.util.Locale
 
 import de.sciss.submin.Submin
+import dotterweide.build.Module
+import dotterweide.demo.{LanguageDialog, ScalaDocLookUp}
 import dotterweide.editor.ColorScheme
-import dotterweide.editor.controller.LookUpTypeAction
 import dotterweide.ide.MainFrame
 import dotterweide.languages.lisp.LispLanguage
-import dotterweide.languages.scala.node.ScalaType
 import dotterweide.languages.scala.{ScalaExamples, ScalaLanguage}
 import dotterweide.languages.toy.ToyLanguage
-import dotterweide.node.NodeType
 
 import scala.swing.event.WindowClosed
 import scala.swing.{Swing, Window}
@@ -112,25 +112,10 @@ object Demo {
       // for Scala, we install the type-at-cursor action (ctrl-alt-D)
       language match {
         case sl: ScalaLanguage =>
-          val panel = frame.panel
-          panel.editors.foreach { ed =>
-            import panel.async
-            ed.addAction(new LookUpTypeAction(ed.document, ed.terminal, ed.data, language.adviser) {
-              override def run(tpe: Option[NodeType]): Unit = {
-                super.run(tpe)
-                tpe.foreach {
-                  case sd: ScalaType =>
-                    val pathOpt = sd.scalaDocPath()
-                    pathOpt.foreach { path =>
-                      val url = s"https://www.scala-lang.org/api/${sl.scalaVersion}/$path"
-                      frame.console.print(url + "\n")
-                    }
-
-                  case _ =>
-                }
-              }
-            })
-          }
+          val docModule = Module("org.scala-lang", "scala-library", sl.scalaVersion)
+          val cacheDir  = Files.createTempDirectory(null).toFile
+          val dark      = config.laf == Laf.SubminDark
+          new ScalaDocLookUp(sl, frame, docModule = docModule, cacheDir = cacheDir, useDarkScheme = dark)
 
         case _ =>
       }

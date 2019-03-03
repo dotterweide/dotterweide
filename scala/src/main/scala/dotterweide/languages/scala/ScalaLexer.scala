@@ -13,6 +13,7 @@
 package dotterweide.languages.scala
 
 import dotterweide.Span
+import dotterweide.build.Version
 import dotterweide.languages.scala.node.{ScalaTokens => STk}
 import dotterweide.lexer.{Lexer, Token, TokenKind}
 import scalariform.lexer.{TokenType, Tokens => Tk}
@@ -20,7 +21,7 @@ import scalariform.lexer.{TokenType, Tokens => Tk}
 /** The lexer for the Scala language uses
   * Scalariform and then converts the token types/kinds.
   */
-class ScalaLexer(scalaVersion: String) extends Lexer {
+class ScalaLexer(scalaVersion: Version) extends Lexer {
   private val mapTypeKinds: Map[TokenType, TokenKind] = Map(
     Tk.PACKAGE                -> STk.PACKAGE,
     Tk.STAR                   -> STk.STAR,
@@ -109,7 +110,7 @@ class ScalaLexer(scalaVersion: String) extends Lexer {
   def analyze(input: CharSequence): Iterator[Token] = {
     val src = input.toString
     val tokens0 = scalariform.lexer.ScalaLexer.rawTokenise(src, forgiveErrors = true,
-      scalaVersion = scalaVersion /* ScalaVersions.Scala_2_11.toString */)
+      scalaVersion = scalaVersion.toString /* ScalaVersions.Scala_2_11.toString */)
     tokens0.iterator.map { tk =>
       val kind = mapTypeKinds.getOrElse(tk.tokenType, TokenKind.UNKNOWN)
       val span = Span(src, begin = tk.offset, end = tk.offset + tk.length)

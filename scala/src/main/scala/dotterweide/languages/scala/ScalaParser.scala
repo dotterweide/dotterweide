@@ -18,6 +18,7 @@ import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
+import dotterweide.build.Version
 import dotterweide.document.Document
 import dotterweide.editor.{Adviser, Async, Data}
 import dotterweide.languages.scala.CompilerActor._
@@ -37,7 +38,7 @@ import scala.util.{Failure, Success}
   * the tree structure according to our needs. Not all tree types are mapped yet,
   * but everything covered in the Dotterweide code-base itself is mapped.
   */
-class ScalaParser(scalaVersion: String, prelude: String, postlude: String) extends Parser with Adviser {
+class ScalaParser(scalaVersion: Version, prelude: String, postlude: String) extends Parser with Adviser {
 
   private[this] final val DEBUG = false
 
