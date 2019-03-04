@@ -60,7 +60,8 @@ object DocUtil {
     newUri.toURL
   }
 
-  def downloadAndExtract(docModule: Module, target: File, darkCss: Boolean = false, repoBase: URL = mavenCentral)
+  def downloadAndExtract(docModule: Module, target: File, darkCss: Boolean = false,
+                         repoBase: URL = mavenCentral, deleteOnExit: Boolean = false)
                         (implicit exec: ExecutionContext): (FileDownload, Future[Unit]) = {
     val jarFile         = File.createTempFile("javadoc", ".jar")
     val docUrl          = mkJavadocDownloadUrl(docModule, repoBase = repoBase)
@@ -70,7 +71,7 @@ object DocUtil {
       blocking {
         target.mkdirs()
         val map = JarUtil.unpackFiles(jar = jarFile, target = target)
-        map.valuesIterator.foreach(_.deleteOnExit())
+        if (deleteOnExit) map.valuesIterator.foreach(_.deleteOnExit())
         jarFile.delete()
         DocUtil.setScalaCssStyle(dark = darkCss, baseDir = target)
       }

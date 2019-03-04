@@ -115,7 +115,8 @@ object Demo {
           val docModule = Module("org.scala-lang", "scala-library", sl.scalaVersion)
           val cacheDir  = Files.createTempDirectory(null).toFile
           val dark      = config.laf == Laf.SubminDark
-          new ScalaDocLookUp(sl, frame, docModule = docModule, cacheDir = cacheDir, useDarkScheme = dark)
+          new ScalaDocLookUp(sl, frame, docModule = docModule, cacheDir = cacheDir,
+            useDarkScheme = dark, deleteOnExit = true)
 
         case _ =>
       }

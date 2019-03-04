@@ -27,7 +27,7 @@ import scala.swing.{Component, Dialog, Frame, GridPanel, Label, ProgressBar, Swi
 import scala.util.{Failure, Success}
 
 class ScalaDocLookUp(language: ScalaLanguage, frame: MainFrame, docModule: Module, cacheDir: File,
-                     useDarkScheme: Boolean = false) {
+                     deleteOnExit: Boolean, useDarkScheme: Boolean = false) {
 
   private[this] val panel       = frame.panel
   private[this] val baseDir     = DocUtil.defaultUnpackDir(cacheDir, docModule)
@@ -50,7 +50,8 @@ class ScalaDocLookUp(language: ScalaLanguage, frame: MainFrame, docModule: Modul
 
   private def prepareJar()(implicit exec: ExecutionContext): Future[Unit] =
     if (ready.isFile) Future.successful(()) else {
-      val (dl, futRes)    = DocUtil.downloadAndExtract(docModule, target = baseDir, darkCss = useDarkScheme)
+      val (dl, futRes)    = DocUtil.downloadAndExtract(docModule, target = baseDir,
+        darkCss = useDarkScheme, deleteOnExit = deleteOnExit)
       val progress        = new ProgressBar
       val progressDialog  = new Dialog(frame) {
         title = "Look up Documentation"
