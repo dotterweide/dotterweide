@@ -12,7 +12,7 @@
 
 package dotterweide.io
 
-import java.io.File
+import java.io.{File, IOException}
 import java.nio.ByteBuffer
 
 import dispatch.Defaults._
@@ -20,7 +20,7 @@ import dispatch._
 import dotterweide.io.FileDownload.Progress
 import io.netty.handler.codec.http.{HttpHeaderNames, HttpHeaders}
 import org.asynchttpclient.handler.resumable.{ResumableAsyncHandler, ResumableRandomAccessFileListener}
-import org.asynchttpclient.{AsyncHandler, ListenableFuture, Request}
+import org.asynchttpclient.{AsyncHandler, ListenableFuture, Request, Response}
 
 import scala.concurrent.Promise
 import scala.util.Try
@@ -76,15 +76,21 @@ class FileDownloadImpl(req: dispatch.Req, out: File, http: Http = Http.default)
     }
   )
 
-  private[this] val reqH: (Request, AsyncHandler[_]) = req > handler
-  private[this] val lFut: ListenableFuture[_] = http.client.executeRequest(reqH._1, reqH._2) // XXX TODO --- this can block
+  private[this] val reqH: (Request, AsyncHandler[Response]) = req > handler
+  private[this] val lFut: ListenableFuture[Response] = http.client.executeRequest(reqH._1, reqH._2) // XXX TODO --- this can block
   private[this] val pr    = Promise[Unit]()
 
   def status: Future[Unit] = pr.future
 
   lFut.addListener(
     new Runnable {
-      def run(): Unit = pr.complete(Try[Unit](lFut.get()))
+      def run(): Unit = pr.complete(Try[Unit] {
+        val resp = lFut.get()
+        // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+        if (resp.getStatusCode >= 400) {
+          throw new IOException(s"Download failed with status code ${resp.getStatusCode}")
+        }
+      })
     },
     new java.util.concurrent.Executor {
       def execute(runnable: Runnable): Unit = executor.execute(runnable)

@@ -42,7 +42,7 @@ lazy val testSettings = Seq(
 )
 
 lazy val root = project.withId(baseNameL).in(file("."))
-  .aggregate(core, lispLang, toyLang, scalaLang, ui, demo)
+  .aggregate(core, lispLang, toyLang, scalaLang, ui, docBrowser, demo)
   .settings(commonSettings)
   .settings(
     name        := baseName,
@@ -110,7 +110,7 @@ lazy val docBrowser = project.withId(s"$baseNameL-doc-browser").in(file("doc-bro
   .settings(commonSettings)
   .settings(testSettings)
   .settings(
-    name        := s"$baseName-DocBrowser",
+    name        := s"$baseName-Doc-Browser",
     description := s"$baseName - documentation browser",
     libraryDependencies ++= Seq(
       "org.dispatchhttp" %% "dispatch-core" % deps.main.dispatch // downloading of http resources
