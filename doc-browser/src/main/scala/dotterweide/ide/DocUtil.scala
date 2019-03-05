@@ -3,10 +3,11 @@ package dotterweide.ide
 import java.io.{BufferedInputStream, BufferedOutputStream, File, FileOutputStream}
 import java.net.URL
 
-import dispatch.url
-import dotterweide.build.Module
+import dispatch.{Http, as, url}
+import dotterweide.build.{Module, Version}
 import dotterweide.io.{FileDownload, FileDownloadImpl, JarUtil}
 
+import scala.collection.immutable.{Seq => ISeq}
 import scala.concurrent.{ExecutionContext, Future, blocking}
 
 object DocUtil {
@@ -50,14 +51,24 @@ object DocUtil {
   def mavenCentral: URL =
     new URL("https://repo1.maven.org/maven2")
 
-  def mkJavadocDownloadUrl(docModule: Module, repoBase: URL = mavenCentral): URL = {
-    val version = docModule.version.toString
-    val uri     = repoBase.toURI
-    import docModule.{artifactId, groupId}
-    val child   = s"/${groupId.replace('.', '/')}/$artifactId/$version/$artifactId-$version-javadoc.jar"
+  private def appendToURL(in: URL, child: String): URL = {
+    val uri     = in.toURI
     val newPath = uri.getPath + child
     val newUri  = uri.resolve(newPath)
     newUri.toURL
+  }
+
+  def mkJavadocDownloadUrl(docModule: Module, repoBase: URL = mavenCentral): URL = {
+    val version = docModule.version.toString
+    import docModule.{artifactId, groupId}
+    val child = s"/${groupId.replace('.', '/')}/$artifactId/$version/$artifactId-$version-javadoc.jar"
+    appendToURL(repoBase, child)
+  }
+
+  def mkJavadocMetaDataUrl(docModule: Module, repoBase: URL = mavenCentral): URL = {
+    import docModule.{artifactId, groupId}
+    val child = s"/${groupId.replace('.', '/')}/$artifactId/maven-metadata.xml"
+    appendToURL(repoBase, child)
   }
 
   def downloadAndExtract(docModule: Module, target: File, darkCss: Boolean = false,
@@ -83,4 +94,29 @@ object DocUtil {
 
   def defaultUnpackDir(baseDir: File, docModule: Module): File =
     new File(new File(new File(baseDir, docModule.groupId), docModule.artifactId), docModule.version.toString)
+
+  case class Metadata(lastUpdated: Long, latestVersion: Version, versions: ISeq[Version])
+
+  /** Reads the maven meta data for a documentation module. It only uses the
+    * `groupId` and `artifactId` and ignores the version, instead returning all
+    * found versions, sorted from newest to oldest.
+    */
+  def findModuleVersions(docModule: Module, repoBase: URL = mavenCentral)
+                        (implicit exec: ExecutionContext): Future[Metadata] = {
+    val metaDataURL     = mkJavadocMetaDataUrl(docModule, repoBase)
+    // println("Resolving artifact...")
+    val metaDataReq     = url(metaDataURL.toString)
+    val metaDataFut: Future[xml.Elem] = Http.default(metaDataReq OK as.xml.Elem)
+
+    metaDataFut.map { metaData =>
+      // val metaGroupId     = (metaData \ "groupId"    ).text.trim
+      // val metaArtifactId  = (metaData \ "artifactId" ).text.trim
+      val metaVersioning  =  metaData \ "versioning"
+      val lastUpdated     = (metaVersioning \ "lastUpdated" ).text.trim.toLong
+      val latestVersion   = Version.parse((metaVersioning \ "latest").text).get
+      val metaVersions    = (metaVersioning \ "versions" \ "version").flatMap(n => Version.parse(n.text).toOption)
+      val res = metaVersions.sorted(Version.ordering.reverse)
+      Metadata(lastUpdated = lastUpdated, latestVersion = latestVersion, versions = res)
+    }
+  }
 }

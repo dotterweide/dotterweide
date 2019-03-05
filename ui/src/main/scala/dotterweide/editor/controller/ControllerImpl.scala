@@ -297,11 +297,25 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     mkLineNew(hold = hold)
   }
 
-  // XXX TODO --- would be great if we could also find an early matching opening mark
+  // We check here if the typed char `c` matches the character
+  // at the current cursor position. If that is the case, and `c`
+  // is one of the closing characters in `pairs`, we additionally
+  // require that the corresponding opening character of the pair
+  // is also found on the same line. If all these conditions hold,
+  // we return `true`, indicating that instead of inserting the
+  // character again, the cursor is to be moved forward.
   private def isClosingPair(c: Char): Boolean = {
-    val nextChar = document.charAtOrElse(terminal.offset    , '?')
-    val prevChar = document.charAtOrElse(terminal.offset - 1, '?')
-    (nextChar == c) && pairs.contains((prevChar, nextChar))
+    val off0      = terminal.offset
+    val nextChar  = document.charAtOrElse(off0, '?')
+    // val prevChar = document.charAtOrElse(terminal.offset - 1, '?')
+    (nextChar == c) && {
+      pairs.exists {
+        case (prevChar, `c`) =>
+          val off = document.startOffsetOf(document.lineNumberOf(off0))
+          (off until off0).exists(off1 => document.charAtOrElse(off1, '?') == prevChar)
+        case _ => false
+      }
+    }
   }
 
   private def isClosingBlock(c: Char): Boolean =

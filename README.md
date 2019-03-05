@@ -2,6 +2,7 @@
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dotterweide/dotterweide-org?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/dotterweide/dotterweide.svg?branch=master)](https://travis-ci.org/dotterweide/dotterweide)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/dotterweide-core_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/dotterweide-core_2.12)
 
 ## statement
 
@@ -15,6 +16,17 @@ under Apache License. This project - Dotterweide - is released under the
 Over time, this project will diverge more and more from the original code base.
 
 The demo is subject to GPL v3 due to the inclusion of [Submin](https://git.iem.at/sciss/Submin).
+
+## linking
+
+We are currently publishing the Scala related modules to Maven Central:
+
+    "de.sciss" %% "dotterweide-core"        % v  // core API, few or no UI components
+    "de.sciss" %% "dotterweide-ui"          % v  // Swing UI components
+    "de.sciss" %% "dotterweide-scala"       % v  // Scala language support
+    "de.sciss" %% "dotterweide-doc-browser" % v  // Building blocks for scaladoc/javadoc API browser
+
+The current release version `v` is `"0.1.0"`.
 
 ## building
 

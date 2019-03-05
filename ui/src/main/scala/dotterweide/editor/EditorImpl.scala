@@ -69,12 +69,23 @@ private class EditorImpl(val document     : Document,
       insetLeft = pIn.left, insetTop = pIn.top, insetRight = pIn.right, insetBottom = pIn.bottom)
   }
 
+  private def checkPreferredSize(): Unit = {
+    // XXX TODO inefficient
+    import document.{linesCount, maximumIndent}
+    val size = grid.toSize(linesCount, maximumIndent)
+    if (Pane.getPreferredSize != size) {
+      Pane.setPreferredSize(size)
+      Pane.revalidate()
+    }
+  }
+
   font.onChange {
     regularFont = mkFont()
     val (advance, height, ascent) = gridParam()
     grid.cellWidth  = advance
     grid.cellHeight = height
     grid.ascent     = ascent
+    checkPreferredSize()
     Pane.repaint()
   }
 
@@ -159,13 +170,7 @@ private class EditorImpl(val document     : Document,
   }
 
   document.onChange { _ =>
-    // XXX TODO inefficient
-    import document.{linesCount, maximumIndent}
-    val size = grid.toSize(linesCount, maximumIndent)
-    if (Pane.getPreferredSize != size) {
-      Pane.setPreferredSize(size)
-      Pane.revalidate()
-    }
+    checkPreferredSize()
   }
 
   terminal.onChange {

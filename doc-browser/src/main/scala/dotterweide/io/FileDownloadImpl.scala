@@ -88,7 +88,7 @@ class FileDownloadImpl(req: dispatch.Req, out: File, http: Http = Http.default)
         val resp = lFut.get()
         // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
         if (resp.getStatusCode >= 400) {
-          throw new IOException(s"Download failed with status code ${resp.getStatusCode}")
+          throw new IOException(s"Download of ${req.url} failed with status code ${resp.getStatusCode}")
         }
       })
     },

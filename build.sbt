@@ -2,12 +2,13 @@ lazy val baseName   = "Dotterweide"
 lazy val baseNameL  = baseName.toLowerCase
 
 lazy val commonSettings = Seq(
-  version                   := "0.1.0-SNAPSHOT",
+  version                   := "0.1.0",
   organization              := "de.sciss",  // for now, so we can publish artifacts
   homepage                  := Some(url(s"https://github.com/dotterweide/dotterweide")),
   licenses                  := Seq(lgpl2),
   scalaVersion              := "2.12.8",
-  crossScalaVersions        := Seq("2.13.0-M5", "2.12.8", "2.11.12"),
+  // dispatch/reboot is currently not available for 2.13.0-M5
+  crossScalaVersions        := Seq(/* "2.13.0-M5", */ "2.12.8", "2.11.12"),
   scalacOptions            ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
   fork in Test              := false,
   fork in (Compile, run)    := true,
@@ -44,6 +45,7 @@ lazy val testSettings = Seq(
 lazy val root = project.withId(baseNameL).in(file("."))
   .aggregate(core, lispLang, toyLang, scalaLang, ui, docBrowser, demo)
   .settings(commonSettings)
+  .settings(noPublishSettings)
   .settings(
     name        := baseName,
     description := s"$baseName - Embeddable mini-IDE"
@@ -52,6 +54,7 @@ lazy val root = project.withId(baseNameL).in(file("."))
 lazy val core = project.withId(s"$baseNameL-core").in(file("core"))
   .settings(commonSettings)
   .settings(testSettings)
+  .settings(publishSettings)
   .settings(
     name        := s"$baseName-Core",
     description := s"$baseName - Core API",
@@ -63,6 +66,7 @@ lazy val core = project.withId(s"$baseNameL-core").in(file("core"))
 lazy val lispLang = project.withId(s"$baseNameL-lisp").in(file("lisp"))
   .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings)
+  .settings(noPublishSettings)
   .settings(testSettings)
   .settings(
     name        := s"$baseName-Lisp",
@@ -73,6 +77,7 @@ lazy val lispLang = project.withId(s"$baseNameL-lisp").in(file("lisp"))
 lazy val toyLang = project.withId(s"$baseNameL-toy").in(file("toy"))
   .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings)
+  .settings(noPublishSettings)
   .settings(testSettings)
   .settings(
     name        := s"$baseName-Toy",
@@ -82,6 +87,7 @@ lazy val toyLang = project.withId(s"$baseNameL-toy").in(file("toy"))
 lazy val scalaLang = project.withId(s"$baseNameL-scala").in(file("scala"))
   .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings)
+  .settings(publishSettings)
   .settings(testSettings)
   .settings(
     name        := s"$baseName-Scala",
@@ -96,6 +102,7 @@ lazy val scalaLang = project.withId(s"$baseNameL-scala").in(file("scala"))
 lazy val ui = project.withId(s"$baseNameL-ui").in(file("ui"))
   .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings)
+  .settings(publishSettings)
   .settings(testSettings)
   .settings(
     name        := s"$baseName-UI",
@@ -108,6 +115,7 @@ lazy val ui = project.withId(s"$baseNameL-ui").in(file("ui"))
 lazy val docBrowser = project.withId(s"$baseNameL-doc-browser").in(file("doc-browser"))
   .dependsOn(core)
   .settings(commonSettings)
+  .settings(publishSettings)
   .settings(testSettings)
   .settings(
     name        := s"$baseName-Doc-Browser",
@@ -120,6 +128,7 @@ lazy val docBrowser = project.withId(s"$baseNameL-doc-browser").in(file("doc-bro
 lazy val demo = project.withId(s"$baseNameL-demo").in(file("demo"))
   .dependsOn(ui, lispLang, toyLang, scalaLang, docBrowser)
   .settings(commonSettings)
+  .settings(noPublishSettings)
   .settings(
     name        := s"$baseName-Demo",
     description := s"$baseName - demo application",
@@ -130,3 +139,34 @@ lazy val demo = project.withId(s"$baseNameL-demo").in(file("demo"))
       "de.sciss"          %  "submin" % deps.demo.submin
     )
   )
+
+// ---- publishing ----
+lazy val publishSettings = Seq(
+  publishMavenStyle := true,
+  publishTo := {
+    Some(if (isSnapshot.value)
+      "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+    else
+      "Sonatype Releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+    )
+  },
+  publishArtifact in Test := false,
+  pomIncludeRepository := { _ => false },
+  pomExtra := { val n = baseNameL
+<scm>
+  <url>git@git.github.com:dotterweide/{n}.git</url>
+  <connection>scm:git:git@git.github.com:dotterweide/{n}.git</connection>
+</scm>
+<developers>
+  <developer>
+    <id>sciss</id>
+    <name>Hanns Holger Rutz</name>
+    <url>http://www.sciss.de</url>
+  </developer>
+</developers>
+  }
+)
+
+lazy val noPublishSettings = Seq(
+  skip in publish := true
+)
