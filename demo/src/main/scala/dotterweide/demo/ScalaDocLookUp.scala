@@ -106,6 +106,7 @@ class ScalaDocLookUp(language: ScalaLanguage, frame: MainFrame, docModule: Modul
             import async.executionContext
             prepareJar().onComplete {
               case Success(_) =>
+                ready.createNewFile()
                 // XXX TODO --- `toURI` will escape the hash symbol; we should use URIs throughout
 //                val docURI = (baseDir / path).toURI
                 val docURI = "file://" + new File(baseDir, path).getPath
@@ -132,7 +133,9 @@ class ScalaDocLookUp(language: ScalaLanguage, frame: MainFrame, docModule: Modul
   private class ActionImpl(ed: Editor)
     extends LookUpTypeAction(ed.document, ed.terminal, ed.data, language.adviser) {
 
-    override def run(tpeOpt: Option[NodeType]): Unit =
+    override def run(tpeOpt: Option[NodeType]): Unit = {
+      super.run(tpeOpt)
       tpeOpt.foreach(docForType)
+    }
   }
 }

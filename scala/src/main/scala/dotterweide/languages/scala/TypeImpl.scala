@@ -32,7 +32,9 @@ private trait TypeImpl {
 
 //    println(s"TYPE TREE = $result | ${result.tpe} | ${result.getClass}")
 
-    def prefixType(tpe: c.Type): Option[ScalaType] = {
+    // XXX TODO --- this is all quite messy
+
+    def decodeType(tpe: c.Type): Option[ScalaType] = {
       val sym = tpe.typeSymbol
       if (sym.isPackageClass /* isPackageObjectOrClass */) {
         val s     = tpe.safeToString
@@ -40,81 +42,75 @@ private trait TypeImpl {
         val name  = if (s.endsWith(".type")) s.substring(0, s.length - 5) else if (s == "type") "" else s
         Some(PackageType(name))
 
-      } else {
-        detect(tpe)
-      }
-    }
-
-    // XXX TODO --- this is all quite messy
-
-    def detect(tpe: c.Type): Option[ScalaType] = tpe match {
-      case c.TypeRef(pre, symC, _) =>
-        if (symC.isClass) {
-          prefixType(pre).flatMap { preTpe =>
-            val ct = ClassType(preTpe, symC.nameString)
-            Some(ct)
-          }
-        } else if (symC.isAbstractType) {
-          val preOpt = if (pre == c.NoPrefix) Some(None) else prefixType(pre).map(Some(_))
-          preOpt.map { pre =>
-            AbstractType(pre, symC.nameString)
-          }
-        } else {
-          None
-        }
-
-      case c.SingleType(pre, symC) if symC.isModuleOrModuleClass =>
-        prefixType(pre).map { preTpe =>
-          ModuleType(preTpe, symC.nameString)
-        }
-
-      case c.NullaryMethodType(ret) =>
-        result match {
-          case c.Select(qual, name) =>
-            detect(qual.tpe).flatMap {
-              case parent: ClassOrModuleType =>
-                detect(ret).map { retTpe =>
-                  NullaryMethodType(parent, name.decoded, ret = retTpe)
-                }
-
-              case _ => None
+      } else tpe match {
+        case c.TypeRef(pre, symC, _) =>
+          if (symC.isClass) {
+            decodeType(pre).flatMap { preTpe =>
+              val ct = ClassType(preTpe, symC.nameString)
+              Some(ct)
             }
-
-          case _ =>
-            println(s"NullaryMethodType, no idea what to do with $result")
+          } else if (symC.isAbstractType) {
+            val preOpt = if (pre == c.NoPrefix) Some(None) else decodeType(pre).map(Some(_))
+            preOpt.map { pre =>
+              AbstractType(pre, symC.nameString)
+            }
+          } else {
             None
-        }
+          }
 
-      case c.MethodType(params, ret) =>
-        val paramsTpe = params.flatMap { p => detect(p.tpe).map { pTpe => p.nameString -> pTpe }}
-        if (paramsTpe.size < params.size) None else {
+        case c.SingleType(pre, symC) if symC.isModuleOrModuleClass =>
+          decodeType(pre).map { preTpe =>
+            ModuleType(preTpe, symC.nameString)
+          }
+
+        case c.NullaryMethodType(ret) =>
           result match {
             case c.Select(qual, name) =>
-              detect(qual.tpe).flatMap {
+              decodeType(qual.tpe).flatMap {
                 case parent: ClassOrModuleType =>
-                  detect(ret).map { retTpe =>
-                    MethodType(parent, name.decoded, params = paramsTpe, ret = retTpe)
+                  decodeType(ret).map { retTpe =>
+                    NullaryMethodType(parent, name.decoded, ret = retTpe)
                   }
 
                 case _ => None
               }
 
             case _ =>
-              println(s"MethodType, no idea what to do with $result")
+              println(s"NullaryMethodType, no idea what to do with $result")
               None
           }
-        }
 
-      case c.PolyType(tParams, res) =>
-        val tParamsTpe = tParams.flatMap { p => detect(p.tpe) } // .map { pTpe => p.nameString -> pTpe }}
-        if (tParamsTpe.size < tParams.size) None else {
-          val resTpeOpt = detect(res)
-          resTpeOpt.map { resTpe =>
-            PolyType(tParamsTpe, resTpe)
+        case c.MethodType(params, ret) =>
+          val paramsTpe = params.flatMap { p => decodeType(p.tpe).map { pTpe => p.nameString -> pTpe }}
+          if (paramsTpe.size < params.size) None else {
+            result match {
+              case c.Select(qual, name) =>
+                decodeType(qual.tpe).flatMap {
+                  case parent: ClassOrModuleType =>
+                    decodeType(ret).map { retTpe =>
+                      MethodType(parent, name.decoded, params = paramsTpe, ret = retTpe)
+                    }
+
+                  case _ => None
+                }
+
+              case _ =>
+                println(s"MethodType, no idea what to do with $result")
+                None
+            }
           }
-        }
 
-      case _ => None
+        case c.PolyType(tParams, res) =>
+          val tParamsTpe = tParams.flatMap { p => decodeType(p.tpe) } // .map { pTpe => p.nameString -> pTpe }}
+          if (tParamsTpe.size < tParams.size) None else {
+            val resTpeOpt = decodeType(res)
+            resTpeOpt.map { resTpe =>
+              PolyType(tParamsTpe, resTpe)
+            }
+          }
+
+        case _ => None
+      }
     }
 
     // There is weird thing about nullary methods in that
@@ -122,23 +118,25 @@ private trait TypeImpl {
     // the `result.tpe` gives the _return_ type of `SinOsc.ar`, not
     // the `NullaryMethodType` - which we want. The following match
     // is aimed at rectifying that.
+    val resTpe = result.tpe
     result match {
       case c.Select(qual, name) =>
-        result.tpe match {
+        resTpe match {
           case c.TypeRef(_, _, _) | c.SingleType(_, _) =>
             // special casing
-            detect(qual.tpe).flatMap {
+            val qualTpe = qual.tpe
+            decodeType(qualTpe).flatMap {
               case parent: ClassOrModuleType =>
-                detect(result.tpe).map { retTpe =>
+                decodeType(resTpe).map { retTpe =>
                   NullaryMethodType(parent, name = name.decoded, ret = retTpe)
                 }
-              case _ => None
+              case _ => decodeType(resTpe)
             }
 
-          case _ => detect(result.tpe)
+          case _ => decodeType(resTpe)
         }
 
-      case _ => detect(result.tpe)
+      case _ => decodeType(resTpe)
     }
   }
 }
