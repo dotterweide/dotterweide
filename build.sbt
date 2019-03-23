@@ -1,8 +1,11 @@
 lazy val baseName   = "Dotterweide"
 lazy val baseNameL  = baseName.toLowerCase
 
+lazy val projectVersion = "0.1.1-SNAPSHOT"
+lazy val mimaVersion    = "0.1.0" // used for migration-manager
+
 lazy val commonSettings = Seq(
-  version                   := "0.1.0",
+  version                   := projectVersion,
   organization              := "de.sciss",  // for now, so we can publish artifacts
   homepage                  := Some(url(s"https://github.com/dotterweide/dotterweide")),
   licenses                  := Seq(lgpl2),
@@ -20,7 +23,7 @@ lazy val gpl3   = "GPL v3+"     -> url("http://www.gnu.org/licenses/gpl-3.0.txt"
 
 lazy val deps = new {
   val main = new {
-    val akka            = "2.5.21"
+    val akka            = "2.5.19"  // "2.5.21" has broken printDebugDump
     val dispatch        = "1.0.0"
     val scalariform     = "0.2.7"
     val scalaSwing      = "2.1.0"
@@ -60,7 +63,8 @@ lazy val core = project.withId(s"$baseNameL-core").in(file("core"))
     description := s"$baseName - Core API",
     libraryDependencies ++= Seq(
       "org.scala-lang.modules" %% "scala-swing" % deps.main.scalaSwing
-    )
+    ),
+    mimaPreviousArtifacts := Set("de.sciss" %% s"$baseNameL-core" % mimaVersion)
   )
 
 lazy val lispLang = project.withId(s"$baseNameL-lisp").in(file("lisp"))
@@ -97,6 +101,7 @@ lazy val scalaLang = project.withId(s"$baseNameL-scala").in(file("scala"))
       "org.scala-lang"    %  "scala-compiler" % scalaVersion.value,
       "org.scalariform"   %% "scalariform"    % deps.main.scalariform
     ),
+    mimaPreviousArtifacts := Set("de.sciss" %% s"$baseNameL-scala" % mimaVersion)
   )
 
 lazy val ui = project.withId(s"$baseNameL-ui").in(file("ui"))
@@ -109,7 +114,8 @@ lazy val ui = project.withId(s"$baseNameL-ui").in(file("ui"))
     description := s"$baseName - graphical user interface",
     libraryDependencies ++= Seq(
       "org.scala-lang.modules" %% "scala-swing" % deps.main.scalaSwing
-    )
+    ),
+    mimaPreviousArtifacts := Set("de.sciss" %% s"$baseNameL-ui" % mimaVersion)
   )
 
 lazy val docBrowser = project.withId(s"$baseNameL-doc-browser").in(file("doc-browser"))
@@ -122,7 +128,8 @@ lazy val docBrowser = project.withId(s"$baseNameL-doc-browser").in(file("doc-bro
     description := s"$baseName - documentation browser",
     libraryDependencies ++= Seq(
       "org.dispatchhttp" %% "dispatch-core" % deps.main.dispatch // downloading of http resources
-    )
+    ),
+    mimaPreviousArtifacts := Set("de.sciss" %% s"$baseNameL-doc-browser" % mimaVersion)
   )
 
 lazy val demo = project.withId(s"$baseNameL-demo").in(file("demo"))

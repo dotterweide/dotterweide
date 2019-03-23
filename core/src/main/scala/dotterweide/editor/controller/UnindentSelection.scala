@@ -30,23 +30,36 @@ private class UnindentSelection(document: Document, terminal: Terminal, tabSize:
   def mnemonic: Char      = 'N'
   def keys: ISeq[String]  = "shift pressed TAB" :: Nil
 
-  protected def calcEnabled(): Boolean = terminal.selection.isDefined
+  protected def calcEnabled(): Boolean = true
+
+  private def apply(beginLine: Int, endLine: Int, moveCursor: Boolean): Unit = {
+    val interval  = Interval(document.startOffsetOf(beginLine), document.endOffsetOf(endLine))
+    val text      = document.text(interval)
+
+    val replacement = text.split("\n").map(s =>
+      s.drop(math.min(tabSize, s.takeWhile(_.isWhitespace).length))
+    ).mkString("\n")
+
+    val decrement = text.length - replacement.length
+    if (moveCursor) terminal.offset -= decrement
+    terminal.selection.foreach { iv =>
+      terminal.selection = Some(iv.withEndShift(-decrement))
+    }
+
+    document.replace(interval, replacement)
+  }
 
   def apply(): Unit =
-    terminal.selection.foreach { it =>
-      val selection   = if (document.toLocation(it.stop).indent == 0) it.withEndShift(-1) else it
-      val beginLine   = document.lineNumberOf(selection.start)
-      val endLine     = document.lineNumberOf(selection.stop)
-      val interval    = Interval(document.startOffsetOf(beginLine), document.endOffsetOf(endLine))
+    terminal.selection match {
+      case Some(iv) =>
+        val selection   = if (document.toLocation(iv.stop).indent == 0) iv.withEndShift(-1) else iv
+        val beginLine   = document.lineNumberOf(selection.start)
+        val endLine     = document.lineNumberOf(selection.stop)
+        apply(beginLine, endLine, moveCursor = terminal.offset > iv.start)
 
-      val text        = document.text(interval)
-      val replacement = text.split("\n").map(s =>
-        s.drop(tabSize.min(s.takeWhile(_.isWhitespace).length))).mkString("\n")
 
-      val decrement   = text.length - replacement.length
-      terminal.offset -= decrement
-      terminal.selection = Some(it.withEndShift(-decrement))
-
-      document.replace(interval, replacement)
+      case None =>
+        val line = document.lineNumberOf(terminal.offset)
+        apply(line, line, moveCursor = true)
     }
 }

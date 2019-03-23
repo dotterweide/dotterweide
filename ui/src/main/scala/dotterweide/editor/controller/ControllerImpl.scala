@@ -251,8 +251,10 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
         }
 
       case c if c == KeyEvent.VK_TAB && !e.isControlDown && !e.isShiftDown && terminal.selection.isEmpty =>
-        val chars = " " * tabSize
-        val edit = typing(chars, advance = chars.length)
+        val loc     = document.toLocation(terminal.offset)
+        val tabRem  = tabSize - (loc.indent % tabSize) // remaining chars to the next column in a tab-sized grid
+        val chars   = " " * tabRem
+        val edit    = Insert(document, terminal, chars, advance = chars.length)  // always insert tabs
         history.add(edit)
 
       case c if !c.isControl && !e.isControlDown && !e.isAltDown =>
@@ -322,8 +324,9 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     c == BlockClosing
 
   private def processCloseBlock(c: Char): Unit = {
-    val indent        = terminal.offset - document.startOffsetOf(document.lineNumberOf(terminal.offset))
-    val targetIndent  = 0.max(indentFrom(document.lineNumberOf(terminal.offset)) - tabSize)
+    val loc = document.toLocation(terminal.offset)
+    import loc.indent
+    val targetIndent  = math.max(0, indentFrom(loc.line) - tabSize)
     if (indent > targetIndent) {
       val d = indent - targetIndent
       if (document.text(terminal.offset - d, terminal.offset).forall(_.isWhitespace)) {
@@ -428,20 +431,18 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     case _ => false
   }
 
-  private def indentOf(line: Int): Int = {
+  private def indentOf(line: Int): Int =
     if (line < 0) 0 else {
       val s = document.text(document.startOffsetOf(line), document.endOffsetOf(line))
       if (s.trim.isEmpty) indentFrom(line - 1) else s.takeWhile(_.isWhitespace).length
     }
-  }
 
-  private def indentFrom(line: Int): Int = {
+  private def indentFrom(line: Int): Int =
     if (line < 0) 0 else {
       val s = document.text(document.startOffsetOf(line), document.endOffsetOf(line))
       if (s.trim.isEmpty) indentFrom(line - 1) else
         s.takeWhile(_.isWhitespace).length + (if (s.trim.endsWith("{")) tabSize else 0)
     }
-  }
 
   private def seek(increment: Int): Int = {
     val predicates  = List[Char => Boolean](_.isWhitespace, _.isLetter, _.isDigit)

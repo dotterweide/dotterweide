@@ -32,20 +32,27 @@ private class IndentSelection(document: Document, terminal: Terminal, tabSize: I
 
   protected def calcEnabled(): Boolean = terminal.selection.isDefined
 
+  private def apply(beginLine: Int, endLine: Int, moveCursor: Boolean): Unit = {
+    val interval    = Interval(document.startOffsetOf(beginLine), document.endOffsetOf(endLine))
+    val text        = document.text(interval)
+    val indent      = List.fill(tabSize)(' ').mkString
+    val replacement = text.split("\n").map(s =>
+      indent + s
+    ).mkString("\n")
+    document.replace(interval, replacement)
+
+    val increment   = replacement.length - text.length
+    if (moveCursor) terminal.offset += increment
+    terminal.selection.foreach { iv =>
+      terminal.selection = Some(iv.withEndShift(increment))
+    }
+  }
+
   def apply(): Unit =
-    terminal.selection.foreach { it =>
-      val selection = if (document.toLocation(it.stop).indent == 0) it.withEndShift(-1) else it
-      val beginLine = document.lineNumberOf(selection.start)
-      val endLine = document.lineNumberOf(selection.stop)
-      val interval = Interval(document.startOffsetOf(beginLine), document.endOffsetOf(endLine))
-
-      val text = document.text(interval)
-      val indent = List.fill(tabSize)(' ').mkString
-      val replacement = text.split("\n").map(indent + _).mkString("\n")
-      document.replace(interval, replacement)
-
-      val increment = replacement.length - text.length
-      terminal.offset += increment
-      terminal.selection = Some(it.withEndShift(increment))
+    terminal.selection.foreach { iv =>
+      val selection   = if (document.toLocation(iv.stop).indent == 0) iv.withEndShift(-1) else iv
+      val beginLine   = document.lineNumberOf(selection.start)
+      val endLine     = document.lineNumberOf(selection.stop)
+      apply(beginLine, endLine, moveCursor = true)
     }
 }
