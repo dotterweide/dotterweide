@@ -125,44 +125,58 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
 
       case KeyEvent.VK_RIGHT =>
         if (terminal.offset < document.length) move {
-          if (e.isControlDown) {
-            terminal.offset = seek(1)
+          terminal.offset = if (e.isControlDown) {
+            seek(1)
           } else {
-            terminal.offset = terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset + 1)(_.stop)
+            terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset + 1)(_.stop)
           }
           terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
         }
 
       case KeyEvent.VK_UP if !e.isControlDown =>
-        if (document.lineNumberOf(terminal.offset) > 0) move {
-          jumpTo(document.lineNumberOf(terminal.offset) - 1, e.isShiftDown)
+        val line = document.lineNumberOf(terminal.offset)
+        move {
+          if (line > 0)
+            jumpToLine(line, line - 1, e.isShiftDown)
+          else
+            jumpToOffset(0, e.isShiftDown)
         }
 
       case KeyEvent.VK_DOWN if !e.isControlDown =>
-        if (document.lineNumberOf(terminal.offset) < document.linesCount - 1) move {
-          jumpTo(document.lineNumberOf(terminal.offset) + 1, e.isShiftDown)
+        val line = document.lineNumberOf(terminal.offset)
+        move {
+          if (line < document.linesCount - 1)
+            jumpToLine(line, line + 1, e.isShiftDown)
+          else
+            jumpToOffset(document.length, e.isShiftDown)
         }
 
       case KeyEvent.VK_PAGE_UP if !e.isControlDown =>
-        if (document.lineNumberOf(terminal.offset) > 0) move {
-          jumpTo(0.max(document.lineNumberOf(terminal.offset) - 10), e.isShiftDown)
+        val line = document.lineNumberOf(terminal.offset)
+        move {
+          if (line > 0)
+            jumpToLine(line, math.max(0, line - 10), e.isShiftDown)
+          else
+            jumpToOffset(0, e.isShiftDown)
         }
 
       case KeyEvent.VK_PAGE_DOWN if !e.isControlDown =>
-        if (document.lineNumberOf(terminal.offset) < document.linesCount - 1) move {
-          jumpTo((document.linesCount - 1).min(document.lineNumberOf(terminal.offset) + 10), e.isShiftDown)
+        val line = document.lineNumberOf(terminal.offset)
+        move {
+          if (line < document.linesCount - 1)
+            jumpToLine(line, math.min(document.linesCount - 1, line + 10), e.isShiftDown)
+          else
+            jumpToOffset(document.length, e.isShiftDown)
         }
 
       case KeyEvent.VK_HOME if e.isControlDown =>
         move {
-          terminal.offset = 0
-          terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+          jumpToOffset(0, e.isShiftDown)
         }
 
       case KeyEvent.VK_END if e.isControlDown =>
         move {
-          terminal.offset = document.length
-          terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
+          jumpToOffset(document.length, e.isShiftDown)
         }
 
       case KeyEvent.VK_HOME =>
@@ -230,11 +244,14 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     }
   }
 
-  private def jumpTo(targetLine: Int, shiftPressed: Boolean): Unit = {
-    val line            = document.lineNumberOf(terminal.offset)
-    val indent          = terminal.offset - document.startOffsetOf(line)
+  private def jumpToLine(currentLine: Int, targetLine: Int, shiftPressed: Boolean): Unit = {
+    val indent          = terminal.offset - document.startOffsetOf(currentLine)
     val target          = document.startOffsetOf(targetLine) + indent
-    terminal.offset     = target.min(document.endOffsetOf(targetLine))
+    jumpToOffset(math.min(target, document.endOffsetOf(targetLine)), shiftPressed = shiftPressed)
+  }
+
+  private def jumpToOffset(offset: Int, shiftPressed: Boolean): Unit = {
+    terminal.offset     = offset
     terminal.selection  = if (shiftPressed) fromOriginTo(terminal.offset) else None
   }
 
