@@ -11,7 +11,7 @@ The following editor features should be implemented (note: checkmark means that 
  - [X] shift and mouse click should make or extend the selection
  - [X] Configurable wrapping code ("prelude", "postlude")
  - [X] insert/overwrite modes
- - [ ] FIX: skip over closing parentheses; issue #4
+ - [X] FIX: skip over closing parentheses; issue #4
  
 The following actions and IDE features should be implemented:
 
@@ -38,7 +38,7 @@ This would work for Mellite. For ScalaCollider-Swing, additionally the following
 
 The following items are "nice to have" but lower priority:
 
- - [ ] FIX: un-indent does not work when applying to single indented line
+ - [X] FIX: un-indent does not work when applying to single indented line
  - [ ] Quick Find (ctrl-F)
  - [ ] Editor: find-and-replace dialog
  - [ ] Navigation: jump to matching bracket
