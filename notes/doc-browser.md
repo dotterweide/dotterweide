@@ -22,3 +22,4 @@ And
 > https://github.com/scalameta/metals/blob/master/mtags-interfaces/src/main/java/scala/meta/pc/SymbolDocumentation.java
 > and have an api to lookup `SymbolDocumentation` given a SemanticDB symbol (which is essentially a string)
 
+For IntelliJ: https://github.com/JetBrains/intellij-scala/blob/84f3fcfb74f75b293342f8c55896b0d2e4f549d0/scala/scala-impl/src/org/jetbrains/plugins/scala/editor/documentationProvider/ScalaDocumentationProvider.scala
