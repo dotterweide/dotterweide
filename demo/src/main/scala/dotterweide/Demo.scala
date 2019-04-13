@@ -65,7 +65,7 @@ object Demo {
         .action { (v, c) => c.copy(language = findLanguage(v)) }
 
       opt[String]('c', "colors")
-        .text(s"Select color scheme name (one of ${Languages.map(_.name).mkString(", ")})")
+        .text(s"Select color scheme name (one of ${ColorScheme.names.mkString(", ")})")
         .validate { v => if (ColorScheme.names.contains(v.capitalize)) success else failure(s"Unknown scheme $v") }
         .action { (v, c) => c.copy(stylingName = Some(v.capitalize)) }
 
