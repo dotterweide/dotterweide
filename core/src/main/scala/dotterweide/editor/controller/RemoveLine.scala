@@ -18,7 +18,6 @@
 package dotterweide.editor.controller
 
 import dotterweide.document.Document
-import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, Terminal}
 
 import scala.collection.immutable.{Seq => ISeq}
@@ -29,9 +28,18 @@ private class RemoveLine(document: Document, terminal: Terminal) extends Action 
   def keys: ISeq[String]  = "ctrl pressed Y" :: Nil
 
   def apply(): Unit = {
-    val range = terminal.currentLineIntervalIn(document)
+    val oldPos    = terminal.offset
+    val line      = document.lineNumberOf(oldPos)
+    val range     = document.intervalOfNl(line)
+    val numLines  = document.linesCount - 1 // after removal
+    val newPos    = if (line == numLines) range.start else {
+      val nextRange = document.intervalOf(line + 1)
+      val lineOff   = math.min(nextRange.length, oldPos - range.start)
+      range.start + lineOff
+    }
+
     terminal.selection = None
-    terminal.offset = terminal.offset.min(document.length - range.length)
+    terminal.offset = newPos
     document.remove(range)
   }
 }

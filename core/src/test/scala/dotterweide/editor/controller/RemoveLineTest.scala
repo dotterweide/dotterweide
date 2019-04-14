@@ -26,5 +26,8 @@ class RemoveLineTest extends ActionTestBase(new RemoveLine(_, _)) {
     assertEffectIs("|foo", "|")
     assertEffectIs("|[foo]", "|")
     assertEffectIs("|", "|")
+    assertEffectIs("foo|\n\nbar", "|\nbar")           // issue #14
+    assertEffectIs("foo|\nother\nbar", "oth|er\nbar") // stay at column if possible
+    assertEffectIs("foo|\not\nbar", "ot|\nbar")       // otherwise clip column to next line length
   }
 }
