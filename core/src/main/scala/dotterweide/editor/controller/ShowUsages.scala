@@ -31,6 +31,7 @@ private class ShowUsages(terminal: Terminal, val data: Data)(implicit val async:
   def keys: ISeq[String]  = "shift ctrl pressed F7" :: Nil
 
   def applyWithStructure(root: Node): Unit = {
-    terminal.highlights = data.connectedLeafsFor(terminal.offset).map(_.span.interval)
+    val nodes = data.connectedLeafsFor(terminal.offset)
+    terminal.highlights = nodes.map(_.span.interval)
   }
 }

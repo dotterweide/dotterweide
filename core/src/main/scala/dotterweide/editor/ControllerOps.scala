@@ -42,7 +42,8 @@ object ControllerOps {
       } yield n
 
     def connectedLeafsFor(offset: Int): ISeq[Node] = {
-      val tgtOpt: Option[IdentifiedNode] = referenceAt(offset).collect {
+      val refOpt = referenceAt(offset)
+      val tgtOpt: Option[IdentifiedNode] = refOpt.collect {
         case ReferenceNodeTarget(node: IdentifiedNode) => node
       } orElse {
         identifierAt(offset)

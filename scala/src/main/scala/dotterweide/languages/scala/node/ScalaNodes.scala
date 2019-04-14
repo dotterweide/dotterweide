@@ -216,7 +216,7 @@ class UnApplyNode(val funNode: NodeImpl, val argNodes: List[NodeImpl]) extends S
 }
 
 class ValDefNode(val modNodes: List[ModifierNode], val nameNode: NameNode, val tptNode: NodeImpl, val rhsNode: NodeImpl)
-  extends ScalaTree("val") with HasNameNode {
+  extends ScalaTree("val") with HasNameNode with IsDef {
 
   children = modNodes ::: (nameNode :: tptNode :: rhsNode :: Nil)
 }

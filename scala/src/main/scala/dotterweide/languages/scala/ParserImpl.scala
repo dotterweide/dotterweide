@@ -1,7 +1,7 @@
 package dotterweide.languages.scala
 
 import dotterweide.Span
-import dotterweide.languages.scala.node.{AppliedTypeTreeNode, ApplyNode, AssignNode, AssignOrNamedArgNode, BindNode, BlockNode, CaseDefNode, ClassDefNode, DefDefNode, EmptyNode, FunctionNode, IdentNode, IfNode, ImportNode, IsRef, LabelDefNode, LiteralNode, MatchNode, ModifierNode, ModuleDefNode, NameNode, NewNode, PackageDefNode, RefNameNode, ReturnNode, SelectNode, SuperNode, TemplateNode, ThisNode, ThrowNode, TryNode, TypeApplyNode, TypeDefNode, TypeTreeNode, TypedNode, UnApplyNode, ValDefNode}
+import dotterweide.languages.scala.node._
 import dotterweide.node.NodeImpl
 
 import scala.reflect.api.Position
@@ -75,7 +75,9 @@ private trait ParserImpl {
       //              mkName(sym.pos, sym.name)
       //            )
       val n = completeDefName(sym.pos, new NameNode(nameString(sym.name)))
-      if (!symCache.contains(sym)) symCache += sym -> n
+      if (!symCache.contains(sym)) {
+        symCache += sym -> n
+      }
       n
     }
 
@@ -134,12 +136,19 @@ private trait ParserImpl {
       complete(p, parents, n)
     }
 
-    def parseIdent(p: Global#Ident, parents: Parents): IdentNode = {
+    def parseIdent(p: Global#Ident, parents: Parents, mkRef: Boolean): IdentNode = {
       // c.Ident(_ /* name: Name */)
-      val nameNode = completeRefName(p.pos, new NameNode(nameString(p.name)))
-      if (!symCache.contains(p.symbol)) symCache += p.symbol -> nameNode
-
-      val n         = new IdentNode(nameNode)
+      val nameNode  = if (mkRef) {
+        mkRefName(p, p.name)
+      } else {
+        val _nameNode = completeRefName(p.pos, new NameNode(nameString(p.name)))
+        val sym       = p.symbol
+        if (!symCache.contains(sym)) {
+          symCache += sym -> _nameNode
+        }
+        _nameNode
+      }
+      val n = new IdentNode(nameNode)
       complete(p, parents, n)
     }
 
@@ -279,7 +288,8 @@ private trait ParserImpl {
           val bodyNode = parseChild1(body)
           new FunctionNode(vParamNodes, bodyNode)
 
-        case in: c.Ident => parseIdent(in, parents)
+        case in: c.Ident =>
+          parseIdent(in, parents, mkRef = true)
 
         case c.If(cond /* :Tree */, thenP /* :Tree */, elseP /* :Tree */) =>
           val condNode  = parseChild1(cond )
@@ -296,7 +306,7 @@ private trait ParserImpl {
 
         case c.LabelDef(_ /* name: TermName */, params /* :List[Ident] */, rhs /* :Tree */) =>
           val paramNodes = params.map { child =>
-            parseIdent(child, parents1)
+            parseIdent(child, parents1, mkRef = false)
           }
           val rhsNode = parseChild1(rhs)
           new LabelDefNode(paramNodes, rhsNode)
@@ -399,7 +409,7 @@ private trait ParserImpl {
     for {
       (rn, sym) <- refMem
       name      <- symCache.get(sym)
-      dn        <- name.parent
+      dn        <- name.parent  // we get back to `name` via `IdentifiedNode#id`
     } {
       rn.target = Some(dn)
     }

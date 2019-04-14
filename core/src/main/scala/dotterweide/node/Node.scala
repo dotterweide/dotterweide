@@ -93,7 +93,8 @@ trait Node extends Evaluable with Translatable with Optimizable {
     if (offset < 0 || offset > span.stop) {
       throw new IllegalArgumentException("Offset (%d) must be in (%d; %d)".format(offset, span.start, span.stop))
     }
-    elements.filter(_.span.touchesNonEmpty(span.start + offset)).findBy[ReferenceNode]
+    val flt = elements.filter(_.span.touchesNonEmpty(span.start + offset))
+    flt.findBy[ReferenceNode]
   }
 
   def identifierAt(offset: Int): Option[IdentifiedNode] = {

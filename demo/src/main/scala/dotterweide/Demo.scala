@@ -35,7 +35,7 @@ import scala.swing.{Swing, Window}
 
 object Demo {
   private val Languages = List(
-    new ScalaLanguage(prelude = "object Main {", postlude = "}", examples = ScalaExamples.Values),
+    new ScalaLanguage(prelude = "object Main {\n", postlude = "\n}", examples = ScalaExamples.Values),
     ToyLanguage,
     LispLanguage
   )
