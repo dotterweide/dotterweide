@@ -3,11 +3,15 @@
 - there is the 'oldest' and 'newest' cursor; for example, newest cursor determines screen rolling;
   say there are three cursors vertically aligned, if the newest is the top one, and we move upwards,
   scrolling begins as the top one exits the screens, and also if we move downwards, scrolling begins
-  when the top cursor exits (thus the other two cursors have already left the screen)
+  when the top cursor exits (thus the other two cursors have already left the screen); "current line"
+  highlight also corresponds to the newest cursor.
   
 - creation via mouse: alt pressed and drag mouse ("rectangle selection"); cursors are only created
   where they align with the rectangle, if there is a selection, but they are created in every line
   if there is no selection
+  
+- also you can add cursors with shift-alt click; see
+  [this document](https://www.jetbrains.com/help/rider/Multicursor.html)
   
 - alternatively, we enter "column selection mode" (alt-shift-insert)
 
@@ -35,4 +39,6 @@
   common keyboard shortcuts are taken (e.g. ctrl-shift-up/down in Atom Linux or alt-up/down in Atom Mac);
   ctrl-alt up/down ([Sublime](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html))
   seems to be available.
+  or better, imitate IntelliJ: press Ctrl twice (don't release the second time), then press up or down while
+  Ctrl is still held.
   
