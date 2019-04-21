@@ -14,10 +14,12 @@ inspired by SuperCollider.
 |`ctrl B`           |Go to declaration                  |
 |`ctrl C`           |Copy to clipboard                  |
 |`ctrl D`           |Duplicate line                     |
+|`ctrl DOWN`        |Scroll down (forward)              |
 |`ctrl MINUS`       |Decrease font size                 |
 |`ctrl PLUS`        |Increase font size                 |
 |`ctrl SLASH`       |Toggle line comment                |
 |`ctrl SPACE`       |Trigger code completion            |
+|`ctrl UP`          |Scroll up (back)                   |
 |`ctrl V`           |Paste from clipboard               |
 |`ctrl X`           |Cut to clipboard                   |
 |`ctrl Y`           |Remove line                        |

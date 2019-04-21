@@ -10,8 +10,8 @@ lazy val commonSettings = Seq(
   homepage                  := Some(url(s"https://github.com/dotterweide/dotterweide")),
   licenses                  := Seq(lgpl2),
   scalaVersion              := "2.12.8",
-  // dispatch/reboot is currently not available for 2.13.0-M5
-  crossScalaVersions        := Seq(/* "2.13.0-M5", */ "2.12.8", "2.11.12"),
+  // dispatch/reboot is currently not available for 2.13.0-RC1
+  crossScalaVersions        := Seq("2.12.8", "2.11.12"),
   scalacOptions            ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
   fork in Test              := false,
   fork in (Compile, run)    := true,
@@ -23,14 +23,14 @@ lazy val gpl3   = "GPL v3+"     -> url("http://www.gnu.org/licenses/gpl-3.0.txt"
 
 lazy val deps = new {
   val main = new {
-    val akka            = "2.5.19"  // "2.5.21" has broken printDebugDump
-    val dispatch        = "1.0.0"
-    val scalariform     = "0.2.7"
-    val scalaSwing      = "2.1.0"
+    val akka            = "2.5.22"
+    val dispatch        = "1.0.1"
+    val scalariform     = "0.2.8"
+    val scalaSwing      = "2.1.1"
   }
   val demo = new {
     val scopt           = "3.7.1"
-    val submin          = "0.2.4"
+    val submin          = "0.2.5"
   }
   val test = new {
     val junit           = "4.12"
