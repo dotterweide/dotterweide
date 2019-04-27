@@ -5,7 +5,7 @@ For now, we try to use the same keyboard mappings as IntelliJ IDEA, with some ad
 inspired by SuperCollider.
 
 |**Key**            |**Action**                         |
-|-------------------|-----------------------------------|
+|:------------------|:----------------------------------|
 |`ESCAPE`           |Clear selection and highlights     |
 |`INSERT`           |Toggle insert and overwrite modes  |
 |`TAB`              |Increase indentation               |
@@ -34,7 +34,7 @@ inspired by SuperCollider.
 ## Currently with no Scala support
 
 |**Key**            |**Action**                         |
-|-------------------|-----------------------------------|
+|:------------------|:----------------------------------|
 |`ctrl alt L`       |Reformat code                      |
 |`ctrl alt O`       |Optimize code                      |
 |`shift F6`         |Rename refactoring                 |
@@ -42,7 +42,7 @@ inspired by SuperCollider.
 ## Reserved for future functionality
 
 |**Key**            |**Action**                         |
-|-------------------|-----------------------------------|
+|:------------------|:----------------------------------|
 |`F2`               |Go to next error                   |
 |`F3`               |Find next occurrence               |
 |`F11`              |Toggle bookmark                    |
@@ -60,7 +60,7 @@ inspired by SuperCollider.
 ## Reserved for external applications
 
 |**Key**            |**Action**                         |
-|-------------------|-----------------------------------|
+|:------------------|:----------------------------------|
 |`ctrl F9`          |Compile or build project           |
 |`ctrl N`           |New file or document               |
 |`ctrl O`           |Open file                          |
