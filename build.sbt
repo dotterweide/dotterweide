@@ -21,10 +21,14 @@ lazy val commonSettings = Seq(
 lazy val lgpl2  = "LGPL v2.1+"  -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")
 lazy val gpl3   = "GPL v3+"     -> url("http://www.gnu.org/licenses/gpl-3.0.txt")
 
+// lazy val dispatchOrg = "org.dispatchhttp"
+lazy val dispatchOrg = "de.sciss"
+
 lazy val deps = new {
   val main = new {
     val akka            = "2.5.22"
-    val dispatch        = "1.0.1"
+    // val dispatch        = "1.0.1"
+    val dispatch        = "0.1.0"
     val scalariform     = "0.2.8"
     val scalaSwing      = "2.1.1"
   }
@@ -127,7 +131,7 @@ lazy val docBrowser = project.withId(s"$baseNameL-doc-browser").in(file("doc-bro
     name        := s"$baseName-Doc-Browser",
     description := s"$baseName - documentation browser",
     libraryDependencies ++= Seq(
-      "org.dispatchhttp" %% "dispatch-core" % deps.main.dispatch // downloading of http resources
+      dispatchOrg %% "dispatch-core" % deps.main.dispatch // downloading of http resources
     ),
     mimaPreviousArtifacts := Set("de.sciss" %% s"$baseNameL-doc-browser" % mimaVersion)
   )
