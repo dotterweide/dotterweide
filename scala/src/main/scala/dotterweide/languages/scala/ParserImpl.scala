@@ -96,7 +96,7 @@ private trait ParserImpl {
         case pd: DefinedPosition =>
           val start = pd.point - mainStart
           val stop  = pd.end   - mainStart
-          if (start >= 0 && stop <= text0.length) {
+          if (start >= 0 && start <= stop && stop <= text0.length) {
             val spanText = text0.substring(start, stop)
             n.span = Span(spanText, start, stop)
           }
@@ -395,7 +395,7 @@ private trait ParserImpl {
         case vd: c.ValDef => parseValDef(vd, parents)
 
         case _ =>
-          log.info(s"-- SKIP ${"  " * parents.size}${p.productPrefix} | ${p.pos} ${p.pos.getClass.getSimpleName}")
+          log.debug(s"-- SKIP ${"  " * parents.size}${p.productPrefix} | ${p.pos} ${p.pos.getClass.getSimpleName}")
           new NodeImpl("<unknown>")
       }
       res

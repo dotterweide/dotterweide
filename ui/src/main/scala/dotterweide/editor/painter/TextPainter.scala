@@ -97,19 +97,21 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
   }
 
   private def paintLine(g: Graphics, area: Area): Unit = {
-    val rectangle     = grid.toRectangle(area)
-    val lineInterval  = document.intervalOf(area.line)
-    val lineText      = document.text(lineInterval)
+    val start         = document.startOffsetOf(area.line) + area.indent
+    val end           = document.endOffsetOf  (area.line)
+    if (start >= end) return
 
-    if (lineText.length > 0) {
-      val tokens    = lexer.analyze(lineText).toList
-      val string    = render(lineText, tokens, styling, font)
+    val p             = grid.toPoint(Location(area.line, area.indent))
+    val interval      = Interval(start, end)
+    val lineText      = document.text(interval)
 
-      val decorated = decorate(string, decorators, lineInterval, - lineInterval.start)
-      val iterator  = decorated.getIterator
+    val tokens        = lexer.analyze(lineText).toList
+    val string        = render(lineText, tokens, styling, font)
 
-      g.drawString(iterator, rectangle.x, rectangle.y + ascent)
-    }
+    val decorated     = decorate(string, decorators, interval, - interval.start)
+    val iterator      = decorated.getIterator
+
+    g.drawString(iterator, p.x, p.y + ascent)
   }
 
   private def paintArea(g: Graphics, area: Area): Unit = {
