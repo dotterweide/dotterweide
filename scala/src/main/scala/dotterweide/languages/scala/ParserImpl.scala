@@ -428,7 +428,22 @@ private trait ParserImpl {
         moreErrors ::= n
         n
       }
-      child.problem = Some(info.msg)
+      val msg = info.msg
+      var sb: java.lang.StringBuilder = null
+      impliedPrefixes.foreach { pre =>
+        // XXX TODO --- we should protect against removing prefixes at locations which already had a deletion
+        while ({
+          val i = if (sb == null) msg.indexOf(pre) else sb.indexOf(pre)
+          i >= 0 && {
+            if (sb == null) sb = new java.lang.StringBuilder(msg)
+            val j = i + pre.length
+            val k = if (j < sb.length() && sb.charAt(j) == '.') j + 1 else j
+            sb.delete(i, k)
+            true
+          }
+        }) ()
+      }
+      child.problem = Some(if (sb == null) msg else sb.toString)
       errorCount += 1
     }
 

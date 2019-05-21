@@ -26,6 +26,7 @@ import dotterweide.lexer.Token
 import dotterweide.node.{Node, NodeType}
 import dotterweide.parser.Parser
 
+import scala.collection.immutable.{Seq => ISeq}
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
@@ -38,7 +39,8 @@ import scala.util.{Failure, Success}
   * the tree structure according to our needs. Not all tree types are mapped yet,
   * but everything covered in the Dotterweide code-base itself is mapped.
   */
-class ScalaParser(scalaVersion: Version, prelude: String, postlude: String) extends Parser with Adviser {
+class ScalaParser(scalaVersion: Version, prelude: String, postlude: String, impliedPrefixes: ISeq[String])
+  extends Parser with Adviser {
 
   private[this] final val DEBUG = false
 
@@ -49,7 +51,8 @@ class ScalaParser(scalaVersion: Version, prelude: String, postlude: String) exte
   }
 
   private[this] val compilerActor: ActorRef = system.actorOf(Props(
-    new CompilerActor(scalaVersion = scalaVersion, prelude = prelude, postlude = postlude)
+    new CompilerActor(scalaVersion = scalaVersion, prelude = prelude, postlude = postlude,
+      impliedPrefixes = impliedPrefixes)
   ), "compiler")
 
   def parseAsync(text: String, tokens: Iterator[Token])(implicit async: Async): Future[Node] = {

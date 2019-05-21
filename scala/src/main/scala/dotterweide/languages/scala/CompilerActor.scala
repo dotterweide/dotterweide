@@ -16,6 +16,7 @@ import akka.actor.Actor
 import akka.event.{Logging, LoggingAdapter}
 import dotterweide.build.Version
 
+import scala.collection.immutable.{Seq => ISeq}
 import scala.tools.nsc.Settings
 import scala.tools.nsc.interactive.DotterweidePeek._
 import scala.tools.nsc.interactive.Global
@@ -30,7 +31,11 @@ private object CompilerActor {
 }
 // XXX TODO --- since we use the enclosing class path, this will cause
 // problems if `scalaVersion` is binary incompatible to the running VM
-private class CompilerActor(scalaVersion: Version, protected val prelude: String, protected val postlude: String)
+private class CompilerActor(scalaVersion: Version,
+                            protected val prelude         : String,
+                            protected val postlude        : String,
+                            protected val impliedPrefixes : ISeq[String]
+                           )
   extends Actor with ParserImpl with AdviserImpl with TypeImpl with AbstractCompilerActor {
 
   import CompilerActor._

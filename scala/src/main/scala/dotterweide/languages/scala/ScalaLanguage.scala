@@ -23,19 +23,32 @@ import dotterweide.{Example, FileType, Language}
 
 import scala.collection.immutable.{Seq => ISeq}
 
+/**
+  * @param scalaVersion     the language version to use, such as 2.12.8 (default)
+  * @param prelude          a string to prepend to the source code, for example including imports or a wrapper class
+  * @param postlude         a string to append to the source code, for example closing an opening block in the prelude
+  * @param impliedPrefixes  a list of package prefixes which should be removed from warning and error messages
+  *                         for better readability. If used, prefixes should be listed from specific (deeply nested)
+  *                         to general, in order to ensure the optimum filtering
+  * @param examples         optional list of examples which may be used by the application menu.
+  */
 class ScalaLanguage(
-                     val scalaVersion : Version = Version(2,12,8),
-                     val prelude      : String  = "",
-                     val postlude     : String  = "",
-                     val examples     : ISeq[Example] = Nil
+                     val scalaVersion     : Version = Version(2,12,8),
+                     val prelude          : String  = "",
+                     val postlude         : String  = "",
+                     val impliedPrefixes  : ISeq[String]  = Nil,
+                     val examples         : ISeq[Example] = Nil
                    )
   extends Language {
+
+  require (impliedPrefixes.forall(_.nonEmpty))
 
   def name        : String = "Scala"
   def description : String = "The Scala programming language"
 
   private[this] val _lexer  = new ScalaLexer  (scalaVersion = scalaVersion)
-  private[this] val _parser = new ScalaParser (scalaVersion = scalaVersion, prelude = prelude, postlude = postlude)
+  private[this] val _parser = new ScalaParser (scalaVersion = scalaVersion,
+    prelude = prelude, postlude = postlude, impliedPrefixes = impliedPrefixes)
 
   def lexer: Lexer = _lexer
 

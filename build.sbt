@@ -1,8 +1,8 @@
 lazy val baseName   = "Dotterweide"
 lazy val baseNameL  = baseName.toLowerCase
 
-lazy val projectVersion = "0.1.3-SNAPSHOT"
-lazy val mimaVersion    = "0.1.0" // used for migration-manager
+lazy val projectVersion = "0.2.0-SNAPSHOT"
+lazy val mimaVersion    = "0.2.0" // used for migration-manager
 
 lazy val commonSettings = Seq(
   version                   := projectVersion,

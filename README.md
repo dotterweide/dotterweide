@@ -26,7 +26,7 @@ We are currently publishing the Scala related modules to Maven Central:
     "de.sciss" %% "dotterweide-scala"       % v  // Scala language support
     "de.sciss" %% "dotterweide-doc-browser" % v  // Building blocks for scaladoc/javadoc API browser
 
-The current release version `v` is `"0.1.2"`.
+The current release version `v` is `"0.2.0"`.
 
 ## building
 
