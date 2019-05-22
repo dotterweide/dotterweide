@@ -43,7 +43,7 @@ lazy val deps = new {
   }
   val demo = new {
     // val scopt           = "3.7.1"
-    val scallop         = "3.2.0"
+    val scallop         = "3.3.0"
     val submin          = "0.2.5"
   }
   val test = new {
