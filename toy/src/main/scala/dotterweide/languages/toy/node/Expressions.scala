@@ -54,10 +54,13 @@ with ToyExpression with PrefixExpressionEvaluator with TypeCheck with PrefixExpr
 
   override def constant: Boolean = expression.exists(_.constant)
 
-  lazy val nodeType: Option[ToyType with Product with Serializable] = {
-    prefix.map(_.kind).zip(expression.flatMap(_.nodeType)).collect {
-      case (BANG        , BooleanType) => BooleanType
-      case (PLUS | MINUS, IntegerType) => IntegerType
+  lazy val nodeType: Option[ToyType] = {
+    val kindOpt: Option[TokenKind]  = prefix    .map    (_.kind)
+    val nodeOpt: Option[NodeType]   = expression.flatMap(_.nodeType)
+    (kindOpt, nodeOpt) match {
+      case (Some(BANG        ), Some(BooleanType))  => Some(BooleanType)
+      case (Some(PLUS | MINUS), Some(IntegerType))  => Some(IntegerType)
+      case _                                        => None
     }
   }
 }
