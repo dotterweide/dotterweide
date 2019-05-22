@@ -120,7 +120,7 @@ class BraceMatcherImplTest {
       }
     }
 
-    val actual = mapped.flatMap(indexOf(_).toSeq)
+    val actual = mapped.flatMap(indexOf)
 
     assertEquals(indices.toList, actual)
   }

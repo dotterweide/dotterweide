@@ -33,7 +33,7 @@ object FunctionLiteral {
   }
 
   private def indicesIn(nodes: Seq[ExpressionNode]): Seq[Int] = nodes.flatMap {
-    case SymbolNode(symbol)       => indexFor(symbol).toSeq
+    case SymbolNode(symbol)       => indexFor(symbol).toList
     case ListNode(children @ _*)  => indicesIn(children)
     case _                        => Nil
   }

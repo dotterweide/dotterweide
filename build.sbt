@@ -9,13 +9,19 @@ lazy val commonSettings = Seq(
   organization              := "de.sciss",  // for now, so we can publish artifacts
   homepage                  := Some(url(s"https://github.com/dotterweide/dotterweide")),
   licenses                  := Seq(lgpl2),
-  scalaVersion              := "2.12.8",
-  // dispatch/reboot is currently not available for 2.13.0-RC1
-  crossScalaVersions        := Seq("2.12.8", "2.11.12"),
+  scalaVersion              := "2.13.0-RC2",
+  crossScalaVersions        := Seq("2.12.8", "2.11.12", "2.13.0-RC2"),
   scalacOptions            ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
   fork in Test              := false,
   fork in (Compile, run)    := true,
-  parallelExecution in Test := false
+  parallelExecution in Test := false,
+  unmanagedSourceDirectories in Compile += {
+    val sourceDir = (sourceDirectory in Compile).value
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, n)) if n >= 13 => sourceDir / "scala-2.13+"
+      case _                       => sourceDir / "scala-2.13-"
+    }
+  }
 )
 
 lazy val lgpl2  = "LGPL v2.1+"  -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")
@@ -24,16 +30,20 @@ lazy val gpl3   = "GPL v3+"     -> url("http://www.gnu.org/licenses/gpl-3.0.txt"
 // lazy val dispatchOrg = "org.dispatchhttp"
 lazy val dispatchOrg = "de.sciss"
 
+// lazy val scalariformOrg = "org.scalariform"
+lazy val scalariformOrg = "de.sciss"
+
 lazy val deps = new {
   val main = new {
-    val akka            = "2.5.22"
+    val akka            = "2.5.23"
     // val dispatch        = "1.0.1"
     val dispatch        = "0.1.0"
     val scalariform     = "0.2.8"
     val scalaSwing      = "2.1.1"
   }
   val demo = new {
-    val scopt           = "3.7.1"
+    // val scopt           = "3.7.1"
+    val scallop         = "3.2.0"
     val submin          = "0.2.5"
   }
   val test = new {
@@ -103,7 +113,7 @@ lazy val scalaLang = project.withId(s"$baseNameL-scala").in(file("scala"))
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-actor"     % deps.main.akka,
       "org.scala-lang"    %  "scala-compiler" % scalaVersion.value,
-      "org.scalariform"   %% "scalariform"    % deps.main.scalariform
+      scalariformOrg      %% "scalariform"    % deps.main.scalariform
     ),
     mimaPreviousArtifacts := Set("de.sciss" %% s"$baseNameL-scala" % mimaVersion)
   )
@@ -146,8 +156,9 @@ lazy val demo = project.withId(s"$baseNameL-demo").in(file("demo"))
     licenses    := Seq(gpl3),
     mainClass in Compile := Some("dotterweide.Demo"),
     libraryDependencies ++= Seq(
-      "com.github.scopt"  %% "scopt"  % deps.demo.scopt,
-      "de.sciss"          %  "submin" % deps.demo.submin
+      // "com.github.scopt"  %% "scopt"  % deps.demo.scopt,
+      "de.sciss"          %  "submin" % deps.demo.submin,
+      "org.rogach" %% "scallop" % deps.demo.scallop
     )
   )
 

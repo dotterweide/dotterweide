@@ -35,7 +35,7 @@ object ToyAdviser extends SyncAdviser {
   private val BooleanLiterals       = List("true", "false").map(asLiteral)
 
   def variants(root: Node, anchor: Node): ISeq[Variant] = {
-    val holders = anchor.parents.filterNot(_.isLeaf)
+    val holders: ISeq[Node] = anchor.parents.filterNot(_.isLeaf)
 
     lazy val elseKeyword = anchor.previousSibling match {
       case Some(statement: If) if statement.elseBlock.isEmpty => ElseKeyword
@@ -53,7 +53,7 @@ object ToyAdviser extends SyncAdviser {
       case Some(_: Program) =>
         referencesFor(anchor) ++ PredefinedFunctions ++ DefinitionKeywords ++ elseKeyword ++ ControlKeywords
       case Some(_: Block) =>
-        val returnKeyword = holders.findBy[FunctionDeclaration].toSeq.flatMap(_ => ReturnKeyword)
+        val returnKeyword = if (holders.findBy[FunctionDeclaration].isDefined) ReturnKeyword else Nil
         referencesFor(anchor) ++ PredefinedFunctions ++ elseKeyword ++ returnKeyword ++ ControlKeywords
       case _ => Nil
     }

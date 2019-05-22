@@ -38,7 +38,7 @@ private class SelectionPainter(context: PainterContext) extends AbstractPainter(
 
   override def paint(g: Graphics2D, bounds: Rectangle): Unit = {
     // XXX TODO inefficient
-    val rectangles = terminal.selection.toSeq.flatMap(rectanglesOf)
+    val rectangles = terminal.selection.toList.flatMap(rectanglesOf)
       .map(_.intersection(bounds)).filterNot(_.isEmpty)
 
     if (rectangles.nonEmpty) {

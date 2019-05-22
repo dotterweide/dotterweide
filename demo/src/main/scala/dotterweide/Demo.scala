@@ -29,6 +29,7 @@ import dotterweide.ide.MainFrame
 import dotterweide.languages.lisp.LispLanguage
 import dotterweide.languages.scala.{ScalaExamples, ScalaLanguage}
 import dotterweide.languages.toy.ToyLanguage
+import org.rogach.scallop.{ScallopConf, ScallopOption => Opt}
 
 import scala.swing.event.WindowClosed
 import scala.swing.{Swing, Window}
@@ -52,49 +53,55 @@ object Demo {
                     structure: Boolean = true, flash: Boolean = false, laf: Laf = Laf.Default)
 
   def main(args: Array[String]): Unit = {
-    val default = Config()
-
     def findLanguage(name: String): Option[Language] = {
       val n          = name.toLowerCase(Locale.US)
       Languages.find(_.name.toLowerCase(Locale.US) == n)
     }
 
-    val p = new scopt.OptionParser[Config]("Demo") {
-      opt[String]('l', "language")
-        .text(s"Select language (one of ${Languages.map(_.name).mkString(", ")})")
-        .validate { v => if (findLanguage(v).isDefined) success else failure(s"Unknown language $v") }
-        .action { (v, c) => c.copy(language = findLanguage(v)) }
+    object parse extends ScallopConf(args) {
+      printedName = "Demo"
+      version(printedName)
 
-      opt[String]('c', "colors")
-        .text(s"Select color scheme name (one of ${ColorScheme.names.mkString(", ")})")
-        .validate { v => if (ColorScheme.names.contains(v.capitalize)) success else failure(s"Unknown scheme $v") }
-        .action { (v, c) => c.copy(stylingName = Some(v.capitalize)) }
+      val language: Opt[String] = opt(
+        descr = s"Select language (one of ${Languages.map(_.name).mkString(", ")})",
+        validate = { v: String => findLanguage(v).isDefined } // s"Unknown language $v"
+      )
+      val colors: Opt[String] = opt(
+        descr = s"Select color scheme name (one of ${ColorScheme.names.mkString(", ")})",
+        validate = { v: String => ColorScheme.names.contains(v.capitalize) } // s"Unknown scheme $v"
+      )
 
-      opt[Unit]("no-structure")
-        .text("Do not show structure view")
-        .action { (_, c) => c.copy(structure = false) }
+      mainOptions = Seq(language, colors)
 
-      opt[Unit]("flash")
-        .text("Demo flash function via shift-return")
-        .action { (_, c) => c.copy(flash = true) }
+      val noStruct: Opt[Boolean] = opt("no-structure", noshort = true, default = Some(false),
+        descr = "Do not show structure view"
+      )
+      val flash: Opt[Boolean] = opt("flash", noshort = true, default = Some(false),
+        descr = "Demo flash function via shift-return"
+      )
+      val subminLight: Opt[Boolean] = opt("submin-light", noshort = true, default = Some(false),
+        descr = "Use Submin light look-and-feel"
+      )
+      val subminDark: Opt[Boolean] = opt("submin-dark", noshort = true, default = Some(false),
+        descr = "Use Submin dark look-and-feel"
+      )
+      mutuallyExclusive(subminLight, subminDark)
 
-      opt[Unit]("submin-light")
-        .text("Use Submin light look-and-feel")
-        .action { (_, c) => c.copy(laf = Laf.SubminLight) }
-
-      opt[Unit]("submin-dark")
-        .text("Use Submin dark look-and-feel")
-        .action { (_, c) => c.copy(laf = Laf.SubminDark) }
+      verify()
+      val config = Config(language = language.toOption.flatMap(findLanguage),
+        stylingName = colors.toOption.map(_.capitalize), structure = !noStruct(), flash = flash(),
+        laf = if (subminLight()) Laf.SubminLight else if (subminDark()) Laf.SubminDark else Laf.Default)
     }
-    p.parse(args, default).fold(sys.exit(1)) { config =>
-      config.laf match {
-        case Laf.SubminLight  => Submin.install(false)
-        case Laf.SubminDark   => Submin.install(true )
-        case Laf.Default      =>
-      }
 
-      Swing.onEDT(run(config))
+    import parse.config
+
+    config.laf match {
+      case Laf.SubminLight  => Submin.install(false)
+      case Laf.SubminDark   => Submin.install(true )
+      case Laf.Default      =>
     }
+
+    Swing.onEDT(run(config))
   }
 
   def run(config: Config): Unit = {

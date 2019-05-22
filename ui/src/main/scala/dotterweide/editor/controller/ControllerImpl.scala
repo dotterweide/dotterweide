@@ -464,7 +464,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   private def seek(increment: Int): Int = {
     val predicates  = List[Char => Boolean](_.isWhitespace, _.isLetter, _.isDigit)
     val other       = (c: Char) => predicates.forall(!_(c))
-    val target      = (other :: predicates).reverse.view.flatMap(seek(_, terminal.offset, increment).toSeq)
+    val target      = (other :: predicates).reverse.view.flatMap(seek(_, terminal.offset, increment))
     target.headOption.getOrElse(terminal.offset + increment)
   }
 

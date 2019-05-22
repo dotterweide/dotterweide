@@ -24,20 +24,20 @@ class DocumentImplAnchorTest {
   @Test
   def nothingLeftBias(): Unit = {
     assertBehaviorIs("[", "[") { _ =>
-      Unit
+      ()
     }
     assertBehaviorIs("foo[bar", "foo[bar") { _ =>
-      Unit
+      ()
     }
   }
 
   @Test
   def nothingRightBias(): Unit = {
     assertBehaviorIs("]", "]") { _ =>
-      Unit
+      ()
     }
     assertBehaviorIs("foo]bar", "foo]bar") { _ =>
-      Unit
+      ()
     }
   }
 

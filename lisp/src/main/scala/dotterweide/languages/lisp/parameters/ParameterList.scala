@@ -41,7 +41,7 @@ private class ParameterList(singularParameters: Seq[Parameters], pluralParameter
     val singularPairs = singularParameters.zip(singularArguments)
     val pluralPair = pluralParameter.map((_, ListValue(restArguments)))
 
-    val pairs = singularPairs ++ pluralPair.toSeq
+    val pairs = singularPairs ++ pluralPair.toList
 
     val bindings = pairs.flatMap {
       case (pattern, initializer) => pattern.bind(initializer).fold(error, identity)
@@ -50,7 +50,7 @@ private class ParameterList(singularParameters: Seq[Parameters], pluralParameter
     bindings.toMap
   }
 
-  def symbols: Seq[String] = (singularParameters ++ pluralParameter.toSeq).flatMap(_.symbols)
+  def symbols: Seq[String] = (singularParameters ++ pluralParameter.toList).flatMap(_.symbols)
 
-  def presentation: String = singularParameters.size + pluralParameter.map(const("*")).mkString
+  def presentation: String = "" + singularParameters.size + pluralParameter.map(const("*")).mkString
 }

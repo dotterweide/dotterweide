@@ -55,8 +55,8 @@ with ToyExpression with PrefixExpressionEvaluator with TypeCheck with PrefixExpr
   override def constant: Boolean = expression.exists(_.constant)
 
   lazy val nodeType: Option[ToyType with Product with Serializable] = {
-    prefix.map(_.kind).zip(expression.flatMap(_.nodeType)).headOption collect {
-      case (BANG, BooleanType) => BooleanType
+    prefix.map(_.kind).zip(expression.flatMap(_.nodeType)).collect {
+      case (BANG        , BooleanType) => BooleanType
       case (PLUS | MINUS, IntegerType) => IntegerType
     }
   }

@@ -60,6 +60,6 @@ object Applicability extends Inspection {
 
     val excessiveMarks: ISeq[Mark] = excessive.map(Mark(_, Excessive(function.name)))
 
-    mismatches ++ excessiveMarks ++ missedMark.toSeq
+    mismatches ++ excessiveMarks ++ missedMark.toList
   }
 }

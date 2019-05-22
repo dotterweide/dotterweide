@@ -104,9 +104,9 @@ object Helpers {
     assertTrue("%d must be within %s".format(i, interval.toString), interval.touches(i))
 
   def formatDocument(document: Document, view: Terminal): String = {
-    val selection = view.selection.toSeq
-    val insertions = selection.map(_.stop -> ']') ++ Seq(view.offset -> '|') ++ selection.map(_.start -> '[')
-    val builder = new StringBuilder(document.text)
+    val selection   = view.selection.toList
+    val insertions  = selection.map(_.stop -> ']') ++ Seq(view.offset -> '|') ++ selection.map(_.start -> '[')
+    val builder     = new StringBuilder(document.text)
     for((i, c) <- insertions.sortBy(-_._1)) builder.insert(i, c)
     builder.toString()
   }
