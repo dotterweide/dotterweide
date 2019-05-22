@@ -224,7 +224,7 @@ class PanelImpl(language          : Language,
 
   // ---- constructor ----
 
-  text = text0.filter(_ != '\r').trim
+  text = text0.filter(_ != '\r') // do not `.trim`, white space may be intentional
 
   data.onChange { _ =>
     if (data.hasNextPass) {
