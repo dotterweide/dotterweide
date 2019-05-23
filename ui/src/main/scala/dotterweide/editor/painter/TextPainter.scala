@@ -124,7 +124,7 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
         lineInterval.intersection(areaInterval)
       }
 
-      if (!interval.empty) {
+      if (!interval.isEmpty) {
         val iterator  = decorated.getIterator(null /* attributes -- all! */, interval.start, interval.stop)
         val p         = grid.toPoint(Location(line, area.indent))
         g.drawString(iterator, p.x, p.y + ascent)
@@ -156,7 +156,7 @@ private object TextPainter {
   private def decorate(string: AttributedString, decorators: ISeq[Decorator], visible: Interval,
                        shift: Int): AttributedString = {
     val decorations = decorators.flatMap(_.decorations.map(p =>
-      (p._1.intersection(visible), p._2)).filterKeys(!_.empty)).toMap
+      (p._1.intersection(visible), p._2)).filterKeys(_.nonEmpty)).toMap
 
     if (decorations.isEmpty) string else {
       val result = new AttributedString(string.getIterator)

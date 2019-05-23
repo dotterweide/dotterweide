@@ -21,19 +21,15 @@ import java.awt.font.TextAttribute
 import java.text.AttributedString
 
 case class Attributes(color: Color, background: Option[Color], weight: Weight, style: Style, underlined: Boolean) {
-  def decorate(result: AttributedString, begin: Int, end: Int): Unit = {
-    result.addAttribute(TextAttribute.FOREGROUND, color, begin, end)
-    background.foreach(it => result.addAttribute(TextAttribute.BACKGROUND, it, begin, end))
-
-    if (underlined)
-      result.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON, begin, end)
-
-    if (weight == Weight.Bold)
-      result.addAttribute(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD, begin, end)
-
-    if (style == Style.Italic)
-      result.addAttribute(TextAttribute.POSTURE, TextAttribute.POSTURE_OBLIQUE, begin, end)
-  }
+  def decorate(result: AttributedString, begin: Int, end: Int): Unit =
+    if (begin < end) {  // note: we can encounter empty spans, but `addAttribute` requires non-empty span!
+      import TextAttribute._
+      result                            .addAttribute(FOREGROUND, color           , begin, end)
+      background.foreach(color => result.addAttribute(BACKGROUND, color           , begin, end))
+      if (underlined)             result.addAttribute(UNDERLINE , UNDERLINE_ON    , begin, end)
+      if (weight == Weight.Bold)  result.addAttribute(WEIGHT    , WEIGHT_BOLD     , begin, end)
+      if (style== Style.Italic)   result.addAttribute(POSTURE   , POSTURE_OBLIQUE , begin, end)
+    }
 }
 
 abstract sealed class Weight

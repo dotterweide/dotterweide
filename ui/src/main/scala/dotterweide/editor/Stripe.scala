@@ -186,7 +186,7 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
 
       val offset  = math.round((lineHeight.toDouble - MarkSize.height) / 2.0D).toInt
 
-      val (y, height) = if (heights.empty)
+      val (y, height) = if (heights.isEmpty)
         (heights.start + offset, MarkSize.height)
       else
         (heights.start, heights.length)

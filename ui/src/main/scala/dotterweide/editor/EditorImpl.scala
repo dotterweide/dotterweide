@@ -255,7 +255,7 @@ private class EditorImpl(val document     : Document,
   document.onChange { _ =>
     terminal.offset     = terminal.offset.min(document.length)
     val selection       = terminal.selection.map(it => Interval(it.start.min(document.length), it.stop.min(document.length)))
-    terminal.selection  = selection.filterNot(_.empty)
+    terminal.selection  = selection.filterNot(_.isEmpty)
     terminal.highlights = Nil
   }
 

@@ -46,10 +46,10 @@ class IntervalTest {
 
   @Test
   def empty(): Unit = {
-    assertTrue(Interval(3, 3).empty)
-    assertFalse(Interval(3, 4).empty)
-    assertFalse(Interval(3, 5).empty)
-    assertFalse( Interval(3, 6).empty)
+    assertTrue(Interval(3, 3).isEmpty)
+    assertFalse(Interval(3, 4).isEmpty)
+    assertFalse(Interval(3, 5).isEmpty)
+    assertFalse( Interval(3, 6).isEmpty)
   }
 
   @Test
