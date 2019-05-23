@@ -107,6 +107,7 @@ class ControllerImplTest {
     assertEffectIs("|a", "(|a")(_.processCharInsertion('('))
     assertEffectIs("|1", "(|1")(_.processCharInsertion('('))
     assertEffectIs("|(", "(|(")(_.processCharInsertion('('))
+    assertEffectIs("|\"a\"", "(|\"a\"")(_.processCharInsertion('('))  // issue #19
   }
 
   @Test

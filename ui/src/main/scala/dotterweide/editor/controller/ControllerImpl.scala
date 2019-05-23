@@ -40,12 +40,15 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   extends Controller {
 
   // XXX TODO extract to some extension (maybe using brace matcher)
-  private[this] val pairs = List(
-    ('(', ')'),
-    ('[', ']'),
-    ('{', '}'),
-    ('\"', '\"')
-  )
+  private[this] val PairOpening = "([{\""
+  private[this] val PairClosing = ")]}\""
+
+  // 'at cursor' characters that trigger insertion
+  // of pairs in `pairs` when typing pair opening character.
+  // again, this could be made language dependent.
+  // additionally the trigger occurs before `lineCommentPrefix`.
+  // see `mkInsertionChars`.
+  private[this] val CharsForPairInsert = "\n ,;\t.:)]}"
 
   private[this] val BlockOpening = '{'
   private[this] val BlockClosing = '}'
@@ -211,7 +214,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
             val remStart        = off - length
             val leftChar        = document.charAt(off - 1)
             val rightChar       = if (document.length > off) document.charAt(off) else '?'
-            val complement      = pairs.contains((leftChar, rightChar))
+            val complement      = isPair(leftChar, rightChar)
             val remStop         = if (complement) off + 1 else off
             backspace(Interval(remStart, remStop))
 
@@ -316,6 +319,11 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     mkLineNew(hold = hold)
   }
 
+  private def isPair(left: Char, right: Char): Boolean = {
+    val i1 =   PairOpening.indexOf(left)
+    i1 >= 0 && PairClosing.indexOf(right) == i1
+  }
+
   // We check here if the typed char `c` matches the character
   // at the current cursor position. If that is the case, and `c`
   // is one of the closing characters in `pairs`, we additionally
@@ -324,15 +332,14 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   // we return `true`, indicating that instead of inserting the
   // character again, the cursor is to be moved forward.
   private def isClosingPair(c: Char): Boolean = {
-    val off0      = terminal.offset
-    val nextChar  = document.charAtOrElse(off0, '?')
-    // val prevChar = document.charAtOrElse(terminal.offset - 1, '?')
-    (nextChar == c) && {
-      pairs.exists {
-        case (prevChar, `c`) =>
-          val off = document.startOffsetOf(document.lineNumberOf(off0))
-          (off until off0).exists(off1 => document.charAtOrElse(off1, '?') == prevChar)
-        case _ => false
+    val i2 = PairClosing.indexOf(c) // fast first condition -- c must be a closing character
+    i2 >= 0 && {
+      val off0      = terminal.offset
+      val nextChar  = document.charAtOrElse(off0, '?')
+      (nextChar == c) && {  // character at cursor must be c
+        val cp  = PairOpening.charAt(i2)
+        val off = document.startOffsetOf(document.lineNumberOf(off0))
+        (off until off0).exists(off1 => document.charAtOrElse(off1, '?') == cp) // opening char must be in line
       }
     }
   }
@@ -358,11 +365,14 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   }
 
   private def mkInsertionChars(c: Char): String = {
-    val nextChar = document.charAtOrElse(terminal.offset, '?')
-    if (nextChar.isLetterOrDigit || nextChar == c) c.toString
-    else pairs.collectFirst {
-      case (`c`, close) => s"$c$close"
-    } .getOrElse(c.toString)
+    val i1 = PairOpening.indexOf(c)
+    if (i1 < 0) c.toString else {   // are we typing an opening character?
+      val nextChar = document.charAtOrElse(terminal.offset, '\n')
+      if (CharsForPairInsert.indexOf(nextChar) < 0) c.toString else { // is cursor as a suitable position to insert pair?
+        val close = PairClosing.charAt(i1)
+        s"$c$close"
+      }
+    }
   }
 
   private def typing(chars: String, advance: Int = 1, overwrite: Boolean = false): NamedEdit =
