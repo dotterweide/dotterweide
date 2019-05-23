@@ -34,7 +34,8 @@ private trait TypeImpl {
 
     // XXX TODO --- this is all quite messy
 
-    def decodeType(tpe: c.Type): Option[ScalaType] = {
+    // Note: `Tree#tpe` can return `null`, so always check that first
+    def decodeType(tpe: c.Type): Option[ScalaType] = if (tpe == null) None else {
       val sym = tpe.typeSymbol
       if (sym.isPackageClass /* isPackageObjectOrClass */) {
         val s     = tpe.safeToString

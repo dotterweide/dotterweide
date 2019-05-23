@@ -42,13 +42,14 @@ object AdviserImpl {
       def fullString: String = name
     }
 
-    final case class Def(name: String, info: String = "", isModule: Boolean = false) extends Candidate {
+    final case class Def(name: String, info: String = "" /*, isModule: Boolean = false*/) extends Candidate {
       def fullString: String = s"$name$info"
 
       override def toString: String = {
         val sInfo   = if (info.nonEmpty) s""", info = "$info"""" else ""
-        val sIsMod  = if (isModule) ", isModule = true" else ""
-        s"""Completion.$productPrefix("$name"$sInfo$sIsMod)"""
+//        val sIsMod  = if (isModule) ", isModule = true" else ""
+//        s"""Completion.$productPrefix("$name"$sInfo$sIsMod)"""
+        s"""Completion.$productPrefix("$name"$sInfo)"""
       }
     }
   }
@@ -88,8 +89,8 @@ private trait AdviserImpl {
 
     val oldAPI = candidates(fullText, offset, result)
     val newAPI = oldAPI.candidates.map {
-      case Completion.Simple(name)            => Variant(title = name, content = name, shift = 0)
-      case df @ Completion.Def(name, info, _) => Variant(title = name, content = df.fullString, shift = if (info.isEmpty) 0 else -1)
+      case Completion.Simple(name)                  => Variant(title = name, content = name, shift = 0)
+      case df @ Completion.Def(name, info /*, _*/)  => Variant(title = name, content = df.fullString, shift = if (info.isEmpty) 0 else -1)
     }
     result.name.decoded -> newAPI
   }
@@ -111,60 +112,53 @@ private trait AdviserImpl {
   private def candidates(fullText: String, offset: Int, result: c.CompletionResult): Completion.Result /* Candidates */ = {
     import c.CompletionResult._
 
-    def defStringCandidates(matching: List[c.Member], name: c.Name): Completion.Result /* Candidates */ = {
-      val defStrings: List[Completion.Def] = for {
+    def mkDef(prefix: c.Type, sym: c.Symbol): Completion.Def = {
+      val tp: c.Type = prefix.memberType(sym)
+      val sugared = sym.sugaredSymbolOrSelf
+
+      def mkParamInfo(params: List[Global#Symbol]): String =
+        params.map { p =>
+          val pn  = p.nameString
+          val ps0 = p.signatureString
+          val pc  = ps0.startsWith(": ")
+          val si  = ps0.lastIndexOf('.') + 1
+          val ps  = if (si == 0) ps0 else (if (pc) ": " else "") + ps0.substring(si)
+          val pd  = if (p.hasDefault) " = {}" else ""
+          pn + ps + pd
+        } .mkString("(", ", ", ")")
+
+      val info: String =
+        if (sugared.isType) {
+          c.typeParamsString(tp)
+        }
+        else if (sugared.isModule) {
+          // val modSym = sugared.asModule
+          ""
+        } else tp match {
+          case c.PolyType(_, ret)       =>
+            val info0 = c.typeParamsString(tp)
+            // XXX TODO -- a bit of DRY
+            val info1 = ret match {
+              case c.MethodType(params, _)  => mkParamInfo(params)
+              case _                        => ""
+            }
+            info0 + info1
+
+          case c.MethodType(params, _)  => mkParamInfo(params)
+          case _                        => ""
+        }
+
+      val n = sugared.nameString
+      // val s = sugared.defStringSeenAs(tp)
+      Completion.Def(n, info /*, isModule = sugared.isModule*/)
+    }
+
+    def defStringCandidates(matching: List[c.Member], name: c.Name): List[(c.Member, Completion.Def)] =
+      for {
         member <- matching
         if member.symNameDropLocal == name
         sym <- member.sym.alternatives
-        sugared = sym.sugaredSymbolOrSelf
-      } yield {
-        val tp: c.Type = member.prefix.memberType(sym)
-
-        def mkParamInfo(params: List[Global#Symbol]): String =
-          params.map { p =>
-            val pn  = p.nameString
-            val ps0 = p.signatureString
-            val pc  = ps0.startsWith(": ")
-            val si  = ps0.lastIndexOf('.') + 1
-            val ps  = if (si == 0) ps0 else (if (pc) ": " else "") + ps0.substring(si)
-            val pd  = if (p.hasDefault) " = {}" else ""
-            pn + ps + pd
-          } .mkString("(", ", ", ")")
-
-        val info: String =
-          if (sugared.isType) {
-            c.typeParamsString(tp)
-          }
-          else if (sugared.isModule) {
-            // val modSym = sugared.asModule
-            ""
-          } else tp match {
-            case c.PolyType(_, ret)       =>
-              val info0 = c.typeParamsString(tp)
-              // XXX TODO -- a bit of DRY
-              val info1 = ret match {
-                case c.MethodType(params, _)  => mkParamInfo(params)
-                case _                        => ""
-              }
-              info0 + info1
-
-            case c.MethodType(params, _)  => mkParamInfo(params)
-            case _                        => ""
-          }
-
-        val n = sugared.nameString
-        // val s = sugared.defStringSeenAs(tp)
-        Completion.Def(n, info, isModule = sugared.isModule)
-      }
-      // XXX TODO : why is this used in the original code, but does not appear in the results?
-      //        val empty: Completion.Candidate = new Completion.Candidate {
-      //          def stringRep: String = ""
-      //        } // ""
-      val dist = defStrings.distinct
-      //        println("distinct:")
-      //        dist.foreach(println)
-      Completion.Result(offset, /* empty :: */ dist)
-    }
+      } yield member -> mkDef(member.prefix, sym)
 
     val found = result match {
       case NoResults => Completion.NoResult // NoCandidates
@@ -189,7 +183,29 @@ private trait AdviserImpl {
 
         val doubleTab = tabCount > 0 && matching.forall(_.symNameDropLocal == r.name)
         //          println(s"tabAfterCommonPrefixCompletion = $tabAfterCommonPrefixCompletion, doubleTab = $doubleTab")
-        val mkDef = tabAfterCommonPrefixCompletion || doubleTab
+        val shouldMkDef = tabAfterCommonPrefixCompletion || doubleTab
+
+        def tryCompanionApply: Completion.Result = {
+          val member = matching.head
+          val nApply = c.TermName("apply")
+          val memberCompletionsF: List[Completion.Candidate] = member.sym.alternatives.flatMap { sym =>
+            val tp: c.Type  = member.prefix.memberType(sym)
+            val sApply      = tp.nonPrivateMember(nApply)
+            if (sApply != c.NoSymbol) {
+              val df0     = mkDef(tp, sApply)
+              val df      = df0.copy(name = r.name.toString) // s"${r.name}.${df0.name}")
+              Some(df)
+            } else {
+              None
+            }
+          }
+
+          if (memberCompletionsF.isEmpty) {
+            Completion.NoResult // don't offer completion if the only option has been fully typed already
+          } else {
+            Completion.Result(offset - r.positionDelta, memberCompletionsF)
+          }
+        }
 
         def tryCamelStuff: Completion.Result = {
           // Lenient matching based on camel case and on eliding JavaBean "get" / "is" boilerplate
@@ -219,15 +235,25 @@ private trait AdviserImpl {
           }
         }
 
-        if (mkDef) {
+        if (shouldMkDef) {
           val attempt = defStringCandidates(matching, r.name)
-          if (attempt.candidates.nonEmpty) attempt else tryCamelStuff
+          if (attempt.nonEmpty) {
+            if (attempt.forall { case (member, df) => df.info.isEmpty && member.symNameDropLocal == r.name }) {
+              tryCompanionApply
+            } else {
+              val memberCompletionsF = attempt.map(_._2)
+              Completion.Result(offset, /* empty :: */ memberCompletionsF)
+            }
+
+          } else {
+            tryCamelStuff
+          }
 
         } else if (matching.isEmpty) {
           tryCamelStuff
 
         } else if (matching.nonEmpty && matching.forall(_.symNameDropLocal == r.name)) {
-          Completion.NoResult // don't offer completion if the only option has been fully typed already
+          tryCompanionApply
 
         } else {
           // regular completion

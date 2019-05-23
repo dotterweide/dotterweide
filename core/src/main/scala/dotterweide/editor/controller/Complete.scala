@@ -36,13 +36,16 @@ private class Complete(document: Document, terminal: Terminal, data: Data,
     terminal.highlights = Nil
     val fut = adviser.variantsAsync(document, data, offset = terminal.offset)
     import async.executionContext
-    fut.foreach { case (query, variants) => applyWithResult(query, variants) }
+    fut.foreach { case (query, variants) =>
+//      println(s"Complete: $query, $variants")
+      applyWithResult(query, variants)
+    }
   }
 
   private def applyWithResult(query: String, variants: ISeq[Variant]): Unit = {
 //    println("_______")
 //    variants.foreach(v => println(s"""${v.productPrefix}(title = "${v.title}", content = "${v.content}", shift = ${v.shift})"""))
-    val filtered  = variants.filter(_.content.startsWith(query))
+    val filtered = variants.filter(_.content.startsWith(query))
     filtered match {
       case Seq() =>
       case Seq(single) => history.capture(name, document, terminal) {
