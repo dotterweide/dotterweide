@@ -92,8 +92,12 @@ object DocUtil {
     (dl, futRes)
   }
 
+  /** The directory in which we would find the version sub-directories of a module. */
+  def defaultUnpackDirBase(baseDir: File, groupId: String, artifactId: String): File =
+    new File(new File(baseDir, groupId), artifactId)
+
   def defaultUnpackDir(baseDir: File, docModule: Module): File =
-    new File(new File(new File(baseDir, docModule.groupId), docModule.artifactId), docModule.version.toString)
+    new File(defaultUnpackDirBase(baseDir, docModule.groupId, docModule.artifactId), docModule.version.toString)
 
   case class Metadata(lastUpdated: Long, latestVersion: Version, versions: ISeq[Version])
 
