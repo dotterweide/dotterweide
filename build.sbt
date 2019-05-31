@@ -1,7 +1,7 @@
 lazy val baseName   = "Dotterweide"
 lazy val baseNameL  = baseName.toLowerCase
 
-lazy val projectVersion = "0.2.0"
+lazy val projectVersion = "0.2.1"
 lazy val mimaVersion    = "0.2.0" // used for migration-manager
 
 lazy val commonSettings = Seq(
@@ -37,7 +37,7 @@ lazy val deps = new {
   val main = new {
     val akka            = "2.5.23"
     // val dispatch        = "1.0.1"
-    val dispatch        = "0.1.0"
+    val dispatch        = "0.1.0" // 0.1.1
     val scalariform     = "0.2.8"
     val scalaSwing      = "2.1.1"
   }

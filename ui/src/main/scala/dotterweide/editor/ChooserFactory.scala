@@ -17,10 +17,10 @@
 
 package dotterweide.editor
 
-import java.awt.event.{ActionEvent, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent}
-import java.awt.{Font, Point}
+import java.awt.event.{ActionEvent, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent}
+import java.awt.{Font, Point, Window}
 
-import javax.swing.{AbstractAction, JComponent, JList, JScrollPane, ListCellRenderer, Popup, PopupFactory}
+import javax.swing.{AbstractAction, JComponent, JList, JScrollPane, JWindow, ListCellRenderer, Popup, PopupFactory, SwingUtilities}
 
 import scala.collection.immutable.{Seq => ISeq}
 
@@ -39,35 +39,44 @@ object ChooserFactory {
     val shift   = parent.getLocationOnScreen
     val popup   = factory.getPopup(parent, pane, shift.x + point.x, shift.y + point.y)
 
+    def finish(confirm: Boolean): Unit = {
+      val res = if (confirm) Option(list.getSelectedValue.asInstanceOf[A]) else None
+      callback(res)
+      popup.hide()
+    }
+
     list.addFocusListener(new FocusAdapter() {
-      override def focusLost(e: FocusEvent): Unit = {
-        callback(None)
-        popup.hide()
-      }
+      override def focusLost(e: FocusEvent): Unit = finish(false)
     })
 
     list.addKeyListener(new KeyAdapter() {
       override def keyTyped(e: KeyEvent): Unit = {
         val kc = e.getKeyChar
-        if (kc == KeyEvent.VK_ESCAPE) {
-          callback(None)
-          popup.hide()
-
-        } else if (kc == KeyEvent.VK_ENTER) {
-          callback(Some(list.getSelectedValue.asInstanceOf[A]))
-          popup.hide()
-        }
+        if      (kc == KeyEvent.VK_ESCAPE ) finish(false)
+        else if (kc == KeyEvent.VK_ENTER  ) finish(true )
       }
     })
+
+    list.addMouseListener(new MouseAdapter {
+      override def mouseClicked(e: MouseEvent): Unit =
+        if (e.getClickCount == 2) finish(true)
+    })
+
+    // cf. https://stackoverflow.com/questions/48583428/jtextfield-get-no-focus-when-in-a-heavy-weight-popup
+    // solves issue #7
+    val win = SwingUtilities.windowForComponent(pane)
+    if (win.isInstanceOf[JWindow] && win.getType == Window.Type.POPUP) {
+      win.setFocusableWindowState(true)
+    }
 
     (popup, list)
   }
 
-  private def createList(variants: ISeq[Any], font: Font) = {
+  private def createList(variants: ISeq[Any], font: Font): JList[AnyRef] = {
     val list = new JList(variants.iterator.map(_.asInstanceOf[AnyRef]).toArray)
     list.setFont(font)
     list.setSelectedIndex(0)
-    list.setVisibleRowCount(variants.size min 10)
+    list.setVisibleRowCount(math.min(variants.size, 10))
 
     val am        = list.getActionMap
     val next      = am.get("selectNextRow")
