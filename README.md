@@ -26,13 +26,13 @@ We are currently publishing the Scala related modules to Maven Central:
     "de.sciss" %% "dotterweide-scala"       % v  // Scala language support
     "de.sciss" %% "dotterweide-doc-browser" % v  // Building blocks for scaladoc/javadoc API browser
 
-The current release version `v` is `"0.2.2"`.
+The current release version `v` is `"0.2.3"`.
 
 ## building
 
-The project build with [sbt](http://www.scala-sbt.org/) with the main Scala version being 2.12.x.
-To run the demo, use `sbt dotterweide-demo/run`. Note that the project in progress, there may still be
-`???` lurking in the code. You can pass arguments to the demo run, for example:
+The project build with [sbt](http://www.scala-sbt.org/) with support for Scala 2.13, 2.12, 2.11,
+and the main Scala version being 2.12. To run the demo, use `sbt dotterweide-demo/run`.
+You can pass arguments to the demo run, for example:
 
     sbt 'dotterweide-demo/run --language scala --colors dark'
     

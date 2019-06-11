@@ -1,7 +1,7 @@
 lazy val baseName   = "Dotterweide"
 lazy val baseNameL  = baseName.toLowerCase
 
-lazy val projectVersion = "0.2.2"
+lazy val projectVersion = "0.2.3"
 lazy val mimaVersion    = "0.2.0" // used for migration-manager
 
 lazy val commonSettings = Seq(
@@ -10,7 +10,7 @@ lazy val commonSettings = Seq(
   homepage                  := Some(url(s"https://github.com/dotterweide/dotterweide")),
   licenses                  := Seq(lgpl2),
   scalaVersion              := "2.12.8",
-  crossScalaVersions        := Seq("2.12.8", "2.11.12", "2.13.0-RC3"),
+  crossScalaVersions        := Seq("2.12.8", "2.11.12", "2.13.0"),
   scalacOptions            ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
   fork in Test              := false,
   fork in (Compile, run)    := true,
@@ -43,7 +43,7 @@ lazy val deps = new {
   }
   val demo = new {
     // val scopt           = "3.7.1"
-    val scallop         = "3.3.0"
+    val scallop         = "3.3.1"
     val submin          = "0.2.5"
   }
   val test = new {
