@@ -104,7 +104,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
 
   /** `true` if pressing back-space or delete */
   private def isImmediate(e: KeyEvent): Boolean = e.getKeyCode match {
-    case KeyEvent.VK_BACK_SPACE | KeyEvent.VK_DELETE => true
+    case KeyEvent.VK_BACK_SPACE | KeyEvent.VK_DELETE if !isMod2(e) => true
     case _ => false
   }
 
@@ -147,7 +147,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
           terminal.selection = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
         }
 
-      case KeyEvent.VK_UP if !e.isControlDown =>
+      case KeyEvent.VK_UP if !isMod2(e) =>
         val line = document.lineNumberOf(terminal.offset)
         move {
           if (line > 0)
@@ -156,7 +156,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
             jumpToOffset(0, e.isShiftDown)
         }
 
-      case KeyEvent.VK_DOWN if !e.isControlDown =>
+      case KeyEvent.VK_DOWN if !isMod2(e) =>
         val line = document.lineNumberOf(terminal.offset)
         move {
           if (line < document.linesCount - 1)
@@ -165,7 +165,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
             jumpToOffset(document.length, e.isShiftDown)
         }
 
-      case KeyEvent.VK_PAGE_UP if !e.isControlDown =>
+      case KeyEvent.VK_PAGE_UP if !isMod2(e) =>
         val line = document.lineNumberOf(terminal.offset)
         move {
           if (line > 0)
@@ -174,7 +174,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
             jumpToOffset(0, e.isShiftDown)
         }
 
-      case KeyEvent.VK_PAGE_DOWN if !e.isControlDown =>
+      case KeyEvent.VK_PAGE_DOWN if !isMod2(e) =>
         val line = document.lineNumberOf(terminal.offset)
         move {
           if (line < document.linesCount - 1)
@@ -183,12 +183,12 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
             jumpToOffset(document.length, e.isShiftDown)
         }
 
-      case KeyEvent.VK_HOME if e.isControlDown => // XXX TODO check if this works on Mac
+      case KeyEvent.VK_HOME if isMod2(e) => // XXX TODO check if this works on Mac
         move {
           jumpToOffset(0, e.isShiftDown)
         }
 
-      case KeyEvent.VK_END if e.isControlDown => // XXX TODO check if this works on Mac
+      case KeyEvent.VK_END if isMod2(e) => // XXX TODO check if this works on Mac
         move {
           jumpToOffset(document.length, e.isShiftDown)
         }
@@ -210,7 +210,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
           terminal.selection  = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
         }
 
-      case KeyEvent.VK_BACK_SPACE if !e.isMetaDown =>
+      case KeyEvent.VK_BACK_SPACE if !isMod2(e) =>
         def backspace(interval: Interval): Unit = {
           val edit = Backspace(document, terminal, interval)
           history.add(edit)
