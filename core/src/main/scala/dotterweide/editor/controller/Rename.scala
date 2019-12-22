@@ -28,7 +28,7 @@ private class Rename(document: Document, terminal: Terminal, val data: Data, his
                     (implicit val async: Async) extends Action with StructureAction {
   def name: String        = "Rename"
   def mnemonic: Char      = 'R'
-  def keys: ISeq[String]  = "shift pressed F6" :: Nil
+  val keys: ISeq[String]  = "shift pressed F6" :: Nil
 
   def applyWithStructure(root: Node): Unit = {
     val leafs: ISeq[Node] = data.connectedLeafsFor(terminal.offset)

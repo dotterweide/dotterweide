@@ -26,7 +26,7 @@ import scala.collection.immutable.{Seq => ISeq}
 private class DuplicateLine(document: Document, terminal: Terminal) extends Action {
   def name: String        = "Duplicate Line"
   def mnemonic: Char      = 'D'
-  def keys: ISeq[String]  = "ctrl pressed D" :: Nil
+  val keys: ISeq[String]  = "ctrl pressed D" :: Nil
 
   def apply(): Unit = {
     val selection = terminal.selection

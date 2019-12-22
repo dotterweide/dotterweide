@@ -23,7 +23,8 @@ object FontSettings {
     lineSpacing   = 1.12f
   )
 
-  def apply(family: String, size: Float = 14f, stretch: Float = 1.0f, lineSpacing: Float = 1.12f): FontSettings =
+  def apply(family: String = "Monospaced", size: Float = 14f, stretch: Float = 1.0f,
+            lineSpacing: Float = 1.12f): FontSettings =
     new FontSettingsImpl(
       family0       = family,
       size0         = size,

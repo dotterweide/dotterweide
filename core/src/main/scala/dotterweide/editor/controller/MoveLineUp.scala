@@ -25,7 +25,7 @@ import scala.collection.immutable.{Seq => ISeq}
 private class MoveLineUp(document: Document, terminal: Terminal) extends DocumentAction(document, terminal) {
   def name: String        = "Move Line Up"
   def mnemonic: Char      = 'U'
-  def keys: ISeq[String]  = "shift ctrl pressed UP" :: Nil
+  val keys: ISeq[String]  = "shift ctrl pressed UP" :: Nil
 
   protected def calcEnabled(): Boolean = document.lineNumberOf(terminal.offset) > 0
 

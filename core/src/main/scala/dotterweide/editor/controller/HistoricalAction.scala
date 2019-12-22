@@ -25,7 +25,7 @@ import scala.collection.immutable.{Seq => ISeq}
 private class HistoricalAction(peer: Action, document: Document, terminal: Terminal, history: History)
   extends Action {
 
-  def keys: ISeq[String]  = peer.keys
+  val keys: ISeq[String]  = peer.keys
 
   override def name     : String  = peer.name
   override def mnemonic : Char    = peer.mnemonic

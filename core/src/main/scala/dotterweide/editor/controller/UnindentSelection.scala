@@ -28,7 +28,7 @@ private class UnindentSelection(document: Document, terminal: Terminal, tabSize:
 
   def name: String        = "Unindent Selection"
   def mnemonic: Char      = 'N'
-  def keys: ISeq[String]  = "shift pressed TAB" :: Nil
+  val keys: ISeq[String]  = "shift pressed TAB" :: Nil
 
   protected def calcEnabled(): Boolean = true
 

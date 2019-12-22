@@ -18,6 +18,7 @@
 package dotterweide.editor.controller
 
 import dotterweide.Helpers._
+import dotterweide.Platform
 import dotterweide.document.Document
 import dotterweide.editor._
 import dotterweide.editor.controller.impl.ControllerImpl
@@ -158,7 +159,8 @@ class ControllerImplTest {
   protected def assertEffectIs(before: String, after: String)(f: ControllerImpl => Unit): Unit = {
     doAssertEffectIs(before, after) { (document, terminal) =>
       val GridMock    = new GridImpl(cellWidth0 = 8, cellHeight0 = 8, ascent0 = 5)
-      implicit val async: Async = new AsyncImpl()
+      implicit val async: Async     = Async()
+      implicit val p    : Platform  = Platform()
       val controller  = new ControllerImpl(document, new MockData(), terminal, GridMock, new MockAdviser(),
         new FormatterImpl(new MockFormat()), 2, "//", FontSettings.Default, new HistoryImpl())
       f(controller)

@@ -28,7 +28,7 @@ private class Format(document: Document, terminal: Terminal, val data: Data, for
                     (implicit val async: Async) extends Action with StructureAction {
   def name: String        = "Reformat"
   def mnemonic: Char      = 'F'
-  def keys: ISeq[String]  = "ctrl alt pressed L" :: Nil
+  val keys: ISeq[String]  = "ctrl alt pressed L" :: Nil
 
   def applyWithStructure(root: Node): Unit = {
     val text        = formatter.format(root, terminal.selection, tabSize)

@@ -17,7 +17,7 @@
 
 package dotterweide.editor
 
-import dotterweide.Observable
+import dotterweide.{Observable, Platform}
 import dotterweide.document.Document
 import dotterweide.editor.painter.{Painter, PainterContext}
 
@@ -33,6 +33,8 @@ trait Editor extends Observable {
   def errorHolder: ErrorHolder
 
   implicit def async: Async
+
+  implicit def platform: Platform
 
   /** The main component enclosing all sub-components represented by the editor. */
   def component: Component

@@ -29,7 +29,7 @@ private class Optimize(document: Document, terminal: Terminal, val data: Data)(i
 
   def name: String        = "Optimize"
   def mnemonic: Char      = 'O'
-  def keys: ISeq[String]  = "ctrl alt pressed O" :: Nil
+  val keys: ISeq[String]  = "ctrl alt pressed O" :: Nil
 
   def applyWithStructure(root: Node): Unit = {
     terminal.highlights = Nil

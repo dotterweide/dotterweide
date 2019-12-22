@@ -17,7 +17,7 @@ import java.io.File
 import dotterweide.document.Document
 import dotterweide.editor.{Async, Data, Editor, FontSettings, History}
 import dotterweide.ide.impl.PanelImpl
-import dotterweide.{FileType, Language, ObservableEvents}
+import dotterweide.{FileType, Language, ObservableEvents, Platform}
 
 import scala.collection.immutable.{Seq => ISeq}
 import scala.swing.Component
@@ -52,6 +52,8 @@ trait Panel extends ObservableEvents[Panel.Update] {
   def data: Data
 
   implicit def async: Async
+
+  implicit def platform: Platform
 
   def status: StatusBar
 

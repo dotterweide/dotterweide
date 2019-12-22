@@ -39,7 +39,7 @@ import scala.collection.immutable.{Seq => ISeq}
 private class ToggleLineComment(document: Document, terminal: Terminal, prefix: String) extends Action {
   def name: String        = "Toggle Line Comment"
   def mnemonic: Char      = 'T'
-  def keys: ISeq[String]  = "ctrl pressed SLASH" :: Nil
+  val keys: ISeq[String]  = "ctrl pressed SLASH" :: Nil
 
   def apply(): Unit = {
     val oldSelection  = terminal.selection

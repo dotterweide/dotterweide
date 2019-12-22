@@ -23,7 +23,7 @@ private trait FontAction extends Action {
 private class FontEnlarge(val font: FontSettings) extends FontAction {
   def name    : String        = "Enlarge Font"
   def mnemonic: Char          = 'E'
-  def keys    : ISeq[String]  = List("ctrl pressed PLUS", "shift ctrl pressed EQUALS") // cf. https://stackoverflow.com/questions/15605109/java-keybinding-plus-key
+  val keys    : ISeq[String]  = List("ctrl pressed PLUS", "shift ctrl pressed EQUALS") // cf. https://stackoverflow.com/questions/15605109/java-keybinding-plus-key
 
   def apply(): Unit = {
     val sz = font.size
@@ -34,7 +34,7 @@ private class FontEnlarge(val font: FontSettings) extends FontAction {
 private class FontShrink(val font: FontSettings) extends FontAction {
   def name    : String        = "Shrink Font"
   def mnemonic: Char          = 'S'
-  def keys    : ISeq[String]  = "ctrl pressed MINUS" :: Nil
+  val keys    : ISeq[String]  = "ctrl pressed MINUS" :: Nil
 
   def apply(): Unit = {
     val sz = font.size
@@ -45,7 +45,7 @@ private class FontShrink(val font: FontSettings) extends FontAction {
 private class FontReset(val font: FontSettings) extends FontAction {
   def name: String        = "Reset Font Size"
   def mnemonic: Char      = 'R'
-  def keys: ISeq[String]  = "ctrl pressed 0" :: Nil
+  val keys: ISeq[String]  = "ctrl pressed 0" :: Nil
 
   private[this] val defaultSize = font.size
 

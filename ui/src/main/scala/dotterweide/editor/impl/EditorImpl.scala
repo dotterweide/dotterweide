@@ -22,7 +22,7 @@ import java.awt.font.FontRenderContext
 import java.awt.geom.AffineTransform
 import java.awt.{BorderLayout, Cursor, Dimension, Font, Graphics, Graphics2D, Point, Rectangle, Toolkit}
 
-import dotterweide.Interval
+import dotterweide.{Interval, Platform}
 import dotterweide.document.Document
 import dotterweide.editor.controller.impl.ControllerImpl
 import dotterweide.editor.painter.{Painter, PainterContext, PainterFactory}
@@ -37,7 +37,7 @@ import scala.collection.immutable.{Seq => ISeq}
 
 class EditorImpl(val document     : Document,
                  val data         : Data,
-                 val errorHolder       : ErrorHolder,
+                 val errorHolder  : ErrorHolder,
                  lexer            : Lexer,
                  styling          : Styling,
                  font             : FontSettings,
@@ -49,7 +49,7 @@ class EditorImpl(val document     : Document,
                  history          : History,
                  preferredGridSize: Option[(Int, Int)]
                 )
-                (implicit val async: Async)
+                (implicit val async: Async, val platform: Platform)
   extends Editor {
 
   private def mkFont(): Font = {

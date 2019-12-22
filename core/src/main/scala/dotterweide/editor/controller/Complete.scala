@@ -29,7 +29,7 @@ private class Complete(document: Document, terminal: Terminal, data: Data,
 
   def name: String        = "Complete"
   def mnemonic: Char      = 'P'
-  def keys: ISeq[String]  = "ctrl pressed SPACE" :: Nil
+  val keys: ISeq[String]  = "ctrl pressed SPACE" :: Nil
 
   def apply(): Unit = {
     terminal.selection  = None

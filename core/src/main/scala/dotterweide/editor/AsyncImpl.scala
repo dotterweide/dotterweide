@@ -19,7 +19,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future, TimeoutException}
 import scala.util.{Failure, Try}
 
-class AsyncImpl(timeOut: Int = 500) extends Async {
+class AsyncImpl(timeOut: Int) extends Async {
   def await[A](f: Future[A]): Try[A] = try {
     Await.ready(f, Duration(timeOut, TimeUnit.MILLISECONDS))
     f.value.get

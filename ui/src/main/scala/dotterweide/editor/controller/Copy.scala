@@ -20,14 +20,15 @@ package dotterweide.editor.controller
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 
+import dotterweide.Platform
 import dotterweide.document.Document
 import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, Terminal}
 
-private class Copy(document: Document, terminal: Terminal) extends Action {
+private class Copy(document: Document, terminal: Terminal)(implicit p: Platform) extends Action {
   def name: String        = "Copy"
   def mnemonic: Char      = 'C'
-  def keys: List[String]  = List("ctrl pressed C", "ctrl pressed INSERT")
+  val keys: List[String]  = s"${p.menuModifier} pressed C" :: s"${p.menuModifier} pressed INSERT" :: Nil
 
   def apply(): Unit = {
     if (terminal.selection.isEmpty)

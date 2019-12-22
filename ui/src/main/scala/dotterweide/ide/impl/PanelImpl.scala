@@ -19,7 +19,7 @@ import dotterweide.document.impl.DocumentImpl
 import dotterweide.document.{Document, Location}
 import dotterweide.editor.{Async, Data, Editor, EditorFactory, FontSettings, History, HistoryImpl, Pass}
 import dotterweide.ide.{Console, DynamicStyling, Panel, StatusBar, StructureTab}
-import dotterweide.{FileType, Language}
+import dotterweide.{FileType, Language, Platform}
 import javax.swing.Timer
 
 import scala.collection.immutable.{Seq => ISeq}
@@ -60,7 +60,8 @@ class PanelImpl(language          : Language,
 
   val data: Data = primaryEditor.data
 
-  implicit val async: Async = primaryEditor.async
+  implicit val async    : Async     = primaryEditor.async
+  implicit val platform : Platform  = primaryEditor.platform
 
   private[this] val secondaryEditor : Editor = {
     EditorFactory.createEditorFor(document,

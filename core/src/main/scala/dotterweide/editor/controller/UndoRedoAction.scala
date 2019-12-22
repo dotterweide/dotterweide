@@ -12,6 +12,7 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.Platform
 import dotterweide.editor.{Action, History}
 
 import scala.collection.immutable.{Seq => ISeq}
@@ -50,10 +51,10 @@ private abstract class UndoRedoAction(history: History) extends Action {
   }
 }
 
-private class Redo(history: History) extends UndoRedoAction(history) {
+private class Redo(history: History)(implicit p: Platform) extends UndoRedoAction(history) {
 
   def mnemonic: Char      = 'R'
-  def keys: ISeq[String]  = "shift ctrl pressed Z" :: Nil
+  val keys: ISeq[String]  = s"shift ${p.menuModifier} pressed Z" :: Nil
 
   protected def calcEnabled(): Boolean = history.canRedo
 
@@ -63,10 +64,10 @@ private class Redo(history: History) extends UndoRedoAction(history) {
     history.redo()
 }
 
-private class Undo(history: History) extends UndoRedoAction(history) {
+private class Undo(history: History)(implicit p: Platform) extends UndoRedoAction(history) {
 
   def mnemonic: Char      = 'U'
-  def keys: ISeq[String]  = "ctrl pressed Z" :: Nil
+  val keys: ISeq[String]  = s"${p.menuModifier} pressed Z" :: Nil
 
   protected def calcEnabled(): Boolean = history.canUndo
 

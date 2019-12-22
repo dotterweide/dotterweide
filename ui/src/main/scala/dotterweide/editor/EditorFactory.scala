@@ -17,7 +17,7 @@
 
 package dotterweide.editor
 
-import dotterweide.Language
+import dotterweide.{Language, Platform}
 import dotterweide.document.Document
 import dotterweide.editor.impl.{BraceMatcherImpl, EditorImpl, ErrorHolderImpl}
 
@@ -28,7 +28,8 @@ object EditorFactory {
   def createEditorFor(document: Document, language: Language, history: History,
                       styling: Styling, font: FontSettings,
                       preferredGridSize: Option[(Int, Int)]): Editor = {
-    implicit val async: Async = new AsyncImpl()
+    implicit val async: Async = Async()
+    implicit val p: Platform  = Platform()
     val data    : Data        = new DataImpl(document, language.lexer, language.parser, language.inspections)
     val holder  : ErrorHolder = new ErrorHolderImpl(document, data)
 
@@ -40,7 +41,7 @@ object EditorFactory {
     */
   def createEditorFor(document: Document, data: Data, holder: ErrorHolder, language: Language,
                       history: History, styling: Styling, font: FontSettings,
-                      preferredGridSize: Option[(Int, Int)])(implicit async: Async): Editor = {
+                      preferredGridSize: Option[(Int, Int)])(implicit async: Async, p: Platform): Editor = {
 
     val listRenderer  = new VariantCellRenderer(language.lexer, styling)
     val matcher       = new BraceMatcherImpl(language.complements)

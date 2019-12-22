@@ -173,7 +173,8 @@ lazy val demo = project.withId(s"$baseNameL-demo").in(file("demo"))
     libraryDependencies ++= Seq(
       "de.sciss"   %  "submin"  % deps.demo.submin,
       "org.rogach" %% "scallop" % deps.demo.scallop
-    )
+    ),
+    libraryDependencies ++= Seq("base", "swing", "controls", "graphics", "media", "web").map(jfxDep),
   )
 
 // ---- publishing ----

@@ -20,14 +20,15 @@ package dotterweide.editor.controller
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 
+import dotterweide.Platform
 import dotterweide.document.Document
 import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, Terminal}
 
-private class Cut(document: Document, terminal: Terminal) extends Action {
+private class Cut(document: Document, terminal: Terminal)(implicit p: Platform) extends Action {
   def name: String        = "Cut"
   def mnemonic: Char      = 'T'
-  def keys: List[String]  = List("ctrl pressed X", "shift pressed DELETE")
+  val keys: List[String]  = s"${p.menuModifier} pressed X":: "shift pressed DELETE" :: Nil
 
   def apply(): Unit = {
     if (terminal.selection.isEmpty)

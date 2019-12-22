@@ -28,7 +28,7 @@ private class IndentSelection(document: Document, terminal: Terminal, tabSize: I
 
   def name: String        = "Indent Selection"
   def mnemonic: Char      = 'I'
-  def keys: ISeq[String]  = "pressed TAB" :: Nil
+  val keys: ISeq[String]  = "pressed TAB" :: Nil
 
   protected def calcEnabled(): Boolean = terminal.selection.isDefined
 

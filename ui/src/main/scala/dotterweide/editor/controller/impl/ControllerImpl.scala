@@ -20,7 +20,7 @@ package dotterweide.editor.controller.impl
 import java.awt.AWTKeyStroke
 import java.awt.event.{KeyEvent, MouseEvent}
 
-import dotterweide.Interval
+import dotterweide.{Interval, Platform}
 import dotterweide.document.Document
 import dotterweide.editor.ControllerOps._
 import dotterweide.editor.controller.{Actions, Backspace, Controller, Delete, Insert, NewLine, Overwrite}
@@ -28,6 +28,7 @@ import dotterweide.editor.{Action, ActionFinished, ActionStarted, Adviser, Async
 import dotterweide.formatter.Formatter
 import dotterweide.node.{IdentifiedNode, Node}
 
+import scala.annotation.tailrec
 import scala.collection.immutable.{Seq => ISeq}
 
 /** Implements `Controller`
@@ -37,7 +38,7 @@ import scala.collection.immutable.{Seq => ISeq}
 class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: Grid, adviser: Adviser,
                      formatter: Formatter, tabSize: Int, lineCommentPrefix: String, font: FontSettings,
                      history: History)
-                    (implicit async: Async)
+                    (implicit async: Async, p: Platform)
   extends Controller {
 
   // XXX TODO extract to some extension (maybe using brace matcher)
@@ -278,7 +279,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
         val edit    = Insert(document, terminal, chars, advance = chars.length)  // always insert tabs
         history.add(edit)
 
-      case c if !c.isControl && !e.isControlDown && !e.isAltDown =>
+      case c if !c.isControl && !e.isControlDown /*&& !e.isAltDown*/ => // XXX TODO - why did we want to block Alt in keyTyped?
         if (isClosingPair(c)) {
           insert { terminal.offset += 1 }
         } else {
@@ -465,6 +466,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
       if (s.trim.isEmpty) indentFrom(line - 1) else s.takeWhile(_.isWhitespace).length
     }
 
+  @tailrec
   private def indentFrom(line: Int): Int =
     if (line < 0) 0 else {
       val s = document.text(document.startOffsetOf(line), document.endOffsetOf(line))

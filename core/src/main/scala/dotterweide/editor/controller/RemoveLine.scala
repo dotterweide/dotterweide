@@ -25,7 +25,7 @@ import scala.collection.immutable.{Seq => ISeq}
 private class RemoveLine(document: Document, terminal: Terminal) extends Action {
   def name: String        = "Remove Line"
   def mnemonic: Char      = 'R'
-  def keys: ISeq[String]  = "ctrl pressed Y" :: Nil
+  val keys: ISeq[String]  = "ctrl pressed Y" :: Nil
 
   def apply(): Unit = {
     val oldPos    = terminal.offset

@@ -28,7 +28,7 @@ private class ShowUsages(terminal: Terminal, val data: Data)(implicit val async:
 
   def name: String        = "Show Usages"
   def mnemonic: Char      = 'S'
-  def keys: ISeq[String]  = "shift ctrl pressed F7" :: Nil
+  val keys: ISeq[String]  = "shift ctrl pressed F7" :: Nil
 
   def applyWithStructure(root: Node): Unit = {
     val nodes = data.connectedLeafsFor(terminal.offset)

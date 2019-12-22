@@ -15,6 +15,9 @@ package dotterweide.editor
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
+object Async {
+  def apply(timeOut: Int = 500): Async = new AsyncImpl(timeOut)
+}
 trait Async {
   /** Await the future with an internal timeout. */
   def await[A](f: Future[A]): Try[A]

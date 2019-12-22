@@ -26,7 +26,7 @@ import scala.collection.immutable.{Seq => ISeq}
 private class GoToDeclaration(terminal: Terminal, data: Data)(implicit async: Async) extends Action {
   def name: String        = "Go to Declaration"
   def mnemonic: Char      = 'G'
-  def keys: ISeq[String]  = "ctrl pressed B" :: Nil
+  val keys: ISeq[String]  = "ctrl pressed B" :: Nil
 
   def apply(): Unit = {
     val fut = data.computeStructure()

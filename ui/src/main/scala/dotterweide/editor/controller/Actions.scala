@@ -17,13 +17,14 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.Platform
 import dotterweide.document.Document
 import dotterweide.editor.{Action, Adviser, Async, Data, EditorActions, FontSettings, History, Terminal}
 import dotterweide.formatter.Formatter
 
 private class Actions(document: Document, terminal: Terminal, data: Data, adviser: Adviser,
                       formatter: Formatter, tabSize: Int, lineCommentPrefix: String, font: FontSettings,
-                      history: History)(implicit async: Async)
+                      history: History)(implicit async: Async, p: Platform)
   extends EditorActions {
 
   private def historical(action: Action) = new HistoricalAction(action, document, terminal, history)
