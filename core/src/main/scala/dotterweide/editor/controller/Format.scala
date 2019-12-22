@@ -17,6 +17,7 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.Platform
 import dotterweide.document.Document
 import dotterweide.editor.{Action, Async, Data, StructureAction, Terminal}
 import dotterweide.formatter.Formatter
@@ -25,10 +26,12 @@ import dotterweide.node.Node
 import scala.collection.immutable.{Seq => ISeq}
 
 private class Format(document: Document, terminal: Terminal, val data: Data, formatter: Formatter, tabSize: Int)
-                    (implicit val async: Async) extends Action with StructureAction {
+                    (implicit val async: Async, p: Platform)
+  extends Action with StructureAction {
+
   def name: String        = "Reformat"
   def mnemonic: Char      = 'F'
-  val keys: ISeq[String]  = "ctrl alt pressed L" :: Nil
+  val keys: ISeq[String]  = s"${p.menuModifier} alt pressed L" :: Nil
 
   def applyWithStructure(root: Node): Unit = {
     val text        = formatter.format(root, terminal.selection, tabSize)

@@ -31,5 +31,11 @@ class PlatformImpl extends Platform {
     }
   }
 
+  private[this] val osName: String = sys.props("os.name")
+
+  val isLinux  : Boolean = osName.contains("Linux")
+  val isMac    : Boolean = osName.contains("Mac")
+  val isWindows: Boolean = osName.contains("Windows")
+
   // println(s"menuModifier = $menuModifier")
 }

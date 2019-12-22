@@ -130,6 +130,8 @@ class ScalaDocLookUp(language: ScalaLanguage, frame: MainFrame, docModule: Modul
       printWarn("No scala type found")
   }
 
+  import frame.panel.platform
+
   private class ActionImpl(ed: Editor)
     extends LookUpTypeAction(ed.document, ed.terminal, ed.data, language.adviser) {
 

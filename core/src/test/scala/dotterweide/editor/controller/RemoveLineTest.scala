@@ -17,9 +17,10 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.Platform
 import org.junit.Test
 
-class RemoveLineTest extends ActionTestBase(new RemoveLine(_, _)) {
+class RemoveLineTest extends ActionTestBase((d, t) => new RemoveLine(d, t)(Platform())) {
   @Test
   def line(): Unit = {
     assertEffectIs("1\n|2\n3", "1\n|3")

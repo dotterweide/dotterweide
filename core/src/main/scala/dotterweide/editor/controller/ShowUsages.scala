@@ -17,18 +17,19 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.Platform
 import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, Async, Data, StructureAction, Terminal}
 import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class ShowUsages(terminal: Terminal, val data: Data)(implicit val async: Async)
+private class ShowUsages(terminal: Terminal, val data: Data)(implicit val async: Async, p: Platform)
   extends Action with StructureAction {
 
   def name: String        = "Show Usages"
   def mnemonic: Char      = 'S'
-  val keys: ISeq[String]  = "shift ctrl pressed F7" :: Nil
+  val keys: ISeq[String]  = s"shift ${p.menuModifier} pressed F7" :: Nil
 
   def applyWithStructure(root: Node): Unit = {
     val nodes = data.connectedLeafsFor(terminal.offset)

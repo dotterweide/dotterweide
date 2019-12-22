@@ -17,15 +17,18 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.Platform
 import dotterweide.document.Document
 import dotterweide.editor.Terminal
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class MoveLineDown(document: Document, terminal: Terminal) extends DocumentAction(document, terminal) {
+private class MoveLineDown(document: Document, terminal: Terminal)(implicit p: Platform)
+  extends DocumentAction(document, terminal) {
+
   def name: String        = "Move Line Down"
   def mnemonic: Char      = 'D'
-  val keys: ISeq[String]  = "shift ctrl pressed DOWN" :: Nil
+  val keys: ISeq[String]  = s"shift ${p.menuModifier} pressed DOWN" :: Nil
 
   protected def calcEnabled(): Boolean = document.lineNumberOf(terminal.offset) < document.linesCount - 1
 

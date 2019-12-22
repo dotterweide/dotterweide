@@ -17,16 +17,19 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.Platform
 import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, Async, Data, Terminal}
 import dotterweide.node.{IdentifiedNode, Node}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class GoToDeclaration(terminal: Terminal, data: Data)(implicit async: Async) extends Action {
+private class GoToDeclaration(terminal: Terminal, data: Data)(implicit async: Async, p: Platform)
+  extends Action {
+
   def name: String        = "Go to Declaration"
   def mnemonic: Char      = 'G'
-  val keys: ISeq[String]  = "ctrl pressed B" :: Nil
+  val keys: ISeq[String]  = s"${p.menuModifier} pressed B" :: Nil
 
   def apply(): Unit = {
     val fut = data.computeStructure()

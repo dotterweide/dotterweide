@@ -2,41 +2,42 @@
 
 Currently, the keymap is hardcoded and cannot be configured. This may change in the future.
 For now, we try to use the same keyboard mappings as IntelliJ IDEA, with some additional mappings
-inspired by SuperCollider. Modifier `menu` corresponds to `ctrl` on Linux and Windows, and `meta`
-(command) on Mac.
+inspired by SuperCollider. Modifier `menu` corresponds to `ctrl` on Linux (L) and Windows (W), 
+and `meta` or command on Mac (M).
 
 |**Key**            |**Action**                         |
 |:------------------|:----------------------------------|
 |`ESCAPE`           |Clear selection and highlights     |
 |`INSERT`           |Toggle insert and overwrite modes  |
 |`TAB`              |Increase indentation               |
-|`ctrl 0`           |Reset font size                    |
+|`menu 0`           |Reset font size                    |
 |`menu A`           |Select all                         |
-|`ctrl B`           |Go to declaration                  |
+|`menu B`           |Go to declaration                  |
 |`menu C`           |Copy to clipboard                  |
-|`ctrl D`           |Duplicate line                     |
+|`menu D`           |Duplicate line                     |
 |`ctrl DOWN`        |Scroll down (forward)              |
-|`ctrl MINUS`       |Decrease font size                 |
-|`ctrl PLUS`        |Increase font size                 |
-|`ctrl SLASH`       |Toggle line comment                |
+|`menu MINUS`       |Decrease font size                 |
+|`menu PLUS`        |Increase font size                 |
+|`menu SLASH`       |Toggle line comment                |
 |`ctrl SPACE`       |Trigger code completion            |
 |`ctrl UP`          |Scroll up (back)                   |
 |`menu V`           |Paste from clipboard               |
 |`menu X`           |Cut to clipboard                   |
-|`ctrl Y`           |Remove line                        |
+|`ctrl Y`           |(L/W) Remove line                  |
+|`meta BACKSPACE`   |(M)   Remove line                  |
 |`menu Z`           |Undo                               |
 |`ctrl alt S`       |Toggle vertical split              |
 |`shift TAB`        |Decrease indentation               |
-|`shift ctrl DOWN`  |Move line down                     |
-|`shift ctrl F7`    |Show usages                        |
-|`shift ctrl UP`    |Move line up                       |
+|`shift menu DOWN`  |Move line down                     |
+|`shift menu F7`    |Show usages                        |
+|`shift menu UP`    |Move line up                       |
 |`shift menu Z`     |Redo                               |
 
 ## Currently with no Scala support
 
 |**Key**            |**Action**                         |
 |:------------------|:----------------------------------|
-|`ctrl alt L`       |Reformat code                      |
+|`menu alt L`       |Reformat code                      |
 |`ctrl alt O`       |Optimize code                      |
 |`shift F6`         |Rename refactoring                 |
 
@@ -45,16 +46,23 @@ inspired by SuperCollider. Modifier `menu` corresponds to `ctrl` on Linux and Wi
 |**Key**            |**Action**                         |
 |:------------------|:----------------------------------|
 |`F2`               |Go to next error                   |
-|`F3`               |Find next occurrence               |
-|`F11`              |Toggle bookmark                    |
+|`F3`               |(L,W) Find next occurrence         |
+|`menu G`           |(M)   Find next occurrence         |
+|`F11`              |(L,W) Toggle bookmark              |
+|`F3`               |(M)   Toggle bookmark              |
 |`shift F2`         |Go to previous error               |
-|`shift F3`         |Find previous occurrence           |
-|`shift ctrl SLASH` |Toggle block comment               |
-|`ctrl F`           |Find dialog                        |
-|`ctrl F4`          |Close editor tab                   |
-|`ctrl G`           |Go to line                         |
-|`ctrl R`           |Find-and-replace dialog            |
-|?(`ctrl W`)        |Extend selection                   |
+|`shift F3`         |(L,W) Find previous occurrence     |
+|`shift menu G`     |(M)   Find previous occurrence     |
+|`shift menu SLASH` |Toggle block comment               |
+|`menu F`           |Find dialog                        |
+|`ctrl F4`          |(L,W) Close editor tab             |
+|`ctrl G`           |(L,W) Go to line                   |
+|`menu L`           |(M)   Go to line                   |
+|`menu R`           |Find-and-replace dialog            |
+|`ctrl W`           |(L,W) Extend selection             |
+|`shift ctrl W`     |(L,W) Shrink selection             |
+|`alt UP`           |(M)   Extend selection             |
+|`alt DOWN`         |(M)   Shrink selection             |
 |`ctrl alt LEFT`    |Navigate back                      |
 |`ctrl alt RIGHT`   |Navigate forward                   |
 
@@ -62,15 +70,15 @@ inspired by SuperCollider. Modifier `menu` corresponds to `ctrl` on Linux and Wi
 
 |**Key**            |**Action**                         |
 |:------------------|:----------------------------------|
-|`ctrl F9`          |Compile or build project           |
-|`ctrl N`           |New file or document               |
-|`ctrl O`           |Open file                          |
-|`ctrl alt D`       |Documentation for cursor           |
-|`ctrl alt O`       |Open most recent file              |
-|`ctrl P`           |Show post or log window            |
-|`ctrl Q`           |Quit application                   |
-|`ctrl S`           |Save file                          |
-|`ctrl W`           |Close window or file               |
+|`menu F9`          |Compile or build project           |
+|`menu N`           |New file or document               |
+|`menu O`           |Open file                          |
+|`menu alt D`       |Documentation for cursor           |
+|`menu alt O`       |Open most recent file              |
+|`menu P`           |Show post or log window            |
+|`shift menu P`     |Clear post or log window           |
+|`menu Q`           |Quit application                   |
+|`menu S`           |Save file                          |
+|`menu W`           |Close window or file               |
 |`shift RETURN`     |Execute selection in interpreter   |
-|`shift ctrl P`     |Clear post or log window           |
-|`shift ctrl S`     |Save file as                       |
+|`shift menu S`     |Save file as                       |

@@ -17,15 +17,17 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.Platform
 import dotterweide.document.Document
 import dotterweide.editor.{Action, Terminal}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class RemoveLine(document: Document, terminal: Terminal) extends Action {
+private class RemoveLine(document: Document, terminal: Terminal)(implicit p: Platform) extends Action {
   def name: String        = "Remove Line"
   def mnemonic: Char      = 'R'
-  val keys: ISeq[String]  = "ctrl pressed Y" :: Nil
+  val keys: ISeq[String]  =
+    (if (p.isMac) "meta pressed BACKSPACE" else "ctrl pressed Y") :: Nil
 
   def apply(): Unit = {
     val oldPos    = terminal.offset

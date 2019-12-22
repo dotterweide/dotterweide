@@ -17,9 +17,10 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.Platform
 import org.junit.Test
 
-class MoveLineDownTest extends ActionTestBase(new MoveLineDown(_, _)) {
+class MoveLineDownTest extends ActionTestBase((d, t) => new MoveLineDown(d, t)(Platform())) {
   @Test
   def line(): Unit = {
     assertEffectIs("|foo\nbar", "bar\n|foo")

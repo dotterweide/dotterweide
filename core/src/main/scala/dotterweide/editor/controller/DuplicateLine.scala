@@ -17,16 +17,16 @@
 
 package dotterweide.editor.controller
 
-import dotterweide.Interval
+import dotterweide.{Interval, Platform}
 import dotterweide.document.Document
 import dotterweide.editor.{Action, Terminal}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class DuplicateLine(document: Document, terminal: Terminal) extends Action {
+private class DuplicateLine(document: Document, terminal: Terminal)(implicit p: Platform) extends Action {
   def name: String        = "Duplicate Line"
   def mnemonic: Char      = 'D'
-  val keys: ISeq[String]  = "ctrl pressed D" :: Nil
+  val keys: ISeq[String]  = s"${p.menuModifier} pressed D" :: Nil
 
   def apply(): Unit = {
     val selection = terminal.selection

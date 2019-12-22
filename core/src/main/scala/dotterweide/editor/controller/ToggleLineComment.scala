@@ -17,7 +17,7 @@
 
 package dotterweide.editor.controller
 
-import dotterweide.Interval
+import dotterweide.{Interval, Platform}
 import dotterweide.document.Document
 import dotterweide.editor.ControllerOps._
 import dotterweide.editor.{Action, Terminal}
@@ -36,10 +36,12 @@ import scala.collection.immutable.{Seq => ISeq}
   *      - no. then add line comment. if line was empty, place cursor after comment chars, otherwise
   *        move cursor to next line.
   */
-private class ToggleLineComment(document: Document, terminal: Terminal, prefix: String) extends Action {
+private class ToggleLineComment(document: Document, terminal: Terminal, prefix: String)(implicit p: Platform)
+  extends Action {
+
   def name: String        = "Toggle Line Comment"
   def mnemonic: Char      = 'T'
-  val keys: ISeq[String]  = "ctrl pressed SLASH" :: Nil
+  val keys: ISeq[String]  = s"${p.menuModifier} pressed SLASH" :: Nil
 
   def apply(): Unit = {
     val oldSelection  = terminal.selection

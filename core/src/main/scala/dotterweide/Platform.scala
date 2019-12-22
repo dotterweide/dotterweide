@@ -23,4 +23,11 @@ trait Platform {
     * This is `"ctrl"` on Linux and Windows, and `"meta"` on Mac.
     */
   def menuModifier: String
+
+  /** `true` when running the application on a Linux system. */
+  def isLinux   : Boolean
+  /** `true` when running the application on a Windows system. */
+  def isWindows : Boolean
+  /** `true` when running the application on a Mac system. */
+  def isMac     : Boolean
 }

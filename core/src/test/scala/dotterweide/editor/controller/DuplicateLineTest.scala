@@ -17,9 +17,10 @@
 
 package dotterweide.editor.controller
 
+import dotterweide.Platform
 import org.junit.Test
 
-class DuplicateLineTest extends ActionTestBase(new DuplicateLine(_, _)) {
+class DuplicateLineTest extends ActionTestBase((d, t) => new DuplicateLine(d, t)(Platform())) {
   @Test
   def line(): Unit = {
     assertEffectIs("|", "\n|")
