@@ -28,18 +28,18 @@ and `meta` or command on Mac (M).
 |`ctrl DOWN`        |Scroll down (forward)              |
 |`menu SLASH`       |Toggle line comment                |
 |`ctrl SPACE`       |Trigger code completion            |
-|`ctrl alt S`       |Toggle vertical split              |
+|`ctrl alt S`       |Toggle vertical split              | XXX
 |`shift menu UP`    |Move line up                       | XXX
 |`shift menu DOWN`  |Move line down                     | XXX
 |`shift menu F7`    |Show usages                        |
 |`ctrl LEFT`        |(L,W) Move to previous word        |
-|`alt LEFT`         |(M)   Move to previous word        |
+|`alt LEFT`         |(M)   Move to previous word        | XXX used by tab-navigation
 |`ctrl RIGHT`       |(L,W) Move to next word            |
-|`alt RIGHT`        |(M)   Move to next word            |
+|`alt RIGHT`        |(M)   Move to next word            | XXX used by tab-navigation
 |`ctrl BACKSPACE`   |(L,W) Delete to previous word      |
-|`alt BACKSPACE`    |(M)   Delete to previous word      |
+|`alt BACKSPACE`    |(M)   Delete to previous word      | XXX
 |`ctrl DELETE`      |(L,W) Delete to next word          |
-|`alt DELETE`       |(M)   Delete to next word          |
+|`alt DELETE`       |(M)   Delete to next word          | XXX
 
 ## Currently with no Scala support
 
@@ -81,7 +81,7 @@ and `meta` or command on Mac (M).
 |`menu F9`          |Compile or build project           |
 |`menu N`           |New file or document               |
 |`menu O`           |Open file                          |
-|`ctrl alt D`       |Documentation for cursor           | XXX
+|`ctrl alt D`       |Documentation for cursor           |
 |`menu alt O`       |Open most recent file              |
 |`menu P`           |Show post or log window            |
 |`shift menu P`     |Clear post or log window           |

@@ -18,15 +18,15 @@
 package dotterweide.editor.controller.impl
 
 import java.awt.AWTKeyStroke
-import java.awt.event.{InputEvent, KeyEvent, MouseEvent}
+import java.awt.event.{KeyEvent, MouseEvent}
 
-import dotterweide.{Interval, Platform}
 import dotterweide.document.Document
 import dotterweide.editor.ControllerOps._
 import dotterweide.editor.controller.{Actions, Backspace, Controller, Delete, Insert, NewLine, Overwrite}
 import dotterweide.editor.{Action, ActionFinished, ActionStarted, Adviser, Async, Data, EditorActions, FontSettings, Grid, History, NamedEdit, Terminal}
 import dotterweide.formatter.Formatter
 import dotterweide.node.{IdentifiedNode, Node}
+import dotterweide.{Interval, Platform}
 
 import scala.annotation.tailrec
 import scala.collection.immutable.{Seq => ISeq}
@@ -56,11 +56,6 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   private[this] val BlockClosing = '}'
 
   private[this] var origin = 0
-
-  // Ctrl on Linux, Windows; Alt on MAc
-  private[this] val mod1 = if (p.isMac) InputEvent.ALT_DOWN_MASK  else InputEvent.CTRL_DOWN_MASK
-  // Ctrl on Linux, Windows; Meta on MAc
-  private[this] val mod2 = if (p.isMac) InputEvent.META_DOWN_MASK else InputEvent.CTRL_DOWN_MASK
 
   val actions: EditorActions =
     new Actions(document, terminal, data, adviser, formatter, tabSize = tabSize,
@@ -116,8 +111,10 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   private def capture[A](name: String)(body: => A): A =
     history.capture(name, document, terminal)(body)
 
-  private def isMod1(e: KeyEvent): Boolean = (e.getModifiers & mod1) != 0
-  private def isMod2(e: KeyEvent): Boolean = (e.getModifiers & mod2) != 0
+  // Ctrl on Linux, Windows; Alt on Mac
+  private def isMod1(e: KeyEvent): Boolean = if (p.isMac) e.isAltDown  else e.isControlDown
+  // Ctrl on Linux, Windows; Meta on Mac
+  private def isMod2(e: KeyEvent): Boolean = if (p.isMac) e.isMetaDown else e.isControlDown
 
   /* Handles cursor movement and back-space/delete */
   private def doProcessKeyPressed(e: KeyEvent): Unit = {
