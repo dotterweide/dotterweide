@@ -32,14 +32,10 @@ and `meta` or command on Mac (M).
 |`shift menu UP`    |Move line up                       | XXX
 |`shift menu DOWN`  |Move line down                     | XXX
 |`shift menu F7`    |Show usages                        |
-|`ctrl LEFT`        |(L,W) Move to previous word        |
-|`alt LEFT`         |(M)   Move to previous word        | XXX used by tab-navigation
-|`ctrl RIGHT`       |(L,W) Move to next word            |
-|`alt RIGHT`        |(M)   Move to next word            | XXX used by tab-navigation
-|`ctrl BACKSPACE`   |(L,W) Delete to previous word      |
-|`alt BACKSPACE`    |(M)   Delete to previous word      | XXX
-|`ctrl DELETE`      |(L,W) Delete to next word          |
-|`alt DELETE`       |(M)   Delete to next word          | XXX
+|`ctrl LEFT`        |Move to previous word              |
+|`ctrl RIGHT`       |Move to next word                  |
+|`ctrl BACKSPACE`   |Delete to previous word            |
+|`ctrl DELETE`      |Delete to next word                |
 
 ## Currently with no Scala support
 

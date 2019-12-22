@@ -111,8 +111,12 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   private def capture[A](name: String)(body: => A): A =
     history.capture(name, document, terminal)(body)
 
-  // Ctrl on Linux, Windows; Alt on Mac
-  private def isMod1(e: KeyEvent): Boolean = if (p.isMac) e.isAltDown  else e.isControlDown
+//  // Ctrl on Linux, Windows; Alt on Mac
+//  private def isMod1(e: KeyEvent): Boolean = if (p.isMac) e.isAltDown  else e.isControlDown
+
+  // Now Ctrl on all platforms
+  private def isMod1(e: KeyEvent): Boolean = /*if (p.isMac) e.isAltDown  else*/ e.isControlDown
+
   // Ctrl on Linux, Windows; Meta on Mac
   private def isMod2(e: KeyEvent): Boolean = if (p.isMac) e.isMetaDown else e.isControlDown
 
