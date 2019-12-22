@@ -137,8 +137,10 @@ private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: 
     if (gridY(document.linesCount) < getHeight) gridY(line) + 3 else
       math.round(getHeight.toDouble * line / document.linesCount).toInt
 
-  private def toLine(y: Int) =
-    (0 until document.linesCount).map(y => (y, toY(y))).takeWhile(_._2 < y).last._1
+  private def toLine(y: Int) = {
+    val opt = (0 until document.linesCount).map(y => (y, toY(y))).takeWhile(_._2 < y).lastOption
+    opt.fold(-1)(_._1)
+  }
 
   private def lineHeight = toY(1) - toY(0)
 
