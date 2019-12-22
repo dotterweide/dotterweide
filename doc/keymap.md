@@ -10,28 +10,36 @@ and `meta` or command on Mac (M).
 |`ESCAPE`           |Clear selection and highlights     |
 |`INSERT`           |Toggle insert and overwrite modes  |
 |`TAB`              |Increase indentation               |
+|`shift TAB`        |Decrease indentation               |
+|`menu PLUS`        |Increase font size                 |
+|`menu MINUS`       |Decrease font size                 |
 |`menu 0`           |Reset font size                    |
 |`menu A`           |Select all                         |
-|`menu B`           |Go to declaration                  |
+|`menu X`           |Cut to clipboard                   |
 |`menu C`           |Copy to clipboard                  |
+|`menu V`           |Paste from clipboard               |
+|`menu Z`           |Undo                               |
+|`shift menu Z`     |Redo                               |
+|`menu B`           |Go to declaration                  |
 |`menu D`           |Duplicate line                     |
+|`ctrl Y`           |(L,W) Remove line                  |
+|`meta BACKSPACE`   |(M)   Remove line                  | XXX
+|`ctrl UP`          |Scroll up (back)                   |
 |`ctrl DOWN`        |Scroll down (forward)              |
-|`menu MINUS`       |Decrease font size                 |
-|`menu PLUS`        |Increase font size                 |
 |`menu SLASH`       |Toggle line comment                |
 |`ctrl SPACE`       |Trigger code completion            |
-|`ctrl UP`          |Scroll up (back)                   |
-|`menu V`           |Paste from clipboard               |
-|`menu X`           |Cut to clipboard                   |
-|`ctrl Y`           |(L/W) Remove line                  |
-|`meta BACKSPACE`   |(M)   Remove line                  |
-|`menu Z`           |Undo                               |
 |`ctrl alt S`       |Toggle vertical split              |
-|`shift TAB`        |Decrease indentation               |
-|`shift menu DOWN`  |Move line down                     |
+|`shift menu UP`    |Move line up                       | XXX
+|`shift menu DOWN`  |Move line down                     | XXX
 |`shift menu F7`    |Show usages                        |
-|`shift menu UP`    |Move line up                       |
-|`shift menu Z`     |Redo                               |
+|`ctrl LEFT`        |(L,W) Move to previous word        |
+|`alt LEFT`         |(M)   Move to previous word        |
+|`ctrl RIGHT`       |(L,W) Move to next word            |
+|`alt RIGHT`        |(M)   Move to next word            |
+|`ctrl BACKSPACE`   |(L,W) Delete to previous word      |
+|`alt BACKSPACE`    |(M)   Delete to previous word      |
+|`ctrl DELETE`      |(L,W) Delete to next word          |
+|`alt DELETE`       |(M)   Delete to next word          |
 
 ## Currently with no Scala support
 
@@ -73,7 +81,7 @@ and `meta` or command on Mac (M).
 |`menu F9`          |Compile or build project           |
 |`menu N`           |New file or document               |
 |`menu O`           |Open file                          |
-|`menu alt D`       |Documentation for cursor           |
+|`ctrl alt D`       |Documentation for cursor           | XXX
 |`menu alt O`       |Open most recent file              |
 |`menu P`           |Show post or log window            |
 |`shift menu P`     |Clear post or log window           |

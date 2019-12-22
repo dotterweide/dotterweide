@@ -20,7 +20,8 @@ class LookUpTypeAction (
 )
   extends Action with StructureAction  {
 
-  val keys: ISeq[String] = s"${p.menuModifier} alt pressed D" :: Nil
+//  val keys: ISeq[String] = s"${p.menuModifier} alt pressed D" :: Nil
+  val keys: ISeq[String] = "ctrl alt pressed D" :: Nil
 
   protected def run(tpe: Option[NodeType]): Unit =
     println(s"Type at cursor: $tpe")

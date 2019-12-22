@@ -18,7 +18,7 @@
 package dotterweide.editor.controller.impl
 
 import java.awt.AWTKeyStroke
-import java.awt.event.{KeyEvent, MouseEvent}
+import java.awt.event.{InputEvent, KeyEvent, MouseEvent}
 
 import dotterweide.{Interval, Platform}
 import dotterweide.document.Document
@@ -56,6 +56,11 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   private[this] val BlockClosing = '}'
 
   private[this] var origin = 0
+
+  // Ctrl on Linux, Windows; Alt on MAc
+  private[this] val mod1 = if (p.isMac) InputEvent.ALT_DOWN_MASK  else InputEvent.CTRL_DOWN_MASK
+  // Ctrl on Linux, Windows; Meta on MAc
+  private[this] val mod2 = if (p.isMac) InputEvent.META_DOWN_MASK else InputEvent.CTRL_DOWN_MASK
 
   val actions: EditorActions =
     new Actions(document, terminal, data, adviser, formatter, tabSize = tabSize,
@@ -111,6 +116,9 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
   private def capture[A](name: String)(body: => A): A =
     history.capture(name, document, terminal)(body)
 
+  private def isMod1(e: KeyEvent): Boolean = (e.getModifiers & mod1) != 0
+  private def isMod2(e: KeyEvent): Boolean = (e.getModifiers & mod2) != 0
+
   /* Handles cursor movement and back-space/delete */
   private def doProcessKeyPressed(e: KeyEvent): Unit = {
     if (e.isShiftDown && terminal.selection.isEmpty) origin = terminal.offset
@@ -120,7 +128,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
     e.getKeyCode match {
       case KeyEvent.VK_LEFT =>
         if (terminal.offset > 0) move {
-          if (e.isControlDown) {
+          if (isMod1(e)) {
             terminal.offset = seek(-1)
           } else {
             terminal.offset = terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset - 1)(_.start)
@@ -130,7 +138,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
 
       case KeyEvent.VK_RIGHT =>
         if (terminal.offset < document.length) move {
-          terminal.offset = if (e.isControlDown) {
+          terminal.offset = if (isMod1(e)) {
             seek(1)
           } else {
             terminal.selection.filter(_ => !e.isShiftDown).fold(terminal.offset + 1)(_.stop)
@@ -174,12 +182,12 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
             jumpToOffset(document.length, e.isShiftDown)
         }
 
-      case KeyEvent.VK_HOME if e.isControlDown =>
+      case KeyEvent.VK_HOME if e.isControlDown => // XXX TODO check if this works on Mac
         move {
           jumpToOffset(0, e.isShiftDown)
         }
 
-      case KeyEvent.VK_END if e.isControlDown =>
+      case KeyEvent.VK_END if e.isControlDown => // XXX TODO check if this works on Mac
         move {
           jumpToOffset(document.length, e.isShiftDown)
         }
@@ -201,7 +209,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
           terminal.selection  = if (e.isShiftDown) fromOriginTo(terminal.offset) else None
         }
 
-      case KeyEvent.VK_BACK_SPACE =>
+      case KeyEvent.VK_BACK_SPACE if !e.isMetaDown =>
         def backspace(interval: Interval): Unit = {
           val edit = Backspace(document, terminal, interval)
           history.add(edit)
@@ -212,7 +220,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
 
           case None if terminal.offset > 0 =>
             val off             = terminal.offset
-            val length          = if (e.isControlDown) off - seek(-1) else 1
+            val length          = if (isMod1(e)) off - seek(-1) else 1
             val remStart        = off - length
             val leftChar        = document.charAt(off - 1)
             val rightChar       = if (document.length > off) document.charAt(off) else '?'
@@ -234,7 +242,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
 
           case None if terminal.offset < document.length =>
             val off       = terminal.offset
-            val length    = if (e.isControlDown) seek(1) - off else 1
+            val length    = if (isMod1(e)) seek(1) - off else 1
             val remStart  = off
             val remStop   = off + length
             delete(Interval(remStart, remStop))
@@ -268,7 +276,7 @@ class ControllerImpl(document: Document, data: Data, terminal: Terminal, grid: G
         if (terminal.selection.isDefined) insert {
           processCharInsertion(c)
         } else {
-          val edit = mkLineNew(hold = e.isControlDown)
+          val edit = mkLineNew(hold = isMod2(e))
           history.add(edit)
         }
 
