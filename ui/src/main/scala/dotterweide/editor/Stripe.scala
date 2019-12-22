@@ -26,7 +26,9 @@ import javax.swing.{JComponent, ToolTipManager}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-/** A vertical bar component that indicates warnings and errors using colored stripes. */
+/** A vertical bar component that indicates warnings and errors using colored stripes.
+  * The observable events are the line numbers of mouse clicks (-1 if clicking "above" first line).
+  */
 private class Stripe(document: Document, data: Data, holder: ErrorHolder, grid: Grid, canvas: Canvas)
   extends JComponent with ObservableEvents[Int] {
 

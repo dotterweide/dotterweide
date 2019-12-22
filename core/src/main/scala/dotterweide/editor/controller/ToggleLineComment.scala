@@ -77,14 +77,12 @@ private class ToggleLineComment(document: Document, terminal: Terminal, prefix: 
       } else {
         val i = interval.start + line.indexOf(prefix)
         val commentInterval = Interval(i, i + prefix.length)
-        document.remove(commentInterval)
-        if (moveCursor) {
-          if (commentInterval.touches(terminal.offset)) {
-            terminal.offset = i
-          } else {
-            terminal.offset -= prefix.length
-          }
+        if (commentInterval.touches(terminal.offset)) {
+          terminal.offset = i
+        } else if (moveCursor || terminal.offset >= commentInterval.stop) {
+          terminal.offset -= prefix.length
         }
+        document.remove(commentInterval)
       }
     }
 
