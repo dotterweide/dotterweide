@@ -18,7 +18,7 @@ import dotterweide.Language
 import dotterweide.editor.controller.FlashAction
 import dotterweide.editor.painter.FlashPainter
 import dotterweide.editor.{Editor, FlashImpl, FontSettings}
-import dotterweide.ide.impl.{ConsoleImpl, LauncherImpl, PanelImpl}
+import dotterweide.ide.impl.{ConsoleImpl, LauncherImpl}
 
 import scala.swing.Frame
 import scala.swing.event.WindowClosed
@@ -29,7 +29,7 @@ class MainFrame(language: Language, text: String, font: FontSettings = FontSetti
 
   val console: Console = new ConsoleImpl(font)
 
-  val panel: Panel = new PanelImpl(language, text0 = text, font = font, stylingName = stylingName,
+  val panel: Panel = Panel(language, text = text, font = font, stylingName = stylingName,
     console = Some(console))
 
   panel.structureVisible = structure

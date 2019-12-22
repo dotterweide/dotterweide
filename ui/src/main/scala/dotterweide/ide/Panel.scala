@@ -15,8 +15,9 @@ package dotterweide.ide
 import java.io.File
 
 import dotterweide.document.Document
-import dotterweide.editor.{Async, Data, Editor, History}
-import dotterweide.{FileType, ObservableEvents}
+import dotterweide.editor.{Async, Data, Editor, FontSettings, History}
+import dotterweide.ide.impl.PanelImpl
+import dotterweide.{FileType, Language, ObservableEvents}
 
 import scala.collection.immutable.{Seq => ISeq}
 import scala.swing.Component
@@ -27,6 +28,16 @@ object Panel {
   case class FileChanged  (newFile: Option[File]) extends Update
   case class SplitChanged (isSplit: Boolean     ) extends Update
   case class DirtyChanged (isDirty: Boolean     ) extends Update
+
+  def apply(language          : Language,
+            text              : String              = "",
+            font              : FontSettings        = FontSettings.Default,
+            stylingName       : Option[String]      = None,
+            console           : Option[Console]     = None,
+            preferredGridSize : Option[(Int, Int)]  = None
+           ): Panel =
+    new PanelImpl(language = language, text0 = text, font = font, stylingName = stylingName,
+      console = console, preferredGridSize = preferredGridSize)
 }
 /** The main IDE component. */
 trait Panel extends ObservableEvents[Panel.Update] {

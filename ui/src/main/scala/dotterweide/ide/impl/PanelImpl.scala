@@ -27,11 +27,11 @@ import scala.swing.event.UIElementShown
 import scala.swing.{BorderPanel, Component, Orientation, ScrollPane, SplitPane}
 
 class PanelImpl(language          : Language,
-                text0             : String              = "",
-                font              : FontSettings        = FontSettings.Default,
-                stylingName       : Option[String]      = None,
-                console           : Option[Console]     = None,
-                preferredGridSize : Option[(Int, Int)]  = None
+                text0             : String,
+                font              : FontSettings,
+                stylingName       : Option[String],
+                console           : Option[Console],
+                preferredGridSize : Option[(Int, Int)],
                )
   extends Panel {
 
