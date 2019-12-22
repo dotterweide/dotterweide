@@ -19,6 +19,7 @@ package dotterweide.editor
 
 import dotterweide.Language
 import dotterweide.document.Document
+import dotterweide.editor.impl.{BraceMatcherImpl, EditorImpl, ErrorHolderImpl}
 
 object EditorFactory {
   /**

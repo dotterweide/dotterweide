@@ -15,13 +15,14 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide.editor
+package dotterweide.editor.impl
 
+import dotterweide.editor.{BraceMatcher, BraceType, Inapplicable, Paired, Unbalanced}
 import dotterweide.lexer.{Token, TokenKind}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class BraceMatcherImpl(complements: ISeq[(TokenKind, TokenKind)]) extends BraceMatcher {
+class BraceMatcherImpl(complements: ISeq[(TokenKind, TokenKind)]) extends BraceMatcher {
   def braceTypeOf(token: Token, tokens: ISeq[Token], offset: Int): BraceType = {
     def right(complement: (TokenKind, TokenKind)): Option[BraceType] = {
       if (token.kind != complement._1) return None

@@ -15,7 +15,7 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide.editor.controller
+package dotterweide.editor.controller.impl
 
 import java.awt.AWTKeyStroke
 import java.awt.event.{KeyEvent, MouseEvent}
@@ -23,6 +23,7 @@ import java.awt.event.{KeyEvent, MouseEvent}
 import dotterweide.Interval
 import dotterweide.document.Document
 import dotterweide.editor.ControllerOps._
+import dotterweide.editor.controller.{Actions, Backspace, Controller, Delete, Insert, NewLine, Overwrite}
 import dotterweide.editor.{Action, ActionFinished, ActionStarted, Adviser, Async, Data, EditorActions, FontSettings, Grid, History, NamedEdit, Terminal}
 import dotterweide.formatter.Formatter
 import dotterweide.node.{IdentifiedNode, Node}

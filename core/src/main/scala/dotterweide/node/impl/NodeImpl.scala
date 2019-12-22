@@ -15,10 +15,11 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide.node
+package dotterweide.node.impl
 
 import dotterweide.Span
 import dotterweide.lexer.Token
+import dotterweide.node.Node
 
 import scala.collection.immutable.{Seq => ISeq}
 

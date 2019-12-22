@@ -15,11 +15,12 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide.editor
+package dotterweide.editor.impl
 
 import java.awt.event.{AdjustmentEvent, AdjustmentListener, ComponentAdapter, ComponentEvent, FocusEvent, FocusListener, HierarchyEvent, HierarchyListener}
 import java.awt.{Dimension, Rectangle}
 
+import dotterweide.editor.{Canvas, CaretVisibilityChanged, FocusChanged, VisibilityChanged, VisibleRectangleChanged}
 import javax.swing.{JComponent, JScrollPane}
 
 private class CanvasImpl(component: JComponent, scrollPane: JScrollPane) extends Canvas {

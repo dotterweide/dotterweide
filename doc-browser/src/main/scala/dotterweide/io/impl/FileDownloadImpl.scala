@@ -10,13 +10,14 @@
  *  contact@sciss.de
  */
 
-package dotterweide.io
+package dotterweide.io.impl
 
 import java.io.{File, IOException}
 import java.nio.ByteBuffer
 
 import dispatch.Defaults._
 import dispatch._
+import dotterweide.io.FileDownload
 import dotterweide.io.FileDownload.Progress
 import io.netty.handler.codec.http.{HttpHeaderNames, HttpHeaders}
 import org.asynchttpclient.handler.resumable.{ResumableAsyncHandler, ResumableRandomAccessFileListener}

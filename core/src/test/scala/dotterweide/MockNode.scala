@@ -17,7 +17,7 @@
 
 package dotterweide
 
-import dotterweide.node.NodeImpl
+import dotterweide.node.impl.NodeImpl
 
 class MockNode extends NodeImpl("node")
 

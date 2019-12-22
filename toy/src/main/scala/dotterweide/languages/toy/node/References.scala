@@ -21,6 +21,7 @@ import dotterweide.Extensions._
 import dotterweide.languages.toy.compiler.ReferenceToValueTranslator
 import dotterweide.languages.toy.interpreter.{ReferenceToValueEvaluator, TypeCheck}
 import dotterweide.node._
+import dotterweide.node.impl.NodeImpl
 
 trait ToyReference extends ReferenceNode {
   def source: Option[Node] = children.headOption

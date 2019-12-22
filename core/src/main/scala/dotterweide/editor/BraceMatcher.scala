@@ -21,14 +21,14 @@ import dotterweide.lexer.{Token, TokenKind}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private trait BraceMatcher {
+trait BraceMatcher {
   def braceTypeOf(token: Token, tokens: ISeq[Token], offset: Int): BraceType
 
   def complementIn(tail: ISeq[Token], opening: TokenKind, closing: TokenKind): Option[Token]
 }
 
-private abstract sealed class BraceType
+abstract sealed class BraceType
 
-private case object Inapplicable  extends BraceType
-private case object Paired        extends BraceType
-private case object Unbalanced    extends BraceType
+case object Inapplicable  extends BraceType
+case object Paired        extends BraceType
+case object Unbalanced    extends BraceType

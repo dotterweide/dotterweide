@@ -20,6 +20,7 @@ package dotterweide.editor
 import org.junit.Test
 import org.junit.Assert._
 import dotterweide.MockLexer
+import dotterweide.editor.impl.BraceMatcherImpl
 import dotterweide.lexer.{Token, TokenKind}
 
 class BraceMatcherImplTest {

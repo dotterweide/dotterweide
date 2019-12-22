@@ -19,7 +19,7 @@ package dotterweide.parser
 
 import dotterweide.Span
 import dotterweide.lexer.{Token, TokenKind}
-import dotterweide.node.NodeImpl
+import dotterweide.node.impl.NodeImpl
 
 import scala.collection.immutable.{Seq => ISeq}
 

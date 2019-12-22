@@ -20,6 +20,7 @@ package dotterweide.node
 import org.junit.Test
 import org.junit.Assert._
 import dotterweide.MockNode
+import dotterweide.node.impl.NodeImpl
 
 class NodeTest {
   def node(children: NodeImpl*): NodeImpl = {

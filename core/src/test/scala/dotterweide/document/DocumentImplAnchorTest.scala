@@ -17,6 +17,7 @@
 
 package dotterweide.document
 
+import dotterweide.document.impl.DocumentImpl
 import org.junit.Test
 import org.junit.Assert._
 

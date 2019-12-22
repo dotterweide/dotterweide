@@ -19,8 +19,9 @@ package dotterweide.parser
 
 import org.junit.Test
 import org.junit.Assert._
-import dotterweide.node.{Node, NodeImpl}
-import dotterweide.{MockNode, Span, MockLexer}
+import dotterweide.node.Node
+import dotterweide.node.impl.NodeImpl
+import dotterweide.{MockLexer, MockNode, Span}
 
 class TreeBuilderTest {
   def builderFor(s: String): TreeBuilder = {

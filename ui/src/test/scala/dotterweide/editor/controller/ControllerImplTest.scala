@@ -20,7 +20,9 @@ package dotterweide.editor.controller
 import dotterweide.Helpers._
 import dotterweide.document.Document
 import dotterweide.editor._
-import dotterweide.formatter.FormatterImpl
+import dotterweide.editor.controller.impl.ControllerImpl
+import dotterweide.editor.impl.GridImpl
+import dotterweide.formatter.impl.FormatterImpl
 import org.junit.Assert._
 import org.junit.Test
 

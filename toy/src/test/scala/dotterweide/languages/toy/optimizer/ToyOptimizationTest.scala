@@ -18,7 +18,7 @@
 package dotterweide.languages.toy.optimizer
 
 import dotterweide.Helpers._
-import dotterweide.document.DocumentImpl
+import dotterweide.document.impl.DocumentImpl
 import dotterweide.languages.toy.ToyLexer
 import dotterweide.languages.toy.parser.ProgramParser
 import dotterweide.optimizer.Optimizer

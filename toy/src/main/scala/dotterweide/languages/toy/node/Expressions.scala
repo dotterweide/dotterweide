@@ -26,6 +26,7 @@ import dotterweide.languages.toy.interpreter.{BinaryExpressionEvaluator, CallExp
 import dotterweide.languages.toy.optimizer.ToyExpressionOptimizer
 import dotterweide.lexer.{Token, TokenKind}
 import dotterweide.node._
+import dotterweide.node.impl.NodeImpl
 
 import scala.collection.immutable.{Seq => ISeq}
 

@@ -19,7 +19,7 @@ package dotterweide.languages.toy.interpreter
 
 import dotterweide.Helpers._
 import dotterweide.MockConsole
-import dotterweide.interpreter.ContextImpl
+import dotterweide.interpreter.impl.ContextImpl
 import dotterweide.languages.toy.ToyLexer
 import dotterweide.languages.toy.parser.ProgramParser
 import org.junit.Assert._

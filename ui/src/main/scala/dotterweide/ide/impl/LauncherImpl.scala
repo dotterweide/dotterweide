@@ -15,11 +15,12 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide.ide
+package dotterweide.ide.impl
 
+import dotterweide.ide.Launcher
 import javax.swing.SwingUtilities
 
-private class LauncherImpl extends Launcher {
+class LauncherImpl extends Launcher {
   private[this] var thread: Option[Thread] = None
 
   def launch(action: => Unit): Unit = {

@@ -18,7 +18,8 @@
 package dotterweide.ide
 
 import dotterweide.editor.{Color, Runner}
-import dotterweide.interpreter.{ContextImpl, EvaluationException}
+import dotterweide.interpreter.EvaluationException
+import dotterweide.interpreter.impl.ContextImpl
 import dotterweide.node.Node
 
 private class NodeInterpreter(console: Console) extends Runner {

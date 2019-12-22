@@ -20,6 +20,7 @@ package dotterweide.languages.lisp.node
 import dotterweide.languages.lisp.core.CoreFunction
 import dotterweide.languages.lisp.value.SymbolValue
 import dotterweide.node._
+import dotterweide.node.impl.NodeImpl
 
 class SymbolNode extends NodeImpl("symbol")
   with ExpressionNode with ReferenceNode with IdentifiedNode with TargetResolution {

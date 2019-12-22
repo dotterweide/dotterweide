@@ -1,16 +1,16 @@
 lazy val baseName   = "Dotterweide"
 lazy val baseNameL  = baseName.toLowerCase
 
-lazy val projectVersion = "0.2.3"
-lazy val mimaVersion    = "0.2.0" // used for migration-manager
+lazy val projectVersion = "0.3.0-SNAPSHOT"
+lazy val mimaVersion    = "0.3.0" // used for migration-manager
 
 lazy val commonSettings = Seq(
   version                   := projectVersion,
   organization              := "de.sciss",  // for now, so we can publish artifacts
   homepage                  := Some(url(s"https://github.com/dotterweide/dotterweide")),
   licenses                  := Seq(lgpl2),
-  scalaVersion              := "2.12.8",
-  crossScalaVersions        := Seq("2.12.8", "2.11.12", "2.13.0"),
+  scalaVersion              := "2.12.10",
+  crossScalaVersions        := Seq("2.12.10", "2.13.1"),
   scalacOptions            ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
   fork in Test              := false,
   fork in (Compile, run)    := true,
@@ -21,7 +21,8 @@ lazy val commonSettings = Seq(
       case Some((2, n)) if n >= 13 => sourceDir / "scala-2.13+"
       case _                       => sourceDir / "scala-2.13-"
     }
-  }
+  },
+  scalacOptions in (Compile, compile) ++= (if (scala.util.Properties.isJavaAtLeast("9")) Seq("-release", "8") else Nil), // JDK >8 breaks API; skip scala-doc
 )
 
 lazy val lgpl2  = "LGPL v2.1+"  -> url("http://www.gnu.org/licenses/lgpl-2.1.txt")
@@ -35,16 +36,15 @@ lazy val scalariformOrg = "de.sciss"
 
 lazy val deps = new {
   val main = new {
-    val akka            = "2.5.23"
+    val akka            = "2.5.27"
     // val dispatch        = "1.0.1"
     val dispatch        = "0.1.1"
     val scalariform     = "0.2.8"
     val scalaSwing      = "2.1.1"
   }
   val demo = new {
-    // val scopt           = "3.7.1"
-    val scallop         = "3.3.1"
-    val submin          = "0.2.5"
+    val scallop         = "3.3.2"
+    val submin          = "0.3.4"
   }
   val test = new {
     val junit           = "4.12"
@@ -132,6 +132,20 @@ lazy val ui = project.withId(s"$baseNameL-ui").in(file("ui"))
     mimaPreviousArtifacts := Set("de.sciss" %% s"$baseNameL-ui" % mimaVersion)
   )
 
+// Determine OS version of JavaFX binaries
+lazy val jfxClassifier = sys.props("os.name") match {
+  case n if n.startsWith("Linux")   => "linux"
+  case n if n.startsWith("Mac")     => "mac"
+  case n if n.startsWith("Windows") => "win"
+  case _ => throw new Exception("Unknown platform!")
+}
+
+// N.B. we use `Provided` here so we can publish
+// neutral Maven artifacts. This is all a big shite,
+// so we really need to get rid of JavaFX soon.
+def jfxDep(name: String): ModuleID =
+  ("org.openjfx" % s"javafx-$name" % "11.0.2" % Provided).classifier(jfxClassifier)
+
 lazy val docBrowser = project.withId(s"$baseNameL-doc-browser").in(file("doc-browser"))
   .dependsOn(core)
   .settings(commonSettings)
@@ -143,6 +157,7 @@ lazy val docBrowser = project.withId(s"$baseNameL-doc-browser").in(file("doc-bro
     libraryDependencies ++= Seq(
       dispatchOrg %% "dispatch-core" % deps.main.dispatch // downloading of http resources
     ),
+    libraryDependencies ++= Seq("base", "swing", "controls", "graphics", "media", "web").map(jfxDep),
     mimaPreviousArtifacts := Set("de.sciss" %% s"$baseNameL-doc-browser" % mimaVersion)
   )
 
@@ -156,8 +171,7 @@ lazy val demo = project.withId(s"$baseNameL-demo").in(file("demo"))
     licenses    := Seq(gpl3),
     mainClass in Compile := Some("dotterweide.Demo"),
     libraryDependencies ++= Seq(
-      // "com.github.scopt"  %% "scopt"  % deps.demo.scopt,
-      "de.sciss"          %  "submin" % deps.demo.submin,
+      "de.sciss"   %  "submin"  % deps.demo.submin,
       "org.rogach" %% "scallop" % deps.demo.scallop
     )
   )

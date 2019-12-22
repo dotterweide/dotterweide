@@ -15,41 +15,52 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide.editor
+package dotterweide.editor.impl
 
 import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseMotionAdapter}
 import java.awt.font.FontRenderContext
+import java.awt.geom.AffineTransform
 import java.awt.{BorderLayout, Cursor, Dimension, Font, Graphics, Graphics2D, Point, Rectangle, Toolkit}
 
 import dotterweide.Interval
 import dotterweide.document.Document
-import dotterweide.editor.controller.ControllerImpl
+import dotterweide.editor.controller.impl.ControllerImpl
 import dotterweide.editor.painter.{Painter, PainterContext, PainterFactory}
-import dotterweide.formatter.{Format, FormatterImpl}
+import dotterweide.editor.{AbstractTerminal, Action, Adviser, Async, BraceMatcher, CaretMovement, ChooserFactory, Data, DialogFactory, Editor, EditorActions, Error, ErrorHolder, FontSettings, HighlightsChange, History, Stripe, Styling, Terminal, TooltipHandler}
+import dotterweide.formatter.Format
+import dotterweide.formatter.impl.FormatterImpl
 import dotterweide.lexer.Lexer
 import javax.swing.border.EmptyBorder
 import javax.swing.{JComponent, JPanel, JScrollPane, JViewport, KeyStroke, ListCellRenderer, Scrollable, SwingConstants, Timer}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class EditorImpl(val document     : Document,
-                         val data         : Data,
-                         val errorHolder       : ErrorHolder,
-                         lexer            : Lexer,
-                         styling          : Styling,
-                         font             : FontSettings,
-                         matcher          : BraceMatcher,
-                         format           : Format,
-                         adviser          : Adviser,
-                         listRenderer     : ListCellRenderer[AnyRef],
-                         lineCommentPrefix: String,
-                         history          : History,
-                         preferredGridSize: Option[(Int, Int)]
-                        )
-                        (implicit val async: Async)
+class EditorImpl(val document     : Document,
+                 val data         : Data,
+                 val errorHolder       : ErrorHolder,
+                 lexer            : Lexer,
+                 styling          : Styling,
+                 font             : FontSettings,
+                 matcher          : BraceMatcher,
+                 format           : Format,
+                 adviser          : Adviser,
+                 listRenderer     : ListCellRenderer[AnyRef],
+                 lineCommentPrefix: String,
+                 history          : History,
+                 preferredGridSize: Option[(Int, Int)]
+                )
+                (implicit val async: Async)
   extends Editor {
 
-  private def mkFont() = new Font(font.family, Font.PLAIN, font.size)
+  private def mkFont(): Font = {
+    val base = new Font(font.family, Font.PLAIN, 1)
+    val st = font.stretch
+    val sz = font.size
+    if (st == 1f)
+      base.deriveFont(sz)
+    else
+      base.deriveFont(AffineTransform.getScaleInstance(sz, sz * st))
+  }
 
   private[this] var regularFont: Font = mkFont()
 

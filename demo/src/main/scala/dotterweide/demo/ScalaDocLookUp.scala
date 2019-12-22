@@ -74,7 +74,7 @@ class ScalaDocLookUp(language: ScalaLanguage, frame: MainFrame, docModule: Modul
   private object browser extends AbstractDocBrowser {
     private lazy val webFrame: Frame = new Frame {
       title     = baseTitle
-      contents  = Component.wrap(fxPanel)
+//      contents  = Component.wrap(fxPanel)
       bounds    = {
         val gc    = frame.peer.getGraphicsConfiguration
         val r     = gc.getBounds

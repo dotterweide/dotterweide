@@ -17,6 +17,6 @@
 
 package dotterweide.languages.lisp.node
 
-import dotterweide.node.NodeImpl
+import dotterweide.node.impl.NodeImpl
 
 class CommentNode extends NodeImpl("comment")

@@ -18,7 +18,7 @@
 package dotterweide.languages.toy.format
 
 import dotterweide.Helpers._
-import dotterweide.formatter.FormatterImpl
+import dotterweide.formatter.impl.FormatterImpl
 import dotterweide.languages.toy.{ToyFormat, ToyLexer}
 import dotterweide.parser.SyncParser
 import org.junit.Assert._

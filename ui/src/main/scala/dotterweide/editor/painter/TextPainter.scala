@@ -18,6 +18,7 @@
 package dotterweide.editor.painter
 
 import java.awt.font.TextAttribute
+import java.awt.geom.AffineTransform
 import java.awt.{Graphics, Graphics2D, Rectangle}
 import java.text.AttributedString
 
@@ -136,12 +137,22 @@ private class TextPainter(context: PainterContext, lexer: Lexer,
 private object TextPainter {
   private val EmptyString = new AttributedString("")
 
+  private final val atStretch = new AffineTransform
+
   private def render(text: String, tokens: ISeq[Token], styling: Styling, font: FontSettings): AttributedString = {
     val result = new AttributedString(text)
 
     if (!text.isEmpty) {
       result.addAttribute(TextAttribute.FAMILY, font.family)
       result.addAttribute(TextAttribute.SIZE  , font.size  )
+      val st = font.stretch
+      if (st != 1f) {
+        val at = atStretch
+        if (at.getScaleY != st) {
+          at.setToScale(1.0, st)
+        }
+        result.addAttribute(TextAttribute.TRANSFORM, at)
+      }
 
       tokens.foreach { token =>
         val attributes  = styling.attributesFor(token.kind)

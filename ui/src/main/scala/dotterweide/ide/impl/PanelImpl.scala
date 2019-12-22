@@ -10,13 +10,15 @@
  *  contact@sciss.de
  */
 
-package dotterweide.ide
+package dotterweide.ide.impl
 
 import java.awt.event.{ActionEvent, ActionListener, FocusAdapter, FocusEvent}
 import java.io.File
 
-import dotterweide.document.{Document, DocumentImpl, Location}
+import dotterweide.document.impl.DocumentImpl
+import dotterweide.document.{Document, Location}
 import dotterweide.editor.{Async, Data, Editor, EditorFactory, FontSettings, History, HistoryImpl, Pass}
+import dotterweide.ide.{Console, DynamicStyling, Panel, StatusBar, StructureTab}
 import dotterweide.{FileType, Language}
 import javax.swing.Timer
 

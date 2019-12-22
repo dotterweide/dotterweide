@@ -20,7 +20,7 @@ package dotterweide.languages.lisp.node
 import dotterweide.Extensions._
 import dotterweide.languages.lisp.LispTokens._
 import dotterweide.languages.lisp.value.ListValue
-import dotterweide.node.NodeImpl
+import dotterweide.node.impl.NodeImpl
 
 import scala.collection.immutable.{Seq => ISeq}
 

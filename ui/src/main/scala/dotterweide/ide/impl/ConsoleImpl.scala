@@ -15,19 +15,20 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide.ide
+package dotterweide.ide.impl
 
 import java.awt.{Color, EventQueue, Font}
 
 import dotterweide.editor.FontSettings
+import dotterweide.ide.Console
 import javax.swing.text.{AttributeSet, SimpleAttributeSet, StyleConstants}
 
 import scala.swing.{Component, Swing, TextPane}
 
-private class ConsoleImpl(_font: FontSettings) extends TextPane with Console {
+class ConsoleImpl(_font: FontSettings) extends TextPane with Console {
   private[this] val LinkColor = new Color(125, 121, 111)
 
-  font      = new Font(_font.family, Font.PLAIN, _font.size)
+  font      = new Font(_font.family, Font.PLAIN, 1).deriveFont(_font.size)
   editable  = false
 
   def component: Component = this

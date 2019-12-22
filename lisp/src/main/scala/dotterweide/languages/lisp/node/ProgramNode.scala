@@ -23,7 +23,7 @@ import dotterweide.compiler.{Labels, TranslationException}
 import dotterweide.interpreter.Context
 import dotterweide.languages.lisp.library.Library
 import dotterweide.languages.lisp.value.{Environment, Expression, ListValue}
-import dotterweide.node.NodeImpl
+import dotterweide.node.impl.NodeImpl
 
 class ProgramNode extends NodeImpl("program") {
   def expressions: Seq[ExpressionNode] = children.filterBy[ExpressionNode]

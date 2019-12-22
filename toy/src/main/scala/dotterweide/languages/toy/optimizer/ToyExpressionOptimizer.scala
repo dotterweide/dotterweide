@@ -17,7 +17,8 @@
 
 package dotterweide.languages.toy.optimizer
 
-import dotterweide.interpreter.{ContextImpl, EvaluationException}
+import dotterweide.interpreter.EvaluationException
+import dotterweide.interpreter.impl.ContextImpl
 import dotterweide.languages.toy.interpreter.ToyValue.StringValue
 import dotterweide.languages.toy.node.ToyExpression
 

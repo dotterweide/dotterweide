@@ -15,13 +15,14 @@
  * Licensed under the Apache License, Version 2.0 (the "License"): http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package dotterweide.editor
+package dotterweide.editor.impl
 
 import dotterweide.document.{AnchoredInterval, Document}
+import dotterweide.editor.{Data, DataEvent, Error, ErrorHolder, ErrorsChanged, Pass}
 
 import scala.collection.immutable.{Seq => ISeq}
 
-private class ErrorHolderImpl(document: Document, data: Data) extends ErrorHolder {
+class ErrorHolderImpl(document: Document, data: Data) extends ErrorHolder {
   private[this] var passToAnchoredErrors = Map.empty[Pass, ISeq[AnchoredError]]
 
   data.onChange {

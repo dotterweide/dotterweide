@@ -2,7 +2,7 @@ package dotterweide.languages.scala
 
 import dotterweide.Span
 import dotterweide.languages.scala.node._
-import dotterweide.node.NodeImpl
+import dotterweide.node.impl.NodeImpl
 
 import scala.reflect.api.Position
 import scala.reflect.internal.util.DefinedPosition

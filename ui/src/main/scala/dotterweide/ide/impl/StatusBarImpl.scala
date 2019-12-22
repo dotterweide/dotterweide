@@ -10,7 +10,9 @@
  *  contact@sciss.de
  */
 
-package dotterweide.ide
+package dotterweide.ide.impl
+
+import dotterweide.ide.StatusBar
 
 import scala.swing.{Alignment, BoxPanel, Component, Label, Orientation, Swing}
 

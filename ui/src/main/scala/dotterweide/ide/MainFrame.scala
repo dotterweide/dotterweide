@@ -18,6 +18,7 @@ import dotterweide.Language
 import dotterweide.editor.controller.FlashAction
 import dotterweide.editor.painter.FlashPainter
 import dotterweide.editor.{Editor, FlashImpl, FontSettings}
+import dotterweide.ide.impl.{ConsoleImpl, LauncherImpl, PanelImpl}
 
 import scala.swing.Frame
 import scala.swing.event.WindowClosed

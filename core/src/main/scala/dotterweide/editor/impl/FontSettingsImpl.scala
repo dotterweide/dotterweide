@@ -9,15 +9,19 @@
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
  */
-package dotterweide.editor
+package dotterweide.editor.impl
 
-class FontSettingsImpl(family0: String, size0: Int, lineSpacing0: Float) extends FontSettings {
+import dotterweide.editor.FontSettings
+
+class FontSettingsImpl(family0: String, size0: Float, stretch0: Float, lineSpacing0: Float) extends FontSettings {
   private[this] var _family       = family0
   private[this] var _size         = size0
+  private[this] var _stretch      = stretch0
   private[this] var _lineSpacing  = lineSpacing0
 
   def family      : String  = _family
-  def size        : Int     = _size
+  def size        : Float   = _size
+  def stretch     : Float   = _stretch
   def lineSpacing : Float   = _lineSpacing
 
   def family_=(value: String): Unit = if (_family != value) {
@@ -25,8 +29,13 @@ class FontSettingsImpl(family0: String, size0: Int, lineSpacing0: Float) extends
     notifyObservers()
   }
 
-  def size_=(value: Int): Unit = if (_size != value) {
+  def size_=(value: Float): Unit = if (_size != value) {
     _size = value
+    notifyObservers()
+  }
+
+  def stretch_=(value: Float): Unit = if (_stretch != value) {
+    _stretch = value
     notifyObservers()
   }
 

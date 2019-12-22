@@ -23,6 +23,7 @@ import dotterweide.languages.toy.ToyType
 import dotterweide.languages.toy.compiler.{AssignmentTranslator, CallTranslator, IfTranslator, ReturnTranslator, WhileTranslator}
 import dotterweide.languages.toy.interpreter.{AssignmentEvaluator, CallEvaluator, IfEvaluator, ReturnEvaluator, WhileEvaluator}
 import dotterweide.node._
+import dotterweide.node.impl.NodeImpl
 
 class Assignment extends NodeImpl("assignment")
 with ExpressionHolder with AssignmentEvaluator with AssignmentTranslator {

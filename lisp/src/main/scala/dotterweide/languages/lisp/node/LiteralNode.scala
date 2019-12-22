@@ -19,7 +19,7 @@ package dotterweide.languages.lisp.node
 
 import dotterweide.languages.lisp.core.NewList
 import dotterweide.languages.lisp.value.{BooleanValue, CharacterValue, Expression, IntegerValue}
-import dotterweide.node.NodeImpl
+import dotterweide.node.impl.NodeImpl
 
 trait LiteralNode extends ExpressionNode {
   override def toString: String = "%s(%s)".format(kind, span.text)

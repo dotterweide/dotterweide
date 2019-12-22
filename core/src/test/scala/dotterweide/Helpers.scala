@@ -17,11 +17,12 @@
 
 package dotterweide
 
-import document.{DocumentImpl, Document}
+import document.Document
 import editor.{MockTerminal, Terminal}
 import org.junit.Assert._
 import dotterweide.Extensions._
-import dotterweide.node.{ReferenceNode, Node}
+import dotterweide.document.impl.DocumentImpl
+import dotterweide.node.{Node, ReferenceNode}
 
 object Helpers {
   def assertMatches[T](actual: T)(pattern: PartialFunction[T, Unit]): Unit =

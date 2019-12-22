@@ -12,7 +12,8 @@
 
 package dotterweide.languages.scala.node
 
-import dotterweide.node.{IdentifiedNode, NamedNode, Node, NodeImpl, ReferenceNode}
+import dotterweide.node.impl.NodeImpl
+import dotterweide.node.{IdentifiedNode, NamedNode, Node, ReferenceNode}
 
 import scala.reflect.internal.Flags
 

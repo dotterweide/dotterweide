@@ -5,7 +5,8 @@ import java.net.URL
 
 import dispatch.{Http, as, url}
 import dotterweide.build.{Module, Version}
-import dotterweide.io.{FileDownload, FileDownloadImpl, JarUtil}
+import dotterweide.io.impl.FileDownloadImpl
+import dotterweide.io.{FileDownload, JarUtil}
 
 import scala.collection.immutable.{Seq => ISeq}
 import scala.concurrent.{ExecutionContext, Future, blocking}

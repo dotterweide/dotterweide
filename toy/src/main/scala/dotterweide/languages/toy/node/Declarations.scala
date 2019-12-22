@@ -25,6 +25,7 @@ import dotterweide.languages.toy.compiler.{FunctionDeclarationTranslator, Variab
 import dotterweide.languages.toy.interpreter.VariableDeclarationEvaluator
 import dotterweide.lexer.TokenKind
 import dotterweide.node._
+import dotterweide.node.impl.NodeImpl
 
 import scala.collection.immutable.{Seq => ISeq}
 
