@@ -28,7 +28,7 @@ import dotterweide.editor.{Action, Terminal}
 private class Copy(document: Document, terminal: Terminal)(implicit p: Platform) extends Action {
   def name: String        = "Copy"
   def mnemonic: Char      = 'C'
-  val keys: List[String]  = s"${p.menuModifier} pressed C" :: s"${p.menuModifier} pressed INSERT" :: Nil
+  val keys: List[String]  = s"${p.menuModifier} pressed C" :: "ctrl pressed INSERT" :: Nil
 
   def apply(): Unit = {
     if (terminal.selection.isEmpty)

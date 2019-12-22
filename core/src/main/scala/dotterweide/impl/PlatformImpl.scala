@@ -12,21 +12,23 @@
 
 package dotterweide.impl
 
-import java.awt.Toolkit
+import java.awt.{GraphicsEnvironment, Toolkit}
 import java.awt.event.InputEvent
 
 import dotterweide.Platform
 
 class PlatformImpl extends Platform {
   val menuModifier: String = {
-    val mask  = Toolkit.getDefaultToolkit.getMenuShortcutKeyMask
-    val buf   = new StringBuilder
-    if ((mask & InputEvent.SHIFT_MASK     ) != 0) buf.append("shift "   )
-    if ((mask & InputEvent.CTRL_MASK      ) != 0) buf.append("ctrl "    )
-    if ((mask & InputEvent.META_MASK      ) != 0) buf.append("meta "    )
-    if ((mask & InputEvent.ALT_MASK       ) != 0) buf.append("alt "     )
-    if ((mask & InputEvent.ALT_GRAPH_MASK ) != 0) buf.append("altGraph ")
-    buf.result().trim
+    if (GraphicsEnvironment.isHeadless) "ctrl" else {
+      val mask  = Toolkit.getDefaultToolkit.getMenuShortcutKeyMask
+      val buf   = new StringBuilder
+      if ((mask & InputEvent.SHIFT_MASK     ) != 0) buf.append("shift "   )
+      if ((mask & InputEvent.CTRL_MASK      ) != 0) buf.append("ctrl "    )
+      if ((mask & InputEvent.META_MASK      ) != 0) buf.append("meta "    )
+      if ((mask & InputEvent.ALT_MASK       ) != 0) buf.append("alt "     )
+      if ((mask & InputEvent.ALT_GRAPH_MASK ) != 0) buf.append("altGraph ")
+      buf.result().trim
+    }
   }
 
   // println(s"menuModifier = $menuModifier")
