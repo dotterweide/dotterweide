@@ -27,7 +27,7 @@ private class RemoveLine(document: Document, terminal: Terminal)(implicit p: Pla
   def name: String        = "Remove Line"
   def mnemonic: Char      = 'R'
   val keys: ISeq[String]  =
-    (if (p.isMac) "meta pressed BACKSPACE" else "ctrl pressed Y") :: Nil
+    (if (p.isMac) "meta pressed BACK_SPACE" else "ctrl pressed Y") :: Nil
 
   def apply(): Unit = {
     val oldPos    = terminal.offset

@@ -23,19 +23,19 @@ and `meta` or command on Mac (M).
 |`menu B`           |Go to declaration                  |
 |`menu D`           |Duplicate line                     |
 |`ctrl Y`           |(L,W) Remove line                  |
-|`meta BACKSPACE`   |(M)   Remove line                  | XXX
+|`meta BACK_SPACE`  |(M)   Remove line                  |
 |`ctrl UP`          |Scroll up (back)                   |
 |`ctrl DOWN`        |Scroll down (forward)              |
 |`menu SLASH`       |Toggle line comment                |
 |`ctrl SPACE`       |Trigger code completion            |
-|`ctrl alt S`       |Toggle vertical split              | XXX
-|`shift menu UP`    |Move line up                       | XXX
-|`shift menu DOWN`  |Move line down                     | XXX
+|`ctrl alt S`       |Toggle vertical split              |
+|`shift menu UP`    |Move line up                       |
+|`shift menu DOWN`  |Move line down                     |
 |`shift menu F7`    |Show usages                        |
-|`ctrl LEFT`        |Move to previous word              |
-|`ctrl RIGHT`       |Move to next word                  |
-|`ctrl BACKSPACE`   |Delete to previous word            |
-|`ctrl DELETE`      |Delete to next word                |
+|`ctrl LEFT`        |Move to word start                 |
+|`ctrl RIGHT`       |Move to word end                   |
+|`ctrl BACKSPACE`   |Delete to word start               |
+|`ctrl DELETE`      |Delete to word end                 |
 
 ## Currently with no Scala support
 
