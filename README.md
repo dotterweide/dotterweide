@@ -1,7 +1,7 @@
 # Dotterweide
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dotterweide/dotterweide-org?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/dotterweide/dotterweide.svg?branch=master)](https://travis-ci.org/dotterweide/dotterweide)
+[![Build Status](https://travis-ci.org/dotterweide/dotterweide.svg?branch=main)](https://travis-ci.org/dotterweide/dotterweide)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/dotterweide-core_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/dotterweide-core_2.13)
 
 ## statement

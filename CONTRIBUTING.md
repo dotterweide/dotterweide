@@ -45,7 +45,7 @@ Before you submit your pull request consider the following guidelines:
 - Make your changes in a new git branch:
 
      ```shell
-     git checkout -b issue-descriptive-name-branch master
+     git checkout -b issue-descriptive-name-branch main
      ```
 
 - Create your patch (__including appropriate test cases__ if applicable).
@@ -64,7 +64,7 @@ Before you submit your pull request consider the following guidelines:
     ```
 
 - In the git hosting service (e.g. GitHub), send a pull request to the upstream `work` branch, 
-  if it exists, or to `master` branch if no `work` branch exists.
+  if it exists, or to `main` branch if no `work` branch exists.
   If you are unsure about which branch to use as reference,
   consult with us first (through the issue tracker) to determine the best point of merge.
 - If we suggest changes then:
@@ -95,7 +95,7 @@ from the main (upstream) repository:
     git push origin --delete issue-descriptive-name-branch
     ```
 
-- Check out the `work` branch, or if it does not exist, the `master` branch (or the branch into which your work was merged):
+- Check out the `work` branch, or if it does not exist, the `main` branch (or the branch into which your work was merged):
 
     ```shell
     git checkout work -f
