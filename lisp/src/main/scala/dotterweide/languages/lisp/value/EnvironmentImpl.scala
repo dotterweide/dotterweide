@@ -25,13 +25,11 @@ case class EnvironmentImpl private (locals: Map[String, Expression],
                                     globals: mutable.Map[String, Expression],
                                     ids: Iterator[Int],
                                     trace: List[Place]) extends Environment {
-  def this(globals: Map[String, Expression]) {
+  def this(globals: Map[String, Expression]) =
     this(Map.empty, mutable.Map(globals.toSeq: _*), Iterator.from(0), List.empty)
-  }
 
-  def this() {
+  def this() =
     this(Map.empty)
-  }
 
   def lookup(name: String): Option[Expression] = locals.get(name).orElse(globals.get(name))
 

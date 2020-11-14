@@ -2,7 +2,7 @@
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dotterweide/dotterweide-org?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/dotterweide/dotterweide.svg?branch=master)](https://travis-ci.org/dotterweide/dotterweide)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/dotterweide-core_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/dotterweide-core_2.12)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.sciss/dotterweide-core_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.sciss/dotterweide-core_2.13)
 
 ## statement
 
@@ -26,12 +26,12 @@ We are currently publishing the Scala related modules to Maven Central:
     "de.sciss" %% "dotterweide-scala"       % v  // Scala language support
     "de.sciss" %% "dotterweide-doc-browser" % v  // Building blocks for scaladoc/javadoc API browser
 
-The current release version `v` is `"0.3.0"`.
+The current release version `v` is `"0.4.0"`.
 
 ## building
 
 The project build with [sbt](http://www.scala-sbt.org/) with support for Scala 2.13, 2.12,
-and the main Scala version being 2.12. To run the demo, use `sbt dotterweide-demo/run`.
+and the main Scala version being 2.13. To run the demo, use `sbt dotterweide-demo/run`.
 You can pass arguments to the demo run, for example:
 
     sbt 'dotterweide-demo/run --language scala --colors dark'

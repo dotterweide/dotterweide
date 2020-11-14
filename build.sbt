@@ -1,16 +1,16 @@
 lazy val baseName   = "Dotterweide"
 lazy val baseNameL  = baseName.toLowerCase
 
-lazy val projectVersion = "0.3.0"
-lazy val mimaVersion    = "0.3.0" // used for migration-manager
+lazy val projectVersion = "0.4.0"
+lazy val mimaVersion    = "0.4.0" // used for migration-manager
 
 lazy val commonSettings = Seq(
   version                   := projectVersion,
   organization              := "de.sciss",  // for now, so we can publish artifacts
   homepage                  := Some(url(s"https://github.com/dotterweide/dotterweide")),
   licenses                  := Seq(lgpl2),
-  scalaVersion              := "2.12.10",
-  crossScalaVersions        := Seq("2.12.10", "2.13.1"),
+  scalaVersion              := "2.13.3",
+  crossScalaVersions        := Seq("2.13.3", "2.12.12"),
   scalacOptions            ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xlint", "-Xsource:2.13"),
   fork in Test              := false,
   fork in (Compile, run)    := true,
@@ -36,18 +36,18 @@ lazy val scalariformOrg = "de.sciss"
 
 lazy val deps = new {
   val main = new {
-    val akka            = "2.6.1"
+    val akka            = "2.6.10"
     // val dispatch        = "1.0.1"
     val dispatch        = "0.1.1"
     val scalariform     = "0.2.8"
-    val scalaSwing      = "2.1.1"
+    val scalaSwing      = "3.0.0"
   }
   val demo = new {
-    val scallop         = "3.3.2"
+    val scallop         = "3.5.1"
     val submin          = "0.3.4"
   }
   val test = new {
-    val junit           = "4.12"
+    val junit           = "4.13.1"
     val junitInterface  = "0.11"
   }
 }

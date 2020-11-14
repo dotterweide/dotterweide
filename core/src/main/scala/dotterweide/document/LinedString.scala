@@ -23,9 +23,8 @@ import scala.collection.immutable.{Seq => ISeq}
 
 // XXX TODO --- very inefficient to traverse a list of lines to find a char index
 class LinedString private (val lines: List[CharSequence]) extends CharSequence with LinesHolder {
-  def this(s: String) {
+  def this(s: String) =
     this(parseLines(s))
-  }
 
   // ---- CharSequence interface ----
 

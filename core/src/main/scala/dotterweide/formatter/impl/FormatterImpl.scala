@@ -38,7 +38,7 @@ class FormatterImpl(format: Format) extends Formatter {
       val formatted = (parts ++ tokens.map(_.span.text).lastOption.toSeq).mkString
       val prefix    = root.span.source.subSequence(0, interval.start)
       val suffix    = root.span.source.subSequence(interval.stop)
-      prefix + formatted + suffix
+      prefix.toString + formatted + suffix
     }
   }
 
